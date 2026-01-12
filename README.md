@@ -114,9 +114,13 @@ This will:
 ### Access
 
 - **Student Interface**: [http://localhost:5173](http://localhost:5173)
+  - Email: `admin@example.com`
+  - Password: `1111`
+
 - **Admin Panel**: [http://localhost:8000/admin/](http://localhost:8000/admin/)
   - Email: `admin@example.com`
   - Password: `1111`
+
 - **API Docs**: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
 ### Additional Services
@@ -164,4 +168,6 @@ Copyright (c) 2025 Minima
 ![Course Schedule](./screenshot/student.course.schedule.png)
 ![Course Achievement](./screenshot/student.course.achievement.png)
 ![Course Detail](./screenshot/student.course.detail.png)
+![Media Search](./screenshot/student.search.png)
+![Video Play](./screenshot/student.video.png)
 ![AI Assistant](./screenshot/student.ai.png)

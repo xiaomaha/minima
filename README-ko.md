@@ -164,4 +164,6 @@ Copyright (c) 2025 Minima
 ![과정 일정](./screenshot/student.course.schedule.png)
 ![과정 성취](./screenshot/student.course.achievement.png)
 ![과정 상세](./screenshot/student.course.detail.png)
+![미디어 검색](./screenshot/student.search.png)
+![동영상 재생](./screenshot/student.video.png)
 ![AI 어시스턴트](./screenshot/student.ai.png)
