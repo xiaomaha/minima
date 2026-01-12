@@ -9,6 +9,10 @@ A lightweight, self-hosted alternative to Moodle, Canvas, and Open edX.
 
 > **🚧 Pre-Release**: not ready for business use yet
 
+## Screenshots
+
+![Dashboard](./screenshot/student.dashboard.learning.png)
+
 ## Admin Panel
 
 ![API Documentation](screenshot/api.swagger.png)
@@ -19,8 +23,6 @@ A lightweight, self-hosted alternative to Moodle, Canvas, and Open edX.
 
 ![Multilingual Support](screenshot/admin.ko.sample.png)
 *Built-in i18n support (English, Korean)*
-
-![Dashboard](./screenshot/student.dashboard.learning.png)
 
 more screenshots below
 
@@ -68,6 +70,13 @@ more screenshots below
 - **Course Store**: Sell courses with integrated shopping system
 - **Coupon System**: Flexible discount and promotion management
 - **PG Ready**: Connect payment gateway for B2C platform
+
+## Use Cases
+
+- **Educational Institutions**: Self-hosted alternative to expensive LMS
+- **Corporate Training**: Track employee skill development
+- **Online Creators**: Sell courses on your own platform
+- **Bootcamps**: Manage cohort-based learning
 
 ## Tech Stack
 
