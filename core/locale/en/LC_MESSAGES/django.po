@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-12 05:12+0000\n"
+"POT-Creation-Date: 2026-01-13 03:41+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,11 +34,11 @@ msgstr ""
 msgid "Login Tokens"
 msgstr ""
 
-#: apps/account/admin.py:51 apps/account/models.py:600
+#: apps/account/admin.py:51 apps/account/models.py:611
 msgid "OTP Log"
 msgstr ""
 
-#: apps/account/admin.py:52 apps/account/models.py:601
+#: apps/account/admin.py:52 apps/account/models.py:612
 msgid "OTP Logs"
 msgstr ""
 
@@ -65,26 +65,39 @@ msgid "Account"
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:5
+#: apps/account/templates/account/mail/activation.html:3
 #, python-format
 msgid "%(platform_name)s Email Address Verification"
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:13
+#: apps/account/templates/account/mail/activation.html:27
 msgid "Verify Your Email"
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:15 apps/account/mjml/email_change.mjml:15
 #: apps/account/mjml/password_change.mjml:15
+#: apps/account/templates/account/mail/activation.html:28
+#: apps/account/templates/account/mail/email_change.html:28
+#: apps/account/templates/account/mail/password_change.html:28
 #: apps/course/mjml/certificate_issued_email.mjml:15
 #: apps/course/mjml/end_today_email.mjml:15
 #: apps/course/mjml/exam_today_email.mjml:15
 #: apps/course/mjml/grade_completed_email.mjml:15
 #: apps/course/mjml/start_today_email.mjml:17
 #: apps/course/mjml/weekly_progress_email.mjml:15
-msgid "Hello { name },"
+#: apps/course/templates/course/mail/certificate_issued_email.html:28
+#: apps/course/templates/course/mail/end_today_email.html:28
+#: apps/course/templates/course/mail/exam_today_email.html:28
+#: apps/course/templates/course/mail/grade_completed_email.html:28
+#: apps/course/templates/course/mail/start_today_email.html:30
+#: apps/course/templates/course/mail/weekly_progress_email.html:28
+#, python-format
+msgid "Hello %(name)s,"
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:18
+#: apps/account/templates/account/mail/activation.html:30
 #, python-format
 msgid ""
 "Thank you for joining for %(platform_name)s. Please verify your email "
@@ -92,33 +105,41 @@ msgid ""
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:21
+#: apps/account/templates/account/mail/activation.html:32
 msgid "Verify Email"
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:24
+#: apps/account/templates/account/mail/activation.html:34
 #, python-format
 msgid ""
-"This verification link will expire in { expiry_hours } hours. If you did not "
+"This verification link will expire in %(expiry_hours)s hours. If you did not "
 "join for a %(platform_name)s account, please ignore this email."
 msgstr ""
 
 #: apps/account/mjml/activation.mjml:27 apps/account/mjml/email_change.mjml:27
+#: apps/account/templates/account/mail/activation.html:36
+#: apps/account/templates/account/mail/email_change.html:36
 msgid ""
 "If the button above doesn't work, you can also verify your email by copying "
 "and pasting the following link into your browser:"
 msgstr ""
 
 #: apps/account/mjml/email_change.mjml:5
+#: apps/account/templates/account/mail/email_change.html:3
 #, python-format
 msgid "%(platform_name)s Email Change Verification"
 msgstr ""
 
 #: apps/account/mjml/email_change.mjml:13
 #: apps/account/mjml/email_change.mjml:21
+#: apps/account/templates/account/mail/email_change.html:27
+#: apps/account/templates/account/mail/email_change.html:32
 msgid "Verify Email Change"
 msgstr ""
 
 #: apps/account/mjml/email_change.mjml:18
+#: apps/account/templates/account/mail/email_change.html:30
 #, python-format
 msgid ""
 "We received a request to change the email address for your %(platform_name)s "
@@ -126,29 +147,34 @@ msgid ""
 msgstr ""
 
 #: apps/account/mjml/email_change.mjml:24
+#: apps/account/templates/account/mail/email_change.html:34
 #, python-format
 msgid ""
-"This verification link will expire in { expiry_hours } hours. If you did not "
+"This verification link will expire in %(expiry_hours)s hours. If you did not "
 "request an email change for your %(platform_name)s account, please ignore "
 "this email and contact our support team."
 msgstr ""
 
 #: apps/account/mjml/email_change.mjml:33
+#: apps/account/templates/account/mail/email_change.html:40
 msgid ""
 "For security purposes, this email was sent to both your previous and new "
 "email addresses."
 msgstr ""
 
 #: apps/account/mjml/password_change.mjml:5
+#: apps/account/templates/account/mail/password_change.html:3
 #, python-format
 msgid "%(platform_name)s Password Reset"
 msgstr ""
 
 #: apps/account/mjml/password_change.mjml:13
+#: apps/account/templates/account/mail/password_change.html:27
 msgid "Reset Your Password"
 msgstr ""
 
 #: apps/account/mjml/password_change.mjml:18
+#: apps/account/templates/account/mail/password_change.html:30
 #, python-format
 msgid ""
 "We received a request to reset your password for your %(platform_name)s "
@@ -156,28 +182,32 @@ msgid ""
 msgstr ""
 
 #: apps/account/mjml/password_change.mjml:21
+#: apps/account/templates/account/mail/password_change.html:32
 msgid "Reset Password"
 msgstr ""
 
 #: apps/account/mjml/password_change.mjml:24
+#: apps/account/templates/account/mail/password_change.html:34
+#, python-format
 msgid ""
-"This password reset link will expire in { expiry_hours } hours. If you did "
+"This password reset link will expire in %(expiry_hours)s hours. If you did "
 "not request a password reset, please ignore this email."
 msgstr ""
 
 #: apps/account/mjml/password_change.mjml:27
+#: apps/account/templates/account/mail/password_change.html:36
 msgid ""
 "If the button above doesn't work, you can also reset your password by "
 "copying and pasting the following link into your browser:"
 msgstr ""
 
-#: apps/account/models.py:104 apps/operation/models.py:162
+#: apps/account/models.py:113 apps/operation/models.py:162
 #: apps/operation/models.py:497 apps/partner/models.py:40
 #: apps/partner/models.py:80
 msgid "Email"
 msgstr ""
 
-#: apps/account/models.py:105 apps/assignment/models.py:484
+#: apps/account/models.py:114 apps/assignment/models.py:484
 #: apps/assignment/models.py:502 apps/assignment/models.py:521
 #: apps/assistant/models.py:39 apps/competency/models.py:59
 #: apps/competency/models.py:103 apps/competency/models.py:124
@@ -191,33 +221,33 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: apps/account/models.py:106 apps/assistant/models.py:41
+#: apps/account/models.py:115 apps/assistant/models.py:41
 #: apps/operation/models.py:165
 msgid "Avatar"
 msgstr ""
 
-#: apps/account/models.py:107
+#: apps/account/models.py:116
 msgid "Nickname"
 msgstr ""
 
-#: apps/account/models.py:108 apps/partner/models.py:39
+#: apps/account/models.py:117 apps/partner/models.py:39
 #: apps/partner/models.py:83
 msgid "Phone"
 msgstr ""
 
-#: apps/account/models.py:109 apps/partner/models.py:81
+#: apps/account/models.py:118 apps/partner/models.py:81
 msgid "Birth Date"
 msgstr ""
 
-#: apps/account/models.py:110 apps/content/models.py:142
+#: apps/account/models.py:119 apps/content/models.py:142
 msgid "Language"
 msgstr ""
 
-#: apps/account/models.py:111
+#: apps/account/models.py:120
 msgid "Preferences"
 msgstr ""
 
-#: apps/account/models.py:113 apps/assignment/models.py:274
+#: apps/account/models.py:122 apps/assignment/models.py:274
 #: apps/assistant/models.py:69 apps/competency/models.py:176
 #: apps/competency/models.py:244 apps/course/models.py:493
 #: apps/discussion/models.py:205 apps/exam/models.py:233
@@ -228,17 +258,17 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: apps/account/models.py:114
+#: apps/account/models.py:123
 msgid "Staff"
 msgstr ""
 
-#: apps/account/models.py:115
+#: apps/account/models.py:124
 msgid "Superuser"
 msgstr ""
 
-#: apps/account/models.py:126 apps/account/models.py:531
-#: apps/account/models.py:547 apps/account/models.py:566
-#: apps/account/models.py:589 apps/assistant/models.py:55
+#: apps/account/models.py:135 apps/account/models.py:542
+#: apps/account/models.py:558 apps/account/models.py:577
+#: apps/account/models.py:600 apps/assistant/models.py:55
 #: apps/assistant/models.py:68 apps/competency/models.py:142
 #: apps/content/models.py:153 apps/content/models.py:265
 #: apps/learning/models.py:64 apps/learning/models.py:376
@@ -249,122 +279,180 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: apps/account/models.py:127
+#: apps/account/models.py:136
 msgid "Users"
 msgstr ""
 
-#: apps/account/models.py:269
+#: apps/account/models.py:278
 msgid "Account Activation"
 msgstr ""
 
-#: apps/account/models.py:287
+#: apps/account/models.py:296
 msgid "Email Change"
 msgstr ""
 
-#: apps/account/models.py:298
+#: apps/account/models.py:307
 msgid "Password Change"
 msgstr ""
 
-#: apps/account/models.py:532
+#: apps/account/models.py:543
 msgid "Password"
 msgstr ""
 
-#: apps/account/models.py:533 apps/account/models.py:568
-#: apps/account/models.py:580 apps/competency/models.py:225
+#: apps/account/models.py:544 apps/account/models.py:579
+#: apps/account/models.py:591 apps/competency/models.py:225
 #: apps/competency/models.py:301 apps/store/models.py:344
 msgid "Expires"
 msgstr ""
 
-#: apps/account/models.py:536
+#: apps/account/models.py:547
 msgid "Temporary Password"
 msgstr ""
 
-#: apps/account/models.py:537
+#: apps/account/models.py:548
 msgid "Temporary Passwords"
 msgstr ""
 
-#: apps/account/models.py:543
+#: apps/account/models.py:554
 msgid "Bookmark"
 msgstr ""
 
-#: apps/account/models.py:544
+#: apps/account/models.py:555
 msgid "Like"
 msgstr ""
 
-#: apps/account/models.py:545
+#: apps/account/models.py:556
 msgid "Flag"
 msgstr ""
 
-#: apps/account/models.py:548 apps/operation/models.py:528
+#: apps/account/models.py:559 apps/operation/models.py:528
 #: apps/store/models.py:100 apps/tracking/admin.py:35
 msgid "Kind"
 msgstr ""
 
-#: apps/account/models.py:549
+#: apps/account/models.py:560
 msgid "Target Type"
 msgstr ""
 
-#: apps/account/models.py:550
+#: apps/account/models.py:561
 msgid "Target ID"
 msgstr ""
 
-#: apps/account/models.py:554
+#: apps/account/models.py:565
 msgid "Reaction"
 msgstr ""
 
-#: apps/account/models.py:555
+#: apps/account/models.py:566
 msgid "Reactions"
 msgstr ""
 
-#: apps/account/models.py:567 apps/account/models.py:573
-#: apps/account/models.py:579
+#: apps/account/models.py:578 apps/account/models.py:584
+#: apps/account/models.py:590
 msgid "Token"
 msgstr ""
 
-#: apps/account/models.py:569
+#: apps/account/models.py:580
 msgid "IP Address"
 msgstr ""
 
-#: apps/account/models.py:570
+#: apps/account/models.py:581
 msgid "User Agent"
 msgstr ""
 
-#: apps/account/models.py:574
+#: apps/account/models.py:585
 msgid "Tokens"
 msgstr ""
 
-#: apps/account/models.py:583
+#: apps/account/models.py:594
 msgid "Blacklisted Token"
 msgstr ""
 
-#: apps/account/models.py:584
+#: apps/account/models.py:595
 msgid "Blacklisted Tokens"
 msgstr ""
 
-#: apps/account/models.py:590 apps/competency/models.py:58
+#: apps/account/models.py:601 apps/competency/models.py:58
 #: apps/competency/models.py:102 apps/competency/models.py:123
 #: apps/operation/models.py:183 apps/store/models.py:101
 msgid "Code"
 msgstr ""
 
-#: apps/account/models.py:591
+#: apps/account/models.py:602
 msgid "Success"
 msgstr ""
 
-#: apps/account/models.py:592
+#: apps/account/models.py:603
 msgid "Fingerprint"
 msgstr ""
 
-#: apps/account/models.py:593
+#: apps/account/models.py:604
 msgid "Device Type"
 msgstr ""
 
-#: apps/account/models.py:595
+#: apps/account/models.py:606
 msgid "Consumer Type"
 msgstr ""
 
-#: apps/account/models.py:596
+#: apps/account/models.py:607
 msgid "Consumer ID"
+msgstr ""
+
+#: apps/account/templates/account/mail/activation.html:40
+#: apps/account/templates/account/mail/email_change.html:42
+#: apps/account/templates/account/mail/password_change.html:40
+#: apps/common/mjml/partial/footer.mjml:6
+#: apps/course/templates/course/mail/certificate_issued_email.html:45
+#: apps/course/templates/course/mail/end_today_email.html:45
+#: apps/course/templates/course/mail/exam_today_email.html:46
+#: apps/course/templates/course/mail/grade_completed_email.html:45
+#: apps/course/templates/course/mail/start_today_email.html:47
+#: apps/course/templates/course/mail/weekly_progress_email.html:46
+#, python-format
+msgid ""
+"Need help? Contact our support team at <a href=\"mailto:%(support_email)s\" "
+"class=\"footer-link\">%(support_email)s</a>"
+msgstr ""
+
+#: apps/account/templates/account/mail/activation.html:42
+#: apps/account/templates/account/mail/email_change.html:44
+#: apps/account/templates/account/mail/password_change.html:42
+#: apps/common/mjml/partial/footer.mjml:13
+#: apps/course/templates/course/mail/certificate_issued_email.html:47
+#: apps/course/templates/course/mail/end_today_email.html:47
+#: apps/course/templates/course/mail/exam_today_email.html:48
+#: apps/course/templates/course/mail/grade_completed_email.html:47
+#: apps/course/templates/course/mail/start_today_email.html:49
+#: apps/course/templates/course/mail/weekly_progress_email.html:48
+#, python-format
+msgid "&copy; %(year)s %(platform_name)s. All rights reserved."
+msgstr ""
+
+#: apps/account/templates/account/mail/activation.html:45
+#: apps/account/templates/account/mail/email_change.html:47
+#: apps/account/templates/account/mail/password_change.html:45
+#: apps/common/mjml/partial/footer.mjml:19
+#: apps/course/templates/course/mail/certificate_issued_email.html:50
+#: apps/course/templates/course/mail/end_today_email.html:50
+#: apps/course/templates/course/mail/exam_today_email.html:51
+#: apps/course/templates/course/mail/grade_completed_email.html:50
+#: apps/course/templates/course/mail/start_today_email.html:52
+#: apps/course/templates/course/mail/weekly_progress_email.html:51
+#: apps/operation/models.py:523
+msgid "Privacy Policy"
+msgstr ""
+
+#: apps/account/templates/account/mail/activation.html:46
+#: apps/account/templates/account/mail/email_change.html:48
+#: apps/account/templates/account/mail/password_change.html:46
+#: apps/common/mjml/partial/footer.mjml:20
+#: apps/course/templates/course/mail/certificate_issued_email.html:51
+#: apps/course/templates/course/mail/end_today_email.html:51
+#: apps/course/templates/course/mail/exam_today_email.html:52
+#: apps/course/templates/course/mail/grade_completed_email.html:51
+#: apps/course/templates/course/mail/start_today_email.html:53
+#: apps/course/templates/course/mail/weekly_progress_email.html:52
+#: apps/operation/models.py:522
+msgid "Terms of Service"
 msgstr ""
 
 #: apps/assignment/admin.py:111 apps/assignment/admin.py:112
@@ -798,38 +886,18 @@ msgstr ""
 msgid "Apps"
 msgstr ""
 
-#: apps/common/management/commands/convert_mjml.py:13
+#: apps/common/management/commands/convert_mjml.py:10
 msgid "Convert MJML templates to HTML for all apps"
 msgstr ""
 
-#: apps/common/management/commands/convert_mjml.py:21
+#: apps/common/management/commands/convert_mjml.py:18
 msgid "Apps directory not found"
 msgstr ""
 
-#: apps/common/management/commands/convert_mjml.py:37
+#: apps/common/management/commands/convert_mjml.py:34
 msgid ""
 "\n"
 "No MJML files found in any app"
-msgstr ""
-
-#: apps/common/mjml/partial/footer.mjml:6
-#, python-format
-msgid ""
-"Need help? Contact our support team at <a href=\"mailto:%(support_email)s\" "
-"class=\"footer-link\">%(support_email)s</a>"
-msgstr ""
-
-#: apps/common/mjml/partial/footer.mjml:13
-#, python-format
-msgid "&copy; %(year)s %(platform_name)s. All rights reserved."
-msgstr ""
-
-#: apps/common/mjml/partial/footer.mjml:19 apps/operation/models.py:523
-msgid "Privacy Policy"
-msgstr ""
-
-#: apps/common/mjml/partial/footer.mjml:20 apps/operation/models.py:522
-msgid "Terms of Service"
 msgstr ""
 
 #: apps/common/models.py:31
@@ -1774,75 +1842,97 @@ msgid "Successfully converted %(name)s"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:5
+#: apps/course/templates/course/mail/certificate_issued_email.html:3
 #, python-format
 msgid "%(platform_name)s Course certificate issued"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:13
+#: apps/course/templates/course/mail/certificate_issued_email.html:27
 msgid "Your Certificate is Ready"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:18
+#: apps/course/templates/course/mail/certificate_issued_email.html:30
 msgid ""
 "Congratulations! We're pleased to inform you that your certificate for "
 "successfully completing <strong>{ course_title }</strong> has been issued."
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:21
+#: apps/course/templates/course/mail/certificate_issued_email.html:32
 msgid "Certificate Details:"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:24
-msgid "Issue Date: { issue_date }"
+#: apps/course/templates/course/mail/certificate_issued_email.html:34
+#, python-format
+msgid "Issue Date: %(issue_date)s"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:25
-msgid "Certificate ID: { certificate_id }"
+#: apps/course/templates/course/mail/certificate_issued_email.html:35
+#, python-format
+msgid "Certificate ID: %(certificate_id)s"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:28
+#: apps/course/templates/course/mail/certificate_issued_email.html:37
 msgid "You can download your certificate by clicking the button below."
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:31
+#: apps/course/templates/course/mail/certificate_issued_email.html:39
 msgid "View Certificate"
 msgstr ""
 
 #: apps/course/mjml/certificate_issued_email.mjml:34
+#: apps/course/templates/course/mail/certificate_issued_email.html:41
 msgid ""
 "If the button above doesn't work, you can also access your certificate by "
 "copying and pasting the following link into your browser:"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:5
+#: apps/course/templates/course/mail/end_today_email.html:3
 #, python-format
 msgid "%(platform_name)s Course ends today"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:13
+#: apps/course/templates/course/mail/end_today_email.html:27
 msgid "Your Course Ends Today"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:18
+#: apps/course/templates/course/mail/end_today_email.html:30
+#, python-format
 msgid ""
-"This is a friendly reminder that your course <strong>{ course_title }</"
+"This is a friendly reminder that your course <strong>%(course_title)s</"
 "strong> ends today."
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:21
 #: apps/course/mjml/grade_completed_email.mjml:21
+#: apps/course/templates/course/mail/end_today_email.html:32
+#: apps/course/templates/course/mail/grade_completed_email.html:32
 msgid "Important Information:"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:24
-msgid "Last day to submit any pending assignments: { deadline }"
+#: apps/course/templates/course/mail/end_today_email.html:34
+#, python-format
+msgid "Last day to submit any pending assignments: %(deadline)s"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:25
-msgid "Course access ends: { end_time }"
+#: apps/course/templates/course/mail/end_today_email.html:35
+#, python-format
+msgid "Course access ends: %(end_time)s"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:28
+#: apps/course/templates/course/mail/end_today_email.html:37
 msgid ""
 "Please make sure to complete and submit any remaining assignments before the "
 "deadline. Your final grade will be calculated shortly after the course ends."
@@ -1850,88 +1940,116 @@ msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:31
 #: apps/course/mjml/start_today_email.mjml:33
+#: apps/course/templates/course/mail/end_today_email.html:39
+#: apps/course/templates/course/mail/start_today_email.html:41
 msgid "Access Course"
 msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:34
 #: apps/course/mjml/start_today_email.mjml:36
 #: apps/course/mjml/weekly_progress_email.mjml:35
+#: apps/course/templates/course/mail/end_today_email.html:41
+#: apps/course/templates/course/mail/start_today_email.html:43
+#: apps/course/templates/course/mail/weekly_progress_email.html:42
 msgid ""
 "If the button above doesn't work, you can also access your course by copying "
 "and pasting the following link into your browser:"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:5
+#: apps/course/templates/course/mail/exam_today_email.html:3
 #, python-format
 msgid "%(platform_name)s Course exam today"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:13
+#: apps/course/templates/course/mail/exam_today_email.html:27
 msgid "Your Exam is Today"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:18
+#: apps/course/templates/course/mail/exam_today_email.html:30
+#, python-format
 msgid ""
 "This is a reminder that you have an exam today for your course "
-"<strong>{ course_title }</strong>."
+"<strong>%(course_title)s</strong>."
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:21
+#: apps/course/templates/course/mail/exam_today_email.html:32
 msgid "Exam Details:"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:24
-msgid "Date: { exam_date }"
+#: apps/course/templates/course/mail/exam_today_email.html:34
+#, python-format
+msgid "Date: %(exam_date)s"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:25
-msgid "Time: { exam_time }"
+#: apps/course/templates/course/mail/exam_today_email.html:35
+#, python-format
+msgid "Time: %(exam_time)s"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:26
-msgid "Duration: { exam_duration }"
+#: apps/course/templates/course/mail/exam_today_email.html:36
+#, python-format
+msgid "Duration: %(exam_duration)s"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:29
+#: apps/course/templates/course/mail/exam_today_email.html:38
 msgid ""
 "Make sure you're prepared and have a stable internet connection. Good luck "
 "on your exam!"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:32
+#: apps/course/templates/course/mail/exam_today_email.html:40
 msgid "Access Exam"
 msgstr ""
 
 #: apps/course/mjml/exam_today_email.mjml:35
+#: apps/course/templates/course/mail/exam_today_email.html:42
 msgid ""
 "If the button above doesn't work, you can also access your exam by copying "
 "and pasting the following link into your browser:"
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:5
+#: apps/course/templates/course/mail/grade_completed_email.html:3
 #, python-format
 msgid "%(platform_name)s Course grading completed"
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:13
+#: apps/course/templates/course/mail/grade_completed_email.html:27
 msgid "Grading Complete - Results Available"
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:18
+#: apps/course/templates/course/mail/grade_completed_email.html:30
+#, python-format
 msgid ""
-"Great news! The grading for <strong>{ course_title }</strong> has been "
+"Great news! The grading for <strong>%(course_title)s</strong> has been "
 "completed and your results are now available."
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:24
-msgid "Grading Completed: { completion_date }"
+#: apps/course/templates/course/mail/grade_completed_email.html:34
+#, python-format
+msgid "Grading Completed: %(completion_date)s"
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:25
-msgid "Your Final Score: { final_score }"
+#: apps/course/templates/course/mail/grade_completed_email.html:35
+#, python-format
+msgid "Your Final Score: %(final_score)s"
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:28
+#: apps/course/templates/course/mail/grade_completed_email.html:37
 msgid ""
 "Congratulations on completing the course! Your final results have been "
 "calculated and are now available for review. If you meet the completion "
@@ -1939,86 +2057,110 @@ msgid ""
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:31
+#: apps/course/templates/course/mail/grade_completed_email.html:39
 msgid "View Results"
 msgstr ""
 
 #: apps/course/mjml/grade_completed_email.mjml:34
+#: apps/course/templates/course/mail/grade_completed_email.html:41
 msgid ""
 "If the button above doesn't work, you can also view your results by copying "
 "and pasting the following link into your browser:"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:5
+#: apps/course/templates/course/mail/start_today_email.html:3
 #, python-format
 msgid "%(platform_name)s Course starts today"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:14
+#: apps/course/templates/course/mail/start_today_email.html:28
 msgid "Your Course Starts Today"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:20
+#: apps/course/templates/course/mail/start_today_email.html:32
+#, python-format
 msgid ""
-"We're excited to let you know that your course <strong>{ course_title }</"
+"We're excited to let you know that your course <strong>%(course_title)s</"
 "strong> starts today!"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:23
+#: apps/course/templates/course/mail/start_today_email.html:34
 msgid "Course Details:"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:26
-msgid "Start Date: { start_date }"
+#: apps/course/templates/course/mail/start_today_email.html:36
+#, python-format
+msgid "Start Date: %(start_date)s"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:27
-msgid "End Date: { end_date }"
+#: apps/course/templates/course/mail/start_today_email.html:37
+#, python-format
+msgid "End Date: %(end_date)s"
 msgstr ""
 
 #: apps/course/mjml/start_today_email.mjml:30
+#: apps/course/templates/course/mail/start_today_email.html:39
 msgid ""
 "We recommend logging in today to familiarize yourself with the course "
 "materials and syllabus."
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:5
+#: apps/course/templates/course/mail/weekly_progress_email.html:3
 #, python-format
 msgid "%(platform_name)s Course weekly progress"
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:13
+#: apps/course/templates/course/mail/weekly_progress_email.html:27
 msgid "Your Weekly Course Progress"
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:18
+#: apps/course/templates/course/mail/weekly_progress_email.html:30
+#, python-format
 msgid ""
-"Here's your weekly progress update for <strong>{ course_title }</strong>."
+"Here's your weekly progress update for <strong>%(course_title)s</strong>."
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:21
+#: apps/course/templates/course/mail/weekly_progress_email.html:32
 msgid "Course Progress Summary:"
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:24
-msgid "Completed Lessons: { completed } / { total }"
+#: apps/course/templates/course/mail/weekly_progress_email.html:34
+#, python-format
+msgid "Completed Lessons: %(completed)s / %(total)s"
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:25
+#: apps/course/templates/course/mail/weekly_progress_email.html:35
 #, python-format
-msgid "Current Progress: { percentage }%%"
+msgid "Current Progress: %(percentage)s%%"
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:26
-msgid "Upcoming Deadlines: { deadline }"
+#: apps/course/templates/course/mail/weekly_progress_email.html:36
+#, python-format
+msgid "Upcoming Deadlines: %(deadline)s"
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:29
+#: apps/course/templates/course/mail/weekly_progress_email.html:38
 msgid ""
 "You're making great progress! Keep up the good work and stay on track with "
 "your learning goals."
 msgstr ""
 
 #: apps/course/mjml/weekly_progress_email.mjml:32
+#: apps/course/templates/course/mail/weekly_progress_email.html:40
 msgid "Continue Learning"
 msgstr ""
 

@@ -12,7 +12,7 @@
       <mj-column>
         <mj-text font-size="24px" font-weight="bold" padding-bottom="20px">{% translate "Your Certificate is Ready" %}</mj-text>
         <mj-text padding-bottom="15px">
-          {% blocktranslate %}Hello { name },{% endblocktranslate %}
+          {% blocktranslate %}Hello {{ name }},{% endblocktranslate %}
         </mj-text>
         <mj-text padding-bottom="15px">
           {% blocktranslate with course_title=course_title %}Congratulations! We're pleased to inform you that your certificate for successfully completing <strong>{ course_title }</strong> has been issued.{% endblocktranslate %}
@@ -21,20 +21,20 @@
           {% translate "Certificate Details:" %}
         </mj-text>
         <mj-text padding-left="15px" padding-bottom="15px">
-          • {% blocktranslate with issue_date=issue_date %}Issue Date: { issue_date }{% endblocktranslate %}<br>
-          • {% blocktranslate with certificate_id=certificate_id %}Certificate ID: { certificate_id }{% endblocktranslate %}
+          • {% blocktranslate with issue_date=issue_date %}Issue Date: {{ issue_date }}{% endblocktranslate %}<br>
+          • {% blocktranslate with certificate_id=certificate_id %}Certificate ID: {{ certificate_id }}{% endblocktranslate %}
         </mj-text>
         <mj-text padding-bottom="20px">
           {% translate "You can download your certificate by clicking the button below." %}
         </mj-text>
-        <mj-button href="{ certificate_url }" width="200px" padding="20px 0" background-color="#4F46E5" role="button">
+        <mj-button href="{{ certificate_url }}" width="200px" padding="20px 0" background-color="#4F46E5" role="button">
           {% translate "View Certificate" %}
         </mj-button>
         <mj-text padding-top="20px" padding-bottom="10px">
           {% translate "If the button above doesn't work, you can also access your certificate by copying and pasting the following link into your browser:" %}
         </mj-text>
         <mj-text font-size="14px" color="#4F46E5" padding-bottom="15px" word-break="break-all">
-          { certificate_url }
+          {{ certificate_url }}
         </mj-text>
       </mj-column>
     </mj-section>

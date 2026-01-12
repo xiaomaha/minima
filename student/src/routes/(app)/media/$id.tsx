@@ -80,12 +80,7 @@ function RouteComponent() {
                     <VideoPlayer src={m().url} onReady={handlePlayerReady} start={search().start} />
                   </Match>
                   <Match when={m().format === 'pdf'}>
-                    <PdfViewer
-                      duration={m().durationSeconds}
-                      src={m().url}
-                      onReady={handlePlayerReady}
-                      start={search().start}
-                    />
+                    <PdfViewer duration={m().durationSeconds} src={m().url} onReady={handlePlayerReady} />
                   </Match>
                   {/* TODO each media format */}
                 </Switch>

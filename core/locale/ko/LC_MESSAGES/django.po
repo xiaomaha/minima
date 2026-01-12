@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-11 09:39+0900\n"
+"POT-Creation-Date: 2026-01-13 03:41+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,11 +34,11 @@ msgstr "로그인 토큰"
 msgid "Login Tokens"
 msgstr "로그인 토큰"
 
-#: apps/account/admin.py:51 apps/account/models.py:600
+#: apps/account/admin.py:51 apps/account/models.py:611
 msgid "OTP Log"
 msgstr "OTP 로그"
 
-#: apps/account/admin.py:52 apps/account/models.py:601
+#: apps/account/admin.py:52 apps/account/models.py:612
 msgid "OTP Logs"
 msgstr "OTP 로그"
 
@@ -67,26 +67,39 @@ msgid "Account"
 msgstr "계정"
 
 #: apps/account/mjml/activation.mjml:5
+#: apps/account/templates/account/mail/activation.html:3
 #, python-format
 msgid "%(platform_name)s Email Address Verification"
 msgstr "%(platform_name)s 이메일 주소 인증"
 
 #: apps/account/mjml/activation.mjml:13
+#: apps/account/templates/account/mail/activation.html:27
 msgid "Verify Your Email"
 msgstr "이메일 인증"
 
 #: apps/account/mjml/activation.mjml:15 apps/account/mjml/email_change.mjml:15
 #: apps/account/mjml/password_change.mjml:15
+#: apps/account/templates/account/mail/activation.html:28
+#: apps/account/templates/account/mail/email_change.html:28
+#: apps/account/templates/account/mail/password_change.html:28
 #: apps/course/mjml/certificate_issued_email.mjml:15
 #: apps/course/mjml/end_today_email.mjml:15
 #: apps/course/mjml/exam_today_email.mjml:15
 #: apps/course/mjml/grade_completed_email.mjml:15
 #: apps/course/mjml/start_today_email.mjml:17
 #: apps/course/mjml/weekly_progress_email.mjml:15
-msgid "Hello { name },"
-msgstr "안녕하세요 { name }님,"
+#: apps/course/templates/course/mail/certificate_issued_email.html:28
+#: apps/course/templates/course/mail/end_today_email.html:28
+#: apps/course/templates/course/mail/exam_today_email.html:28
+#: apps/course/templates/course/mail/grade_completed_email.html:28
+#: apps/course/templates/course/mail/start_today_email.html:30
+#: apps/course/templates/course/mail/weekly_progress_email.html:28
+#, python-format
+msgid "Hello %(name)s,"
+msgstr "안녕하세요 %(name)s님,"
 
 #: apps/account/mjml/activation.mjml:18
+#: apps/account/templates/account/mail/activation.html:30
 #, python-format
 msgid ""
 "Thank you for joining for %(platform_name)s. Please verify your email "
@@ -96,19 +109,22 @@ msgstr ""
 "소를 인증해 주세요:"
 
 #: apps/account/mjml/activation.mjml:21
+#: apps/account/templates/account/mail/activation.html:32
 msgid "Verify Email"
 msgstr "이메일 인증"
 
 #: apps/account/mjml/activation.mjml:24
-#, python-format
+#: apps/account/templates/account/mail/activation.html:34
 msgid ""
-"This verification link will expire in { expiry_hours } hours. If you did not "
+"This verification link will expire in %(expiry_hours)s hours. If you did not "
 "join for a %(platform_name)s account, please ignore this email."
 msgstr ""
-"이 인증 링크는 { expiry_hours }시간 후에 만료됩니다. %(platform_name)s 계정"
+"이 인증 링크는 %(expiry_hours)s시간 후에 만료됩니다. %(platform_name)s 계정"
 "에 가입하지 않으셨다면 이 이메일을 무시해 주세요."
 
 #: apps/account/mjml/activation.mjml:27 apps/account/mjml/email_change.mjml:27
+#: apps/account/templates/account/mail/activation.html:36
+#: apps/account/templates/account/mail/email_change.html:36
 msgid ""
 "If the button above doesn't work, you can also verify your email by copying "
 "and pasting the following link into your browser:"
@@ -117,16 +133,20 @@ msgstr ""
 "을 인증할 수 있습니다:"
 
 #: apps/account/mjml/email_change.mjml:5
+#: apps/account/templates/account/mail/email_change.html:3
 #, python-format
 msgid "%(platform_name)s Email Change Verification"
 msgstr "%(platform_name)s 이메일 변경 인증"
 
 #: apps/account/mjml/email_change.mjml:13
 #: apps/account/mjml/email_change.mjml:21
+#: apps/account/templates/account/mail/email_change.html:27
+#: apps/account/templates/account/mail/email_change.html:32
 msgid "Verify Email Change"
 msgstr "이메일 변경 인증"
 
 #: apps/account/mjml/email_change.mjml:18
+#: apps/account/templates/account/mail/email_change.html:30
 #, python-format
 msgid ""
 "We received a request to change the email address for your %(platform_name)s "
@@ -136,17 +156,18 @@ msgstr ""
 "하여 새 이메일 주소를 인증해 주세요:"
 
 #: apps/account/mjml/email_change.mjml:24
-#, python-format
+#: apps/account/templates/account/mail/email_change.html:34
 msgid ""
-"This verification link will expire in { expiry_hours } hours. If you did not "
+"This verification link will expire in %(expiry_hours)s hours. If you did not "
 "request an email change for your %(platform_name)s account, please ignore "
 "this email and contact our support team."
 msgstr ""
-"이 인증 링크는 { expiry_hours }시간 후에 만료됩니다. %(platform_name)s 계정"
+"이 인증 링크는 %(expiry_hours)s시간 후에 만료됩니다. %(platform_name)s 계정"
 "의 이메일 변경을 요청하지 않으셨다면 이 이메일을 무시하고 고객지원팀에 문의"
 "해 주세요."
 
 #: apps/account/mjml/email_change.mjml:33
+#: apps/account/templates/account/mail/email_change.html:40
 msgid ""
 "For security purposes, this email was sent to both your previous and new "
 "email addresses."
@@ -155,15 +176,18 @@ msgstr ""
 "습니다."
 
 #: apps/account/mjml/password_change.mjml:5
+#: apps/account/templates/account/mail/password_change.html:3
 #, python-format
 msgid "%(platform_name)s Password Reset"
 msgstr "%(platform_name)s 비밀번호 재설정"
 
 #: apps/account/mjml/password_change.mjml:13
+#: apps/account/templates/account/mail/password_change.html:27
 msgid "Reset Your Password"
 msgstr "비밀번호 재설정"
 
 #: apps/account/mjml/password_change.mjml:18
+#: apps/account/templates/account/mail/password_change.html:30
 #, python-format
 msgid ""
 "We received a request to reset your password for your %(platform_name)s "
@@ -173,18 +197,21 @@ msgstr ""
 "하려면 아래 버튼을 클릭해 주세요:"
 
 #: apps/account/mjml/password_change.mjml:21
+#: apps/account/templates/account/mail/password_change.html:32
 msgid "Reset Password"
 msgstr "비밀번호 재설정"
 
 #: apps/account/mjml/password_change.mjml:24
+#: apps/account/templates/account/mail/password_change.html:34
 msgid ""
-"This password reset link will expire in { expiry_hours } hours. If you did "
+"This password reset link will expire in %(expiry_hours)s hours. If you did "
 "not request a password reset, please ignore this email."
 msgstr ""
-"이 비밀번호 재설정 링크는 { expiry_hours }시간 후에 만료됩니다. 비밀번호 재설"
+"이 비밀번호 재설정 링크는 %(expiry_hours)s시간 후에 만료됩니다. 비밀번호 재설"
 "정을 요청하지 않으셨다면 이 이메일을 무시해 주세요."
 
 #: apps/account/mjml/password_change.mjml:27
+#: apps/account/templates/account/mail/password_change.html:36
 msgid ""
 "If the button above doesn't work, you can also reset your password by "
 "copying and pasting the following link into your browser:"
@@ -192,18 +219,18 @@ msgstr ""
 "위 버튼이 작동하지 않는 경우, 다음 링크를 복사하여 브라우저에 붙여넣어 비밀번"
 "호를 재설정할 수 있습니다:"
 
-#: apps/account/models.py:104 apps/operation/models.py:162
+#: apps/account/models.py:113 apps/operation/models.py:162
 #: apps/operation/models.py:497 apps/partner/models.py:40
 #: apps/partner/models.py:80
 msgid "Email"
 msgstr "이메일"
 
-#: apps/account/models.py:105 apps/assignment/models.py:484
+#: apps/account/models.py:114 apps/assignment/models.py:484
 #: apps/assignment/models.py:502 apps/assignment/models.py:521
 #: apps/assistant/models.py:39 apps/competency/models.py:59
 #: apps/competency/models.py:103 apps/competency/models.py:124
-#: apps/competency/models.py:143 apps/competency/models.py:168
-#: apps/competency/models.py:234 apps/learning/models.py:234
+#: apps/competency/models.py:143 apps/competency/models.py:173
+#: apps/competency/models.py:239 apps/learning/models.py:233
 #: apps/operation/models.py:62 apps/operation/models.py:161
 #: apps/operation/models.py:195 apps/partner/models.py:37
 #: apps/partner/models.py:60 apps/partner/models.py:79
@@ -212,57 +239,57 @@ msgstr "이메일"
 msgid "Name"
 msgstr "이름"
 
-#: apps/account/models.py:106 apps/assistant/models.py:41
+#: apps/account/models.py:115 apps/assistant/models.py:41
 #: apps/operation/models.py:165
 msgid "Avatar"
 msgstr "아바타"
 
-#: apps/account/models.py:107
+#: apps/account/models.py:116
 msgid "Nickname"
 msgstr "닉네임"
 
-#: apps/account/models.py:108 apps/partner/models.py:39
+#: apps/account/models.py:117 apps/partner/models.py:39
 #: apps/partner/models.py:83
 msgid "Phone"
 msgstr "전화번호"
 
-#: apps/account/models.py:109 apps/partner/models.py:81
+#: apps/account/models.py:118 apps/partner/models.py:81
 msgid "Birth Date"
 msgstr "생년월일"
 
-#: apps/account/models.py:110 apps/content/models.py:142
+#: apps/account/models.py:119 apps/content/models.py:142
 msgid "Language"
 msgstr "언어"
 
-#: apps/account/models.py:111
+#: apps/account/models.py:120
 msgid "Preferences"
 msgstr "환경설정"
 
-#: apps/account/models.py:113 apps/assignment/models.py:274
-#: apps/assistant/models.py:69 apps/competency/models.py:171
-#: apps/competency/models.py:239 apps/course/models.py:493
+#: apps/account/models.py:122 apps/assignment/models.py:274
+#: apps/assistant/models.py:69 apps/competency/models.py:176
+#: apps/competency/models.py:244 apps/course/models.py:493
 #: apps/discussion/models.py:205 apps/exam/models.py:233
-#: apps/learning/models.py:65 apps/learning/models.py:236
+#: apps/learning/models.py:65 apps/learning/models.py:235
 #: apps/operation/models.py:166 apps/operation/models.py:214
 #: apps/operation/models.py:531 apps/quiz/models.py:97 apps/store/models.py:107
 #: apps/store/models.py:149 apps/survey/models.py:91
 msgid "Active"
 msgstr "활성"
 
-#: apps/account/models.py:114
+#: apps/account/models.py:123
 msgid "Staff"
 msgstr "관리자"
 
-#: apps/account/models.py:115
+#: apps/account/models.py:124
 msgid "Superuser"
 msgstr "최고 관리자"
 
-#: apps/account/models.py:126 apps/account/models.py:531
-#: apps/account/models.py:547 apps/account/models.py:566
-#: apps/account/models.py:589 apps/assistant/models.py:55
+#: apps/account/models.py:135 apps/account/models.py:542
+#: apps/account/models.py:558 apps/account/models.py:577
+#: apps/account/models.py:600 apps/assistant/models.py:55
 #: apps/assistant/models.py:68 apps/competency/models.py:142
 #: apps/content/models.py:153 apps/content/models.py:265
-#: apps/learning/models.py:64 apps/learning/models.py:377
+#: apps/learning/models.py:64 apps/learning/models.py:376
 #: apps/operation/models.py:149 apps/operation/models.py:507
 #: apps/operation/models.py:630 apps/partner/admin.py:59
 #: apps/partner/models.py:89 apps/partner/models.py:161
@@ -270,123 +297,183 @@ msgstr "최고 관리자"
 msgid "User"
 msgstr "사용자"
 
-#: apps/account/models.py:127
+#: apps/account/models.py:136
 msgid "Users"
 msgstr "사용자"
 
-#: apps/account/models.py:269
+#: apps/account/models.py:278
 msgid "Account Activation"
 msgstr "계정 활성화"
 
-#: apps/account/models.py:287
+#: apps/account/models.py:296
 msgid "Email Change"
 msgstr "이메일 변경"
 
-#: apps/account/models.py:298
+#: apps/account/models.py:307
 msgid "Password Change"
 msgstr "비밀번호 변경"
 
-#: apps/account/models.py:532
+#: apps/account/models.py:543
 msgid "Password"
 msgstr "비밀번호"
 
-#: apps/account/models.py:533 apps/account/models.py:568
-#: apps/account/models.py:580 apps/competency/models.py:220
-#: apps/competency/models.py:296 apps/store/models.py:344
+#: apps/account/models.py:544 apps/account/models.py:579
+#: apps/account/models.py:591 apps/competency/models.py:225
+#: apps/competency/models.py:301 apps/store/models.py:344
 msgid "Expires"
 msgstr "만료"
 
-#: apps/account/models.py:536
+#: apps/account/models.py:547
 msgid "Temporary Password"
 msgstr "임시 비밀번호"
 
-#: apps/account/models.py:537
+#: apps/account/models.py:548
 msgid "Temporary Passwords"
 msgstr "임시 비밀번호"
 
-#: apps/account/models.py:543
+#: apps/account/models.py:554
 msgid "Bookmark"
 msgstr "북마크"
 
-#: apps/account/models.py:544
+#: apps/account/models.py:555
 msgid "Like"
 msgstr "좋아요"
 
-#: apps/account/models.py:545
+#: apps/account/models.py:556
 msgid "Flag"
 msgstr "신고"
 
-#: apps/account/models.py:548 apps/operation/models.py:528
+#: apps/account/models.py:559 apps/operation/models.py:528
 #: apps/store/models.py:100 apps/tracking/admin.py:35
 msgid "Kind"
 msgstr "유형"
 
-#: apps/account/models.py:549
+#: apps/account/models.py:560
 msgid "Target Type"
 msgstr "대상 유형"
 
-#: apps/account/models.py:550
+#: apps/account/models.py:561
 msgid "Target ID"
 msgstr "대상 ID"
 
-#: apps/account/models.py:554
+#: apps/account/models.py:565
 msgid "Reaction"
 msgstr "반응"
 
-#: apps/account/models.py:555
+#: apps/account/models.py:566
 msgid "Reactions"
 msgstr "반응"
 
-#: apps/account/models.py:567 apps/account/models.py:573
-#: apps/account/models.py:579
+#: apps/account/models.py:578 apps/account/models.py:584
+#: apps/account/models.py:590
 msgid "Token"
 msgstr "토큰"
 
-#: apps/account/models.py:569
+#: apps/account/models.py:580
 msgid "IP Address"
 msgstr "IP 주소"
 
-#: apps/account/models.py:570
+#: apps/account/models.py:581
 msgid "User Agent"
 msgstr "사용자 에이전트"
 
-#: apps/account/models.py:574
+#: apps/account/models.py:585
 msgid "Tokens"
 msgstr "토큰"
 
-#: apps/account/models.py:583
+#: apps/account/models.py:594
 msgid "Blacklisted Token"
 msgstr "차단된 토큰"
 
-#: apps/account/models.py:584
+#: apps/account/models.py:595
 msgid "Blacklisted Tokens"
 msgstr "차단된 토큰"
 
-#: apps/account/models.py:590 apps/competency/models.py:58
+#: apps/account/models.py:601 apps/competency/models.py:58
 #: apps/competency/models.py:102 apps/competency/models.py:123
 #: apps/operation/models.py:183 apps/store/models.py:101
 msgid "Code"
 msgstr "코드"
 
-#: apps/account/models.py:591
+#: apps/account/models.py:602
 msgid "Success"
 msgstr "성공"
 
-#: apps/account/models.py:592
+#: apps/account/models.py:603
 msgid "Fingerprint"
 msgstr "지문"
 
-#: apps/account/models.py:593
+#: apps/account/models.py:604
 msgid "Device Type"
 msgstr "기기 유형"
 
-#: apps/account/models.py:595
+#: apps/account/models.py:606
 msgid "Consumer Type"
 msgstr "사용 유형"
 
-#: apps/account/models.py:596
+#: apps/account/models.py:607
 msgid "Consumer ID"
 msgstr "사용 ID"
+
+#: apps/account/templates/account/mail/activation.html:40
+#: apps/account/templates/account/mail/email_change.html:42
+#: apps/account/templates/account/mail/password_change.html:40
+#: apps/common/mjml/partial/footer.mjml:6
+#: apps/course/templates/course/mail/certificate_issued_email.html:45
+#: apps/course/templates/course/mail/end_today_email.html:45
+#: apps/course/templates/course/mail/exam_today_email.html:46
+#: apps/course/templates/course/mail/grade_completed_email.html:45
+#: apps/course/templates/course/mail/start_today_email.html:47
+#: apps/course/templates/course/mail/weekly_progress_email.html:46
+#, python-format
+msgid ""
+"Need help? Contact our support team at <a href=\"mailto:%(support_email)s\" "
+"class=\"footer-link\">%(support_email)s</a>"
+msgstr ""
+"도움이 필요하신가요? 고객지원팀에 문의하세요 <a href=\"mailto:"
+"%(support_email)s\" class=\"footer-link\">%(support_email)s</a>"
+
+#: apps/account/templates/account/mail/activation.html:42
+#: apps/account/templates/account/mail/email_change.html:44
+#: apps/account/templates/account/mail/password_change.html:42
+#: apps/common/mjml/partial/footer.mjml:13
+#: apps/course/templates/course/mail/certificate_issued_email.html:47
+#: apps/course/templates/course/mail/end_today_email.html:47
+#: apps/course/templates/course/mail/exam_today_email.html:48
+#: apps/course/templates/course/mail/grade_completed_email.html:47
+#: apps/course/templates/course/mail/start_today_email.html:49
+#: apps/course/templates/course/mail/weekly_progress_email.html:48
+#, python-format
+msgid "&copy; %(year)s %(platform_name)s. All rights reserved."
+msgstr "&copy; %(year)s %(platform_name)s. 모든 권리 보유."
+
+#: apps/account/templates/account/mail/activation.html:45
+#: apps/account/templates/account/mail/email_change.html:47
+#: apps/account/templates/account/mail/password_change.html:45
+#: apps/common/mjml/partial/footer.mjml:19
+#: apps/course/templates/course/mail/certificate_issued_email.html:50
+#: apps/course/templates/course/mail/end_today_email.html:50
+#: apps/course/templates/course/mail/exam_today_email.html:51
+#: apps/course/templates/course/mail/grade_completed_email.html:50
+#: apps/course/templates/course/mail/start_today_email.html:52
+#: apps/course/templates/course/mail/weekly_progress_email.html:51
+#: apps/operation/models.py:523
+msgid "Privacy Policy"
+msgstr "개인정보처리방침"
+
+#: apps/account/templates/account/mail/activation.html:46
+#: apps/account/templates/account/mail/email_change.html:48
+#: apps/account/templates/account/mail/password_change.html:46
+#: apps/common/mjml/partial/footer.mjml:20
+#: apps/course/templates/course/mail/certificate_issued_email.html:51
+#: apps/course/templates/course/mail/end_today_email.html:51
+#: apps/course/templates/course/mail/exam_today_email.html:52
+#: apps/course/templates/course/mail/grade_completed_email.html:51
+#: apps/course/templates/course/mail/start_today_email.html:53
+#: apps/course/templates/course/mail/weekly_progress_email.html:52
+#: apps/operation/models.py:522
+msgid "Terms of Service"
+msgstr "이용약관"
 
 #: apps/assignment/admin.py:111 apps/assignment/admin.py:112
 #: apps/content/admin.py:47 apps/content/admin.py:48
@@ -450,10 +537,10 @@ msgstr "제목"
 #: apps/assignment/models.py:70 apps/assignment/models.py:485
 #: apps/assignment/models.py:503 apps/assignment/models.py:522
 #: apps/assistant/models.py:40 apps/common/models.py:172
-#: apps/competency/models.py:144 apps/competency/models.py:169
-#: apps/competency/models.py:235 apps/course/models.py:87
+#: apps/competency/models.py:144 apps/competency/models.py:174
+#: apps/competency/models.py:240 apps/course/models.py:87
 #: apps/course/models.py:281 apps/discussion/models.py:71
-#: apps/exam/models.py:69 apps/learning/models.py:235
+#: apps/exam/models.py:69 apps/learning/models.py:234
 #: apps/operation/models.py:196 apps/operation/models.py:530
 #: apps/operation/models.py:652 apps/partner/models.py:38
 #: apps/partner/models.py:61 apps/partner/models.py:130 apps/quiz/models.py:34
@@ -545,7 +632,7 @@ msgstr "해답"
 
 #: apps/assignment/models.py:184 apps/course/models.py:117
 #: apps/discussion/models.py:129 apps/exam/models.py:134
-#: apps/operation/models.py:186 apps/operation/tests/factories.py:65
+#: apps/operation/models.py:186 apps/operation/tests/factories.py:66
 msgid "Honor Code"
 msgstr "윤리 서약"
 
@@ -564,7 +651,7 @@ msgstr "학습자"
 msgid "Attempt Start"
 msgstr "응시 시작"
 
-#: apps/assignment/models.py:275 apps/competency/models.py:299
+#: apps/assignment/models.py:275 apps/competency/models.py:304
 #: apps/content/models.py:159 apps/content/models.py:268
 #: apps/discussion/models.py:206 apps/exam/models.py:234 apps/quiz/models.py:98
 msgid "Context Key"
@@ -729,7 +816,7 @@ msgstr "도우미 봇"
 
 #: apps/assistant/models.py:56 apps/content/models.py:267
 #: apps/content/models.py:272 apps/course/models.py:698
-#: apps/learning/models.py:380
+#: apps/learning/models.py:379
 msgid "Note"
 msgstr "노트"
 
@@ -819,43 +906,21 @@ msgstr "열기"
 msgid "Apps"
 msgstr "앱"
 
-#: apps/common/management/commands/convert_mjml.py:13
+#: apps/common/management/commands/convert_mjml.py:10
 msgid "Convert MJML templates to HTML for all apps"
 msgstr "모든 앱에서 MJML 템플릿을 HTML로 변환합니다."
 
-#: apps/common/management/commands/convert_mjml.py:21
+#: apps/common/management/commands/convert_mjml.py:18
 msgid "Apps directory not found"
 msgstr "찾을 수 없습니다: %s"
 
-#: apps/common/management/commands/convert_mjml.py:37
+#: apps/common/management/commands/convert_mjml.py:34
 msgid ""
 "\n"
 "No MJML files found in any app"
 msgstr ""
 "\n"
 "MJML 파일을 찾을 수 없습니다."
-
-#: apps/common/mjml/partial/footer.mjml:6
-#, python-format
-msgid ""
-"Need help? Contact our support team at <a href=\"mailto:%(support_email)s\" "
-"class=\"footer-link\">%(support_email)s</a>"
-msgstr ""
-"도움이 필요하신가요? 고객지원팀에 문의하세요 <a href=\"mailto:"
-"%(support_email)s\" class=\"footer-link\">%(support_email)s</a>"
-
-#: apps/common/mjml/partial/footer.mjml:13
-#, python-format
-msgid "&copy; %(year)s %(platform_name)s. All rights reserved."
-msgstr "&copy; %(year)s %(platform_name)s. 모든 권리 보유."
-
-#: apps/common/mjml/partial/footer.mjml:19 apps/operation/models.py:523
-msgid "Privacy Policy"
-msgstr "개인정보처리방침"
-
-#: apps/common/mjml/partial/footer.mjml:20 apps/operation/models.py:522
-msgid "Terms of Service"
-msgstr "이용약관"
 
 #: apps/common/models.py:31
 msgid "ID"
@@ -886,8 +951,8 @@ msgstr "삭제됨"
 msgid "Audience"
 msgstr "대상"
 
-#: apps/common/models.py:174 apps/competency/models.py:237
-#: apps/competency/models.py:294 apps/content/models.py:65
+#: apps/common/models.py:174 apps/competency/models.py:242
+#: apps/competency/models.py:299 apps/content/models.py:65
 #: apps/store/models.py:57
 msgid "Thumbnail"
 msgstr "썸네일"
@@ -1438,11 +1503,11 @@ msgid "Number"
 msgstr "번호"
 
 #: apps/competency/models.py:109 apps/competency/models.py:122
-#: apps/competency/models.py:190 apps/competency/models.py:261
+#: apps/competency/models.py:195 apps/competency/models.py:266
 msgid "Skill"
 msgstr "능력"
 
-#: apps/competency/models.py:110 apps/competency/models.py:174
+#: apps/competency/models.py:110 apps/competency/models.py:179
 msgid "Skills"
 msgstr "능력"
 
@@ -1451,146 +1516,146 @@ msgid "Factor"
 msgstr "능력 요소"
 
 #: apps/competency/models.py:130 apps/competency/models.py:146
-#: apps/competency/models.py:191 apps/competency/models.py:262
+#: apps/competency/models.py:196 apps/competency/models.py:267
 msgid "Factors"
 msgstr "능력 요소"
 
-#: apps/competency/models.py:151
+#: apps/competency/models.py:149
 msgid "Competency Goal"
 msgstr "역량 목표"
 
-#: apps/competency/models.py:152
+#: apps/competency/models.py:150
 msgid "Competency Goals"
 msgstr "역량 목표"
 
-#: apps/competency/models.py:170
+#: apps/competency/models.py:175
 msgid "Image"
 msgstr "이미지"
 
-#: apps/competency/models.py:172 apps/competency/models.py:240
+#: apps/competency/models.py:177 apps/competency/models.py:245
 msgid "Issuer"
 msgstr "발급자"
 
-#: apps/competency/models.py:173 apps/competency/models.py:241
+#: apps/competency/models.py:178 apps/competency/models.py:246
 #: apps/store/models.py:78
 msgid "Validity Days"
 msgstr "유효 기간(일)"
 
-#: apps/competency/models.py:177 apps/competency/models.py:189
-#: apps/competency/models.py:205 apps/competency/models.py:218
+#: apps/competency/models.py:182 apps/competency/models.py:194
+#: apps/competency/models.py:210 apps/competency/models.py:223
 msgid "Badge"
 msgstr "배지"
 
-#: apps/competency/models.py:178
+#: apps/competency/models.py:183
 msgid "Badges"
 msgstr "배지"
 
-#: apps/competency/models.py:192 apps/competency/models.py:263
+#: apps/competency/models.py:197 apps/competency/models.py:268
 msgid "Coverage"
 msgstr "적용 범위"
 
-#: apps/competency/models.py:195
+#: apps/competency/models.py:200
 msgid "Badge Skill"
 msgstr "배지 능력"
 
-#: apps/competency/models.py:196
+#: apps/competency/models.py:201
 msgid "Badge Skills"
 msgstr "배지 능력"
 
-#: apps/competency/models.py:206 apps/competency/models.py:277
+#: apps/competency/models.py:211 apps/competency/models.py:282
 #: apps/partner/apps.py:8 apps/partner/models.py:46 apps/partner/models.py:59
 msgid "Partner"
 msgstr "파트너"
 
-#: apps/competency/models.py:207 apps/competency/models.py:278
+#: apps/competency/models.py:212 apps/competency/models.py:283
 msgid "Claim"
 msgstr "보증"
 
-#: apps/competency/models.py:208 apps/competency/models.py:279
+#: apps/competency/models.py:213 apps/competency/models.py:284
 msgid "Endorsed"
 msgstr "보증됨"
 
-#: apps/competency/models.py:211
+#: apps/competency/models.py:216
 msgid "BadgeEndorsement"
 msgstr "보증"
 
-#: apps/competency/models.py:212
+#: apps/competency/models.py:217
 msgid "Badge Endorsements"
 msgstr "배지 보증"
 
-#: apps/competency/models.py:219
+#: apps/competency/models.py:224
 msgid "Earner"
 msgstr "획득자"
 
-#: apps/competency/models.py:221 apps/competency/models.py:297
+#: apps/competency/models.py:226 apps/competency/models.py:302
 msgid "Revoked"
 msgstr "취소됨"
 
-#: apps/competency/models.py:222 apps/competency/models.py:298
+#: apps/competency/models.py:227 apps/competency/models.py:303
 msgid "Revoked Reason"
 msgstr "취소 사유"
 
-#: apps/competency/models.py:228
+#: apps/competency/models.py:233
 msgid "Badge Award"
 msgstr "배지 수여"
 
-#: apps/competency/models.py:229
+#: apps/competency/models.py:234
 msgid "Badge Awards"
 msgstr "배지 수여"
 
-#: apps/competency/models.py:236
+#: apps/competency/models.py:241
 msgid "Background Image"
 msgstr "배경 이미지"
 
-#: apps/competency/models.py:238
+#: apps/competency/models.py:243
 msgid "Template"
 msgstr "템플릿"
 
-#: apps/competency/models.py:244 apps/competency/models.py:260
-#: apps/competency/models.py:276 apps/competency/models.py:291
+#: apps/competency/models.py:249 apps/competency/models.py:265
+#: apps/competency/models.py:281 apps/competency/models.py:296
 #: apps/course/admin.py:35
 msgid "Certificate"
 msgstr "수료증"
 
-#: apps/competency/models.py:245 apps/course/admin.py:36
+#: apps/competency/models.py:250 apps/course/admin.py:36
 #: apps/course/models.py:125
 msgid "Certificates"
 msgstr "수료증"
 
-#: apps/competency/models.py:266
+#: apps/competency/models.py:271
 msgid "Certificate Skill"
 msgstr "수료증 능력"
 
-#: apps/competency/models.py:267
+#: apps/competency/models.py:272
 msgid "Certificate Skills"
 msgstr "수료증 능력"
 
-#: apps/competency/models.py:282
+#: apps/competency/models.py:287
 msgid "Certificate Endorsement"
 msgstr "수료증 보증"
 
-#: apps/competency/models.py:283
+#: apps/competency/models.py:288
 msgid "Certificate Endorsements"
 msgstr "수료증 보증"
 
-#: apps/competency/models.py:292
+#: apps/competency/models.py:297
 msgid "Recipient"
 msgstr "수신 주소"
 
-#: apps/competency/models.py:293 apps/content/models.py:63
+#: apps/competency/models.py:298 apps/content/models.py:63
 msgid "PDF"
 msgstr "PDF"
 
-#: apps/competency/models.py:295 apps/operation/models.py:505
+#: apps/competency/models.py:300 apps/operation/models.py:505
 #: apps/tracking/models.py:26
 msgid "Data"
 msgstr "데이터"
 
-#: apps/competency/models.py:302
+#: apps/competency/models.py:307
 msgid "Certificate Award"
 msgstr "수료증 수여"
 
-#: apps/competency/models.py:303
+#: apps/competency/models.py:308
 msgid "Certificate Awards"
 msgstr "수료증 수여"
 
@@ -1664,11 +1729,11 @@ msgstr "시스템 검증됨"
 msgid "Certificate not found"
 msgstr "수료증을 찾을 수 없습니다."
 
-#: apps/competency/tests/factories.py:138
+#: apps/competency/tests/factories.py:146
 msgid "Certificate of Completion"
 msgstr "수료증"
 
-#: apps/competency/tests/factories.py:141 apps/course/models.py:553
+#: apps/competency/tests/factories.py:149 apps/course/models.py:553
 #, python-format
 msgid "%(hours)s hours"
 msgstr "%(hours)s 시간"
@@ -1812,15 +1877,18 @@ msgid "Successfully converted %(name)s"
 msgstr "%(name)s을(를) 성공적으로 변환했습니다."
 
 #: apps/course/mjml/certificate_issued_email.mjml:5
+#: apps/course/templates/course/mail/certificate_issued_email.html:3
 #, python-format
 msgid "%(platform_name)s Course certificate issued"
 msgstr "%(platform_name)s 과정 수료증 발급"
 
 #: apps/course/mjml/certificate_issued_email.mjml:13
+#: apps/course/templates/course/mail/certificate_issued_email.html:27
 msgid "Your Certificate is Ready"
 msgstr "수료증이 준비되었습니다."
 
 #: apps/course/mjml/certificate_issued_email.mjml:18
+#: apps/course/templates/course/mail/certificate_issued_email.html:30
 msgid ""
 "Congratulations! We're pleased to inform you that your certificate for "
 "successfully completing <strong>{ course_title }</strong> has been issued."
@@ -1828,26 +1896,32 @@ msgstr ""
 "축하합니다! <strong>{ course_title }</strong> 과정 수료증이 발행되었습니다."
 
 #: apps/course/mjml/certificate_issued_email.mjml:21
+#: apps/course/templates/course/mail/certificate_issued_email.html:32
 msgid "Certificate Details:"
 msgstr "수료증 세부사항:"
 
 #: apps/course/mjml/certificate_issued_email.mjml:24
-msgid "Issue Date: { issue_date }"
-msgstr "발행일: { issue_date }"
+#: apps/course/templates/course/mail/certificate_issued_email.html:34
+msgid "Issue Date: %(issue_date)s"
+msgstr "발행일: %(issue_date)s"
 
 #: apps/course/mjml/certificate_issued_email.mjml:25
-msgid "Certificate ID: { certificate_id }"
-msgstr "수료증 ID: { certificate_id }"
+#: apps/course/templates/course/mail/certificate_issued_email.html:35
+msgid "Certificate ID: %(certificate_id)s"
+msgstr "수료증 ID: %(certificate_id)s"
 
 #: apps/course/mjml/certificate_issued_email.mjml:28
+#: apps/course/templates/course/mail/certificate_issued_email.html:37
 msgid "You can download your certificate by clicking the button below."
 msgstr "아래 버튼을 클릭하여 수료증을 다운로드할 수 있습니다."
 
 #: apps/course/mjml/certificate_issued_email.mjml:31
+#: apps/course/templates/course/mail/certificate_issued_email.html:39
 msgid "View Certificate"
 msgstr "수료증 보기"
 
 #: apps/course/mjml/certificate_issued_email.mjml:34
+#: apps/course/templates/course/mail/certificate_issued_email.html:41
 msgid ""
 "If the button above doesn't work, you can also access your certificate by "
 "copying and pasting the following link into your browser:"
@@ -1856,34 +1930,42 @@ msgstr ""
 "을 볼 수 있습니다:"
 
 #: apps/course/mjml/end_today_email.mjml:5
+#: apps/course/templates/course/mail/end_today_email.html:3
 #, python-format
 msgid "%(platform_name)s Course ends today"
 msgstr "%(platform_name)s 과정 오늘 종료"
 
 #: apps/course/mjml/end_today_email.mjml:13
+#: apps/course/templates/course/mail/end_today_email.html:27
 msgid "Your Course Ends Today"
 msgstr "오늘 과정이 종료됩니다."
 
 #: apps/course/mjml/end_today_email.mjml:18
+#: apps/course/templates/course/mail/end_today_email.html:30
 msgid ""
-"This is a friendly reminder that your course <strong>{ course_title }</"
+"This is a friendly reminder that your course <strong>%(course_title)s</"
 "strong> ends today."
-msgstr "<strong>{ course_title }</strong> 과정이 오늘 종료됩니다."
+msgstr "<strong>%(course_title)s</strong> 과정이 오늘 종료됩니다."
 
 #: apps/course/mjml/end_today_email.mjml:21
 #: apps/course/mjml/grade_completed_email.mjml:21
+#: apps/course/templates/course/mail/end_today_email.html:32
+#: apps/course/templates/course/mail/grade_completed_email.html:32
 msgid "Important Information:"
 msgstr "중요 정보:"
 
 #: apps/course/mjml/end_today_email.mjml:24
-msgid "Last day to submit any pending assignments: { deadline }"
-msgstr "과제 제출 종료일: { deadline }"
+#: apps/course/templates/course/mail/end_today_email.html:34
+msgid "Last day to submit any pending assignments: %(deadline)s"
+msgstr "과제 제출 종료일: %(deadline)s"
 
 #: apps/course/mjml/end_today_email.mjml:25
-msgid "Course access ends: { end_time }"
-msgstr "과정 접속 종료: { end_time }"
+#: apps/course/templates/course/mail/end_today_email.html:35
+msgid "Course access ends: %(end_time)s"
+msgstr "과정 접속 종료: %(end_time)s" 
 
 #: apps/course/mjml/end_today_email.mjml:28
+#: apps/course/templates/course/mail/end_today_email.html:37
 msgid ""
 "Please make sure to complete and submit any remaining assignments before the "
 "deadline. Your final grade will be calculated shortly after the course ends."
@@ -1893,12 +1975,17 @@ msgstr ""
 
 #: apps/course/mjml/end_today_email.mjml:31
 #: apps/course/mjml/start_today_email.mjml:33
+#: apps/course/templates/course/mail/end_today_email.html:39
+#: apps/course/templates/course/mail/start_today_email.html:41
 msgid "Access Course"
 msgstr "과정 보기"
 
 #: apps/course/mjml/end_today_email.mjml:34
 #: apps/course/mjml/start_today_email.mjml:36
 #: apps/course/mjml/weekly_progress_email.mjml:35
+#: apps/course/templates/course/mail/end_today_email.html:41
+#: apps/course/templates/course/mail/start_today_email.html:43
+#: apps/course/templates/course/mail/weekly_progress_email.html:42
 msgid ""
 "If the button above doesn't work, you can also access your course by copying "
 "and pasting the following link into your browser:"
@@ -1907,47 +1994,57 @@ msgstr ""
 "을 볼 수 있습니다:"
 
 #: apps/course/mjml/exam_today_email.mjml:5
+#: apps/course/templates/course/mail/exam_today_email.html:3
 #, python-format
 msgid "%(platform_name)s Course exam today"
 msgstr "%(platform_name)s 과정 오늘 시험"
 
 #: apps/course/mjml/exam_today_email.mjml:13
+#: apps/course/templates/course/mail/exam_today_email.html:27
 msgid "Your Exam is Today"
 msgstr "오늘 시험이 있습니다."
 
 #: apps/course/mjml/exam_today_email.mjml:18
+#: apps/course/templates/course/mail/exam_today_email.html:30
 msgid ""
 "This is a reminder that you have an exam today for your course "
-"<strong>{ course_title }</strong>."
-msgstr "오늘 <strong>{ course_title }</strong> 과정 시험이 있습니다."
+"<strong>%(course_title)s</strong>."
+msgstr "오늘 <strong>%(course_title)s</strong> 과정 시험이 있습니다."
 
 #: apps/course/mjml/exam_today_email.mjml:21
+#: apps/course/templates/course/mail/exam_today_email.html:32
 msgid "Exam Details:"
 msgstr "시험 세부사항:"
 
 #: apps/course/mjml/exam_today_email.mjml:24
-msgid "Date: { exam_date }"
-msgstr "날짜: { exam_date }"
+#: apps/course/templates/course/mail/exam_today_email.html:34
+msgid "Date: %(exam_date)s"
+msgstr "날짜: %(exam_date)s"
 
 #: apps/course/mjml/exam_today_email.mjml:25
-msgid "Time: { exam_time }"
-msgstr "시간: { exam_time }"
+#: apps/course/templates/course/mail/exam_today_email.html:35
+msgid "Time: %(exam_time)s"
+msgstr "시간: %(exam_time)s"
 
 #: apps/course/mjml/exam_today_email.mjml:26
-msgid "Duration: { exam_duration }"
-msgstr "시험 시간: { exam_duration }"
+#: apps/course/templates/course/mail/exam_today_email.html:36
+msgid "Duration: %(exam_duration)s"
+msgstr "시험 시간: %(exam_duration)s"
 
 #: apps/course/mjml/exam_today_email.mjml:29
+#: apps/course/templates/course/mail/exam_today_email.html:38
 msgid ""
 "Make sure you're prepared and have a stable internet connection. Good luck "
 "on your exam!"
 msgstr "인터넷 접속이 안정적인지 확인하십시오. 시험을 잘 보시길 바랍니다!"
 
 #: apps/course/mjml/exam_today_email.mjml:32
+#: apps/course/templates/course/mail/exam_today_email.html:40
 msgid "Access Exam"
 msgstr "시험 접속"
 
 #: apps/course/mjml/exam_today_email.mjml:35
+#: apps/course/templates/course/mail/exam_today_email.html:42
 msgid ""
 "If the button above doesn't work, you can also access your exam by copying "
 "and pasting the following link into your browser:"
@@ -1956,31 +2053,37 @@ msgstr ""
 "을 볼 수 있습니다:"
 
 #: apps/course/mjml/grade_completed_email.mjml:5
+#: apps/course/templates/course/mail/grade_completed_email.html:3
 #, python-format
 msgid "%(platform_name)s Course grading completed"
 msgstr "%(platform_name)s 과정 채점 완료"
 
 #: apps/course/mjml/grade_completed_email.mjml:13
+#: apps/course/templates/course/mail/grade_completed_email.html:27
 msgid "Grading Complete - Results Available"
 msgstr "채점 완료 - 결과를 볼 수 있습니다."
 
 #: apps/course/mjml/grade_completed_email.mjml:18
+#: apps/course/templates/course/mail/grade_completed_email.html:30
 msgid ""
-"Great news! The grading for <strong>{ course_title }</strong> has been "
+"Great news! The grading for <strong>%(course_title)s</strong> has been "
 "completed and your results are now available."
 msgstr ""
-"<strong>{ course_title }</strong> 과정 채점이 완료되었으며 결과를 보실 수 있"
+"<strong>%(course_title)s</strong> 과정 채점이 완료되었으며 결과를 보실 수 있"
 "습니다."
 
 #: apps/course/mjml/grade_completed_email.mjml:24
-msgid "Grading Completed: { completion_date }"
-msgstr "채점 완료: { completion_date }"
+#: apps/course/templates/course/mail/grade_completed_email.html:34
+msgid "Grading Completed: %(completion_date)s"
+msgstr "채점 완료: %(completion_date)s"
 
 #: apps/course/mjml/grade_completed_email.mjml:25
-msgid "Your Final Score: { final_score }"
-msgstr "최종 점수: { final_score }"
+#: apps/course/templates/course/mail/grade_completed_email.html:35
+msgid "Your Final Score: %(final_score)s"
+msgstr "최종 점수: %(final_score)s"
 
 #: apps/course/mjml/grade_completed_email.mjml:28
+#: apps/course/templates/course/mail/grade_completed_email.html:37
 msgid ""
 "Congratulations on completing the course! Your final results have been "
 "calculated and are now available for review. If you meet the completion "
@@ -1990,10 +2093,12 @@ msgstr ""
 "경우 수료증을 생성하고 다운로드할 수 있습니다."
 
 #: apps/course/mjml/grade_completed_email.mjml:31
+#: apps/course/templates/course/mail/grade_completed_email.html:39
 msgid "View Results"
 msgstr "결과 보기"
 
 #: apps/course/mjml/grade_completed_email.mjml:34
+#: apps/course/templates/course/mail/grade_completed_email.html:41
 msgid ""
 "If the button above doesn't work, you can also view your results by copying "
 "and pasting the following link into your browser:"
@@ -2002,76 +2107,91 @@ msgstr ""
 "를 볼 수 있습니다:"
 
 #: apps/course/mjml/start_today_email.mjml:5
+#: apps/course/templates/course/mail/start_today_email.html:3
 #, python-format
 msgid "%(platform_name)s Course starts today"
 msgstr "%(platform_name)s 과정 오늘 시작"
 
 #: apps/course/mjml/start_today_email.mjml:14
+#: apps/course/templates/course/mail/start_today_email.html:28
 msgid "Your Course Starts Today"
 msgstr "오늘 과정이 시작됩니다."
 
 #: apps/course/mjml/start_today_email.mjml:20
+#: apps/course/templates/course/mail/start_today_email.html:32
 msgid ""
-"We're excited to let you know that your course <strong>{ course_title }</"
+"We're excited to let you know that your course <strong>%(course_title)s</"
 "strong> starts today!"
-msgstr "오늘 <strong>{ course_title }</strong> 과정이 시작됩니다!"
+msgstr "오늘 <strong>%(course_title)s</strong> 과정이 시작됩니다!"
 
 #: apps/course/mjml/start_today_email.mjml:23
+#: apps/course/templates/course/mail/start_today_email.html:34
 msgid "Course Details:"
 msgstr "과정 세부사항:"
 
 #: apps/course/mjml/start_today_email.mjml:26
-msgid "Start Date: { start_date }"
-msgstr "시작일: { start_date }"
+#: apps/course/templates/course/mail/start_today_email.html:36
+msgid "Start Date: %(start_date)s"
+msgstr "시작일: %(start_date)s"
 
 #: apps/course/mjml/start_today_email.mjml:27
-msgid "End Date: { end_date }"
-msgstr "종료일: { end_date }"
+#: apps/course/templates/course/mail/start_today_email.html:37
+msgid "End Date: %(end_date)s"
+msgstr "종료일: %(end_date)s"
 
 #: apps/course/mjml/start_today_email.mjml:30
+#: apps/course/templates/course/mail/start_today_email.html:39
 msgid ""
 "We recommend logging in today to familiarize yourself with the course "
 "materials and syllabus."
 msgstr "오늘 로그인하여 과정 자료와 강의 계획을 확인해보세요."
 
 #: apps/course/mjml/weekly_progress_email.mjml:5
+#: apps/course/templates/course/mail/weekly_progress_email.html:3
 #, python-format
 msgid "%(platform_name)s Course weekly progress"
 msgstr "%(platform_name)s 과정 주간 진행"
 
 #: apps/course/mjml/weekly_progress_email.mjml:13
+#: apps/course/templates/course/mail/weekly_progress_email.html:27
 msgid "Your Weekly Course Progress"
 msgstr "주간 과정 진행입니다."
 
 #: apps/course/mjml/weekly_progress_email.mjml:18
+#: apps/course/templates/course/mail/weekly_progress_email.html:30
 msgid ""
-"Here's your weekly progress update for <strong>{ course_title }</strong>."
-msgstr "<strong>{ course_title }</strong> 과정 주간 진행 업데이트입니다."
+"Here's your weekly progress update for <strong>%(course_title)s</strong>."
+msgstr "<strong>%(course_title)s</strong> 과정 주간 진행 업데이트입니다."
 
 #: apps/course/mjml/weekly_progress_email.mjml:21
+#: apps/course/templates/course/mail/weekly_progress_email.html:32
 msgid "Course Progress Summary:"
 msgstr "과정 진행 요약:"
 
 #: apps/course/mjml/weekly_progress_email.mjml:24
-msgid "Completed Lessons: { completed } / { total }"
-msgstr "완료된 강의: { completed } / { total }"
+#: apps/course/templates/course/mail/weekly_progress_email.html:34
+msgid "Completed Lessons: %(completed)s / %(total)s"
+msgstr "완료된 강의: %(completed)s / %(total)s"
 
 #: apps/course/mjml/weekly_progress_email.mjml:25
-#, python-format
-msgid "Current Progress: { percentage }%%"
-msgstr "현재 진행률: { percentage }%%"
+#: apps/course/templates/course/mail/weekly_progress_email.html:35
+msgid "Current Progress: %(percentage)s%%"
+msgstr "현재 진행률: %(percentage)s%%"
 
 #: apps/course/mjml/weekly_progress_email.mjml:26
-msgid "Upcoming Deadlines: { deadline }"
-msgstr "종료일: { deadline }"
+#: apps/course/templates/course/mail/weekly_progress_email.html:36
+msgid "Upcoming Deadlines: %(deadline)s"
+msgstr "종료일: %(deadline)s"
 
 #: apps/course/mjml/weekly_progress_email.mjml:29
+#: apps/course/templates/course/mail/weekly_progress_email.html:38
 msgid ""
 "You're making great progress! Keep up the good work and stay on track with "
 "your learning goals."
 msgstr "과정 학습을 진행하고 있습니다! 진도를 유지하고 목표를 달성하십시오."
 
 #: apps/course/mjml/weekly_progress_email.mjml:32
+#: apps/course/templates/course/mail/weekly_progress_email.html:40
 msgid "Continue Learning"
 msgstr "학습 계속"
 
@@ -2368,12 +2488,12 @@ msgstr "학습"
 msgid "Enrolled"
 msgstr "등록"
 
-#: apps/learning/models.py:73 apps/learning/models.py:354
+#: apps/learning/models.py:73 apps/learning/models.py:353
 #: apps/operation/models.py:366
 msgid "Content Type"
 msgstr "콘텐츠 유형"
 
-#: apps/learning/models.py:76 apps/learning/models.py:357
+#: apps/learning/models.py:76 apps/learning/models.py:356
 #: apps/operation/models.py:367
 msgid "Content ID"
 msgstr "콘텐츠 ID"
@@ -2394,44 +2514,44 @@ msgstr "등록"
 msgid "Content does not exist"
 msgstr "컨텐츠가 존재하지 않습니다."
 
-#: apps/learning/models.py:237 apps/operation/models.py:119
+#: apps/learning/models.py:236 apps/operation/models.py:119
 msgid "Public"
 msgstr "공개"
 
-#: apps/learning/models.py:238
+#: apps/learning/models.py:237
 msgid "Available From"
 msgstr "시작일"
 
-#: apps/learning/models.py:239
+#: apps/learning/models.py:238
 msgid "Available Until"
 msgstr "만료일"
 
-#: apps/learning/models.py:242 apps/learning/models.py:350
-#: apps/learning/models.py:378
+#: apps/learning/models.py:241 apps/learning/models.py:349
+#: apps/learning/models.py:377
 msgid "Catalog"
 msgstr "카탈로그"
 
-#: apps/learning/models.py:243
+#: apps/learning/models.py:242
 msgid "Catalogs"
 msgstr "카탈로그"
 
-#: apps/learning/models.py:363
+#: apps/learning/models.py:362
 msgid "Catalog Item"
 msgstr "카탈로그 항목"
 
-#: apps/learning/models.py:364
+#: apps/learning/models.py:363
 msgid "Catalog Items"
 msgstr "카탈로그 항목"
 
-#: apps/learning/models.py:379
+#: apps/learning/models.py:378
 msgid "Granted By"
 msgstr "부여자"
 
-#: apps/learning/models.py:383
+#: apps/learning/models.py:382
 msgid "User Catalog"
 msgstr "사용자 카탈로그"
 
-#: apps/learning/models.py:384
+#: apps/learning/models.py:383
 msgid "User Catalogs"
 msgstr "사용자 카탈로그"
 
@@ -2727,451 +2847,451 @@ msgstr "댓글"
 msgid "Comments"
 msgstr "댓글"
 
-#: apps/operation/tests/factories.py:292
+#: apps/operation/tests/factories.py:293
 msgid "Generic programmes and qualifications"
 msgstr "일반 프로그램 및 자격"
 
-#: apps/operation/tests/factories.py:295 apps/operation/tests/factories.py:296
+#: apps/operation/tests/factories.py:296 apps/operation/tests/factories.py:297
 msgid "Basic programmes and qualifications"
 msgstr "기초 프로그램 및 자격"
 
-#: apps/operation/tests/factories.py:298
+#: apps/operation/tests/factories.py:299
 msgid "Literacy and numeracy"
 msgstr "문해력 및 수리력"
 
-#: apps/operation/tests/factories.py:300 apps/operation/tests/factories.py:301
+#: apps/operation/tests/factories.py:301 apps/operation/tests/factories.py:302
 msgid "Personal skills and development"
 msgstr "개인 기술 및 개발"
 
-#: apps/operation/tests/factories.py:306
+#: apps/operation/tests/factories.py:307
 msgid "Education"
 msgstr "교육"
 
-#: apps/operation/tests/factories.py:309
+#: apps/operation/tests/factories.py:310
 msgid "Education & Studies"
 msgstr "교육 및 연구"
 
-#: apps/operation/tests/factories.py:311
+#: apps/operation/tests/factories.py:312
 msgid "Education science"
 msgstr "교육학"
 
-#: apps/operation/tests/factories.py:312
+#: apps/operation/tests/factories.py:313
 msgid "Training for pre-school teachers"
 msgstr "유치원 교사 양성"
 
-#: apps/operation/tests/factories.py:313
+#: apps/operation/tests/factories.py:314
 msgid "Teacher training without subject specialization"
 msgstr "과목 전문화 없는 교사 양성"
 
-#: apps/operation/tests/factories.py:314
+#: apps/operation/tests/factories.py:315
 msgid "Teacher training with subject specialization"
 msgstr "과목 전문화 교사 양성"
 
-#: apps/operation/tests/factories.py:320
+#: apps/operation/tests/factories.py:321
 msgid "Arts and humanities"
 msgstr "예술 및 인문학"
 
-#: apps/operation/tests/factories.py:323
+#: apps/operation/tests/factories.py:324
 msgid "Arts"
 msgstr "예술"
 
-#: apps/operation/tests/factories.py:325
+#: apps/operation/tests/factories.py:326
 msgid "Audio-visual techniques and media production"
 msgstr "시청각 기법 및 미디어 제작"
 
-#: apps/operation/tests/factories.py:326
+#: apps/operation/tests/factories.py:327
 msgid "Fashion, interior and industrial design"
 msgstr "패션, 인테리어 및 산업 디자인"
 
-#: apps/operation/tests/factories.py:327
+#: apps/operation/tests/factories.py:328
 msgid "Fine arts"
 msgstr "순수 예술"
 
-#: apps/operation/tests/factories.py:328
+#: apps/operation/tests/factories.py:329
 msgid "Handicrafts"
 msgstr "수공예"
 
-#: apps/operation/tests/factories.py:329
+#: apps/operation/tests/factories.py:330
 msgid "Music and performing arts"
 msgstr "음악 및 공연 예술"
 
-#: apps/operation/tests/factories.py:333
+#: apps/operation/tests/factories.py:334
 msgid "Humanities (except languages)"
 msgstr "인문학 (언어 제외)"
 
-#: apps/operation/tests/factories.py:335
+#: apps/operation/tests/factories.py:336
 msgid "Religion and theology"
 msgstr "종교 및 신학"
 
-#: apps/operation/tests/factories.py:336
+#: apps/operation/tests/factories.py:337
 msgid "History and archaeology"
 msgstr "역사 및 고고학"
 
-#: apps/operation/tests/factories.py:337
+#: apps/operation/tests/factories.py:338
 msgid "Philosophy and ethics"
 msgstr "철학 및 윤리학"
 
-#: apps/operation/tests/factories.py:341
+#: apps/operation/tests/factories.py:342
 msgid "Languages"
 msgstr "언어"
 
-#: apps/operation/tests/factories.py:342
+#: apps/operation/tests/factories.py:343
 msgid "Language acquisition"
 msgstr "언어 습득"
 
-#: apps/operation/tests/factories.py:342
+#: apps/operation/tests/factories.py:343
 msgid "Literature and linguistics"
 msgstr "문학 및 언어학"
 
-#: apps/operation/tests/factories.py:347
+#: apps/operation/tests/factories.py:348
 msgid "Social sciences, journalism and information"
 msgstr "사회과학, 저널리즘 및 정보학"
 
-#: apps/operation/tests/factories.py:350
+#: apps/operation/tests/factories.py:351
 msgid "Social and behavioural sciences"
 msgstr "사회 및 행동 과학"
 
-#: apps/operation/tests/factories.py:352
+#: apps/operation/tests/factories.py:353
 msgid "Economics"
 msgstr "경제학"
 
-#: apps/operation/tests/factories.py:353
+#: apps/operation/tests/factories.py:354
 msgid "Political sciences and civics"
 msgstr "정치학 및 시민학"
 
-#: apps/operation/tests/factories.py:354
+#: apps/operation/tests/factories.py:355
 msgid "Psychology"
 msgstr "심리학"
 
-#: apps/operation/tests/factories.py:355
+#: apps/operation/tests/factories.py:356
 msgid "Sociology and cultural studies"
 msgstr "사회학 및 문화 연구"
 
-#: apps/operation/tests/factories.py:359
+#: apps/operation/tests/factories.py:360
 msgid "Journalism and information"
 msgstr "저널리즘 및 정보학"
 
-#: apps/operation/tests/factories.py:361
+#: apps/operation/tests/factories.py:362
 msgid "Journalism and reporting"
 msgstr "저널리즘 및 보도"
 
-#: apps/operation/tests/factories.py:362
+#: apps/operation/tests/factories.py:363
 msgid "Library, information and archival studies"
 msgstr "도서관학, 정보학 및 기록학"
 
-#: apps/operation/tests/factories.py:368
+#: apps/operation/tests/factories.py:369
 msgid "Business, administration and law"
 msgstr "경영, 행정 및 법학"
 
-#: apps/operation/tests/factories.py:371
+#: apps/operation/tests/factories.py:372
 msgid "Business and administration"
 msgstr "경영 및 행정"
 
-#: apps/operation/tests/factories.py:373
+#: apps/operation/tests/factories.py:374
 msgid "Accounting and taxation"
 msgstr "회계 및 세무"
 
-#: apps/operation/tests/factories.py:374
+#: apps/operation/tests/factories.py:375
 msgid "Finance, banking and insurance"
 msgstr "금융, 은행 및 보험"
 
-#: apps/operation/tests/factories.py:375
+#: apps/operation/tests/factories.py:376
 msgid "Management and administration"
 msgstr "경영 및 관리"
 
-#: apps/operation/tests/factories.py:376
+#: apps/operation/tests/factories.py:377
 msgid "Marketing and advertising"
 msgstr "마케팅 및 광고"
 
-#: apps/operation/tests/factories.py:377
+#: apps/operation/tests/factories.py:378
 msgid "Secretarial and office work"
 msgstr "비서 및 사무 업무"
 
-#: apps/operation/tests/factories.py:378
+#: apps/operation/tests/factories.py:379
 msgid "Wholesale and retail sales"
 msgstr "도매 및 소매 판매"
 
-#: apps/operation/tests/factories.py:379
+#: apps/operation/tests/factories.py:380
 msgid "Work skills"
 msgstr "업무 기술"
 
-#: apps/operation/tests/factories.py:382
+#: apps/operation/tests/factories.py:383
 msgid "Law"
 msgstr "법학"
 
-#: apps/operation/tests/factories.py:386
+#: apps/operation/tests/factories.py:387
 msgid "Natural sciences, mathematics and statistics"
 msgstr "자연과학, 수학 및 통계학"
 
-#: apps/operation/tests/factories.py:389
+#: apps/operation/tests/factories.py:390
 msgid "Biological and related sciences"
 msgstr "생물학 및 관련 과학"
 
-#: apps/operation/tests/factories.py:390
+#: apps/operation/tests/factories.py:391
 msgid "Biology"
 msgstr "생물학"
 
-#: apps/operation/tests/factories.py:390
+#: apps/operation/tests/factories.py:391
 msgid "Biochemistry"
 msgstr "생화학"
 
-#: apps/operation/tests/factories.py:393
+#: apps/operation/tests/factories.py:394
 msgid "Environment"
 msgstr "환경"
 
-#: apps/operation/tests/factories.py:394
+#: apps/operation/tests/factories.py:395
 msgid "Environmental sciences"
 msgstr "환경과학"
 
-#: apps/operation/tests/factories.py:394
+#: apps/operation/tests/factories.py:395
 msgid "Natural environments and wildlife"
 msgstr "자연환경 및 야생동물"
 
-#: apps/operation/tests/factories.py:397
+#: apps/operation/tests/factories.py:398
 msgid "Physical sciences"
 msgstr "물리과학"
 
-#: apps/operation/tests/factories.py:398
+#: apps/operation/tests/factories.py:399
 msgid "Chemistry"
 msgstr "화학"
 
-#: apps/operation/tests/factories.py:398
+#: apps/operation/tests/factories.py:399
 msgid "Earth sciences"
 msgstr "지구과학"
 
-#: apps/operation/tests/factories.py:398
+#: apps/operation/tests/factories.py:399
 msgid "Physics"
 msgstr "물리학"
 
-#: apps/operation/tests/factories.py:401
+#: apps/operation/tests/factories.py:402
 msgid "Mathematics and statistics"
 msgstr "수학 및 통계학"
 
-#: apps/operation/tests/factories.py:402
+#: apps/operation/tests/factories.py:403
 msgid "Mathematics"
 msgstr "수학"
 
-#: apps/operation/tests/factories.py:402
+#: apps/operation/tests/factories.py:403
 msgid "Statistics"
 msgstr "통계학"
 
-#: apps/operation/tests/factories.py:407
+#: apps/operation/tests/factories.py:408
 msgid "Information"
 msgstr "정보학"
 
-#: apps/operation/tests/factories.py:410
+#: apps/operation/tests/factories.py:411
 msgid "Information and Communication Technologies"
 msgstr "정보통신기술"
 
-#: apps/operation/tests/factories.py:412
+#: apps/operation/tests/factories.py:413
 msgid "Computer use"
 msgstr "컴퓨터 활용"
 
-#: apps/operation/tests/factories.py:413
+#: apps/operation/tests/factories.py:414
 msgid "Database and network design and administration"
 msgstr "데이터베이스 및 네트워크 설계 및 관리"
 
-#: apps/operation/tests/factories.py:414
+#: apps/operation/tests/factories.py:415
 msgid "Software and applications development and analysis"
 msgstr "소프트웨어 및 애플리케이션 개발 및 분석"
 
-#: apps/operation/tests/factories.py:420
+#: apps/operation/tests/factories.py:421
 msgid "Engineering, manufacturing and construction"
 msgstr "공학, 제조업 및 건설업"
 
-#: apps/operation/tests/factories.py:423
+#: apps/operation/tests/factories.py:424
 msgid "Engineering and engineering trades"
 msgstr "공학 및 공학 기술"
 
-#: apps/operation/tests/factories.py:425
+#: apps/operation/tests/factories.py:426
 msgid "Chemical engineering and processes"
 msgstr "화학공학 및 공정"
 
-#: apps/operation/tests/factories.py:426
+#: apps/operation/tests/factories.py:427
 msgid "Environmental protection technology"
 msgstr "환경보호 기술"
 
-#: apps/operation/tests/factories.py:427
+#: apps/operation/tests/factories.py:428
 msgid "Electricity and energy"
 msgstr "전기 및 에너지"
 
-#: apps/operation/tests/factories.py:428
+#: apps/operation/tests/factories.py:429
 msgid "Electronics and automation"
 msgstr "전자공학 및 자동화"
 
-#: apps/operation/tests/factories.py:429
+#: apps/operation/tests/factories.py:430
 msgid "Mechanics and metal trades"
 msgstr "기계 및 금속 기술"
 
-#: apps/operation/tests/factories.py:430
+#: apps/operation/tests/factories.py:431
 msgid "Motor vehicles, ships and aircraft"
 msgstr "자동차, 선박 및 항공기"
 
-#: apps/operation/tests/factories.py:434
+#: apps/operation/tests/factories.py:435
 msgid "Manufacturing and processing"
 msgstr "제조업 및 가공업"
 
-#: apps/operation/tests/factories.py:436
+#: apps/operation/tests/factories.py:437
 msgid "Food processing"
 msgstr "식품 가공"
 
-#: apps/operation/tests/factories.py:437
+#: apps/operation/tests/factories.py:438
 msgid "Materials (glass, paper, plastic and wood)"
 msgstr "재료 (유리, 종이, 플라스틱 및 목재)"
 
-#: apps/operation/tests/factories.py:438
+#: apps/operation/tests/factories.py:439
 msgid "Textiles (clothes, footwear and leather)"
 msgstr "섬유 (의류, 신발 및 가죽)"
 
-#: apps/operation/tests/factories.py:439
+#: apps/operation/tests/factories.py:440
 msgid "Mining and extraction"
 msgstr "광업 및 채굴업"
 
-#: apps/operation/tests/factories.py:443
+#: apps/operation/tests/factories.py:444
 msgid "Architecture and construction"
 msgstr "건축 및 건설"
 
-#: apps/operation/tests/factories.py:445
+#: apps/operation/tests/factories.py:446
 msgid "Architecture and town planning"
 msgstr "건축학 및 도시계획"
 
-#: apps/operation/tests/factories.py:446
+#: apps/operation/tests/factories.py:447
 msgid "Building and civil engineering"
 msgstr "건설 및 토목공학"
 
-#: apps/operation/tests/factories.py:452
+#: apps/operation/tests/factories.py:453
 msgid "Agriculture, forestry, fisheries and veterinary"
 msgstr "농업, 임업, 수산업 및 수의학"
 
-#: apps/operation/tests/factories.py:455
+#: apps/operation/tests/factories.py:456
 msgid "Agriculture"
 msgstr "농업"
 
-#: apps/operation/tests/factories.py:456
+#: apps/operation/tests/factories.py:457
 msgid "Crop and livestock production"
 msgstr "작물 및 축산업"
 
-#: apps/operation/tests/factories.py:456
+#: apps/operation/tests/factories.py:457
 msgid "Horticulture"
 msgstr "원예학"
 
-#: apps/operation/tests/factories.py:458
+#: apps/operation/tests/factories.py:459
 msgid "Forestry"
 msgstr "임업"
 
-#: apps/operation/tests/factories.py:459
+#: apps/operation/tests/factories.py:460
 msgid "Fisheries"
 msgstr "수산업"
 
-#: apps/operation/tests/factories.py:460
+#: apps/operation/tests/factories.py:461
 msgid "Veterinary"
 msgstr "수의학"
 
-#: apps/operation/tests/factories.py:464
+#: apps/operation/tests/factories.py:465
 msgid "Health and welfare"
 msgstr "보건 및 복지"
 
-#: apps/operation/tests/factories.py:467
+#: apps/operation/tests/factories.py:468
 msgid "Health"
 msgstr "보건"
 
-#: apps/operation/tests/factories.py:469
+#: apps/operation/tests/factories.py:470
 msgid "Dental studies"
 msgstr "치의학"
 
-#: apps/operation/tests/factories.py:470
+#: apps/operation/tests/factories.py:471
 msgid "Medicine"
 msgstr "의학"
 
-#: apps/operation/tests/factories.py:471
+#: apps/operation/tests/factories.py:472
 msgid "Nursing and midwifery"
 msgstr "간호학 및 조산학"
 
-#: apps/operation/tests/factories.py:472
+#: apps/operation/tests/factories.py:473
 msgid "Medical diagnostic and treatment technology"
 msgstr "의료 진단 및 치료 기술"
 
-#: apps/operation/tests/factories.py:473
+#: apps/operation/tests/factories.py:474
 msgid "Therapy and rehabilitation"
 msgstr "치료 및 재활"
 
-#: apps/operation/tests/factories.py:474
+#: apps/operation/tests/factories.py:475
 msgid "Pharmacy"
 msgstr "약학"
 
-#: apps/operation/tests/factories.py:475
+#: apps/operation/tests/factories.py:476
 msgid "Traditional and complementary medicine and therapy"
 msgstr "전통의학 및 보완대체의학"
 
-#: apps/operation/tests/factories.py:479
+#: apps/operation/tests/factories.py:480
 msgid "Welfare"
 msgstr "복지"
 
-#: apps/operation/tests/factories.py:481
+#: apps/operation/tests/factories.py:482
 msgid "Care of the elderly and of disabled adults"
 msgstr "노인 및 장애인 돌봄"
 
-#: apps/operation/tests/factories.py:482
+#: apps/operation/tests/factories.py:483
 msgid "Child care and youth services"
 msgstr "아동 돌봄 및 청소년 서비스"
 
-#: apps/operation/tests/factories.py:483
+#: apps/operation/tests/factories.py:484
 msgid "Social work and counselling"
 msgstr "사회복지 및 상담"
 
-#: apps/operation/tests/factories.py:489
+#: apps/operation/tests/factories.py:490
 msgid "Services"
 msgstr "서비스업"
 
-#: apps/operation/tests/factories.py:492
+#: apps/operation/tests/factories.py:493
 msgid "Personal services"
 msgstr "개인 서비스"
 
-#: apps/operation/tests/factories.py:494
+#: apps/operation/tests/factories.py:495
 msgid "Domestic services"
 msgstr "가사 서비스"
 
-#: apps/operation/tests/factories.py:495
+#: apps/operation/tests/factories.py:496
 msgid "Hair and beauty services"
 msgstr "미용 서비스"
 
-#: apps/operation/tests/factories.py:496
+#: apps/operation/tests/factories.py:497
 msgid "Hotel, restaurants and catering"
 msgstr "호텔, 레스토랑 및 외식업"
 
-#: apps/operation/tests/factories.py:497
+#: apps/operation/tests/factories.py:498
 msgid "Sports"
 msgstr "스포츠"
 
-#: apps/operation/tests/factories.py:498
+#: apps/operation/tests/factories.py:499
 msgid "Travel, tourism and leisure"
 msgstr "여행, 관광 및 여가"
 
-#: apps/operation/tests/factories.py:502
+#: apps/operation/tests/factories.py:503
 msgid "Hygiene and occupational health services"
 msgstr "위생 및 산업보건 서비스"
 
-#: apps/operation/tests/factories.py:503
+#: apps/operation/tests/factories.py:504
 msgid "Community sanitation"
 msgstr "지역사회 위생"
 
-#: apps/operation/tests/factories.py:503
+#: apps/operation/tests/factories.py:504
 msgid "Occupational health and safety"
 msgstr "산업보건 및 안전"
 
-#: apps/operation/tests/factories.py:506
+#: apps/operation/tests/factories.py:507
 msgid "Security services"
 msgstr "보안 서비스"
 
-#: apps/operation/tests/factories.py:507
+#: apps/operation/tests/factories.py:508
 msgid "Military and defence"
 msgstr "군사 및 국방"
 
-#: apps/operation/tests/factories.py:507
+#: apps/operation/tests/factories.py:508
 msgid "Protection of persons and property"
 msgstr "인명 및 재산 보호"
 
-#: apps/operation/tests/factories.py:509
+#: apps/operation/tests/factories.py:510
 msgid "Transport services"
 msgstr "운송 서비스"
 
@@ -3708,6 +3828,9 @@ msgstr "최근 이벤트"
 #: minima/settings.py:217
 msgid "Storage"
 msgstr "저장소"
+
+#~ msgid "Hello { name },"
+#~ msgstr "안녕하세요 { name }님,"
 
 #~ msgid "Course Announcement"
 #~ msgstr "공지사항"

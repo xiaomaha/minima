@@ -38,14 +38,19 @@ def generate_dummy_image(width, height, index):
 
 
 def ensure_test_images(prefix, size, count=100):
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    images = list(CACHE_DIR.glob(f"{prefix}_*.jpg"))
+    if not CACHE_DIR.parent.exists():
+        return []
 
+    try:
+        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    except PermissionError:
+        return []
+
+    images = list(CACHE_DIR.glob(f"{prefix}_*.jpg"))
     if images:
         return images
 
     width, height = map(int, size.split("x"))
-
     for i in range(count):
         img_path = CACHE_DIR / f"{prefix}_{i}.jpg"
         img_path.write_bytes(generate_dummy_image(width, height, i))
@@ -55,18 +60,24 @@ def ensure_test_images(prefix, size, count=100):
 
 FIXTURE_IMAGES = ensure_test_images("thumb", "800x600")
 FIXTURE_AVATARS = ensure_test_images("avatar", "200x200")
+DUMMY_THUMBNAIL = generate_dummy_image(800, 600, 0)
+DUMMY_AVATAR = generate_dummy_image(200, 200, 0)
 
 
 def lazy_thumbnail():
-    return ContentFile(
-        generic.random.choice(FIXTURE_IMAGES).read_bytes(), f"thumb_{generic.random.randint(1000, 9999)}.jpg"
-    )
+    if FIXTURE_IMAGES:
+        return ContentFile(
+            generic.random.choice(FIXTURE_IMAGES).read_bytes(), f"thumb_{generic.random.randint(1000, 9999)}.jpg"
+        )
+    return ContentFile(DUMMY_THUMBNAIL, f"thumb_{generic.random.randint(1000, 9999)}.jpg")
 
 
 def lazy_avatar():
-    return ContentFile(
-        generic.random.choice(FIXTURE_AVATARS).read_bytes(), f"avatar_{generic.random.randint(1000, 9999)}.jpg"
-    )
+    if FIXTURE_AVATARS:
+        return ContentFile(
+            generic.random.choice(FIXTURE_AVATARS).read_bytes(), f"avatar_{generic.random.randint(1000, 9999)}.jpg"
+        )
+    return ContentFile(DUMMY_AVATAR, f"avatar_{generic.random.randint(1000, 9999)}.jpg")
 
 
 class LearningObjectFactory[T: LearningObjectMixin](DjangoModelFactory[T]):

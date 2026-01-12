@@ -144,7 +144,12 @@ export function createCachedInfiniteStore<T, P>(
       }
     }
 
-    ops = { loadMore, reset, refetch, setStore: setState }
+    const wrappedSetStore: SetStoreFunction<StoreState<T>> = ((...args: unknown[]) => {
+      setState(...(args as [never]))
+      writeCache()
+    }) as SetStoreFunction<StoreState<T>>
+
+    ops = { loadMore, reset, refetch, setStore: wrappedSetStore }
 
     createEffect(() => {
       const params = getParams()

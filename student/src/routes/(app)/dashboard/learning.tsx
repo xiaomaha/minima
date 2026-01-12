@@ -26,13 +26,17 @@ function RouteComponent() {
 
   const newEnrollments = useNewEnrollment()
 
+  // merge new enrollments
   createEffect(() => {
-    // merge new enrollments
-    while (newEnrollments.length > 0) {
-      const newEnrollment = newEnrollments.shift()
-      if (!enrollments.items.find((item) => item.id === newEnrollment?.id)) {
-        setStore('items', (prev) => [newEnrollment!, ...prev])
-      }
+    if (enrollments.loading || newEnrollments.length === 0) return
+    const toAdd = newEnrollments
+      .splice(0)
+      .filter((item) => !enrollments.items.some((existing) => existing.id === item.id))
+    if (toAdd.length > 0) {
+      setStore({
+        items: [...toAdd, ...enrollments.items],
+        count: enrollments.count + toAdd.length,
+      })
     }
   })
 
