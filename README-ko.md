@@ -9,6 +9,10 @@ Moodle, Canvas, Open edX의 가볍고 셀프 호스팅 가능한 대안.
 
 > **🚧 출시 준비 중**: 아직 비즈니스 용도로 사용할 준비가 되지 않았습니다
 
+## Screenshots
+
+![대시보드](./screenshot/student.dashboard.learning.png)
+
 ## 관리자 패널
 
 ![API 문서](screenshot/api.swagger.png)
@@ -20,9 +24,7 @@ Moodle, Canvas, Open edX의 가볍고 셀프 호스팅 가능한 대안.
 ![다국어 지원](screenshot/admin.ko.sample.png)
 *내장 i18n 지원 (영어, 한국어)*
 
-![대시보드](./screenshot/student.dashboard.learning.png)
-
-더 많은 스크린샷은 아래에서 확인하세요
+더 많은 스크린샷은 아래에서 있습니다.
 
 ## 주요 기능
 
@@ -69,6 +71,13 @@ Moodle, Canvas, Open edX의 가볍고 셀프 호스팅 가능한 대안.
 - **쿠폰 시스템**: 유연한 할인 및 프로모션 관리
 - **PG 연동 준비**: 결제 게이트웨이 연결로 B2C 플랫폼 구축
 
+## 활용 사례
+
+- **교육 기관**: 고가의 LMS를 대체하는 자체 호스팅 솔루션
+- **기업 교육**: 직원 역량 개발 추적
+- **온라인 크리에이터**: 자체 플랫폼에서 강의 판매
+- **부트캠프**: 코호트 기반 학습 관리
+
 ## 기술 스택
 
 ### 백엔드 (Core)
@@ -114,9 +123,13 @@ chmod +x dev.sh
 ### 접속
 
 - **학생 인터페이스**: [http://localhost:5173](http://localhost:5173)
+  - 이메일: `admin@example.com`
+  - 비밀번호: `1111`
+
 - **관리자 패널**: [http://localhost:8000/admin/](http://localhost:8000/admin/)
   - 이메일: `admin@example.com`
   - 비밀번호: `1111`
+
 - **API 문서**: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
 ### 추가 서비스
