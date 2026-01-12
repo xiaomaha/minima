@@ -1,41 +1,46 @@
 #!/usr/bin/env bash
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 case "$1" in
   up)
     echo "Starting core..."
-    cd core \
-      && uv run dev.py up \
-      && uv run dev.py bootstrap \
-      && uv run dev.py download-images \
-      && docker compose exec minima pytest -m load_data \
-      && cd ..
+    cd "$SCRIPT_DIR/core"
+    [ -f env.example ] && [ ! -f .env ] && cp env.example .env
+    [ ! -f .env ] && touch .env
+    uv run dev.py up
+    uv run dev.py bootstrap
+    uv run dev.py download-images
+    docker compose exec minima pytest -m load_data
+    
     echo "Starting student..."
-    cd student && docker compose up -d && cd ..
+    cd "$SCRIPT_DIR/student"
+    docker compose up -d
     ;;
 
   down)
-    cd core && docker compose down && cd ..
-    cd student && docker compose down && cd ..
+    cd "$SCRIPT_DIR/core" && docker compose down
+    cd "$SCRIPT_DIR/student" && docker compose down
     ;;
 
   clean)
-    cd core && docker compose down -v && cd ..
-    cd student && docker compose down -v && cd ..
+    cd "$SCRIPT_DIR/core" && docker compose down -v
+    cd "$SCRIPT_DIR/student" && docker compose down -v
     ;;
 
   stop)
-    cd core && docker compose stop && cd ..
-    cd student && docker compose stop && cd ..
+    cd "$SCRIPT_DIR/core" && docker compose stop
+    cd "$SCRIPT_DIR/student" && docker compose stop
     ;;
 
   restart)
-    cd core && docker compose restart && cd ..
-    cd student && docker compose restart && cd ..
+    cd "$SCRIPT_DIR/core" && docker compose restart
+    cd "$SCRIPT_DIR/student" && docker compose restart
     ;;
 
   logs)
-    docker compose -f core/docker-compose.yml -f student/docker-compose.yml logs -f
+    docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/student/docker-compose.yml" logs -f
     ;;
 
   *)
