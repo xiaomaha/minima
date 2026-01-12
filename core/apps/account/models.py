@@ -62,6 +62,15 @@ log = logging.getLogger(__name__)
 AuthTokenType = Literal["activation", "email_change", "password_change"]
 
 
+auth_mail_context = {
+    "platform_name": settings.PLATFORM_NAME,
+    "platform_address": settings.PLATFORM_ADDRESS,
+    "privacy_policy_url": settings.PRIVACY_POLICY_URL,
+    "terms_url": settings.TERMS_URL,
+    "support_email": settings.DEFAULT_FROM_EMAIL,
+}
+
+
 class CookieDict(TypedDict):
     httponly: bool
     secure: bool
@@ -323,6 +332,8 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         expiry_hours = expiry // 60 // 60
 
         context = {"name": name, "callback_url": callback_url, "expiry_hours": expiry_hours}
+        context.update(auth_mail_context)
+
         template = load_template(template_name)
         body = template.render(context).strip()
 
