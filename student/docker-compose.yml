@@ -1,0 +1,17 @@
+services:
+  student:
+    image: node:24-alpine
+    container_name: student
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - minima
+
+networks:
+  minima:
+    external: true

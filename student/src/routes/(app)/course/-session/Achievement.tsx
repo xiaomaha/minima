@@ -1,0 +1,113 @@
+import { useTransContext } from '@mbarzda/solid-i18next'
+import { For, Show } from 'solid-js'
+import { competencyV1GetCertificates } from '@/api'
+import { Avatar } from '@/shared/Avatar'
+import { createCachedStore } from '@/shared/solid/cached-store'
+import { useSession } from './context'
+
+export const Achievement = () => {
+  const [t] = useTransContext()
+
+  const [session] = useSession()
+  const s = () => session.data!
+
+  const [certificates] = createCachedStore(
+    'competencyV1GetCertificates',
+    () => ({ query: { courseId: s().course.id } }),
+    async (options) => {
+      const { data } = await competencyV1GetCertificates(options)
+      return data
+    },
+  )
+
+  return (
+    <div class="max-w-5xl mx-auto space-y-12">
+      <div>
+      </div>
+      <div>
+        <div class="font-bold mb-6 text-sm">{t('Available Certificates')}</div>
+        <div class="space-y-6">
+          <For each={certificates.data}>
+            {(cert) => (
+              <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                  <div class="flex flex-col md:flex-row gap-8">
+                    <div class="w-80 shrink-0 mx-auto">
+                      <img
+                        src={cert.thumbnail}
+                        alt={cert.name}
+                        class="w-full aspect-[1/1.4] object-cover rounded border border-base-content/10"
+                      />
+                    </div>
+
+                    <div class="flex-1 space-y-8">
+                      <div>
+                        <h4 class="text-xl font-bold">{cert.name}</h4>
+                        <p class="text-sm/5 text-base-content/60 mt-2">{cert.description}</p>
+                      </div>
+
+                      <div class="flex items-center gap-3">
+                        <Avatar user={{ avatar: cert.issuer.logo, ...cert.issuer }} />
+                        <div>
+                          <div class="label text-xs">{t('Issued by')}</div>
+                          <div class="font-semibold text-base">{cert.issuer.name}</div>
+                        </div>
+                      </div>
+
+                      <Show when={cert.certificateskillSet.length > 0}>
+                        <div class="space-y-3">
+                          <div class="text-sm font-semibold divider divider-start after:h-px">{t('Skills')}</div>
+                          <For each={cert.certificateskillSet}>
+                            {(certSkill) => (
+                              <div>
+                                <div class="breadcrumbs py-0">
+                                  <ul class="text-xs label">
+                                    <For each={certSkill.skill.classification.ancestors}>
+                                      {(ancestor) => <li>{ancestor}</li>}
+                                    </For>
+                                  </ul>
+                                </div>
+
+                                <div class="flex items-center gap-3">
+                                  <span class="text-base">{certSkill.skill.name}</span>
+                                  <span class="badge badge-xs badge-neutral">
+                                    {t('Level {{num}}', { num: certSkill.skill.level })}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </For>
+                        </div>
+                      </Show>
+
+                      <Show when={cert.certificateendorsementSet.length > 0}>
+                        <div class="space-y-2">
+                          <div class="text-sm font-semibold divider divider-start after:h-px">{t('Endorsements')}</div>
+                          <div class="grid grid-cols-2 gap-4">
+                            <For each={cert.certificateendorsementSet}>
+                              {(certEndorsement) => (
+                                <div class="flex gap-3">
+                                  <div class="flex flex-col gap-1">
+                                    <div class="text-sm">{certEndorsement.partner.name}</div>
+                                    <div class="label text-xs">{certEndorsement.claim}</div>
+                                    <div class="label text-xs">
+                                      {new Date(certEndorsement.endorsed).toLocaleDateString()}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </For>
+                          </div>
+                        </div>
+                      </Show>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </For>
+        </div>
+      </div>
+    </div>
+  )
+}

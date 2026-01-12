@@ -1,0 +1,128 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+svg.tabler-icon {
+  stroke-width: 1.5;
+}
+
+.modal-box {
+  max-height: calc(100vh - 2rem);
+}
+
+.badge {
+  white-space: nowrap;
+}
+
+.label {
+  white-space: normal;
+}
+
+fieldset:disabled .tiptap {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+fieldset:disabled .tiptap * {
+  pointer-events: none;
+}
+
+fieldset:disabled .tiptap a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.tiptap {
+  p.is-editor-empty:first-child::before {
+    @apply float-left text-base-content/30 h-0 pointer-events-none;
+    content: attr(data-placeholder);
+  }
+
+  ul[data-type='taskList'] {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+
+    li {
+      align-items: flex-start;
+      display: flex;
+
+      >label {
+        flex: 0 0 auto;
+        margin-right: 0.5rem;
+        user-select: none;
+      }
+
+      >div {
+        flex: 1 1 auto;
+      }
+    }
+
+    input[type='checkbox'] {
+      cursor: pointer;
+    }
+
+    ul[data-type='taskList'] {
+      margin: 0;
+    }
+  }
+}
+
+li p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+@layer base {
+  h1 {
+    @apply text-4xl font-bold mt-8 mb-4;
+  }
+
+  h2 {
+    @apply text-3xl font-bold mt-6 mb-3;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold mt-2 mb-2;
+  }
+
+  h4 {
+    @apply text-xl font-semibold mt-2 mb-2;
+  }
+
+  p {
+    @apply mb-2 leading-relaxed;
+  }
+
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic my-4;
+  }
+
+  code {
+    @apply bg-gray-100 px-1 py-0.5 rounded text-sm font-mono;
+  }
+
+  pre {
+    @apply bg-gray-100 p-4 rounded overflow-x-auto mb-4;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
+  strong {
+    @apply font-bold;
+  }
+
+  em {
+    @apply italic;
+  }
+
+  hr {
+    @apply my-8 border-gray-300;
+  }
+
+  li {
+    @apply list-disc list-inside;
+  }
+}

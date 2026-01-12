@@ -1,0 +1,3 @@
+PLATFORM_NAME=Minima
+BASE_URL=http://localhost:5173
+DEFAULT_LANGUAGE=en
