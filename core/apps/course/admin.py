@@ -1,6 +1,6 @@
 from asgiref.sync import async_to_sync
 from django.contrib import admin
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django_jsonform.forms.fields import JSONFormField
 from unfold.decorators import action
 
@@ -126,7 +126,7 @@ class EngagementAdmin(ModelAdmin[Engagement]):
 
     actions_submit_line = ["grade"]
 
-    @action(description=_("Grade"), permissions=["grade"])
+    @action(description=_("Grade"), permissions=["grade"])  # type: ignore # gettext not working
     def grade(self, request: AuthenticatedRequest, obj: Engagement):
         async_to_sync(Engagement.grade)(course_id=obj.course.id, learner_id=obj.learner.pk, grader=request.user)
 
