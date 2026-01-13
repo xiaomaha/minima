@@ -60,4 +60,5 @@ export const NOOP = [
   t('Survey'),
   t('Completion'),
   t('Video'),
+  t('Engagement'),
 ]

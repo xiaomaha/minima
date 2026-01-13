@@ -25,6 +25,7 @@ class CompetencyFactorySchema(Schema):
 
 
 class CertificateSchema(Schema):
+    id: int
     name: str
     description: str
     thumbnail: str
@@ -46,9 +47,11 @@ class CertificateEndorsementSchema(Schema):
 
 
 class CertificateAwardSchema(Schema):
+    id: int
+    created: datetime
     pdf: str
     thumbnail: str
-    expires: datetime
+    certificate_id: int
 
 
 class CertificateFilterSchema(FilterSchema, Schema):

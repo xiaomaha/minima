@@ -40,7 +40,12 @@ case "$1" in
     ;;
 
   logs)
-    docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/student/docker-compose.yml" logs -f
+    if [ $# -eq 1 ]; then
+      docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/student/docker-compose.yml" logs -f --tail=100
+    else
+      shift
+      docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/student/docker-compose.yml" logs "$@"
+    fi
     ;;
 
   *)

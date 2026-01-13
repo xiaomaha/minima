@@ -14,8 +14,6 @@ from conftest import AdminUser
 def test_competency_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     admin_user.login()
 
-    # skip: certificate api will be tested in course api test
-
     CompetencyGoalFactory(user=admin_user.get_user())
 
     # get competency goals
@@ -53,3 +51,7 @@ def test_competency_flow(client: Client, mimesis: Generic, admin_user: AdminUser
     # get skill data
     res = client.get(f"/api/v1/competency/classification/{classification.pk}/skill/data")
     assert res.status_code == 200, "get skill data"
+
+    # get certificate awards
+    res = client.get("/api/v1/competency/certificate/award")
+    assert res.status_code == 200, "get certificate awards"
