@@ -954,12 +954,21 @@ export const vCourseCertificateRequestSchema = v.object({
 });
 
 /**
+ * DiscussionEarnedDetailsSchema
+ */
+export const vDiscussionEarnedDetailsSchema = v.object({
+    post: v.pipe(v.number(), v.integer()),
+    reply: v.pipe(v.number(), v.integer()),
+    tutorAssessment: v.pipe(v.number(), v.integer())
+});
+
+/**
  * DiscussionGradeSchema
  */
 export const vDiscussionGradeSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
-    earnedDetails: v.object({}),
+    earnedDetails: vDiscussionEarnedDetailsSchema,
     possiblePoint: v.pipe(v.number(), v.integer()),
     earnedPoint: v.pipe(v.number(), v.integer()),
     score: v.number(),
@@ -1104,6 +1113,18 @@ export const vDiscussionPostSaveSchema = v.object({
     parentId: v.optional(v.pipe(v.number(), v.integer())),
     title: v.pipe(v.string(), v.minLength(10), v.maxLength(100)),
     body: v.pipe(v.string(), v.maxLength(5000))
+});
+
+/**
+ * DiscussionOwnPostSchema
+ */
+export const vDiscussionOwnPostSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    title: v.string(),
+    body: v.string(),
+    parentId: v.union([v.pipe(v.number(), v.integer()), v.null()])
 });
 
 /**
@@ -2329,6 +2350,21 @@ export const vDiscussionV1CreatePostData = v.object({
  * OK
  */
 export const vDiscussionV1CreatePostResponse = vDiscussionPostWithCountSchema;
+
+export const vDiscussionV1GetOwnPostsData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vDiscussionV1GetOwnPostsResponse = v.array(vDiscussionOwnPostSchema);
 
 export const vDiscussionV1DeletePostData = v.object({
     body: v.optional(v.never()),
