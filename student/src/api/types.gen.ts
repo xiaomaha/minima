@@ -2116,6 +2116,24 @@ export type DiscussionAttemptSchema = {
 };
 
 /**
+ * DiscussionEarnedDetailsSchema
+ */
+export type DiscussionEarnedDetailsSchema = {
+    /**
+     * Post
+     */
+    post: number;
+    /**
+     * Reply
+     */
+    reply: number;
+    /**
+     * Tutorassessment
+     */
+    tutorAssessment: number;
+};
+
+/**
  * DiscussionGradeSchema
  */
 export type DiscussionGradeSchema = {
@@ -2127,12 +2145,7 @@ export type DiscussionGradeSchema = {
      * Modified
      */
     modified: string;
-    /**
-     * Earneddetails
-     */
-    earnedDetails: {
-        [key: string]: number | null;
-    };
+    earnedDetails: DiscussionEarnedDetailsSchema;
     /**
      * Possiblepoint
      */
@@ -2443,6 +2456,36 @@ export type DiscussionPostSaveSchema = {
      * Body
      */
     body: string;
+};
+
+/**
+ * DiscussionOwnPostSchema
+ */
+export type DiscussionOwnPostSchema = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body
+     */
+    body: string;
+    /**
+     * Parentid
+     */
+    parentId: number | null;
 };
 
 /**
@@ -5040,6 +5083,29 @@ export type DiscussionV1CreatePostResponses = {
 };
 
 export type DiscussionV1CreatePostResponse = DiscussionV1CreatePostResponses[keyof DiscussionV1CreatePostResponses];
+
+export type DiscussionV1GetOwnPostsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/discussion/{id}/post/own';
+};
+
+export type DiscussionV1GetOwnPostsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<DiscussionOwnPostSchema>;
+};
+
+export type DiscussionV1GetOwnPostsResponse = DiscussionV1GetOwnPostsResponses[keyof DiscussionV1GetOwnPostsResponses];
 
 export type DiscussionV1DeletePostData = {
     body?: never;

@@ -45,22 +45,28 @@ export const Thread = () => {
 
   const selectedPost = () => posts.items.find((item) => item.id === selectedPostID())
 
+  // Based on access date not session.step. cf. exam, assignment
+  // Api will be blocked after end date
+  const disabled = () => new Date(s().accessDate.end) < new Date()
+
   return (
     <>
       <div class="w-full">
         <div class="my-12 text-center space-y-4">
-          <button
-            type="button"
-            class="btn btn-primary"
-            onClick={() =>
-              setEditorOpen({
-                bodyMinLength: s().attempt!.question.pointRequirements.postMinCharacters,
-              })
-            }
-          >
-            <IconPlus />
-            {t('Write Discussion Post')}
-          </button>
+          <Show when={!disabled()}>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onClick={() =>
+                setEditorOpen({
+                  bodyMinLength: s().attempt!.question.pointRequirements.postMinCharacters,
+                })
+              }
+            >
+              <IconPlus />
+              {t('Write Discussion Post')}
+            </button>
+          </Show>
 
           <Show when={s().postCount}>
             <div class="flex font-semibold items-center gap-4 justify-center text-base-content/60">
@@ -90,7 +96,7 @@ export const Thread = () => {
       </div>
 
       <Dialog boxClass="max-w-5xl" open={!!selectedPostID()} onClose={() => setSelectedPostID(null)}>
-        <PostThread post={selectedPost()!} setEditorOpen={setEditorOpen} />
+        <PostThread post={selectedPost()!} setEditorOpen={setEditorOpen} disabled={disabled()} />
       </Dialog>
 
       <Dialog boxClass="max-w-5xl" open={!!editorOpen()} onClose={() => setEditorOpen(null)}>
@@ -154,6 +160,7 @@ const PostCard = (props: PostCardProps) => {
 interface PostThreadProps {
   post: DiscussionPostNestedSchema
   setEditorOpen: (options: ContentEditorOptions | null) => void
+  disabled: boolean
 }
 
 const PostThread = (props: PostThreadProps) => {
@@ -183,20 +190,22 @@ const PostThread = (props: PostThreadProps) => {
           <Show when={post.learner.id === accountStore.user?.id}>
             <div class="badge badge-sm badge-primary badge-soft">{t('Me')}</div>
             <div class="flex-1" />
-            <button
-              type="button"
-              class="mr-4 btn btn-square btn-ghost rounded-full"
-              onClick={() =>
-                props.setEditorOpen({
-                  postId: post.id,
-                  title: props.post.title,
-                  body: props.post.body,
-                  bodyMinLength: postBodyMinLength,
-                })
-              }
-            >
-              <IconEdit />
-            </button>
+            <Show when={!props.disabled}>
+              <button
+                type="button"
+                class="mr-4 btn btn-square btn-ghost rounded-full"
+                onClick={() =>
+                  props.setEditorOpen({
+                    postId: post.id,
+                    title: props.post.title,
+                    body: props.post.body,
+                    bodyMinLength: postBodyMinLength,
+                  })
+                }
+              >
+                <IconEdit />
+              </button>
+            </Show>
           </Show>
         </div>
 
@@ -204,21 +213,23 @@ const PostThread = (props: PostThreadProps) => {
         <ContentViewer content={props.post.body} />
       </article>
 
-      <div class="my-12 text-center">
-        <button
-          type="button"
-          class="btn btn-primary"
-          onClick={() =>
-            props.setEditorOpen({
-              parentId: props.post.id,
-              bodyMinLength: replyBodyMinLength,
-            })
-          }
-        >
-          <IconPlus />
-          {t('Write Reply')}
-        </button>
-      </div>
+      <Show when={!props.disabled}>
+        <div class="my-12 text-center">
+          <button
+            type="button"
+            class="btn btn-primary"
+            onClick={() =>
+              props.setEditorOpen({
+                parentId: props.post.id,
+                bodyMinLength: replyBodyMinLength,
+              })
+            }
+          >
+            <IconPlus />
+            {t('Write Reply')}
+          </button>
+        </div>
+      </Show>
 
       <div class="border-t border-base-300 pt-12 px-6">
         <div class="flex items-center gap-2 mb-8 text-base-content/60">
@@ -247,21 +258,23 @@ const PostThread = (props: PostThreadProps) => {
                     <Show when={reply.learner.id === accountStore.user?.id}>
                       <div class="badge badge-xs badge-primary badge-soft">{t('Me')}</div>
                       <div class="flex-1" />
-                      <button
-                        type="button"
-                        class="mr-4 btn btn-square btn-ghost rounded-full"
-                        onClick={() =>
-                          props.setEditorOpen({
-                            parentId: post.id,
-                            postId: reply.id,
-                            title: reply.title,
-                            body: reply.body,
-                            bodyMinLength: replyBodyMinLength,
-                          })
-                        }
-                      >
-                        <IconEdit />
-                      </button>
+                      <Show when={!props.disabled}>
+                        <button
+                          type="button"
+                          class="mr-4 btn btn-square btn-ghost rounded-full"
+                          onClick={() =>
+                            props.setEditorOpen({
+                              parentId: post.id,
+                              postId: reply.id,
+                              title: reply.title,
+                              body: reply.body,
+                              bodyMinLength: replyBodyMinLength,
+                            })
+                          }
+                        >
+                          <IconEdit />
+                        </button>
+                      </Show>
                     </Show>
                   </div>
 

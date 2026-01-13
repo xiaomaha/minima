@@ -2,7 +2,7 @@ from asgiref.sync import async_to_sync
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django_jsonform.forms.fields import JSONFormField
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
@@ -89,7 +89,7 @@ class GradeAdmin(ModelAdmin[Grade]):
     inlines = (GradeEventInline,)
     actions_submit_line = ["grade"]
 
-    @action(description=_("Grade"), permissions=["grade"])
+    @action(description=_("Grade"), permissions=["grade"])  # type: ignore # gettext not working
     def grade(self, request: HttpRequest, obj: Grade):
         grade = Grade.objects.select_related("attempt__discussion", "attempt__question").get(pk=obj.pk)
         async_to_sync(grade.grade)(grader=request.user)

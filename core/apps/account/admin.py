@@ -7,7 +7,7 @@ from django.contrib import admin
 from django.contrib.auth.hashers import make_password
 from django.http.request import HttpRequest
 from django.utils import timezone
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django_otp.plugins.otp_static.models import StaticDevice
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from unfold.contrib.filters.admin import BooleanRadioFilter
@@ -57,7 +57,7 @@ class UserAdmin(ModelAdmin[User]):
 
     actions_submit_line = ["create_temp_password"]
 
-    @action(description=_("Create temporary password"), permissions=["create_temp_password"])
+    @action(description=_("Create temporary password"), permissions=["create_temp_password"])  # type: ignore # gettext not working
     def create_temp_password(self, request: HttpRequest, obj: User):
         expiry_hours = 2
         alphabet = string.ascii_letters + string.digits

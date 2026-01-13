@@ -45,8 +45,16 @@ class DiscussionAttemptSchema(Schema):
     active: bool
 
 
+class DiscussionEarnedDetailsSchema(Schema):
+    post: int
+    reply: int
+    tutor_assessment: int
+
+
 class DiscussionGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
     id: int
+    # override
+    earned_details: DiscussionEarnedDetailsSchema
 
 
 class DiscussionSessionSchema(Schema):
@@ -71,6 +79,17 @@ class DiscussionPostSchema(TimeStampedMixinSchema):
     @staticmethod
     def resolve_learner(obj: Post):
         return obj.attempt.learner
+
+    @staticmethod
+    def resolve_body(obj: Post):
+        return obj.cleaned_body
+
+
+class DiscussionOwnPostSchema(TimeStampedMixinSchema):
+    id: int
+    title: str
+    body: str
+    parent_id: int | None
 
     @staticmethod
     def resolve_body(obj: Post):

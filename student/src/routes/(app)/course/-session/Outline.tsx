@@ -42,7 +42,7 @@ export const Outline = () => {
         </div>
       </div>
 
-      <div class="overflow-x-auto min-w-200">
+      <div class="min-w-200">
         <p class="font-bold text-sm">{t('Assessments')}</p>
         <table class="table tabular-nums">
           <thead>
@@ -117,7 +117,7 @@ export const Outline = () => {
         </table>
       </div>
 
-      <div class="overflow-x-auto min-w-200">
+      <div class="min-w-200">
         <p class="font-bold text-sm">{t('Lessons')}</p>
         <table class="table tabular-nums">
           <thead>
