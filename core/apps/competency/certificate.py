@@ -73,7 +73,12 @@ async def generate_thumbnail_from_pdf(pdf_bytes: bytes | bytearray) -> BytesIO:
 
     bitmap = await sync_to_async(page.render)(scale=150 / 72, rotation=0)
     pil_image = await sync_to_async(bitmap.to_pil)()
-    pil_image.thumbnail((400, 566))
+
+    aspect_ratio = pil_image.width / pil_image.height
+    thumb_width = 600
+    thumb_height = int(thumb_width / aspect_ratio)
+
+    pil_image.thumbnail((thumb_width, thumb_height))
 
     thumbnail_buffer = BytesIO()
     pil_image.save(thumbnail_buffer, "PNG", optimize=True)
@@ -127,7 +132,7 @@ async def generate_certificate(
 
         else:
             text = data.get(control_type, "")
-            if not text:
+            if not text and control_type == "expiration_date":
                 continue
 
             font_size = control["font_size"]
@@ -258,48 +263,59 @@ def default_certificate_template():
                 "label": "",
             },
             {
-                "type": "completion_period",
-                "x_percentage": 50,
-                "y_percentage": 34,
-                "font_size": 10,
-                "font_family": "Arial",
-                "font_weight": "normal",
-                "font_color": "#333333",
-                "text_align": "center",
-                "label": _("Completion Period"),
-            },
-            {
                 "type": "recipient_name",
                 "x_percentage": 10,
-                "y_percentage": 42,
+                "y_percentage": 36,
                 "font_size": 10,
                 "font_family": "Arial",
                 "font_weight": "bold",
                 "font_color": "#000000",
                 "text_align": "left",
-                "label": _("Recipient Name"),
+                "label": _("Name"),
             },
             {
                 "type": "recipient_birth_date",
                 "x_percentage": 10,
-                "y_percentage": 46,
+                "y_percentage": 40,
                 "font_size": 10,
                 "font_family": "Arial",
                 "font_weight": "normal",
                 "font_color": "#666666",
                 "text_align": "left",
-                "label": _("Recipient Birth Date"),
+                "label": _("Birth Date"),
+            },
+            {
+                "type": "completion_period",
+                "x_percentage": 10,
+                "y_percentage": 44,
+                "font_size": 10,
+                "font_family": "Arial",
+                "font_weight": "normal",
+                "font_color": "#333333",
+                "text_align": "left",
+                "label": _("Completion Period"),
             },
             {
                 "type": "completion_hours",
                 "x_percentage": 10,
-                "y_percentage": 50,
+                "y_percentage": 48,
                 "font_size": 10,
                 "font_family": "Arial",
                 "font_weight": "normal",
                 "font_color": "#333333",
                 "text_align": "left",
                 "label": _("Completion Hours"),
+            },
+            {
+                "type": "expiration_date",
+                "x_percentage": 10,
+                "y_percentage": 52,
+                "font_size": 10,
+                "font_family": "Arial",
+                "font_weight": "normal",
+                "font_color": "#333333",
+                "text_align": "left",
+                "label": _("Valid Until"),
             },
             {
                 "type": "issue_date",

@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING, cast
 
 import mimesis
-from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
-from django.utils.translation import gettext as _
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import post_generation
@@ -13,14 +11,13 @@ from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
 from apps.common.factory import lazy_thumbnail
-from apps.competency.certificate import CertificateAwardDataDict, default_certificate_template
+from apps.competency.certificate import default_certificate_template
 from apps.competency.models import (
     Badge,
     BadgeAward,
     BadgeEndorsement,
     BadgeSkill,
     Certificate,
-    CertificateAward,
     CertificateEndorsement,
     CertificateSkill,
     Classification,
@@ -136,22 +133,6 @@ class CertificateFactory(DjangoModelFactory[Certificate]):
 
         if TYPE_CHECKING:
             user = cast(User, user)
-
-        if not CertificateAward.objects.filter(certificate_id=self.pk, recipient=user, context="").exists():
-            async_to_sync(CertificateAward.issue)(
-                certificate_id=self.pk,
-                recipient=user,
-                context="",
-                data=CertificateAwardDataDict(
-                    document_title=_("Certificate of Completion"),
-                    completion_title=" ".join(generic.text.words(generic.random.randint(5, 8))),
-                    completion_period="2000-01-01 ~ 2050-01-01",
-                    completion_hours=_("%(hours)s hours") % {"hours": str(generic.random.choice([4, 8, 16, 32, 64]))},
-                    recipient_name=generic.person.full_name(),
-                    recipient_birth_date=generic.person.birthdate().strftime("%Y-%m-%d"),
-                ),
-                verification_url="https://example.com/verify",
-            )
 
 
 class CertificateSkillFactory(DjangoModelFactory[CertificateSkill]):

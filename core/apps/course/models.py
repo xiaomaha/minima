@@ -3,6 +3,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from typing import TYPE_CHECKING, NotRequired, TypedDict
 
 import pghistory
+from asgiref.sync import sync_to_async
 from celery.exceptions import ImproperlyConfigured
 from django.apps import apps
 from django.contrib.auth import get_user_model
@@ -35,6 +36,7 @@ from django.db.models import (
 )
 from django.db.models.query import Prefetch
 from django.db.utils import IntegrityError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
@@ -76,8 +78,9 @@ TEMPLATE_SCHEDULES = {
 class SessionDict(TypedDict):
     access_date: AccessDate
     course: Course
-    engagement: NotRequired["Engagement"]
+    engagement: NotRequired[Engagement]
     otp_token: NotRequired[str]
+    certificate_awards: NotRequired[list[CertificateAward]]
     # stats: NotRequired["ScoreStatsDict"]
 
 
@@ -184,6 +187,21 @@ class Course(LearningObjectMixin):
             return session
 
         session["engagement"] = engagement
+
+        if hasattr(engagement, "gradebook") and engagement.gradebook.certificate_eligible:
+            session["certificate_awards"] = [
+                c
+                async for c in CertificateAward.objects
+                .filter(
+                    recipient_id=learner_id,
+                    content_type=await sync_to_async(ContentType.objects.get_for_model)(engagement),
+                    content_id=engagement.pk,
+                    revoked__isnull=True,
+                )
+                .exclude(expires__lte=timezone.now())
+                .order_by("id")
+            ]
+
         return session
 
     @classmethod
@@ -543,7 +561,7 @@ class Engagement(TimeStampedMixin):
             raise ValueError(ErrorCode.CERTIFICATE_NOT_IN_COURSE)
 
         gradebook = getattr(engagement, "gradebook", None)
-        if not gradebook or not (gradebook.confirmed and gradebook.passed):
+        if not (gradebook and gradebook.certificate_eligible):
             raise ValueError(ErrorCode.NOT_QUALIFIED_FOR_CERTIFICATE)
 
         data = CertificateAwardDataDict(
@@ -558,7 +576,8 @@ class Engagement(TimeStampedMixin):
         return await CertificateAward.issue(
             certificate_id=certificate_id,
             recipient=engagement.learner,
-            context=engagement.issue_context(),
+            content_type=await sync_to_async(ContentType.objects.get_for_model)(engagement),
+            content_id=engagement.pk,
             data=data,
             verification_url=verification_url,
         )
@@ -701,3 +720,7 @@ class Gradebook(TimeStampedMixin):
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Gradebook")
         verbose_name_plural = _("Gradebooks")
+
+    @property
+    def certificate_eligible(self):
+        return self.confirmed and self.passed

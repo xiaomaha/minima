@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, TypedDict
 
 import pghistory
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import (
     CASCADE,
@@ -301,14 +303,18 @@ class CertificateAward(TimeStampedMixin):
     expires = DateTimeField(_("Expires"), null=True, blank=True)
     revoked = DateTimeField(_("Revoked"), null=True, blank=True)
     revoked_reason = TextField(_("Revoked Reason"), blank=True, default="")
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+
+    content_type = ForeignKey(ContentType, on_delete=CASCADE, verbose_name=_("Content Type"))
+    content_id = CharField(_("Content ID"), max_length=36)
+    content = GenericForeignKey("content_type", "content_id")
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Certificate Award")
         verbose_name_plural = _("Certificate Awards")
         constraints = [
             UniqueConstraint(
-                fields=["certificate", "recipient", "context"], name="competency_certificateaward_ce_re_co_ke_uniq"
+                fields=["certificate", "recipient", "content_type", "content_id"],
+                name="competency_certificateaward_ce_re_coty_coid_uniq",
             )
         ]
 
@@ -322,7 +328,8 @@ class CertificateAward(TimeStampedMixin):
         *,
         certificate_id: int,
         recipient: User,
-        context: str,
+        content_type: ContentType,
+        content_id: int,
         data: CertificateAwardDataDict,
         verification_url: str,
     ):
@@ -330,7 +337,12 @@ class CertificateAward(TimeStampedMixin):
             await Certificate.objects
             .annotate(
                 awarded=Exists(
-                    CertificateAward.objects.filter(certificate_id=certificate_id, recipient=recipient, context=context)
+                    CertificateAward.objects.filter(
+                        certificate_id=certificate_id,
+                        recipient=recipient,
+                        content_type=content_type,
+                        content_id=content_id,
+                    )
                 )
             )
             .select_related("issuer")
@@ -372,5 +384,6 @@ class CertificateAward(TimeStampedMixin):
             thumbnail=thumbnail_content,
             data=full_data,
             expires=expires,
-            context=context,
+            content_type=content_type,
+            content_id=content_id,
         )

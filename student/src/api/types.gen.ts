@@ -1062,6 +1062,10 @@ export type CertificateEndorsementSchema = {
  */
 export type CertificateSchema = {
     /**
+     * Id
+     */
+    id: number;
+    /**
      * Name
      */
     name: string;
@@ -1162,6 +1166,58 @@ export type PartnerSchema = {
      * Website
      */
     website: string;
+};
+
+/**
+ * CertificateAwardSchema
+ */
+export type CertificateAwardSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Pdf
+     */
+    pdf: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string;
+    /**
+     * Certificateid
+     */
+    certificateId: number;
+};
+
+/**
+ * PagedCertificateAwardSchema
+ */
+export type PagedCertificateAwardSchema = {
+    /**
+     * Items
+     */
+    items: Array<CertificateAwardSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
 };
 
 /**
@@ -1600,6 +1656,10 @@ export type CourseGradebookSchema = {
      * Passed
      */
     passed: boolean;
+    /**
+     * Certificateeligible
+     */
+    certificateEligible: boolean;
 };
 
 /**
@@ -1696,6 +1756,10 @@ export type CourseSessionSchema = {
      * Otptoken
      */
     otpToken?: string;
+    /**
+     * Certificateawards
+     */
+    certificateAwards?: Array<CertificateAwardSchema>;
 };
 
 /**
@@ -4398,6 +4462,31 @@ export type CompetencyV1GetCertificatesResponses = {
 
 export type CompetencyV1GetCertificatesResponse = CompetencyV1GetCertificatesResponses[keyof CompetencyV1GetCertificatesResponses];
 
+export type CompetencyV1GetCertificateAwardsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/competency/certificate/award';
+};
+
+export type CompetencyV1GetCertificateAwardsResponses = {
+    /**
+     * OK
+     */
+    200: PagedCertificateAwardSchema;
+};
+
+export type CompetencyV1GetCertificateAwardsResponse = CompetencyV1GetCertificateAwardsResponses[keyof CompetencyV1GetCertificateAwardsResponses];
+
 export type CompetencyV1GetCompetencyGoalsData = {
     body?: never;
     path?: never;
@@ -4804,8 +4893,10 @@ export type CourseV1RequestCertificateResponses = {
     /**
      * OK
      */
-    200: unknown;
+    200: CertificateAwardSchema;
 };
+
+export type CourseV1RequestCertificateResponse = CourseV1RequestCertificateResponses[keyof CourseV1RequestCertificateResponses];
 
 export type DiscussionV1GetSessionData = {
     body?: never;

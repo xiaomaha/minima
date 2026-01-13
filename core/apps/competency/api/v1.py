@@ -1,10 +1,13 @@
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import Prefetch, Q
+from django.utils import timezone
 from ninja import Query, Router
+from ninja.pagination import paginate
 
 from apps.common.error import ErrorCode
-from apps.common.util import HttpRequest
+from apps.common.util import HttpRequest, Pagination
 from apps.competency.api.schema import (
+    CertificateAwardSchema,
     CertificateFilterSchema,
     CertificateSchema,
     ClassificationTreeNodeSchema,
@@ -12,7 +15,14 @@ from apps.competency.api.schema import (
     CompetencyGoalSchema,
     SkillDataSchema,
 )
-from apps.competency.models import Certificate, CertificateEndorsement, CertificateSkill, Classification, CompetencyGoal
+from apps.competency.models import (
+    Certificate,
+    CertificateAward,
+    CertificateEndorsement,
+    CertificateSkill,
+    Classification,
+    CompetencyGoal,
+)
 
 router = Router(by_alias=True)
 
@@ -32,6 +42,14 @@ async def get_certificates(request: HttpRequest, filter: Query[CertificateFilter
         .filter(active=True)
     )
     return [c async for c in filter.filter(qs)]
+
+
+@router.get("/certificate/award", response=list[CertificateAwardSchema])
+@paginate(Pagination)
+async def get_certificate_awards(request: HttpRequest):
+    return CertificateAward.objects.filter(recipient_id=request.auth, revoked__isnull=True).exclude(
+        expires__lte=timezone.now()
+    )
 
 
 @router.get("/goal", response=list[CompetencyGoalSchema])

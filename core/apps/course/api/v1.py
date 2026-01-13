@@ -3,6 +3,7 @@ from ninja.router import Router
 
 from apps.common.util import HttpRequest
 from apps.course.api.schema import (
+    CertificateAwardSchema,
     CourseCertificateRequestSchema,
     CourseDetailSchema,
     CourseEngagementSchema,
@@ -31,7 +32,7 @@ async def get_detail(request: HttpRequest, id: str):
     return await Course.get_detail(id)
 
 
-@router.post("/{id}/certificate/request")
+@router.post("/{id}/certificate/request", response=CertificateAwardSchema)
 async def request_certificate(request: HttpRequest, id: str, data: CourseCertificateRequestSchema):
     # cf competency/views.py
     verification_url = request.build_absolute_uri(reverse("verify_certificate"))

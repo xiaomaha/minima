@@ -5,6 +5,7 @@ from pydantic.fields import Field
 
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import AccessDateSchema, LearningObjectMixinSchema, Schema, TimeStampedMixinSchema
+from apps.competency.api.schema import CertificateAwardSchema
 from apps.course.models import Course
 from apps.operation.api.schema import FAQItemSchema, HonorCodeSchema
 from apps.partner.api.schema import PartnerSchema
@@ -68,6 +69,7 @@ class CourseEngagementSchema(TimeStampedMixinSchema):
         score: float
         completion_rate: float
         passed: bool
+        certificate_eligible: bool
 
     id: int
     gradebook: Annotated[CourseGradebookSchema, Field(None)]
@@ -121,6 +123,7 @@ class CourseSessionSchema(Schema):
     course: CourseSchema
     engagement: Annotated[CourseEngagementSchema, Field(None)]
     otp_token: Annotated[str, Field(None)]
+    certificate_awards: Annotated[list[CertificateAwardSchema], Field(None)]
 
 
 class CourseCertificateRequestSchema(Schema):

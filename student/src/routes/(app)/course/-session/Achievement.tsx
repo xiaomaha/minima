@@ -1,8 +1,9 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
-import { For, Show } from 'solid-js'
-import { competencyV1GetCertificates } from '@/api'
+import { createSignal, For, Show } from 'solid-js'
+import { competencyV1GetCertificates, courseV1RequestCertificate } from '@/api'
 import { Avatar } from '@/shared/Avatar'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { CertificateAwardList } from '../../-shared/CertificateAwardList'
 import { useSession } from './context'
 
 export const Achievement = () => {
@@ -22,10 +23,11 @@ export const Achievement = () => {
 
   return (
     <div class="max-w-5xl mx-auto space-y-12">
+      <Show when={session.data!.certificateAwards?.length}>
+        <CertificateAwardList awards={session.data!.certificateAwards!} />
+      </Show>
       <div>
-      </div>
-      <div>
-        <div class="font-bold mb-6 text-sm">{t('Available Certificates')}</div>
+        <div class="font-bold mb-6 text-sm">{t('Course Certificates')}</div>
         <div class="space-y-6">
           <For each={certificates.data}>
             {(cert) => (
@@ -100,6 +102,8 @@ export const Achievement = () => {
                           </div>
                         </div>
                       </Show>
+
+                      <CertificateButton certificateId={cert.id} />
                     </div>
                   </div>
                 </div>
@@ -109,5 +113,42 @@ export const Achievement = () => {
         </div>
       </div>
     </div>
+  )
+}
+
+interface CertificateButtonProps {
+  certificateId: number
+}
+
+const CertificateButton = (props: CertificateButtonProps) => {
+  const [session, { setStore }] = useSession()
+  const [t] = useTransContext()
+
+  const [isPending, setIsPending] = createSignal(false)
+  const requestCertificate = async () => {
+    setIsPending(true)
+    try {
+      const { data } = await courseV1RequestCertificate({
+        path: { id: session.data!.course.id },
+        body: { certificateId: props.certificateId },
+      })
+      setStore('data', 'certificateAwards', (prev) => (prev ? [data, ...prev] : [data]))
+    } finally {
+      setIsPending(false)
+    }
+  }
+
+  const eligible = session.data!.engagement?.gradebook?.certificateEligible
+  const awarded = () =>
+    (session.data!.certificateAwards?.findIndex((c) => c.certificateId === props.certificateId) ?? -1) > -1
+
+  return (
+    <Show when={eligible && !awarded()}>
+      <button type="button" class="btn btn-primary w-full" onClick={requestCertificate}>
+        <Show when={!isPending()} fallback={<span class="loading loading-spinner"></span>}>
+          {t('Request Certificate')}
+        </Show>
+      </button>
+    </Show>
   )
 }

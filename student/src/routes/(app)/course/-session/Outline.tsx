@@ -51,10 +51,7 @@ export const Outline = () => {
               <th class="w-0 font-normal">{t('Type')}</th>
               <th class="font-normal">{t('Title')}</th>
               <th class="w-0 font-normal">
-                <div
-                  class="tooltip"
-                  data-tip={t('Scoring below this points will result in course failure')}
-                >
+                <div class="tooltip" data-tip={t('Scoring below this points will result in course failure')}>
                   <span class="flex items-center gap-1">
                     {t('Pass')} <IconHelpCircle size={16} />
                   </span>

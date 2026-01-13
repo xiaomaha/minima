@@ -549,12 +549,35 @@ export const vCertificateEndorsementSchema = v.object({
  * CertificateSchema
  */
 export const vCertificateSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
     name: v.string(),
     description: v.string(),
     thumbnail: v.string(),
     issuer: vPartnerSchema,
     certificateskillSet: v.array(vCertificateSkillSchema),
     certificateendorsementSet: v.array(vCertificateEndorsementSchema)
+});
+
+/**
+ * CertificateAwardSchema
+ */
+export const vCertificateAwardSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    pdf: v.string(),
+    thumbnail: v.string(),
+    certificateId: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * PagedCertificateAwardSchema
+ */
+export const vPagedCertificateAwardSchema = v.object({
+    items: v.array(vCertificateAwardSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -738,7 +761,8 @@ export const vCourseGradebookSchema = v.object({
     details: v.record(v.string(), v.number()),
     score: v.number(),
     completionRate: v.number(),
-    passed: v.boolean()
+    passed: v.boolean(),
+    certificateEligible: v.boolean()
 });
 
 /**
@@ -829,7 +853,8 @@ export const vCourseSessionSchema = v.object({
     accessDate: vAccessDateSchema,
     course: vCourseSchema,
     engagement: v.optional(vCourseEngagementSchema),
-    otpToken: v.optional(v.string())
+    otpToken: v.optional(v.string()),
+    certificateAwards: v.optional(v.array(vCertificateAwardSchema))
 });
 
 /**
@@ -1967,6 +1992,20 @@ export const vCompetencyV1GetCertificatesData = v.object({
  */
 export const vCompetencyV1GetCertificatesResponse = v.array(vCertificateSchema);
 
+export const vCompetencyV1GetCertificateAwardsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vCompetencyV1GetCertificateAwardsResponse = vPagedCertificateAwardSchema;
+
 export const vCompetencyV1GetCompetencyGoalsData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
@@ -2208,6 +2247,11 @@ export const vCourseV1RequestCertificateData = v.object({
     }),
     query: v.optional(v.never())
 });
+
+/**
+ * OK
+ */
+export const vCourseV1RequestCertificateResponse = vCertificateAwardSchema;
 
 export const vDiscussionV1GetSessionData = v.object({
     body: v.optional(v.never()),

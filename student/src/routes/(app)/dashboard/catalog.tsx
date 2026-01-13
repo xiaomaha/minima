@@ -123,7 +123,7 @@ const ItemList = (props: ItemListProps) => {
         <div class="label text-sm mb-6 flex items-center justify-between">
           {t('Enrolled content will be displayed Learning tab.')}
           <button type="button" class="btn btn-sm btn-ghost btn-circle" onClick={refetch}>
-            <IconRefresh />
+            <IconRefresh size={20} />
           </button>
         </div>
         <div class="max-w-5xl mx-auto flex flex-col gap-6">
@@ -212,7 +212,12 @@ const ItemCard = (props: ItemCardProps) => {
       </div>
       <div class="min-w-20 flex justify-center items-start mb-4">
         <Show when={!props.item.enrolled} fallback={<div class="text-xs text-base-content/40">{t('Enrolled')}</div>}>
-          <button onClick={enrollContent} type="button" class="btn btn-sm btn-primary" data-tip={t('Enroll this content')}>
+          <button
+            onClick={enrollContent}
+            type="button"
+            class="btn btn-sm btn-primary"
+            data-tip={t('Enroll this content')}
+          >
             <Show when={!isLoadnig()} fallback={<span class="loading loading-xs loading-spinner"></span>}>
               {t('Enroll')}
             </Show>
