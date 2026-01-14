@@ -89,9 +89,14 @@ class CourseSchema(LearningObjectMixinSchema):
         medias: list[LessonMediaSchema]
         start_date: datetime
         end_date: datetime
-        ordering: int
         title: str
         description: str
+
+    class CourseSurveySchema(Schema):
+        survey_id: str
+        title: str
+        start_date: datetime
+        end_date: datetime
 
     class GradingCriterionSchema(Schema):
         title: str
@@ -108,6 +113,7 @@ class CourseSchema(LearningObjectMixinSchema):
     honor_code: HonorCodeSchema
     grading_criteria: list[GradingCriterionSchema]
     lessons: list[LessonSchema]
+    surveys: list[CourseSurveySchema]
     objective: str
     preview_url: str | None
     effort_hours: int
@@ -116,6 +122,10 @@ class CourseSchema(LearningObjectMixinSchema):
     @staticmethod
     def resolve_lessons(obj: Course):
         return obj.lesson_set.all()
+
+    @staticmethod
+    def resolve_surveys(obj: Course):
+        return obj.coursesurvey_set.all()
 
 
 class CourseSessionSchema(Schema):

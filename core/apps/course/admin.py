@@ -49,9 +49,7 @@ class CourseAdmin(ModelAdmin[Course]):
 
     class LessonInline(TabularInline[Lesson]):
         model = Lesson
-        # orderable
-        ordering = ("ordering", "id")
-        ordering_field = "ordering"
+        ordering_field = "start_offset"
 
     class GradingPolicyInline(TabularInline[GradingPolicy]):
         model = GradingPolicy

@@ -180,3 +180,4 @@ Copyright (c) 2025 Minima
 ![Media Search](./screenshot/student.search.png)
 ![Video Play](./screenshot/student.video.png)
 ![AI Assistant](./screenshot/student.ai.png)
+![Survey](./screenshot/student.survey.png)

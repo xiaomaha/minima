@@ -3,11 +3,12 @@ from django_opensearch_dsl.documents import Document
 from django_opensearch_dsl.fields import KeywordField, NestedField, TextField
 from django_opensearch_dsl.registries import registry
 
+from apps.common.search import AnswerAnalyzerMixin
 from apps.survey.models import Submission
 
 
 @registry.register_document
-class SubmissionDocument(Document):
+class SubmissionDocument(Document, AnswerAnalyzerMixin):
     class Index:
         name = "survey_submission"
         settings = settings.OPENSEARCH_DSL_SETTINGS

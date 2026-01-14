@@ -1,5 +1,5 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
-import { createForm, getValue, validate, valiForm } from '@modular-forms/solid'
+import { createForm, getValue, toCustom, validate, valiForm } from '@modular-forms/solid'
 import { debounce } from '@solid-primitives/scheduled'
 import { For, type JSX, onMount, Show } from 'solid-js'
 import type * as v from 'valibot'
@@ -73,7 +73,10 @@ export const TakeExam = () => {
           <For each={questions}>
             {(question, i) => {
               const field = (
-                <Field name={String(question.id)}>
+                <Field
+                  name={String(question.id)}
+                  transform={toCustom((value) => (typeof value === 'string' ? value.trim() : value), { on: 'blur' })}
+                >
                   {(field, props) => {
                     let input: JSX.Element
 

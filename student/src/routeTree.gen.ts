@@ -18,6 +18,7 @@ import { Route as authJoinRouteImport } from './routes/(auth)/join'
 import { Route as authActivateRouteImport } from './routes/(auth)/activate'
 import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
 import { Route as appDashboardIndexRouteImport } from './routes/(app)/dashboard/index'
+import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
 import { Route as appMediaIdRouteImport } from './routes/(app)/media/$id'
 import { Route as appDashboardSearchRouteImport } from './routes/(app)/dashboard/search'
 import { Route as appDashboardLearningRouteImport } from './routes/(app)/dashboard/learning'
@@ -75,6 +76,11 @@ const appDashboardIndexRoute = appDashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appDashboardRouteRoute,
+} as any)
+const publicSurveyIdRoute = publicSurveyIdRouteImport.update({
+  id: '/(public)/survey/$id',
+  path: '/survey/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const appMediaIdRoute = appMediaIdRouteImport.update({
   id: '/media/$id',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/learning': typeof appDashboardLearningRoute
   '/dashboard/search': typeof appDashboardSearchRoute
   '/media/$id': typeof appMediaIdRoute
+  '/survey/$id': typeof publicSurveyIdRoute
   '/dashboard/': typeof appDashboardIndexRoute
   '/assignment/$id/session': typeof appAssignmentIdSessionRoute
   '/course/$id/session': typeof appCourseIdSessionRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/dashboard/learning': typeof appDashboardLearningRoute
   '/dashboard/search': typeof appDashboardSearchRoute
   '/media/$id': typeof appMediaIdRoute
+  '/survey/$id': typeof publicSurveyIdRoute
   '/dashboard': typeof appDashboardIndexRoute
   '/assignment/$id/session': typeof appAssignmentIdSessionRoute
   '/course/$id/session': typeof appCourseIdSessionRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/(app)/dashboard/learning': typeof appDashboardLearningRoute
   '/(app)/dashboard/search': typeof appDashboardSearchRoute
   '/(app)/media/$id': typeof appMediaIdRoute
+  '/(public)/survey/$id': typeof publicSurveyIdRoute
   '/(app)/dashboard/': typeof appDashboardIndexRoute
   '/(app)/assignment/$id/session': typeof appAssignmentIdSessionRoute
   '/(app)/course/$id/session': typeof appCourseIdSessionRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/dashboard/learning'
     | '/dashboard/search'
     | '/media/$id'
+    | '/survey/$id'
     | '/dashboard/'
     | '/assignment/$id/session'
     | '/course/$id/session'
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/dashboard/learning'
     | '/dashboard/search'
     | '/media/$id'
+    | '/survey/$id'
     | '/dashboard'
     | '/assignment/$id/session'
     | '/course/$id/session'
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/(app)/dashboard/learning'
     | '/(app)/dashboard/search'
     | '/(app)/media/$id'
+    | '/(public)/survey/$id'
     | '/(app)/dashboard/'
     | '/(app)/assignment/$id/session'
     | '/(app)/course/$id/session'
@@ -296,6 +308,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
+  publicSurveyIdRoute: typeof publicSurveyIdRoute
 }
 
 declare module '@tanstack/solid-router' {
@@ -362,6 +375,13 @@ declare module '@tanstack/solid-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof appDashboardIndexRouteImport
       parentRoute: typeof appDashboardRouteRoute
+    }
+    '/(public)/survey/$id': {
+      id: '/(public)/survey/$id'
+      path: '/survey/$id'
+      fullPath: '/survey/$id'
+      preLoaderRoute: typeof publicSurveyIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(app)/media/$id': {
       id: '/(app)/media/$id'
@@ -537,6 +557,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
+  publicSurveyIdRoute: publicSurveyIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

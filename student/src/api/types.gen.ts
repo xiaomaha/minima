@@ -1728,6 +1728,10 @@ export type CourseSchema = {
      */
     lessons: Array<LessonSchema>;
     /**
+     * Surveys
+     */
+    surveys: Array<CourseSurveySchema>;
+    /**
      * Objective
      */
     objective: string;
@@ -1760,6 +1764,28 @@ export type CourseSessionSchema = {
      * Certificateawards
      */
     certificateAwards?: Array<CertificateAwardSchema>;
+};
+
+/**
+ * CourseSurveySchema
+ */
+export type CourseSurveySchema = {
+    /**
+     * Surveyid
+     */
+    surveyId: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Startdate
+     */
+    startDate: string;
+    /**
+     * Enddate
+     */
+    endDate: string;
 };
 
 /**
@@ -1850,10 +1876,6 @@ export type LessonSchema = {
      * Enddate
      */
     endDate: string;
-    /**
-     * Ordering
-     */
-    ordering: number;
     /**
      * Title
      */
@@ -3939,6 +3961,122 @@ export type PagedCommentBriefSchema = {
     pages: number;
 };
 
+/**
+ * SurveyQuestionSchema
+ */
+export type SurveyQuestionSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Format
+     */
+    format: 'single_choice' | 'text_input' | 'number_input';
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Supplement
+     */
+    supplement: string;
+    /**
+     * Options
+     */
+    options: Array<string>;
+    /**
+     * Mandatory
+     */
+    mandatory: boolean;
+};
+
+/**
+ * SurveySchema
+ */
+export type SurveySchema = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Audience
+     */
+    audience: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string;
+    /**
+     * Featured
+     */
+    featured: boolean;
+    /**
+     * Format
+     */
+    format: string;
+    /**
+     * Durationseconds
+     */
+    durationSeconds: number | null;
+    /**
+     * Passingpoint
+     */
+    passingPoint: number;
+    /**
+     * Maxattempts
+     */
+    maxAttempts: number;
+    /**
+     * Verificationrequired
+     */
+    verificationRequired: boolean;
+    /**
+     * Id
+     */
+    id: string;
+    owner: OwnerSchema;
+    /**
+     * Completemessage
+     */
+    completeMessage: string;
+    /**
+     * Anonymous
+     */
+    anonymous: boolean;
+    /**
+     * Likertoptions
+     */
+    likertOptions: Array<string>;
+    /**
+     * Showresults
+     */
+    showResults: boolean;
+    /**
+     * Questions
+     */
+    questions: Array<SurveyQuestionSchema>;
+};
+
+/**
+ * SurveyAnswersSchema
+ */
+export type SurveyAnswersSchema = {
+    [key: string]: string;
+};
+
 export type MinimaApiHealthData = {
     body?: never;
     path?: never;
@@ -5894,3 +6032,143 @@ export type OperationV1GetCommentsResponses = {
 };
 
 export type OperationV1GetCommentsResponse = OperationV1GetCommentsResponses[keyof OperationV1GetCommentsResponses];
+
+export type SurveyV1GetSurveyData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/survey/{id}';
+};
+
+export type SurveyV1GetSurveyResponses = {
+    /**
+     * OK
+     */
+    200: SurveySchema;
+};
+
+export type SurveyV1GetSurveyResponse = SurveyV1GetSurveyResponses[keyof SurveyV1GetSurveyResponses];
+
+export type SurveyV1SubmitData = {
+    body: SurveyAnswersSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/survey/{id}/submit';
+};
+
+export type SurveyV1SubmitResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type SurveyV1ResultsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/survey/{id}/results';
+};
+
+export type SurveyV1ResultsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: {
+        [key: string]: {
+            [key: string]: number;
+        };
+    };
+};
+
+export type SurveyV1ResultsResponse = SurveyV1ResultsResponses[keyof SurveyV1ResultsResponses];
+
+export type SurveyV1GetAnonymousSurveyData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/survey/{id}/anonymous';
+};
+
+export type SurveyV1GetAnonymousSurveyResponses = {
+    /**
+     * OK
+     */
+    200: SurveySchema;
+};
+
+export type SurveyV1GetAnonymousSurveyResponse = SurveyV1GetAnonymousSurveyResponses[keyof SurveyV1GetAnonymousSurveyResponses];
+
+export type SurveyV1SubmitAnonymousData = {
+    body: SurveyAnswersSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/survey/{id}/anonymous/submit';
+};
+
+export type SurveyV1SubmitAnonymousResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type SurveyV1ResultsAnonymousData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/survey/{id}/anonymous/results';
+};
+
+export type SurveyV1ResultsAnonymousResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: {
+        [key: string]: {
+            [key: string]: number;
+        };
+    };
+};
+
+export type SurveyV1ResultsAnonymousResponse = SurveyV1ResultsAnonymousResponses[keyof SurveyV1ResultsAnonymousResponses];
