@@ -88,4 +88,4 @@ class CompetencyGoalSaveSchema(Schema):
     name: Annotated[str, Field(min_length=5)]
     description: str
     classification_id: int
-    factor_ids: Annotated[list[int], Field(min_items=1)]
+    factor_ids: Annotated[list[int], Field(min_length=1)]

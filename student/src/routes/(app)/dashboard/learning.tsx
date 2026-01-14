@@ -72,6 +72,7 @@ const ContentCard = (props: ContentCardProps) => {
       case 'discussion':
         return `/${props.item.contentType.model}/${props.item.content.id}/session`
       case 'media':
+      case 'survey':
         return `/${props.item.contentType.model}/${props.item.content.id}`
     }
   }

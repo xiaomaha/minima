@@ -1,5 +1,5 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
-import { IconHelpCircle } from '@tabler/icons-solidjs'
+import { IconHelpCircle, IconSquareCheck } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
 import { capitalize, toYYYYMMDD } from '@/shared/utils'
@@ -17,6 +17,23 @@ export const Outline = () => {
   const passingScore = s().course.passingPoint || 0
   const passingProgressRate = s().course.gradingCriteria.find((p) => p.model === 'completion')?.passingPoint
   const now = new Date()
+
+  let lessonNumber = 0
+  const lessonAndSurveys = [
+    ...s().course.lessons.map((lesson) => ({
+      type: 'lesson' as const,
+      number: ++lessonNumber,
+      ...lesson,
+    })),
+    ...s().course.surveys.map((survey) => ({
+      type: 'survey' as const,
+      ...survey,
+    })),
+  ].sort((a, b) => {
+    const dateCompare = new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+    if (dateCompare !== 0) return dateCompare
+    return a.type === 'lesson' ? -1 : 1
+  })
 
   return (
     <div class="max-w-5xl space-y-12">
@@ -132,50 +149,62 @@ export const Outline = () => {
             </tr>
           </thead>
           <tbody>
-            <For each={s().course.lessons}>
-              {(lesson, i) => {
-                const startDate = new Date(lesson.startDate!)
-                const endDate = new Date(lesson.endDate!)
+            <For each={lessonAndSurveys}>
+              {(item) => {
+                const startDate = new Date(item.startDate)
+                const endDate = new Date(item.endDate)
                 const notOpen = startDate > now
 
                 return (
                   <tr>
-                    <td>{i() + 1}</td>
-                    <td>{lesson.title}</td>
+                    <td>{item.type === 'lesson' ? item.number : <IconSquareCheck size={16} />}</td>
+                    <td>{item.title}</td>
                     <td class="whitespace-nowrap">
                       {toYYYYMMDD(startDate)} - {toYYYYMMDD(endDate)}
                     </td>
                     <td>
                       <progress
                         class="progress progress-primary"
-                        // TODO: check lesson passed logic
-                        value={getAverageProgress(
-                          lesson.medias.map((m) => m.id),
-                          `course=${s().course.id}`,
-                        )}
+                        value={
+                          item.type === 'lesson'
+                            ? getAverageProgress(
+                                item.medias.map((m) => m.id),
+                                `course=${s().course.id}`,
+                              )
+                            : getProgress(item.surveyId, `course=${s().course.id}`)
+                        }
                         max={100}
-                      ></progress>
+                      />
                     </td>
-
                     <Show when={s().engagement}>
                       <td class="py-0.5">
-                        <div class="flex flex-col gap-1">
-                          {lesson.medias.map((media) => (
-                            <button
-                              type="button"
-                              disabled={notOpen}
-                              class="btn btn-primary btn-sm whitespace-nowrap"
-                              onClick={() =>
-                                navigate({
-                                  to: `/media/${media.id}`,
-                                  search: { course: s().course.id },
-                                })
-                              }
-                            >
-                              {t(capitalize(media.format))}
-                            </button>
-                          ))}
-                        </div>
+                        {item.type === 'lesson' ? (
+                          <div class="flex flex-col gap-1">
+                            {item.medias.map((media) => (
+                              <button
+                                type="button"
+                                disabled={notOpen}
+                                class="btn btn-primary btn-sm whitespace-nowrap w-full"
+                                onClick={() =>
+                                  navigate({ to: `/media/${media.id}`, search: { course: s().course.id } })
+                                }
+                              >
+                                {t(capitalize(media.format))}
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            disabled={notOpen}
+                            class="btn btn-secondary btn-sm whitespace-nowrap w-full"
+                            onClick={() =>
+                              navigate({ to: `/survey/${item.surveyId}`, search: { course: s().course.id } })
+                            }
+                          >
+                            {t('Survey')}
+                          </button>
+                        )}
                       </td>
                     </Show>
                   </tr>

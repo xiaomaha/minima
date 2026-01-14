@@ -4,7 +4,7 @@ import mimesis
 from django.conf import settings
 from django.db.models import QuerySet
 from django.utils.translation import gettext as _
-from factory.declarations import Iterator, LazyAttribute, LazyFunction, Sequence, SubFactory
+from factory.declarations import Iterator, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
@@ -68,7 +68,8 @@ class SurveyFactory(LearningObjectFactory[Survey]):
     owner = SubFactory("account.tests.factories.UserFactory")
     paper = SubFactory(QuestionPaperFactory)
     complete_message = FactoryField("text")
-    anonymous = FactoryField("boolean")
+    anonymous = Iterator([True, False])
+    show_results = Iterator([True, False])
 
     class Meta:
         model = Survey
@@ -94,14 +95,12 @@ class SurveyFactory(LearningObjectFactory[Survey]):
 class SubmissionFactory(DjangoModelFactory[Submission]):
     survey = SubFactory(SurveyFactory)
     respondent = SubFactory("account.tests.factories.UserFactory")
-    hashed_email = LazyAttribute(
-        lambda o: Submission.hash_email(o.respondent.email if o.respondent else generic.person.email())
-    )
     active = True
+    context = ""
 
     class Meta:
         model = Submission
-        django_get_or_create = ("survey", "respondent", "active")
+        django_get_or_create = ("survey", "respondent", "context", "active")
 
     @lazy_attribute
     def answers(self):
@@ -109,7 +108,7 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
         if TYPE_CHECKING:
             self = cast(Submission, self)
 
-        if self.survey.is_likert:
+        if self.survey.likert_options:
             return {
                 str(pk): generic.random.choice(self.survey.likert_options)
                 for pk in self.survey.paper.question_set.values_list("id", flat=True)

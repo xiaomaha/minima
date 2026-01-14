@@ -48,6 +48,7 @@ from apps.exam.models import Grade as ExamGrade
 from apps.learning.trigger import enrollment_content_exists
 from apps.quiz.models import Grade as QuizGrade
 from apps.quiz.models import Quiz
+from apps.survey.models import Submission as SurveySubmission
 from apps.survey.models import Survey
 
 User = get_user_model()
@@ -162,6 +163,13 @@ class Enrollment(TimeStampedMixin):
                 .values_list(pk_path, "attempt__context", "score_"),
                 all=True,
             )
+
+        # add survey records
+        qs = qs.union(
+            SurveySubmission.objects.filter(respondent_id=user_id, active=True).values_list(
+                "survey_id", "context", Value(100)
+            )
+        )
 
         # content_id, context, rate or score
         records: dict[str, dict[str, float]] = {}
@@ -444,7 +452,3 @@ async def _attach_contents(items, contents):
         content_data = origin_content.copy()
         user = User(**content_data.pop("owner_obj"))
         item._content_cache = M(**content_data, owner=user)
-
-
-# TODO: !!!!!!!!!!!!!!!!!!!!!!
-# class Recommendation(TimeStampedMixin):

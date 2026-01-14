@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
+from itertools import chain
 from typing import TYPE_CHECKING, NotRequired, TypedDict
 
 import pghistory
@@ -138,6 +139,7 @@ class Course(LearningObjectMixin):
         gradingpolicy: "GradingPolicy"
         grading_criteria: list[GradingCriterionDict]
         pk: str
+        coursesurvey_set: "QuerySet[CourseSurvey]"
 
     def __str__(self):
         return f"{self.title} ({self.pk})"
@@ -150,7 +152,7 @@ class Course(LearningObjectMixin):
             .prefetch_related(
                 Prefetch(
                     "lesson_set",
-                    queryset=Lesson.objects.order_by("ordering").prefetch_related(
+                    queryset=Lesson.objects.order_by("start_offset").prefetch_related(
                         Prefetch(
                             "medias",
                             queryset=Media.objects.annotate(ordering=F("lessonmedia__ordering")).order_by(
@@ -158,19 +160,21 @@ class Course(LearningObjectMixin):
                             ),
                         )
                     ),
-                )
+                ),
+                Prefetch(
+                    "coursesurvey_set",
+                    queryset=CourseSurvey.objects.annotate(title=F("survey__title")).order_by("start_offset"),
+                ),
             )
             .aget(id=course_id)
         )
         course.grading_criteria = await course.gradingpolicy.grading_criteria(access_date)
         session = SessionDict(access_date=access_date, course=course)
 
-        for lesson in course.lesson_set.all():
-            lesson.start_date = access_date["start"] + timedelta(days=lesson.start_offset)
-            lesson.end_date = (
-                lesson.start_date + timedelta(days=lesson.end_offset)
-                if lesson.end_offset is not None
-                else access_date["end"]
+        for unit in chain(course.lesson_set.all(), course.coursesurvey_set.all()):
+            unit.start_date = access_date["start"] + timedelta(days=unit.start_offset)
+            unit.end_date = (
+                unit.start_date + timedelta(days=unit.end_offset) if unit.end_offset is not None else access_date["end"]
             )
 
         engagement = (
@@ -239,6 +243,8 @@ class Course(LearningObjectMixin):
         elif app_label == Media._meta.app_label and model == Media._meta.model.__name__.lower():
             # unique by lessonmedia trigger
             accessible = await Lesson.objects.aget(course_id=course_id, lessonmedia__media_id=content_id)
+        elif app_label == Survey._meta.app_label and model == Survey._meta.model.__name__.lower():
+            accessible = await CourseSurvey.objects.aget(course_id=course_id, survey_id=content_id)
         else:
             raise ValueError(ErrorCode.UNKNOWN_COURSE_CONTENT)
 
@@ -276,24 +282,24 @@ class CourseInstructor(OrderableMixin):
 
 
 @pghistory.track()
-class CourseSurvey(OrderableMixin):
-    class TimingChoices(TextChoices):
-        PRE = "pre", _("Pre")
-        POST = "post", _("Post")
-        FREE = "free", _("Free")
-
+class CourseSurvey(Model):
     course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
     survey = ForeignKey(Survey, CASCADE, verbose_name=_("Survey"))
-    timing = CharField(_("Timing"), max_length=10, choices=TimingChoices.choices, default=TimingChoices.FREE)
+    start_offset = PositiveSmallIntegerField(_("Start Offset (Days)"))
+    end_offset = PositiveSmallIntegerField(_("End Offset (Days) from Start Offset"), null=True, blank=True)
 
-    class Meta(OrderableMixin.Meta):
+    class Meta:
         verbose_name = _("Course Survey")
         verbose_name_plural = _("Course Surveys")
         constraints = [UniqueConstraint(fields=["course", "survey"], name="course_coursesurvey_co_su_uniq")]
 
+    if TYPE_CHECKING:
+        start_date: datetime
+        end_date: datetime
+
 
 @pghistory.track()
-class Lesson(OrderableMixin):
+class Lesson(Model):
     course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
     title = CharField(_("Title"), max_length=255)
     description = TextField(_("Description"), blank=True, default="")
@@ -301,9 +307,7 @@ class Lesson(OrderableMixin):
     start_offset = PositiveSmallIntegerField(_("Start Offset (Days)"))
     end_offset = PositiveSmallIntegerField(_("End Offset (Days) from Start Offset"), null=True, blank=True)
 
-    ordering_group = ("course",)
-
-    class Meta(OrderableMixin.Meta):
+    class Meta:
         verbose_name = _("Lesson")
         verbose_name_plural = _("Lessons")
         constraints = [UniqueConstraint(fields=["course", "title"], name="course_lesson_co_ti_uniq")]

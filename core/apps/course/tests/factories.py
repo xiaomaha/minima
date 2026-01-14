@@ -28,7 +28,7 @@ from apps.discussion.models import Discussion
 from apps.exam.models import Exam
 from apps.operation.models import Category
 from apps.operation.tests.factories import FAQFactory, HonorCodeFactory, InstructorFactory
-from apps.survey.models import Survey
+from apps.survey.tests.factories import SurveyFactory
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -94,38 +94,36 @@ class CourseFactory(LearningObjectFactory[Course]):
                 ignore_conflicts=True,
             )
 
-        # survey
-        surveys = Survey.objects.order_by("?")[: generic.random.randint(1, 2)]
-        if surveys:
-            CourseSurvey.objects.bulk_create(
-                [
-                    CourseSurvey(
-                        course=self,
-                        survey=survey,
-                        timing=generic.random.choice(CourseSurvey.TimingChoices.choices)[0],
-                        ordering=i,
-                    )
-                    for i, survey in enumerate(surveys)
-                ],
-                ignore_conflicts=True,
-            )
-
         # lesson
         medias = Media.objects.order_by("?")[: generic.random.choice([8, 16, 32])]
+        last_lesson_start_offset = 0
 
         for i, media in enumerate(medias):
             lesson, created = Lesson.objects.get_or_create(
                 course=self,
                 title=media.title,
-                defaults={"description": media.description, "start_offset": i * 7, "end_offset": 7, "ordering": i},
+                defaults={"description": media.description, "start_offset": i * 7, "end_offset": 7},
             )
-
+            last_lesson_start_offset = i * 7
             if created:
                 LessonMedia(lesson=lesson, media=media, ordering=0).save()
 
                 if i in [2, 4]:
                     media = MediaFactory.create(owner=self.owner, url=f"{generic.internet.url()}/{uuid4().hex}.mp4")
                     LessonMedia(lesson=lesson, media=media, ordering=i).save()
+
+        # survey
+        surveys = SurveyFactory.create_batch(2)
+        if surveys:
+            CourseSurvey.objects.bulk_create(
+                [
+                    CourseSurvey(course=self, survey=surveys[0], start_offset=0, end_offset=None),
+                    CourseSurvey(
+                        course=self, survey=surveys[1], start_offset=last_lesson_start_offset, end_offset=None
+                    ),
+                ],
+                ignore_conflicts=True,
+            )
 
         # assessment
         discussions = Discussion.objects.order_by("?")[: generic.random.randint(1, 2)]

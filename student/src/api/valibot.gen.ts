@@ -777,6 +777,16 @@ export const vCourseEngagementSchema = v.object({
 });
 
 /**
+ * CourseSurveySchema
+ */
+export const vCourseSurveySchema = v.object({
+    surveyId: v.string(),
+    title: v.string(),
+    startDate: v.pipe(v.string(), v.isoTimestamp()),
+    endDate: v.pipe(v.string(), v.isoTimestamp())
+});
+
+/**
  * GradingCriterionSchema
  */
 export const vGradingCriterionSchema = v.object({
@@ -810,7 +820,6 @@ export const vLessonSchema = v.object({
     medias: v.array(vLessonMediaSchema),
     startDate: v.pipe(v.string(), v.isoTimestamp()),
     endDate: v.pipe(v.string(), v.isoTimestamp()),
-    ordering: v.pipe(v.number(), v.integer()),
     title: v.string(),
     description: v.string()
 });
@@ -835,6 +844,7 @@ export const vCourseSchema = v.object({
     honorCode: vHonorCodeSchema,
     gradingCriteria: v.array(vGradingCriterionSchema),
     lessons: v.array(vLessonSchema),
+    surveys: v.array(vCourseSurveySchema),
     objective: v.string(),
     previewUrl: v.union([v.string(), v.null()]),
     effortHours: v.pipe(v.number(), v.integer()),
@@ -1722,6 +1732,52 @@ export const vPagedCommentBriefSchema = v.object({
     page: v.pipe(v.number(), v.integer()),
     pages: v.pipe(v.number(), v.integer())
 });
+
+/**
+ * SurveyQuestionSchema
+ */
+export const vSurveyQuestionSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    format: v.picklist([
+        'single_choice',
+        'text_input',
+        'number_input'
+    ]),
+    question: v.string(),
+    supplement: v.string(),
+    options: v.array(v.string()),
+    mandatory: v.boolean()
+});
+
+/**
+ * SurveySchema
+ */
+export const vSurveySchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    title: v.string(),
+    description: v.string(),
+    audience: v.string(),
+    thumbnail: v.string(),
+    featured: v.boolean(),
+    format: v.string(),
+    durationSeconds: v.union([v.number(), v.null()]),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    maxAttempts: v.pipe(v.number(), v.integer()),
+    verificationRequired: v.boolean(),
+    id: v.string(),
+    owner: vOwnerSchema,
+    completeMessage: v.string(),
+    anonymous: v.boolean(),
+    likertOptions: v.array(v.string()),
+    showResults: v.boolean(),
+    questions: v.array(vSurveyQuestionSchema)
+});
+
+/**
+ * SurveyAnswersSchema
+ */
+export const vSurveyAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
 
 export const vMinimaApiHealthData = v.object({
     body: v.optional(v.never()),
@@ -2775,3 +2831,81 @@ export const vOperationV1GetCommentsData = v.object({
  * OK
  */
 export const vOperationV1GetCommentsResponse = vPagedCommentBriefSchema;
+
+export const vSurveyV1GetSurveyData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
+
+/**
+ * OK
+ */
+export const vSurveyV1GetSurveyResponse = vSurveySchema;
+
+export const vSurveyV1SubmitData = v.object({
+    body: vSurveyAnswersSchema,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
+
+export const vSurveyV1ResultsData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vSurveyV1ResultsResponse = v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer())));
+
+export const vSurveyV1GetAnonymousSurveyData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vSurveyV1GetAnonymousSurveyResponse = vSurveySchema;
+
+export const vSurveyV1SubmitAnonymousData = v.object({
+    body: vSurveyAnswersSchema,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+export const vSurveyV1ResultsAnonymousData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vSurveyV1ResultsAnonymousResponse = v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer())));
