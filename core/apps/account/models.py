@@ -479,7 +479,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         try:
             app_label, model = consumer_data["app_label"], consumer_data["model"]
             consumer_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
-        except ObjectDoesNotExist, LookupError:
+        except ObjectDoesNotExist, LookupError:  # python 3.14
             raise ValueError(ErrorCode.INVALID_OTP_CONSUMER)
 
         totp_devices = [device async for device in TOTPDevice.objects.filter(user=self, confirmed=True)]

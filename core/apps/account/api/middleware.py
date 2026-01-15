@@ -30,7 +30,7 @@ def cookie_auth_middleware(get_response):
             user_id = decode_token(refresh_token).get("sub")
             request.auth = user_id
 
-            max_age = settings.ACCESS_TOKEN_EXPIRE_SECONDS * 60
+            max_age = settings.ACCESS_TOKEN_EXPIRE_SECONDS
             expires = int(time()) + max_age
             access_token = encode_token({"sub": user_id, "exp": expires, "type": "access"})
             options = auth_cookie_options()
