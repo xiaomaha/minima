@@ -421,21 +421,19 @@ class GradingPolicy(Model):
         if not assessments:
             return criteria
 
-        type_to_ids: dict[str, list[str]] = {}
-        lookup: dict[str, Assessment] = {}
+        type_to_ids: dict[tuple[str, str], list[str]] = {}
 
         for assessment in assessments:
-            model = assessment.item_type.model
-            type_to_ids.setdefault(model, []).append(assessment.item_id)
-            lookup[assessment.item_id] = assessment
+            key = (assessment.item_type.app_label, assessment.item_type.model)
+            type_to_ids.setdefault(key, []).append(assessment.item_id)
 
-        items_qs = QuerySet().none()
-        for model_name, ids in type_to_ids.items():
-            app_label = lookup[ids[0]].item_type.app_label
+        qs_list = []
+        for (app_label, model_name), ids in type_to_ids.items():
             model_class = apps.get_model(app_label, model_name)
             qs = model_class.objects.filter(id__in=ids).values("id", "title", "passing_point")
-            items_qs = items_qs.union(qs)
+            qs_list.append(qs)
 
+        items_qs = qs_list[0].union(*qs_list[1:]) if len(qs_list) > 1 else qs_list[0]
         items = [item async for item in items_qs.all()]
 
         if not items:
@@ -593,112 +591,105 @@ class Engagement(TimeStampedMixin):
         )
         criteria = await engagement.course.gradingpolicy.grading_criteria()
 
-        # completed lessons count rate
-        completion_rate = 0.0
+        context = engagement.issue_context()
 
-        qss = []
+        completion_criterion = next((c for c in criteria if c["model"] == "completion"), None)
+        assessment_criteria = [c for c in criteria if c["model"] != "completion"]
 
-        for criterion in criteria:
-            if criterion["model"] == "completion":
-                completion = await (
-                    Lesson.objects
-                    .filter(course_id=criterion["item_id"])
-                    .annotate(
-                        media_count=Count("lessonmedia"),
-                        passed_count=Count(
-                            "lessonmedia",
-                            filter=Q(
-                                lessonmedia__media__watch__user_id=learner_id,
-                                lessonmedia__media__watch__context=engagement.issue_context(),
-                                lessonmedia__media__watch__passed=True,
-                            ),
+        if completion_criterion:
+            completion_agg = (
+                await Lesson.objects
+                .filter(course_id=completion_criterion["item_id"])
+                .annotate(
+                    media_count=Count("lessonmedia"),
+                    passed_count=Count(
+                        "lessonmedia",
+                        filter=Q(
+                            lessonmedia__media__watch__user_id=learner_id,
+                            lessonmedia__media__watch__context=context,
+                            lessonmedia__media__watch__passed=True,
                         ),
-                    )
-                    .aaggregate(
-                        total_lessons=Count("id"),
-                        passed_lessons=Count("id", filter=Q(media_count__gt=0, passed_count=F("media_count"))),
-                    )
+                    ),
                 )
-                total = completion["total_lessons"]
-                passed = completion["passed_lessons"]
-                completion_rate = (passed * 100.0 / total) if total else 0.0
-
-            else:
-                M = ASSESSIBLE_MODEL_MAP.get((criterion["app_label"], criterion["model"]))
-                G = ASSESSIBLE_GRADE_MODELS.get(M)
-                if not (M and G):
-                    raise ImproperlyConfigured(
-                        f"Cannot find assessable model {criterion['app_label']}.{criterion['model']}"
-                    )
-
-                pk_path = f"attempt__{M._meta.model.__name__.lower()}_id"
-                qss.append(
-                    G.objects.filter(
-                        **{pk_path: criterion["item_id"]},
-                        attempt__learner_id=learner_id,
-                        attempt__context=engagement.issue_context(),
-                        attempt__active=True,
-                        completed__isnull=False,
-                        confirmed__isnull=False,
-                    ).values_list(pk_path, "score", "passed")
+                .aaggregate(
+                    total_lessons=Count("id"),
+                    passed_lessons=Count("id", filter=Q(media_count__gt=0, passed_count=F("media_count"))),
                 )
+            )
 
-        if qss:
-            qs = qss[0].union(*qss[1:]) if len(qss) > 1 else qss[0]
-            assessment_results = {r[0]: {"score": r[1], "passed": r[2]} async for r in qs}
+            total = completion_agg["total_lessons"]
+            passed = completion_agg["passed_lessons"]
+            completion_rate = (passed * 100.0 / total) if total else 0.0
         else:
-            assessment_results = {}
+            completion_rate = 0.0
+
+        assessment_results = {}
+        if assessment_criteria:
+            type_to_ids = {}
+            for crit in assessment_criteria:
+                key = (crit["app_label"], crit["model"])
+                type_to_ids.setdefault(key, []).append(crit["item_id"])
+
+            qs_list = []
+            for (app_label, model_name), ids in type_to_ids.items():
+                model_class = apps.get_model(app_label, model_name)
+                grade_class = ASSESSIBLE_GRADE_MODELS.get(model_class)
+                if not grade_class:
+                    raise ImproperlyConfigured(f"Cannot find grade model for {app_label}.{model_name}")
+
+                pk_field = f"{model_class._meta.model_name}_id"
+                qs = grade_class.objects.filter(
+                    **{f"attempt__{pk_field}__in": ids},
+                    attempt__learner_id=learner_id,
+                    attempt__context=context,
+                    attempt__active=True,
+                    completed__isnull=False,
+                    confirmed__isnull=False,
+                ).values_list(f"attempt__{pk_field}", "score", "passed")
+                qs_list.append(qs)
+
+            if qs_list:
+                qs_union = qs_list[0].union(*qs_list[1:]) if len(qs_list) > 1 else qs_list[0]
+                assessment_results = {r[0]: {"score": r[1], "passed": r[2]} async for r in qs_union}
 
         total_score = 0.0
         total_weight = 0.0
         failed_exist = False
-        details = {}
+        details: dict[str, dict[str, bool | float | int] | None] = {}
 
-        for criterion in criteria:
-            weight = criterion["normalized_weight"]
+        if completion_criterion:
+            weight = completion_criterion["normalized_weight"]
+            passed = completion_rate >= completion_criterion["passing_point"]
+            details["completion"] = {
+                "rate": completion_rate,
+                "passing_point": completion_criterion["passing_point"],
+                "passed": passed,
+            }
+            if weight > 0:
+                total_score += completion_rate * weight / 100
+                total_weight += weight
+            if not passed:
+                failed_exist = True
 
-            if criterion["model"] == "completion":
-                passed = completion_rate >= criterion["passing_point"]
-
-                details["completion"] = {
-                    "rate": completion_rate,
-                    "passing_point": criterion["passing_point"],
-                    "passed": passed,
-                }
-
-                if weight > 0:
-                    total_score += completion_rate * weight / 100
-                    total_weight += weight
-
-                if not passed:
-                    failed_exist = True
-
-            else:
-                result = assessment_results.get(criterion["item_id"])
-                if not result:
-                    details[criterion["item_id"]] = None
-                    failed_exist = True
-                    continue
-
-                score = result["score"]
-                passed = result["passed"]
-
-                details[criterion["item_id"]] = {
-                    "score": score,
-                    "passing_point": criterion["passing_point"],
-                    "passed": passed,
-                }
-
-                if weight > 0:
-                    total_score += score * weight / 100
-                    total_weight += weight
-
-                if not passed:
-                    failed_exist = True
+        for crit in assessment_criteria:
+            result = assessment_results.get(crit["item_id"])
+            if not result:
+                details[crit["item_id"]] = None
+                failed_exist = True
+                continue
+            score = result["score"]
+            passed = result["passed"]
+            details[crit["item_id"]] = {"score": score, "passing_point": crit["passing_point"], "passed": passed}
+            weight = crit["normalized_weight"]
+            if weight > 0:
+                total_score += score * weight / 100
+                total_weight += weight
+            if not passed:
+                failed_exist = True
 
         final_score = total_score if total_weight > 0 else 0.0
 
-        await Gradebook.objects.aupdate_or_create(
+        gradebook, created = await Gradebook.objects.aupdate_or_create(
             engagement=engagement,
             defaults={
                 "details": details,
