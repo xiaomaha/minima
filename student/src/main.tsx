@@ -7,6 +7,7 @@ import './styles.css'
 import { TransProvider } from '@mbarzda/solid-i18next'
 import { client } from './api/client.gen'
 import { accessContextParam } from './context'
+import { getUserLanguage } from './routes/(app)/account/-store'
 import { DateLocaleProvider } from './shared/DateLocaleProvider'
 import { handleApiError } from './shared/error'
 
@@ -25,11 +26,17 @@ const router = createRouter({
   },
 })
 
-// permission context
 router.subscribe('onResolved', () => {
+  const userLang = getUserLanguage() || navigator.language
+
   client.setConfig({
     ky: ky.create({
+      // permission context
       searchParams: accessContextParam(),
+      // set language
+      headers: {
+        'Accept-Language': userLang,
+      },
     }),
   })
 })

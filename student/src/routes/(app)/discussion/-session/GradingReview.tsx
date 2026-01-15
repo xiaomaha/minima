@@ -56,7 +56,7 @@ export const GradingReview = () => {
               <tr>
                 <td class="text-center">{t('{{count}} post', { count: postCount.post })}</td>
                 <td class="text-center">{t('{{count}} reply', { count: postCount.reply })}</td>
-                <td class="text-center">{grade.feedback.tutorAssessment}</td>
+                <td class="text-center text-green-600">{grade.feedback.tutorAssessment}</td>
               </tr>
               <tr>
                 <td class="text-center">{t('{{count}} point', { count: grade.earnedDetails.post })}</td>
@@ -81,7 +81,7 @@ export const GradingReview = () => {
           </div>
         </Show>
 
-        <div class="label my-1 text-sm">{t('Posts and Replies')}</div>
+        <div class="label my-1 text-sm">{t('My posts and replies')}</div>
         <div class="space-y-6">
           <For each={posts.data}>
             {(post, i) => (
@@ -110,7 +110,12 @@ export const GradingReview = () => {
           </For>
         </div>
       </div>
-      <Dialog boxClass="max-w-3xl" open={!!appealDialogOpen()} onClose={() => setAppealDialogOpen(false)}>
+      <Dialog
+        title={t('Discussion Grading Appeal')}
+        boxClass="max-w-3xl"
+        open={!!appealDialogOpen()}
+        onClose={() => setAppealDialogOpen(false)}
+      >
         <Appeal
           appeal={appeal()}
           appLabel="assignment"

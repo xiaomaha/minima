@@ -54,14 +54,10 @@ async def get_posts(request: HttpRequest, id: str):
 
 
 @router.get("/{id}/post/own", response=list[DiscussionOwnPostSchema])
+@active_context()
+@access_date("discussion", "discussion")
 async def get_own_posts(request: HttpRequest, id: str):
-    return [
-        p
-        async for p in Post.objects
-        .prefetch_related("attachments")
-        .filter(attempt__learner_id=request.auth, attempt__discussion_id=id)
-        .order_by("id")
-    ]
+    return await Post.get_own_posts(discussion_id=id, learner_id=request.auth, context=request.active_context)
 
 
 @router.post("/{id}/post", response=DiscussionPostWithCountSchema)

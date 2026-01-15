@@ -2156,6 +2156,16 @@ export type DiscussionEarnedDetailsSchema = {
 };
 
 /**
+ * DiscussionFeedbackSchema
+ */
+export type DiscussionFeedbackSchema = {
+    /**
+     * Tutorassessment
+     */
+    tutorAssessment: string;
+};
+
+/**
  * DiscussionGradeSchema
  */
 export type DiscussionGradeSchema = {
@@ -2184,12 +2194,7 @@ export type DiscussionGradeSchema = {
      * Passed
      */
     passed: boolean;
-    /**
-     * Feedback
-     */
-    feedback: {
-        [key: string]: string;
-    };
+    feedback: DiscussionFeedbackSchema;
     /**
      * Completed
      */

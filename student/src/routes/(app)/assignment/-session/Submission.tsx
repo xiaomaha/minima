@@ -76,6 +76,13 @@ export const Submission = () => {
                   </li>
                 )}
               </For>
+              <Show when={question.plagiarismThreshold}>
+                <li class="font-semibold text-base-content">
+                  {t('Plagiarism threshold is {{threshold}}%. Over this threshold, the submission will be rejected.', {
+                    threshold: question.plagiarismThreshold,
+                  })}
+                </li>
+              </Show>
               <li>{t('Detailed level descriptions are available after the grading completion.')}</li>
             </ul>
           </div>
