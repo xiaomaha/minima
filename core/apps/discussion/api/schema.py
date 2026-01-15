@@ -52,9 +52,13 @@ class DiscussionEarnedDetailsSchema(Schema):
 
 
 class DiscussionGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
+    class DiscussionFeedbackSchema(Schema):
+        tutor_assessment: str
+
     id: int
     # override
     earned_details: DiscussionEarnedDetailsSchema
+    feedback: DiscussionFeedbackSchema
 
 
 class DiscussionSessionSchema(Schema):

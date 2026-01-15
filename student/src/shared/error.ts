@@ -6,6 +6,7 @@ import { showToast } from '@/shared/toast/store.ts'
 
 export const handleApiError = async (error: unknown, _: Response) => {
   let message: string = ''
+  let duration: number = 1000 * 5
 
   if (typeof error === 'string') {
     console.error(error)
@@ -24,6 +25,13 @@ export const handleApiError = async (error: unknown, _: Response) => {
       case 'OTP_VERIFICATION_REQUIRED':
         message = i18n.t('OTP Verification Required')
         break
+      case 'PLAGIARISM_DETECTED':
+        message = i18n.t('Plagiarism Detected, Similarity percentage: {{similarity}}%', {
+          similarity: err.similarity,
+        })
+        duration = 1000 * 10
+        break
+
       default:
         message = err.detail
     }
@@ -39,6 +47,7 @@ export const handleApiError = async (error: unknown, _: Response) => {
   showToast({
     title: i18n.t('Error'),
     message,
+    duration,
     type: 'error',
   })
 

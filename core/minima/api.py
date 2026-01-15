@@ -13,6 +13,8 @@ from ninja import NinjaAPI
 from ninja.parser import Parser
 from ninja.renderers import BaseRenderer
 
+from apps.assignment.models import PlagiarismDetectedException
+
 log = logging.getLogger(__name__)
 
 
@@ -82,6 +84,12 @@ for app_dir in sorted(apps_path.iterdir()):
 @api.get("/health", tags=["default"])
 async def health(request):
     pass
+
+
+# This handler should be placed before the ValueError handler
+@api.exception_handler(PlagiarismDetectedException)
+def plagiarism_detected(request, exc):
+    return api.create_response(request, {"detail": "PLAGIARISM_DETECTED", "similarity": exc.similarity}, status=400)
 
 
 # exception handler

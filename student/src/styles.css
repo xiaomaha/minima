@@ -122,7 +122,15 @@ li p {
     @apply my-8 border-gray-300;
   }
 
+  ul {
+    @apply list-disc ml-6 mb-4;
+  }
+
+  ol {
+    @apply list-decimal ml-6 mb-4;
+  }
+
   li {
-    @apply list-disc list-inside;
+    @apply mb-1;
   }
 }

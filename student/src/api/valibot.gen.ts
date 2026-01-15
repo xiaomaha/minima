@@ -973,6 +973,13 @@ export const vDiscussionEarnedDetailsSchema = v.object({
 });
 
 /**
+ * DiscussionFeedbackSchema
+ */
+export const vDiscussionFeedbackSchema = v.object({
+    tutorAssessment: v.string()
+});
+
+/**
  * DiscussionGradeSchema
  */
 export const vDiscussionGradeSchema = v.object({
@@ -983,7 +990,7 @@ export const vDiscussionGradeSchema = v.object({
     earnedPoint: v.pipe(v.number(), v.integer()),
     score: v.number(),
     passed: v.boolean(),
-    feedback: v.record(v.string(), v.string()),
+    feedback: vDiscussionFeedbackSchema,
     completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
     confirmed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
     id: v.pipe(v.number(), v.integer())

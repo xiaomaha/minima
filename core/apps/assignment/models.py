@@ -47,7 +47,9 @@ if TYPE_CHECKING:
 
 
 class PlagiarismDetectedException(ValueError):
-    pass
+    def __init__(self, similarity):
+        self.similarity = similarity
+        super().__init__(f"Plagiarism detected: {similarity}%")
 
 
 class SessionDict(TypedDict):
@@ -355,7 +357,7 @@ class Attempt(Model):
 
             similarity_percentage = test_result["similarity_percentage"]
             if similarity_percentage >= attempt.question.plagiarism_threshold:
-                raise PlagiarismDetectedException([ErrorCode.PLAGIARISM_DETECTED, similarity_percentage])
+                raise PlagiarismDetectedException(similarity_percentage)
 
         submission = await Submission.create(attempt=attempt, answer=answer, extracted_text=content, files=files)
 

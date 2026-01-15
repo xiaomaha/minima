@@ -161,7 +161,9 @@ export const QuestionReview = (props: Props) => {
         </table>
       </div>
 
-      <Dialog boxClass="max-w-3xl" open={!!appealDialogOpen()} onClose={() => setAppealDialogOpen(false)}>
+      <Dialog 
+      title={t(`Question ${props.numbering}.`)}
+      boxClass="max-w-3xl" open={!!appealDialogOpen()} onClose={() => setAppealDialogOpen(false)}>
         <Appeal appeal={appeal()} appLabel="exam" model="question" questionId={question.id} onCreate={onCreateAppeal} />
       </Dialog>
     </div>

@@ -125,7 +125,9 @@ export const GradingReview = () => {
         </div>
       </div>
 
-      <Dialog boxClass="max-w-3xl" open={!!appealDialogOpen()} onClose={() => setAppealDialogOpen(false)}>
+      <Dialog
+      title={t("Assignment Grading Appeal")}
+      boxClass="max-w-3xl" open={!!appealDialogOpen()} onClose={() => setAppealDialogOpen(false)}>
         <Appeal
           appeal={appeal()}
           appLabel="assignment"

@@ -718,4 +718,4 @@ class Gradebook(TimeStampedMixin):
 
     @property
     def certificate_eligible(self):
-        return self.confirmed and self.passed
+        return bool(self.confirmed and self.passed)

@@ -286,7 +286,6 @@ class Attempt(Model):
             )
             .filter(
                 attempt__discussion_id=discussion_id,
-                attempt__learner_id=learner_id,
                 attempt__context=context,
                 attempt__active=True,
                 parent__isnull=True,
@@ -399,6 +398,21 @@ class Post(TimeStampedMixin, AttachmentMixin):
             raise ValueError(ErrorCode.CHILDREN_EXISTS)
 
         await post.adelete()
+
+    @classmethod
+    async def get_own_posts(cls, *, discussion_id: str, learner_id: str, context: str):
+        return [
+            p
+            async for p in Post.objects
+            .prefetch_related("attachments")
+            .filter(
+                attempt__learner_id=learner_id,
+                attempt__discussion_id=discussion_id,
+                attempt__active=True,
+                attempt__context=context,
+            )
+            .order_by("id")
+        ]
 
 
 @pghistory.track()
