@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from unfold.contrib.forms.widgets import WysiwygWidget
 
 from apps.common.admin import HiddenModelAdmin, ModelAdmin, TabularInline
@@ -44,7 +45,16 @@ class AttemptAdmin(ModelAdmin[Attempt]):
     class GradeInline(TabularInline[Grade]):
         model = Grade
 
-    inlines = (SubmissionInline, GradeInline)
+    class QuestionInline(TabularInline[Question]):
+        model = Attempt.questions.through
+        verbose_name = _("Question")
+        verbose_name_plural = _("Questions")
+        ordering = ("id",)
+
+    inlines = (SubmissionInline, GradeInline, QuestionInline)
+
+    def get_fields(self, request, obj=None):
+        return [f for f in super().get_fields(request, obj=obj) if f not in ("questions",)]
 
 
 @admin.register(Submission)

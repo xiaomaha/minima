@@ -3,7 +3,6 @@ from typing import Annotated
 from django.conf import settings
 from django.http import HttpResponse
 from ninja.files import UploadedFile
-from ninja.pagination import paginate
 from ninja.params import functions
 from ninja.router import Router
 
@@ -16,8 +15,6 @@ from apps.account.api.schema import (
     OtpSetupCompleteSchema,
     OtpSetupSchema,
     OtpVerifySchema,
-    ReactionSaveSchema,
-    ReactionSchema,
     RequestactivationSchema,
     RequestEmailChangeSchema,
     RequestPasswordChangeSchema,
@@ -25,9 +22,9 @@ from apps.account.api.schema import (
     UserSchema,
     UserUpdateSchema,
 )
-from apps.account.models import Reaction, User
+from apps.account.models import User
 from apps.common.error import ErrorCode
-from apps.common.util import HttpRequest, Pagination, no_auth_required
+from apps.common.util import HttpRequest, no_auth_required
 
 router = Router(by_alias=True)
 
@@ -128,18 +125,6 @@ async def apply_password_change(request: HttpRequest, data: ApplyPasswordChangeS
 @router.post("/logout")
 async def logout(request: HttpRequest, response: HttpResponse):
     await User.token_logout(request=request, response=response)
-
-
-@router.get("/reaction", response=list[ReactionSchema])
-@paginate(Pagination)
-async def get_reactions(request: HttpRequest):
-    return Reaction.objects.select_related("target_type").filter(user_id=request.auth).order_by("-id")
-
-
-@router.post("/reaction")
-async def save_reaction(request: HttpRequest, data: ReactionSaveSchema):
-    user = await User.get_user(id=request.auth, is_active=True)
-    await user.save_reaction(**data.model_dump())
 
 
 @router.post("/otp/setup", response=OtpSetupSchema)

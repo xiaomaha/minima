@@ -14,7 +14,6 @@ class SurveySchema(LearningObjectMixinSchema):
     owner: OwnerSchema
     complete_message: str
     anonymous: bool
-    likert_options: list[str]
     show_results: bool
     questions: list[SurveyQuestionSchema]
 

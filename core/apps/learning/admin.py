@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from apps.common.admin import ModelAdmin, ReadOnlyHiddenModelAdmin, ReadOnlyTabularInline
-from apps.learning.models import Catalog, CatalogItem, Enrollment, UserCatalog
+from apps.learning.models import Catalog, CatalogItem, CohortCatalog, Enrollment, UserCatalog
 
 
 @admin.register(Enrollment)
@@ -32,4 +32,9 @@ class CatalogItemAdmin(ReadOnlyHiddenModelAdmin[CatalogItem]):
 
 @admin.register(UserCatalog)
 class UserCatalogAdmin(ModelAdmin[UserCatalog]):
+    pass
+
+
+@admin.register(CohortCatalog)
+class CohortCatalogAdmin(ModelAdmin[CohortCatalog]):
     pass

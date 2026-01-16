@@ -14,14 +14,8 @@ from unfold.contrib.filters.admin import BooleanRadioFilter
 from unfold.decorators import action
 from unfold.widgets import UnfoldAdminSelectWidget
 
-from apps.account.models import BlacklistedToken, OtpLog, Reaction, TempPassword, Token, User
-from apps.common.admin import (
-    HiddenModelAdmin,
-    ModelAdmin,
-    ReadOnlyHiddenModelAdmin,
-    ReadOnlyTabularInline,
-    TabularInline,
-)
+from apps.account.models import BlacklistedToken, OtpLog, TempPassword, Token, User
+from apps.common.admin import HiddenModelAdmin, ModelAdmin, ReadOnlyHiddenModelAdmin, ReadOnlyTabularInline
 
 
 @admin.register(User)
@@ -32,9 +26,6 @@ class UserAdmin(ModelAdmin[User]):
     list_filter_submit = True
     exclude = ("password", "groups", "user_permissions")
 
-    class ReactionInline(TabularInline[Reaction]):
-        model = Reaction
-
     class UserEventInline(ReadOnlyTabularInline[User.pgh_event_model]):
         model = User.pgh_event_model
         exclude = ("pgh_context",)
@@ -43,15 +34,17 @@ class UserAdmin(ModelAdmin[User]):
 
     class TokenInline(ReadOnlyTabularInline[Token]):
         model = Token
+        exclude = ("token",)
         verbose_name = _("Login Token")
         verbose_name_plural = _("Login Tokens")
 
     class OtpLogInline(ReadOnlyTabularInline[OtpLog]):
         model = OtpLog
+        exclude = ("fingerprint",)
         verbose_name = _("OTP Log")
         verbose_name_plural = _("OTP Logs")
 
-    inlines = (UserEventInline, TokenInline, OtpLogInline, ReactionInline)
+    inlines = (UserEventInline, TokenInline, OtpLogInline)
 
     list_filter = (("is_staff", BooleanRadioFilter), ("is_superuser", BooleanRadioFilter))
 
@@ -75,6 +68,7 @@ class UserAdmin(ModelAdmin[User]):
         obj.password = ""
         obj.save()
 
+        # SECURITY DECISION: show plaintext in admin UI. one-time display, not logged. operationally necessary
         self.message_user(
             request,
             _("Temporary password created for {user}: {password}. Expires in {hours} hours.").format(
@@ -95,11 +89,6 @@ class UserAdmin(ModelAdmin[User]):
                 widget=UnfoldAdminSelectWidget(),
             )
         return form
-
-
-@admin.register(Reaction)
-class ReactionAdmin(HiddenModelAdmin[Reaction]):
-    pass
 
 
 @admin.register(Token)

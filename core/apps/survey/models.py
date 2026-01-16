@@ -68,17 +68,11 @@ class Question(OrderableMixin):
 
 @pghistory.track()
 class Survey(LearningObjectMixin):
-    class VisibilityChoices(TextChoices):
-        NOT_PUBLIC = "not_public", _("Not Public")
-        IMMEDIATE = "immediate", _("Immediate")
-        AFTER_CLOSE = "after_close", _("After Close")
-
     thumbnail = ImageField(_("Thumbnail"))
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     paper = ForeignKey(QuestionPaper, CASCADE, verbose_name=_("Question Paper"))
     complete_message = TextField(_("Complete Message"), blank=True, default="")
     anonymous = BooleanField(_("Anonymous"), default=True)
-    likert_options = ArrayField(CharField(max_length=30), blank=True, default=list, verbose_name=_("Likert Options"))
     show_results = BooleanField(_("Show Results"), default=False)
 
     class Meta(LearningObjectMixin.Meta):

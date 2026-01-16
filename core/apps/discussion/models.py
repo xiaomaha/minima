@@ -79,6 +79,9 @@ class QuestionPool(Model):
     if TYPE_CHECKING:
         question_set: "QuerySet[Question]"
 
+    def __str__(self):
+        return self.title
+
     async def select_question(self):
         question = await self.question_set.order_by("?").afirst()
         if not question:
