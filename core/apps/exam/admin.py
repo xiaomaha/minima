@@ -30,7 +30,7 @@ class ExamAdmin(ModelAdmin[Exam]):
     def get_list_display(self, request: HttpRequest):
         return tuple(
             str(field)
-            for field in self.list_display
+            for field in super().get_list_display(request)
             if field not in ("__str__", "grade_due_days", "approval_due_days", "confirm_due_days")
         )
 

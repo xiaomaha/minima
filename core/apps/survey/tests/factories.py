@@ -76,12 +76,6 @@ class SurveyFactory(LearningObjectFactory[Survey]):
         django_get_or_create = ("title",)
         skip_postgeneration_save = True
 
-    @lazy_attribute
-    def likert_options(self):
-        if generic.random.weighted_choice({True: 7, False: 3}):
-            return []
-        return [_("Strongly Disagree"), _("Disagree"), _("Neutral"), _("Agree"), _("Strongly Agree")]
-
     @post_generation
     def post_generation(self, create: bool, extracted: object, **kwargs: object):
         if not create:
@@ -107,12 +101,6 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
 
         if TYPE_CHECKING:
             self = cast(Submission, self)
-
-        if self.survey.likert_options:
-            return {
-                str(pk): generic.random.choice(self.survey.likert_options)
-                for pk in self.survey.paper.question_set.values_list("id", flat=True)
-            }
 
         answer_dict = {}
         for q in self.survey.paper.question_set.all():

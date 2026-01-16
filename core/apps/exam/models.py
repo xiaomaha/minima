@@ -75,6 +75,9 @@ class QuestionPool(Model):
         verbose_name_plural = _("Question Pools")
         constraints = [UniqueConstraint(fields=["title", "owner"], name="exam_questionpool_ti_ow_uniq")]
 
+    def __str__(self):
+        return self.title
+
     if TYPE_CHECKING:
         question_set: "QuerySet[Question]"
 

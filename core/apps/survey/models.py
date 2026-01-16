@@ -73,7 +73,6 @@ class Survey(LearningObjectMixin):
     paper = ForeignKey(QuestionPaper, CASCADE, verbose_name=_("Question Paper"))
     complete_message = TextField(_("Complete Message"), blank=True, default="")
     anonymous = BooleanField(_("Anonymous"), default=True)
-    likert_options = ArrayField(CharField(max_length=30), blank=True, default=list, verbose_name=_("Likert Options"))
     show_results = BooleanField(_("Show Results"), default=False)
 
     class Meta(LearningObjectMixin.Meta):

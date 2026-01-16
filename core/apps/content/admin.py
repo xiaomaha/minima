@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.common.admin import HiddenModelAdmin, ModelAdmin, ReadOnlyModelAdmin, TabularInline
 from apps.content.models import Media, Note, PublicAccessMedia, Subtitle, Watch
-from apps.operation.models import Attachment
 
 log = logging.getLogger(__name__)
 
@@ -37,17 +36,9 @@ class SubtitleAdmin(HiddenModelAdmin[Subtitle]):
 @admin.register(Watch)
 class WatchAdmin(ReadOnlyModelAdmin[Watch]):
     def get_list_display(self, request: HttpRequest):
-        return tuple(str(field) for field in self.list_display if field not in ("__str__", "watch_bits"))
+        return tuple(str(field) for field in super().get_list_display(request) if field not in ("watch_bits",))
 
 
 @admin.register(Note)
-class NoteAdmin(ModelAdmin[Note]):
-    class AttachmentInline(TabularInline[Attachment]):
-        model = Note.attachments.through
-        verbose_name = _("Attachments")
-        verbose_name_plural = _("Attachments")
-
-    inlines = (AttachmentInline,)
-
-    def get_fields(self, request, obj=None):
-        return [f for f in super().get_fields(request, obj=obj) if f not in ("attachments",)]
+class NoteAdmin(ReadOnlyModelAdmin[Note]):
+    pass
