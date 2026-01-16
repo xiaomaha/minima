@@ -112,10 +112,18 @@ class InquiryAdmin(ModelAdmin[Inquiry]):
         qs = super().get_queryset(request)
         return qs.annotate(solved=Exists(InquiryResponse.objects.filter(inquiry=OuterRef("pk"), solved__isnull=False)))
 
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        if db_field.name in "question":
-            kwargs["widget"] = WysiwygWidget
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
+    exclude = ("question",)
+
+    @admin.display(description=_("Question"))
+    def display_question(self, obj: Inquiry):
+        return mark_safe(obj.cleaned_question)
+
+    def get_readonly_fields(self, request, obj=None):
+        return (
+            tuple(f.name for f in self.model._meta.fields if f.name != "question")
+            + super().get_readonly_fields(request, obj)
+            + ("display_question",)
+        )
 
 
 @admin.register(InquiryResponse)
@@ -135,17 +143,16 @@ class AppealAdmin(ModelAdmin[Appeal]):
     def get_fields(self, request, obj=None):
         return [f for f in super().get_fields(request, obj=obj) if f not in ("attachments",)]
 
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        if db_field.name in "explanation":
-            kwargs["widget"] = WysiwygWidget
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
-
     @admin.display(description=_("Explanation"))
     def display_explanation(self, obj: Appeal):
         return mark_safe(obj.cleaned_explanation)
 
-    readonly_fields = ("display_explanation",)
     exclude = ("explanation",)
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields if f.name not in ["review", "closed", "explanation"]] + [
+            "display_explanation"
+        ]
 
 
 @admin.register(Attachment)

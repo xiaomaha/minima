@@ -9,7 +9,7 @@ from pydantic.functional_validators import field_validator
 from pydantic.networks import EmailStr, HttpUrl
 from pydantic_core._pydantic_core import PydanticCustomError
 
-from apps.common.schema import ContentTypeSchema, Schema, TimeStampedMixinSchema
+from apps.common.schema import Schema, TimeStampedMixinSchema
 
 Language = Literal["en", "ko", ""]
 
@@ -93,23 +93,6 @@ class RequestPasswordChangeSchema(Schema):
 class ApplyPasswordChangeSchema(Schema):
     password: Annotated[str, Field(min_length=settings.PASSWORD_MIN_LENGTH, max_length=50)]
     token: Annotated[str, Field(min_length=32)]
-
-
-ReactionKind = Literal["like", "flag", "bookmark"]
-
-
-class ReactionSchema(TimeStampedMixinSchema):
-    id: int
-    kind: ReactionKind
-    target_type: ContentTypeSchema
-    target_id: str
-
-
-class ReactionSaveSchema(Schema):
-    kind: ReactionKind | None  # None means delete
-    target_id: str
-    app_label: str
-    model: str
 
 
 class TOTPDeviceSchema(Schema):

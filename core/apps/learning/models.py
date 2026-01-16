@@ -46,6 +46,7 @@ from apps.discussion.models import Grade as DiscussionGrade
 from apps.exam.models import Exam
 from apps.exam.models import Grade as ExamGrade
 from apps.learning.trigger import enrollment_content_exists
+from apps.partner.models import Cohort
 from apps.quiz.models import Grade as QuizGrade
 from apps.quiz.models import Quiz
 from apps.survey.models import Submission as SurveySubmission
@@ -266,7 +267,11 @@ class Catalog(TimeStampedMixin):
             cls.objects
             .filter(
                 Q(available_from__lte=now, available_until__gte=now, active=True)
-                & (Q(public=True) | Q(usercatalog__user_id=user_id))
+                & (
+                    Q(public=True)  # shared catalogs
+                    | Q(usercatalog__user_id=user_id)  # user specific catalogs
+                    | Q(cohortcatalog__cohort__employees__user_id=user_id)  #  partner's cohort catalogs
+                )
             )
             .annotate(item_count=Count("catalogitem", distinct=True))
             .distinct()
@@ -390,6 +395,19 @@ class UserCatalog(TimeStampedMixin):
         verbose_name = _("User Catalog")
         verbose_name_plural = _("User Catalogs")
         constraints = [UniqueConstraint(fields=["user", "catalog"], name="learning_usercatalog_us_ca_uniq")]
+
+
+@pghistory.track()
+class CohortCatalog(TimeStampedMixin):
+    cohort = ForeignKey(Cohort, on_delete=CASCADE, verbose_name=_("Cohort"))
+    catalog = ForeignKey(Catalog, on_delete=CASCADE, verbose_name=_("Catalog"))
+    granted_by = ForeignKey(User, on_delete=CASCADE, verbose_name=_("Granted By"), null=True, related_name="+")
+    note = TextField(_("Note"), blank=True, default="")
+
+    class Meta:
+        verbose_name = _("Cohort Catalog")
+        verbose_name_plural = _("Cohort Catalogs")
+        constraints = [UniqueConstraint(fields=["cohort", "catalog"], name="learning_cohortcatalog_co_ca_uniq")]
 
 
 async def _fetch_enrollable_contents(content_ids_by_type: dict):

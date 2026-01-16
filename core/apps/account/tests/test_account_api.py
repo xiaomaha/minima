@@ -117,20 +117,6 @@ def test_account_flow(client: Client, token_spy: list[str], mimesis: Generic):
         content_type="application/json",
     )
     assert res.status_code == 200, "login with new email"
-    login_user = res.json()
-
-    # reaction
-    res = client.post(
-        "/api/v1/account/reaction",
-        data=json.dumps({"targetId": login_user["id"], "appLabel": "account", "model": "user", "kind": "bookmark"}),
-        content_type="application/json",
-    )
-    assert res.status_code == 200, "save reaction"
-
-    # reaction
-    res = client.get("/api/v1/account/reaction")
-    bookmarked_item = res.json()["items"][:1][0]
-    assert bookmarked_item["kind"] == "bookmark" and bookmarked_item["targetId"] == login_user["id"], "get reactions"
 
     # setup otp
     res = client.post("/api/v1/account/otp/setup")

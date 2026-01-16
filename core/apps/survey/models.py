@@ -68,11 +68,6 @@ class Question(OrderableMixin):
 
 @pghistory.track()
 class Survey(LearningObjectMixin):
-    class VisibilityChoices(TextChoices):
-        NOT_PUBLIC = "not_public", _("Not Public")
-        IMMEDIATE = "immediate", _("Immediate")
-        AFTER_CLOSE = "after_close", _("After Close")
-
     thumbnail = ImageField(_("Thumbnail"))
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     paper = ForeignKey(QuestionPaper, CASCADE, verbose_name=_("Question Paper"))

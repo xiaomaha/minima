@@ -34,9 +34,7 @@ from django.db.models import (
     JSONField,
     Model,
     OneToOneField,
-    TextChoices,
     TextField,
-    UniqueConstraint,
 )
 from django.db.models.expressions import OuterRef, Subquery
 from django.db.models.query import QuerySet
@@ -371,18 +369,6 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         self.password = temp_passwords.password
         return await self.acheck_password(password)
 
-    async def save_reaction(
-        self, *, target_id: str, app_label: str, model: str, kind: Literal["like", "flag", "bookmark"] | None
-    ):
-        target_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
-        if not kind:
-            await Reaction.objects.filter(user=self, target_type=target_type, target_id=target_id).adelete()
-            return
-
-        await Reaction.objects.aupdate_or_create(
-            user=self, target_type=target_type, target_id=target_id, defaults={"modified": timezone.now(), "kind": kind}
-        )
-
     async def setup_otp(self):
         if await TOTPDevice.objects.filter(user=self, confirmed=True).aexists():
             raise ValueError(ErrorCode.OTP_ALREADY_ENABLED)
@@ -546,30 +532,6 @@ class TempPassword(Model):
     class Meta:
         verbose_name = _("Temporary Password")
         verbose_name_plural = _("Temporary Passwords")
-
-
-@pghistory.track()
-class Reaction(TimeStampedMixin):
-    class ReactionChoices(TextChoices):
-        BOOKMARK = "bookmark", _("Bookmark")
-        LIKE = "like", _("Like")
-        FLAG = "flag", _("Flag")
-
-    user = ForeignKey(User, CASCADE, verbose_name=_("User"))
-    kind = CharField(_("Kind"), max_length=10, choices=ReactionChoices)
-    target_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Target Type"))
-    target_id = CharField(_("Target ID"), max_length=36)
-    target = GenericForeignKey("target_type", "target_id")
-
-    class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Reaction")
-        verbose_name_plural = _("Reactions")
-        constraints = [
-            UniqueConstraint(fields=["user", "target_type", "target_id"], name="account_reaction_us_kaid_taty_uniq")
-        ]
-
-    if TYPE_CHECKING:
-        pk: int
 
 
 @pghistory.track()

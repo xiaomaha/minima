@@ -66,7 +66,9 @@ class EmployeeAdmin(ImportExportModelAdmin[Employee]):
 
     def get_list_display(self, request: HttpRequest):
         list_display = super().get_list_display(request)
-        return tuple(f for f in list_display if f not in ["encrypted_id_number"]) + ("linked_user",)
+        return tuple(
+            f for f in list_display if f not in ["encrypted_id_number", "employment_status", "employment_type"]
+        ) + ("linked_user",)
 
 
 @admin.register(Cohort)
