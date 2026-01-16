@@ -1,9 +1,9 @@
 import pgtrigger
 
 
-def enrollment_content_exists(enrollment_table: str, content_type_table: str):
+def content_exists_trigger(table_name: str, content_type_table: str):
     return pgtrigger.Trigger(
-        name=f"{enrollment_table}_content_exists",
+        name=f"{table_name}_content_exists",
         operation=pgtrigger.Insert | pgtrigger.Update,
         when=pgtrigger.Before,
         func=f"""

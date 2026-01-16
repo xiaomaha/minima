@@ -45,7 +45,7 @@ from apps.discussion.models import Discussion
 from apps.discussion.models import Grade as DiscussionGrade
 from apps.exam.models import Exam
 from apps.exam.models import Grade as ExamGrade
-from apps.learning.trigger import enrollment_content_exists
+from apps.learning.trigger import content_exists_trigger
 from apps.partner.models import Cohort
 from apps.quiz.models import Grade as QuizGrade
 from apps.quiz.models import Quiz
@@ -232,9 +232,7 @@ class Enrollment(TimeStampedMixin):
         await enrollment.asave()
 
 
-setattr(
-    Enrollment._meta, "triggers", [enrollment_content_exists(Enrollment._meta.db_table, ContentType._meta.db_table)]
-)
+setattr(Enrollment._meta, "triggers", [content_exists_trigger(Enrollment._meta.db_table, ContentType._meta.db_table)])
 
 
 @pghistory.track()
@@ -382,6 +380,9 @@ class CatalogItem(TimeStampedMixin, OrderableMixin):
 
     if TYPE_CHECKING:
         _content_cache: GenericForeignKey
+
+
+setattr(CatalogItem._meta, "triggers", [content_exists_trigger(CatalogItem._meta.db_table, ContentType._meta.db_table)])
 
 
 @pghistory.track()
