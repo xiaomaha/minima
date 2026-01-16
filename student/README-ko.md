@@ -4,13 +4,13 @@
 [![한국어](https://img.shields.io/badge/Language-한국어-red)](README-ko.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-SolidJS와 TypeScript로 만든 Minima LMS 학생 인터페이스.
+SolidJS와 TypeScript로 만든 Minima LMS 학습자 인터페이스.
 
 > **🚧 출시 준비 중**: 아직 비즈니스 용도로 사용할 준비가 되지 않았습니다
 
 ## 주요 기능
 
-- 현대적인 마이크로 러닝 학생 인터페이스
+- 현대적인 마이크로 러닝 학습자 인터페이스
   - 문서 (현재 작성 중)
 
 - 기술 스택
