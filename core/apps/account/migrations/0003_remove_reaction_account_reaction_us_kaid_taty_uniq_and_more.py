@@ -10,6 +10,22 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL(
+            """
+            DO $$ 
+            DECLARE r RECORD;
+            BEGIN
+                FOR r IN SELECT tgname 
+                         FROM pg_trigger 
+                         WHERE tgrelid = 'account_reaction'::regclass
+                LOOP
+                    EXECUTE 'DROP TRIGGER IF EXISTS ' || r.tgname || ' ON account_reaction CASCADE';
+                END LOOP;
+            END $$;
+            """,
+            migrations.RunSQL.noop
+        ),
+
         migrations.RemoveConstraint(
             model_name='reaction',
             name='account_reaction_us_kaid_taty_uniq',
