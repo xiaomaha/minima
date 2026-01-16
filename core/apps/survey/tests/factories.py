@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, cast
 import mimesis
 from django.conf import settings
 from django.db.models import QuerySet
-from django.utils.translation import gettext as _
 from factory.declarations import Iterator, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
