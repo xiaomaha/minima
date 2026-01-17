@@ -10,6 +10,7 @@ import jwt
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.contrib.postgres.forms import SimpleArrayField
+from django.core.exceptions import ImproperlyConfigured
 from django.db import connection
 from django.db.models import Avg, Count, FloatField, Max, Min, Model, Value
 from django.db.models.functions import Coalesce
@@ -239,3 +240,20 @@ def openapi_query_param(*, func, name: str, schema_type: str, required: bool, nu
             })
 
     func._ninja_contribute_to_operation.append(contribute_to_operation)
+
+
+def issue_active_context(model_name: str, model_id: str | int, session_id: str | int) -> str:
+    return f"{model_name}::{model_id}::{session_id}"
+
+
+def normalize_context(context: str) -> str:
+    # On the server, context can be used to dynamically isolate static content.
+    # active_context is unique and only active_context is accessible externally,
+    # so when going external, the session_id is removed.
+
+    if not context:
+        return ""
+    parts = context.split("::")
+    if len(parts) != 3:
+        raise ImproperlyConfigured(f"Invalid context: {context}")
+    return f"{parts[0]}={parts[1]}"

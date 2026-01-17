@@ -1005,7 +1005,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "boto3-stubs", extras = ["s3"] },
-    { name = "django-stubs" },
+    { name = "django-stubs", specifier = ">=5.2.8" },
     { name = "factory-boy" },
     { name = "httpx" },
     { name = "mimesis" },

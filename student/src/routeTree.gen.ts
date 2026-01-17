@@ -21,6 +21,7 @@ import { Route as appDashboardIndexRouteImport } from './routes/(app)/dashboard/
 import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
 import { Route as appMediaIdRouteImport } from './routes/(app)/media/$id'
 import { Route as appDashboardSearchRouteImport } from './routes/(app)/dashboard/search'
+import { Route as appDashboardReportRouteImport } from './routes/(app)/dashboard/report'
 import { Route as appDashboardLearningRouteImport } from './routes/(app)/dashboard/learning'
 import { Route as appDashboardInquiryRouteImport } from './routes/(app)/dashboard/inquiry'
 import { Route as appDashboardGoalRouteImport } from './routes/(app)/dashboard/goal'
@@ -90,6 +91,11 @@ const appMediaIdRoute = appMediaIdRouteImport.update({
 const appDashboardSearchRoute = appDashboardSearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => appDashboardRouteRoute,
+} as any)
+const appDashboardReportRoute = appDashboardReportRouteImport.update({
+  id: '/report',
+  path: '/report',
   getParentRoute: () => appDashboardRouteRoute,
 } as any)
 const appDashboardLearningRoute = appDashboardLearningRouteImport.update({
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/goal': typeof appDashboardGoalRoute
   '/dashboard/inquiry': typeof appDashboardInquiryRoute
   '/dashboard/learning': typeof appDashboardLearningRoute
+  '/dashboard/report': typeof appDashboardReportRoute
   '/dashboard/search': typeof appDashboardSearchRoute
   '/media/$id': typeof appMediaIdRoute
   '/survey/$id': typeof publicSurveyIdRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/dashboard/goal': typeof appDashboardGoalRoute
   '/dashboard/inquiry': typeof appDashboardInquiryRoute
   '/dashboard/learning': typeof appDashboardLearningRoute
+  '/dashboard/report': typeof appDashboardReportRoute
   '/dashboard/search': typeof appDashboardSearchRoute
   '/media/$id': typeof appMediaIdRoute
   '/survey/$id': typeof publicSurveyIdRoute
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/(app)/dashboard/goal': typeof appDashboardGoalRoute
   '/(app)/dashboard/inquiry': typeof appDashboardInquiryRoute
   '/(app)/dashboard/learning': typeof appDashboardLearningRoute
+  '/(app)/dashboard/report': typeof appDashboardReportRoute
   '/(app)/dashboard/search': typeof appDashboardSearchRoute
   '/(app)/media/$id': typeof appMediaIdRoute
   '/(public)/survey/$id': typeof publicSurveyIdRoute
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/dashboard/goal'
     | '/dashboard/inquiry'
     | '/dashboard/learning'
+    | '/dashboard/report'
     | '/dashboard/search'
     | '/media/$id'
     | '/survey/$id'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/dashboard/goal'
     | '/dashboard/inquiry'
     | '/dashboard/learning'
+    | '/dashboard/report'
     | '/dashboard/search'
     | '/media/$id'
     | '/survey/$id'
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/(app)/dashboard/goal'
     | '/(app)/dashboard/inquiry'
     | '/(app)/dashboard/learning'
+    | '/(app)/dashboard/report'
     | '/(app)/dashboard/search'
     | '/(app)/media/$id'
     | '/(public)/survey/$id'
@@ -397,6 +409,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof appDashboardSearchRouteImport
       parentRoute: typeof appDashboardRouteRoute
     }
+    '/(app)/dashboard/report': {
+      id: '/(app)/dashboard/report'
+      path: '/report'
+      fullPath: '/dashboard/report'
+      preLoaderRoute: typeof appDashboardReportRouteImport
+      parentRoute: typeof appDashboardRouteRoute
+    }
     '/(app)/dashboard/learning': {
       id: '/(app)/dashboard/learning'
       path: '/learning'
@@ -491,6 +510,7 @@ interface appDashboardRouteRouteChildren {
   appDashboardGoalRoute: typeof appDashboardGoalRoute
   appDashboardInquiryRoute: typeof appDashboardInquiryRoute
   appDashboardLearningRoute: typeof appDashboardLearningRoute
+  appDashboardReportRoute: typeof appDashboardReportRoute
   appDashboardSearchRoute: typeof appDashboardSearchRoute
   appDashboardIndexRoute: typeof appDashboardIndexRoute
 }
@@ -502,6 +522,7 @@ const appDashboardRouteRouteChildren: appDashboardRouteRouteChildren = {
   appDashboardGoalRoute: appDashboardGoalRoute,
   appDashboardInquiryRoute: appDashboardInquiryRoute,
   appDashboardLearningRoute: appDashboardLearningRoute,
+  appDashboardReportRoute: appDashboardReportRoute,
   appDashboardSearchRoute: appDashboardSearchRoute,
   appDashboardIndexRoute: appDashboardIndexRoute,
 }

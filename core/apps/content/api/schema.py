@@ -1,11 +1,15 @@
+from datetime import datetime
 from typing import Annotated, Literal
 
 from pydantic.fields import Field
 
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import LearningObjectMixinSchema, Schema, TimeStampedMixinSchema
+from apps.common.util import normalize_context
 from apps.content.api.encoder import GzipInEncodedType, GzipOutEncodedType
-from apps.content.models import Note
+from apps.content.models import Media, Note, Watch
+
+MediaFormat = Literal["video", "short", "ebook", "html", "pdf"]
 
 
 class MediaSchema(LearningObjectMixinSchema):
@@ -14,7 +18,7 @@ class MediaSchema(LearningObjectMixinSchema):
     duration_seconds: float
     owner: OwnerSchema
     subtitle_count: int
-    format: Literal["video", "short", "ebook", "html", "pdf"]
+    format: MediaFormat
     uploaded: bool
     url: str
 
@@ -23,6 +27,34 @@ class SubtitleSchema(Schema):
     id: int
     lang: str
     body: str
+
+
+class WatchedMediaSchema(Schema):
+    media_id: str
+    title: str
+    thumbnail: str
+    format: MediaFormat
+    duration_seconds: float
+    passing_point: int
+    url: str
+    context: str
+    watched: datetime
+
+    @staticmethod
+    def resolve_duration_seconds(obj: Watch):
+        return obj.duration.total_seconds()
+
+    @staticmethod
+    def resolve_context(obj: Watch):
+        return normalize_context(obj.context)
+
+    @staticmethod
+    def resolve_watched(obj: Watch):
+        return obj.modified
+
+    @staticmethod
+    def resolve_thumbnail(obj: Watch):
+        return Media(thumbnail=obj.thumbnail).thumbnail
 
 
 class WatchOutSchema(Schema):

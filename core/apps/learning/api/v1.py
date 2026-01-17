@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated
 
 from django.conf import settings
@@ -12,6 +13,7 @@ from apps.learning.api.schema import (
     EnrollmentSchema,
     EnrollmentSuccessSchema,
     LearningRecordSchema,
+    LearningReportSchema,
 )
 from apps.learning.models import Catalog, Enrollment
 
@@ -64,3 +66,8 @@ async def enroll_catalog_item(request: HttpRequest, id: int, data: CatalogItemEn
         model=data.model,
         enrolled_by_id=request.auth,
     )
+
+
+@router.get("/report", response=LearningReportSchema)
+def get_report(request: HttpRequest, start: date, end: date):
+    return Enrollment.get_report(user_id=request.auth, start=start, end=end)

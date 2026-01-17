@@ -75,3 +75,14 @@ class EnrollmentSuccessSchema(TimeStampedMixinSchema):
 
 class UnEnrollSchema(Schema):
     enrollment_id: int
+
+
+class LearningReportSchema(Schema):
+    enrollment_count: int
+    exam_attempt_count: int
+    discussion_attempt_count: int
+    assignment_attempt_count: int
+    quiz_attempt_count: int
+    survey_submission_count: int
+    watch_media_count: int
+    watch_seconds: int

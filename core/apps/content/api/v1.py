@@ -1,19 +1,23 @@
+from datetime import date, datetime, time
 from typing import Annotated
 
 from django.conf import settings
-from django.db.models import Count
+from django.db.models import Count, F
 from django.shortcuts import aget_object_or_404
+from django.utils import timezone
 from ninja.files import UploadedFile
+from ninja.pagination import paginate
 from ninja.params import Form, functions
 from ninja.router import Router
 
-from apps.common.util import HttpRequest, PaginatedResponse
+from apps.common.util import HttpRequest, PaginatedResponse, Pagination
 from apps.content.api.schema import (
     MediaSchema,
     NoteSaveSchema,
     NoteSchema,
     SearchedMediaSchema,
     SubtitleSchema,
+    WatchedMediaSchema,
     WatchInSchema,
     WatchOutSchema,
 )
@@ -89,6 +93,27 @@ async def save_media_note(
         Note.validate_files(files)
     return await Note.upsert(
         media_id=id, user_id=request.auth, context=request.active_context, note=data.note, files=files
+    )
+
+
+@router.get("/watch", response=list[WatchedMediaSchema])
+@paginate(Pagination)
+async def get_watch_medias(request: HttpRequest, start: date, end: date):
+    start_dt = timezone.make_aware(datetime.combine(start, time.min))
+    end_dt = timezone.make_aware(datetime.combine(end, time.max))
+
+    return (
+        Watch.objects
+        .filter(user_id=request.auth, created__range=(start_dt, end_dt))
+        .annotate(
+            title=F("media__title"),
+            thumbnail=F("media__thumbnail"),
+            format=F("media__format"),
+            duration=F("media__duration"),
+            passing_point=F("media__passing_point"),
+            url=F("media__url"),
+        )
+        .order_by("-created")
     )
 
 

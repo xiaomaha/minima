@@ -4,9 +4,8 @@ export default defineConfig({
   output: {
     path: 'src/api',
     clean: true,
-    format: null,
-    lint: null,
   },
+  postProcess: ['biome:format', 'biome:lint'],
   plugins: [
     {
       name: '@hey-api/client-ky',
