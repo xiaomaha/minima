@@ -21,6 +21,8 @@ class GeminiAgent(BaseAgent):
         system_instruction: str | None = None,
         parts: list[dict] | None = None,
     ) -> AsyncIterator[str]:
+        self.last_usage = None
+
         contents: list[types.ContentUnion] = []
 
         if context:
@@ -62,3 +64,9 @@ class GeminiAgent(BaseAgent):
         async for chunk in stream:
             if chunk.text:
                 yield chunk.text
+
+            if hasattr(chunk, "usage_metadata") and chunk.usage_metadata:
+                self.last_usage = {
+                    "input_tokens": chunk.usage_metadata.prompt_token_count,
+                    "output_tokens": chunk.usage_metadata.candidates_token_count,
+                }

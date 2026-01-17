@@ -31,6 +31,9 @@ async def save_assistant_note(request: HttpRequest, data: AssistantNoteSaveSchem
     await AssistantNote.objects.aupdate_or_create(user_id=request.auth, defaults={"note": data.note})
 
 
+# TODO rate limit
+
+
 @router.post(
     "/chat/message",
     openapi_extra={
@@ -73,6 +76,10 @@ async def create_chat_message(
                     message.response += chunk
                     chunk_data = json.dumps({"response": chunk}, ensure_ascii=False)
                     yield f"event: chunk\ndata: {chunk_data}\n\n".encode("utf-8")
+
+                if plugin.agent.last_usage:
+                    message.input_tokens = plugin.agent.last_usage["input_tokens"]
+                    message.output_tokens = plugin.agent.last_usage["output_tokens"]
             except ImproperlyConfigured:
                 kind_message = (
                     "Maybe your ASSISTANT_AGENT or ASSISTANT_AGENT_API_KEY is not set. "

@@ -94,3 +94,17 @@ class ChatMessageFactory(DjangoModelFactory[ChatMessage]):
         if self.completed:
             return generic.random.choice([None, 1, 2, 3, 4, 5])
         return None
+
+    @lazy_attribute
+    def input_tokens(self):
+        if self.completed:
+            message_length = len(self.message)
+            return int(message_length / 4)
+        return None
+
+    @lazy_attribute
+    def output_tokens(self):
+        if self.completed:
+            response_length = len(self.response)
+            return int(response_length / 4)
+        return None
