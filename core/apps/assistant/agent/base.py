@@ -5,6 +5,7 @@ from typing import AsyncIterator
 class BaseAgent(ABC):
     def __init__(self, api_key: str):
         self.api_key = api_key
+        self.last_usage = None
 
     @abstractmethod
     async def generate_stream(

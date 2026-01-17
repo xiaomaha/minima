@@ -1,7 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, AsyncIterator
+from typing import Any, AsyncIterator, TypedDict
 
 from apps.assistant.agent.factory import create_agent
+
+
+class UsageInfo(TypedDict):
+    input_tokens: int
+    output_tokens: int
 
 
 class BasePlugin(ABC):
