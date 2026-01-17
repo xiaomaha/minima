@@ -9,7 +9,7 @@ import {
   IconPlayerPlayFilled,
   IconPlus,
 } from '@tabler/icons-solidjs'
-import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { toHHMMSS } from '@/shared/utils'
 
 interface MediaPlayerAPI {
@@ -36,6 +36,7 @@ export function PdfViewer(props: PdfViewerProps) {
 
   const [autoPlay, setAutoPlay] = createSignal(true)
   const [position, setPosition] = createSignal(-1)
+  const [isSeeking, setIsSeeking] = createSignal(false)
   let timeUpdateCallback: ((time: number) => void) | undefined
 
   const positionPerPage = () => props.duration / (store.numPages || 1)
@@ -50,8 +51,38 @@ export function PdfViewer(props: PdfViewerProps) {
     return Math.max(1, Math.min(Math.ceil(pos / positionPerPage()), total))
   }
 
+  onMount(() => {
+    const container = document.querySelector('.pdfSlickContainer')
+    if (!container) return
+
+    let scrollTimeout: ReturnType<typeof setTimeout> | undefined
+
+    const handleWheel = () => {
+      if (!autoPlay()) return
+
+      setAutoPlay(false)
+
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+
+      scrollTimeout = setTimeout(() => {
+        const currentPage = store.pageNumber
+        if (currentPage) {
+          setPosition(pageToPosition(currentPage))
+        }
+        setAutoPlay(true)
+      }, 150)
+    }
+
+    container.addEventListener('wheel', handleWheel, { passive: true })
+
+    onCleanup(() => {
+      container.removeEventListener('wheel', handleWheel)
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+    })
+  })
+
   createEffect(() => {
-    if (!isDocumentLoaded()) return
+    if (!isDocumentLoaded() || isSeeking()) return
     const currentPage = store.pageNumber
     if (currentPage) {
       const expectedPage = positionToPage(position())
@@ -73,7 +104,9 @@ export function PdfViewer(props: PdfViewerProps) {
         const currentPage = positionToPage(prev)
         const nextPage = positionToPage(next)
         if (currentPage !== nextPage) {
+          setIsSeeking(true)
           smoothGotoPage(nextPage)
+          setTimeout(() => setIsSeeking(false), 500)
         }
         timeUpdateCallback?.(next)
         return next
@@ -109,7 +142,7 @@ export function PdfViewer(props: PdfViewerProps) {
         jumpToTime: (time: number) => {
           const page = positionToPage(time)
           store.pdfSlick?.gotoPage(page)
-          setPosition(time - 1) // because of interval 1s
+          setPosition(time - 1)
         },
         onTimeUpdate: (callback: (time: number) => void) => {
           timeUpdateCallback = callback
@@ -126,6 +159,13 @@ export function PdfViewer(props: PdfViewerProps) {
       <div
         class={`flex-1 relative overflow-auto transition-opacity duration-300 ${isDocumentLoaded() ? 'opacity-100' : 'opacity-0'}`}
       >
+        <style>
+          {`
+            .pdfSlickContainer {
+              scroll-behavior: auto;
+            }
+          `}
+        </style>
         <PDFSlickViewer {...{ store, viewerRef }} />
       </div>
       <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 transition-colors bg-base-content/40 hover:bg-base-content/80 p-4 rounded-lg z-50 whitespace-nowrap">
