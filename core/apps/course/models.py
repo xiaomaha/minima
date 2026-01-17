@@ -45,7 +45,7 @@ from apps.assignment.models import Assignment
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
 from apps.common.models import BooleanNowField, LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AccessDate, OtpTokenDict
+from apps.common.util import AccessDate, OtpTokenDict, issue_active_context
 from apps.competency.models import Certificate, CertificateAward, CertificateAwardDataDict
 from apps.content.models import Media
 from apps.course.trigger import course_create_grading_policy, lessonmedia_unifier
@@ -256,15 +256,6 @@ class Course(LearningObjectMixin):
     async def issue_context(cls, *, course_id: str, user_id: str):
         en = await Engagement.objects.only("pk", "course_id").aget(course_id=course_id, learner_id=user_id, active=True)
         return en.issue_context()
-
-    @classmethod
-    def normalize_context(cls, context: str) -> str:
-        if not context:
-            return ""
-        parts = context.split("::")
-        if parts[0] == "course" and len(parts) >= 2:
-            return f"course={parts[1]}"
-        return ""
 
 
 @pghistory.track()
@@ -527,7 +518,7 @@ class Engagement(TimeStampedMixin):
         course_id: str
 
     def issue_context(self):
-        return f"course::{self.course_id}::{self.pk}"
+        return issue_active_context("course", self.course_id, self.pk)
 
     @classmethod
     async def start(cls, *, course_id: str, learner_id: str):

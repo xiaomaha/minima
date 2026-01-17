@@ -109,63 +109,6 @@ export const vApplyPasswordChangeSchema = v.object({
 });
 
 /**
- * Input
- */
-export const vInput = v.object({
-    page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
-    size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
-});
-
-/**
- * ContentTypeSchema
- */
-export const vContentTypeSchema = v.object({
-    appLabel: v.string(),
-    model: v.string()
-});
-
-/**
- * ReactionSchema
- */
-export const vReactionSchema = v.object({
-    created: v.pipe(v.string(), v.isoTimestamp()),
-    modified: v.pipe(v.string(), v.isoTimestamp()),
-    id: v.pipe(v.number(), v.integer()),
-    kind: v.picklist([
-        'like',
-        'flag',
-        'bookmark'
-    ]),
-    targetType: vContentTypeSchema,
-    targetId: v.string()
-});
-
-/**
- * PagedReactionSchema
- */
-export const vPagedReactionSchema = v.object({
-    items: v.array(vReactionSchema),
-    count: v.pipe(v.number(), v.integer()),
-    size: v.pipe(v.number(), v.integer()),
-    page: v.pipe(v.number(), v.integer()),
-    pages: v.pipe(v.number(), v.integer())
-});
-
-/**
- * ReactionSaveSchema
- */
-export const vReactionSaveSchema = v.object({
-    kind: v.union([v.picklist([
-            'like',
-            'flag',
-            'bookmark'
-        ]), v.null()]),
-    targetId: v.string(),
-    appLabel: v.string(),
-    model: v.string()
-});
-
-/**
  * OtpSetupSchema
  */
 export const vOtpSetupSchema = v.object({
@@ -460,6 +403,14 @@ export const vChatListSchema = v.object({
 });
 
 /**
+ * Input
+ */
+export const vInput = v.object({
+    page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+    size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+});
+
+/**
  * ChatMessageSchema
  */
 export const vChatMessageSchema = v.object({
@@ -699,6 +650,38 @@ export const vNoteSchema = v.object({
  */
 export const vNoteSaveSchema = v.object({
     note: v.pipe(v.string(), v.maxLength(10000))
+});
+
+/**
+ * WatchedMediaSchema
+ */
+export const vWatchedMediaSchema = v.object({
+    mediaId: v.string(),
+    title: v.string(),
+    thumbnail: v.string(),
+    format: v.picklist([
+        'video',
+        'short',
+        'ebook',
+        'html',
+        'pdf'
+    ]),
+    durationSeconds: v.number(),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    url: v.string(),
+    context: v.string(),
+    watched: v.pipe(v.string(), v.isoTimestamp())
+});
+
+/**
+ * PagedWatchedMediaSchema
+ */
+export const vPagedWatchedMediaSchema = v.object({
+    items: v.array(vWatchedMediaSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -1264,6 +1247,14 @@ export const vExamSessionSchema = v.object({
 export const vExamAttemptAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
 
 /**
+ * ContentTypeSchema
+ */
+export const vContentTypeSchema = v.object({
+    appLabel: v.string(),
+    model: v.string()
+});
+
+/**
  * EnrollmentContentSchema
  */
 export const vEnrollmentContentSchema = v.object({
@@ -1397,6 +1388,20 @@ export const vCatalogItemEnrollSchema = v.object({
     appLabel: v.string(),
     model: v.string(),
     contentId: v.string()
+});
+
+/**
+ * LearningReportSchema
+ */
+export const vLearningReportSchema = v.object({
+    enrollmentCount: v.pipe(v.number(), v.integer()),
+    examAttemptCount: v.pipe(v.number(), v.integer()),
+    discussionAttemptCount: v.pipe(v.number(), v.integer()),
+    assignmentAttemptCount: v.pipe(v.number(), v.integer()),
+    quizAttemptCount: v.pipe(v.number(), v.integer()),
+    surveySubmissionCount: v.pipe(v.number(), v.integer()),
+    watchMediaCount: v.pipe(v.number(), v.integer()),
+    watchSeconds: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -1776,7 +1781,6 @@ export const vSurveySchema = v.object({
     owner: vOwnerSchema,
     completeMessage: v.string(),
     anonymous: v.boolean(),
-    likertOptions: v.array(v.string()),
     showResults: v.boolean(),
     questions: v.array(vSurveyQuestionSchema)
 });
@@ -1884,26 +1888,6 @@ export const vAccountV1ApplyPasswordChangeData = v.object({
 
 export const vAccountV1LogoutData = v.object({
     body: v.optional(v.never()),
-    path: v.optional(v.never()),
-    query: v.optional(v.never())
-});
-
-export const vAccountV1GetReactionsData = v.object({
-    body: v.optional(v.never()),
-    path: v.optional(v.never()),
-    query: v.optional(v.object({
-        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
-        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
-    }))
-});
-
-/**
- * OK
- */
-export const vAccountV1GetReactionsResponse = vPagedReactionSchema;
-
-export const vAccountV1SaveReactionData = v.object({
-    body: vReactionSaveSchema,
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
@@ -2250,6 +2234,20 @@ export const vContentV1SaveMediaNoteData = v.object({
  */
 export const vContentV1SaveMediaNoteResponse = vNoteSchema;
 
+export const vContentV1GetWatchMediasData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vContentV1GetWatchMediasResponse = vPagedWatchedMediaSchema;
+
 export const vContentV1SearchSuggestionData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
@@ -2419,7 +2417,9 @@ export const vDiscussionV1GetOwnPostsData = v.object({
     path: v.object({
         id: v.string()
     }),
-    query: v.optional(v.never())
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
 });
 
 /**
@@ -2613,6 +2613,20 @@ export const vLearningV1EnrollCatalogItemData = v.object({
  * OK
  */
 export const vLearningV1EnrollCatalogItemResponse = vEnrollmentSuccessSchema;
+
+export const vLearningV1GetReportData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.object({
+        start: v.pipe(v.string(), v.isoDate()),
+        end: v.pipe(v.string(), v.isoDate())
+    })
+});
+
+/**
+ * OK
+ */
+export const vLearningV1GetReportResponse = vLearningReportSchema;
 
 export const vOperationV1GetAnnouncementsData = v.object({
     body: v.optional(v.never()),

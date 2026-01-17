@@ -20,6 +20,7 @@ function RouteComponent() {
     achievement: t('Achievement'),
     announcement: t('Announcement'),
     inquiry: t('1:1 Inquiry'),
+    report: t('Report'),
   } as const
 
   const currentTab = () => {

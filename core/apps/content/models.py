@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 from typing import TYPE_CHECKING, Sequence, TypedDict
 
 import pghistory
@@ -167,6 +168,8 @@ class Watch(TimeStampedMixin):
     if TYPE_CHECKING:
         pk: int
         media_id: str
+        duration: timedelta  # annotated
+        thumbnail: str  # annotated
 
     @classmethod
     async def update_media_watch(

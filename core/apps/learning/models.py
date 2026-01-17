@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import timedelta
+from datetime import date, datetime, time, timedelta
 from typing import TYPE_CHECKING
 
 import pghistory
@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.aggregates.general import ArrayAgg
-from django.db import IntegrityError
+from django.db import IntegrityError, connection
 from django.db.models import (
     CASCADE,
     SET_NULL,
@@ -35,18 +35,22 @@ from django.utils.translation import gettext_lazy as _
 from pghistory.models import PghEventModel
 
 from apps.assignment.models import Assignment
+from apps.assignment.models import Attempt as AssignmentAttempt
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
 from apps.common.models import OrderableMixin, TimeStampedMixin
-from apps.common.util import offset_paginate
+from apps.common.util import normalize_context, offset_paginate
 from apps.content.models import Media, Watch
 from apps.course.models import Course, Engagement, Gradebook
+from apps.discussion.models import Attempt as DiscussionAttempt
 from apps.discussion.models import Discussion
 from apps.discussion.models import Grade as DiscussionGrade
+from apps.exam.models import Attempt as ExamAttempt
 from apps.exam.models import Exam
 from apps.exam.models import Grade as ExamGrade
 from apps.learning.trigger import content_exists_trigger
 from apps.partner.models import Cohort
+from apps.quiz.models import Attempt as QuziAttempt
 from apps.quiz.models import Grade as QuizGrade
 from apps.quiz.models import Quiz
 from apps.survey.models import Submission as SurveySubmission
@@ -111,6 +115,14 @@ class Enrollment(TimeStampedMixin):
             model_class = self.content_type.model_class()
             if not model_class or not model_class.objects.filter(id=self.content_id).exists():
                 raise ValidationError(_("Content does not exist"))
+
+    @classmethod
+    async def deactivate(cls, *, id: int, user_id: str):
+        enrollment = await cls.objects.aget(id=id, user_id=user_id, active=True)
+        if not enrollment.can_deactivate:
+            raise ValueError(ErrorCode.PERMISSION_DENIED)
+        enrollment.active = False
+        await enrollment.asave()
 
     @classmethod
     async def get_enrolled(cls, *, user_id: str, page: int, size: int):
@@ -178,11 +190,7 @@ class Enrollment(TimeStampedMixin):
             content_id, context, value = record
 
             if context.startswith("course"):
-                # cf learning.api.access_control.active_context
-                # Frontend only accesses active context, so we can safely normalize
-                # Active contexts are unique per user (only one active engagement per course)
-                # This simplifies the frontend by removing engagement-specific details
-                context = Course.normalize_context(context)
+                context = normalize_context(context)
 
             # another context ...
             if content_id not in records:
@@ -224,12 +232,51 @@ class Enrollment(TimeStampedMixin):
         return records
 
     @classmethod
-    async def deactivate(cls, *, id: int, user_id: str):
-        enrollment = await cls.objects.aget(id=id, user_id=user_id, active=True)
-        if not enrollment.can_deactivate:
-            raise ValueError(ErrorCode.PERMISSION_DENIED)
-        enrollment.active = False
-        await enrollment.asave()
+    def get_report(cls, user_id: str, start: date, end: date):
+        start_dt = timezone.make_aware(datetime.combine(start, time.min))
+        end_dt = timezone.make_aware(datetime.combine(end, time.max))
+
+        query = f"""
+            SELECT
+                (SELECT COUNT(*) FROM {cls._meta.db_table}
+                 WHERE user_id = %(user_id)s AND active = true AND enrolled BETWEEN %(start)s AND %(end)s)
+                    AS enrollment_count,
+
+                (SELECT COUNT(*) FROM {ExamAttempt._meta.db_table}
+                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                    AS exam_attempt_count,
+
+                (SELECT COUNT(*) FROM {DiscussionAttempt._meta.db_table}
+                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                    AS discussion_attempt_count,
+
+                (SELECT COUNT(*) FROM {AssignmentAttempt._meta.db_table}
+                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                    AS assignment_attempt_count,
+
+                (SELECT COUNT(*) FROM {QuziAttempt._meta.db_table}
+                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                    AS quiz_attempt_count,
+
+                (SELECT COUNT(*) FROM {SurveySubmission._meta.db_table}
+                 WHERE respondent_id = %(user_id)s AND active = true AND created BETWEEN %(start)s AND %(end)s)
+                    AS survey_submission_count,
+
+                (SELECT COUNT(*) FROM {Watch._meta.db_table}
+                 WHERE user_id = %(user_id)s AND created BETWEEN %(start)s AND %(end)s)
+                    AS watch_media_count,
+
+                (SELECT COALESCE(SUM(BIT_COUNT(watch_bits)), 0) FROM {Watch._meta.db_table}
+                 WHERE user_id = %(user_id)s AND created BETWEEN %(start)s AND %(end)s)
+                    AS watch_seconds
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(query, {"user_id": user_id, "start": start_dt, "end": end_dt})
+            row = cursor.fetchone()
+            columns = [col[0] for col in cursor.description]
+
+        return dict(zip(columns, row))
 
 
 setattr(Enrollment._meta, "triggers", [content_exists_trigger(Enrollment._meta.db_table, ContentType._meta.db_table)])

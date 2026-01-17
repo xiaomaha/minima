@@ -221,109 +221,6 @@ export type ApplyPasswordChangeSchema = {
 };
 
 /**
- * Input
- */
-export type Input = {
-    /**
-     * Page
-     */
-    page?: number;
-    /**
-     * Size
-     */
-    size?: number;
-};
-
-/**
- * ContentTypeSchema
- */
-export type ContentTypeSchema = {
-    /**
-     * Applabel
-     */
-    appLabel: string;
-    /**
-     * Model
-     */
-    model: string;
-};
-
-/**
- * PagedReactionSchema
- */
-export type PagedReactionSchema = {
-    /**
-     * Items
-     */
-    items: Array<ReactionSchema>;
-    /**
-     * Count
-     */
-    count: number;
-    /**
-     * Size
-     */
-    size: number;
-    /**
-     * Page
-     */
-    page: number;
-    /**
-     * Pages
-     */
-    pages: number;
-};
-
-/**
- * ReactionSchema
- */
-export type ReactionSchema = {
-    /**
-     * Created
-     */
-    created: string;
-    /**
-     * Modified
-     */
-    modified: string;
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Kind
-     */
-    kind: 'like' | 'flag' | 'bookmark';
-    targetType: ContentTypeSchema;
-    /**
-     * Targetid
-     */
-    targetId: string;
-};
-
-/**
- * ReactionSaveSchema
- */
-export type ReactionSaveSchema = {
-    /**
-     * Kind
-     */
-    kind: 'like' | 'flag' | 'bookmark' | null;
-    /**
-     * Targetid
-     */
-    targetId: string;
-    /**
-     * Applabel
-     */
-    appLabel: string;
-    /**
-     * Model
-     */
-    model: string;
-};
-
-/**
  * OtpSetupSchema
  */
 export type OtpSetupSchema = {
@@ -965,6 +862,20 @@ export type ChatSchema = {
 };
 
 /**
+ * Input
+ */
+export type Input = {
+    /**
+     * Page
+     */
+    page?: number;
+    /**
+     * Size
+     */
+    size?: number;
+};
+
+/**
  * ChatMessageSchema
  */
 export type ChatMessageSchema = {
@@ -1478,6 +1389,74 @@ export type NoteSaveSchema = {
      * Note
      */
     note: string;
+};
+
+/**
+ * PagedWatchedMediaSchema
+ */
+export type PagedWatchedMediaSchema = {
+    /**
+     * Items
+     */
+    items: Array<WatchedMediaSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * WatchedMediaSchema
+ */
+export type WatchedMediaSchema = {
+    /**
+     * Mediaid
+     */
+    mediaId: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string;
+    /**
+     * Format
+     */
+    format: 'video' | 'short' | 'ebook' | 'html' | 'pdf';
+    /**
+     * Durationseconds
+     */
+    durationSeconds: number;
+    /**
+     * Passingpoint
+     */
+    passingPoint: number;
+    /**
+     * Url
+     */
+    url: string;
+    /**
+     * Context
+     */
+    context: string;
+    /**
+     * Watched
+     */
+    watched: string;
 };
 
 /**
@@ -2800,6 +2779,20 @@ export type ExamAttemptAnswersSchema = {
 };
 
 /**
+ * ContentTypeSchema
+ */
+export type ContentTypeSchema = {
+    /**
+     * Applabel
+     */
+    appLabel: string;
+    /**
+     * Model
+     */
+    model: string;
+};
+
+/**
  * EnrollmentContentSchema
  */
 export type EnrollmentContentSchema = {
@@ -3150,6 +3143,44 @@ export type CatalogItemEnrollSchema = {
      * Contentid
      */
     contentId: string;
+};
+
+/**
+ * LearningReportSchema
+ */
+export type LearningReportSchema = {
+    /**
+     * Enrollmentcount
+     */
+    enrollmentCount: number;
+    /**
+     * Examattemptcount
+     */
+    examAttemptCount: number;
+    /**
+     * Discussionattemptcount
+     */
+    discussionAttemptCount: number;
+    /**
+     * Assignmentattemptcount
+     */
+    assignmentAttemptCount: number;
+    /**
+     * Quizattemptcount
+     */
+    quizAttemptCount: number;
+    /**
+     * Surveysubmissioncount
+     */
+    surveySubmissionCount: number;
+    /**
+     * Watchmediacount
+     */
+    watchMediaCount: number;
+    /**
+     * Watchseconds
+     */
+    watchSeconds: number;
 };
 
 /**
@@ -4062,10 +4093,6 @@ export type SurveySchema = {
      */
     anonymous: boolean;
     /**
-     * Likertoptions
-     */
-    likertOptions: Array<string>;
-    /**
      * Showresults
      */
     showResults: boolean;
@@ -4278,45 +4305,6 @@ export type AccountV1LogoutData = {
 };
 
 export type AccountV1LogoutResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type AccountV1GetReactionsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Page
-         */
-        page?: number;
-        /**
-         * Size
-         */
-        size?: number;
-    };
-    url: '/api/v1/account/reaction';
-};
-
-export type AccountV1GetReactionsResponses = {
-    /**
-     * OK
-     */
-    200: PagedReactionSchema;
-};
-
-export type AccountV1GetReactionsResponse = AccountV1GetReactionsResponses[keyof AccountV1GetReactionsResponses];
-
-export type AccountV1SaveReactionData = {
-    body: ReactionSaveSchema;
-    path?: never;
-    query?: never;
-    url: '/api/v1/account/reaction';
-};
-
-export type AccountV1SaveReactionResponses = {
     /**
      * OK
      */
@@ -4940,6 +4928,31 @@ export type ContentV1SaveMediaNoteResponses = {
 
 export type ContentV1SaveMediaNoteResponse = ContentV1SaveMediaNoteResponses[keyof ContentV1SaveMediaNoteResponses];
 
+export type ContentV1GetWatchMediasData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/content/watch';
+};
+
+export type ContentV1GetWatchMediasResponses = {
+    /**
+     * OK
+     */
+    200: PagedWatchedMediaSchema;
+};
+
+export type ContentV1GetWatchMediasResponse = ContentV1GetWatchMediasResponses[keyof ContentV1GetWatchMediasResponses];
+
 export type ContentV1SearchSuggestionData = {
     body?: never;
     path?: never;
@@ -5235,7 +5248,9 @@ export type DiscussionV1GetOwnPostsData = {
          */
         id: string;
     };
-    query?: never;
+    query?: {
+        course?: string;
+    };
     url: '/api/v1/discussion/{id}/post/own';
 };
 
@@ -5581,6 +5596,31 @@ export type LearningV1EnrollCatalogItemResponses = {
 };
 
 export type LearningV1EnrollCatalogItemResponse = LearningV1EnrollCatalogItemResponses[keyof LearningV1EnrollCatalogItemResponses];
+
+export type LearningV1GetReportData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Start
+         */
+        start: string;
+        /**
+         * End
+         */
+        end: string;
+    };
+    url: '/api/v1/learning/report';
+};
+
+export type LearningV1GetReportResponses = {
+    /**
+     * OK
+     */
+    200: LearningReportSchema;
+};
+
+export type LearningV1GetReportResponse = LearningV1GetReportResponses[keyof LearningV1GetReportResponses];
 
 export type OperationV1GetAnnouncementsData = {
     body?: never;
