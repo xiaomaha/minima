@@ -154,13 +154,17 @@ export const TextEditor = (props: Props) => {
     if (!editor) return
 
     const filename = uniqueFilename(file.name)
+      .replace(/[<>"'&]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+
     const renamedFile = new File([file], filename, { type: file.type })
     const blobUrl = URL.createObjectURL(renamedFile)
 
     if (file.type.startsWith('image/')) {
       editor.chain().focus().setImage({ src: blobUrl, alt: filename }).run()
       setTimeout(() => {
-        const imgElement = editor?.view.dom.querySelector(`img[alt="${filename}"]`)
+        const imgElement = editor?.view.dom.querySelector(`img[alt="${CSS.escape(filename)}"]`)
         if (imgElement) {
           ;(imgElement as HTMLImageElement).click()
         }
