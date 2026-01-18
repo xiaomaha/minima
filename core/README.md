@@ -12,7 +12,7 @@ A lightweight alternative to Moodle, Canvas, and Open edX.
 ## Features
 
 - Modern Micro Learning Learning Management System
-  - docs (currently in progress)
+  - [https://cobel1024.github.io/minima-docs/](https://cobel1024.github.io/minima-docs/)
 
 - Tech Stack
   - Django 6.x

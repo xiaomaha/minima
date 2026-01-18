@@ -11,7 +11,7 @@ SolidJS와 TypeScript로 만든 Minima LMS 학습자 인터페이스.
 ## 주요 기능
 
 - 현대적인 마이크로 러닝 학습자 인터페이스
-  - 문서 (현재 작성 중)
+  - [https://cobel1024.github.io/minima-docs/ko/](https://cobel1024.github.io/minima-docs/ko/)
 
 - 기술 스택
   - SolidJS

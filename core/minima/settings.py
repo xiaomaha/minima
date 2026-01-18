@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "import_export",
     "django_cleanup.apps.CleanupConfig",
     "django_jsonform",
+    "django_celery_results",
     # django
     "django.contrib.admin",
     "django.contrib.auth",
@@ -81,9 +82,9 @@ INSTALLED_APPS = [
     "apps.course",
     "apps.learning",
     "apps.store",
-    "apps.tracking",
     "apps.assistant",
-    "django_celery_results",
+    "apps.tracking",
+    "apps.warehouse",
 ]
 
 MIDDLEWARE = [
@@ -104,7 +105,7 @@ ROOT_URLCONF = "minima.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "apps/warehouse/templates"],
         "APP_DIRS": True,  # app/templates
         "OPTIONS": {
             "context_processors": [
@@ -115,6 +116,14 @@ TEMPLATES = [
         },
     }
 ]
+
+if DEBUG:
+    TEMPLATES[0]["APP_DIRS"] = False
+    TEMPLATES[0]["OPTIONS"]["loaders"] = [  # type: ignore
+        "django.template.loaders.filesystem.Loader",
+        "django.template.loaders.app_directories.Loader",
+    ]
+
 
 # WSGI_APPLICATION = "minima.wsgi.application"
 ASGI_APPLICATION = "minima.asgi.application"
@@ -213,6 +222,7 @@ TERMS_URL = f"{PLATFORM_BASE_URL}/terms"
 
 # unfold
 UNFOLD = {
+    "DASHBOARD_CALLBACK": "apps.warehouse.views.dashboard_callback",
     "SITE_DROPDOWN": [
         {"icon": "storage", "title": _("Storage"), "link": STORAGE_ADMIN_URL, "attrs": {"target": "_blank"}}
     ],
@@ -290,6 +300,7 @@ OTP_TOTP_THROTTLE_FACTOR = 1
 CELERY_BEAT_SCHEDULE = {
     "sync-hot-events": {"task": "tracking.tasks.sync_hot_event", "schedule": 300.0},
     "cleanup-hot-events": {"task": "tracking.tasks.cleanup_hot_event", "schedule": crontab(hour=2, minute=0)},
+    "collect-daily-data": {"task": "apps.warehouse.tasks.collect_daily_data", "schedule": crontab(hour=3, minute=0)},
 }
 
 # assistant

@@ -11,7 +11,7 @@ Minima LMS student interface built with SolidJS and TypeScript.
 ## Features
 
 - Modern Micro Learning Student Interface
-  - docs (currently in progress)
+  - [https://cobel1024.github.io/minima-docs/](https://cobel1024.github.io/minima-docs/)
 
 - Tech Stack
   - SolidJS
