@@ -6,7 +6,7 @@ import mimesis
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-from factory.declarations import LazyAttribute, LazyFunction, SubFactory
+from factory.declarations import Iterator, LazyAttribute, LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
@@ -75,7 +75,7 @@ class CatalogFactory(DjangoModelFactory[Catalog]):
     name = FactoryField("text.title")
     description = FactoryField("text")
     active = True
-    public = True
+    public = Iterator([True, False])
     available_from = LazyFunction(lambda: timezone.now())
     available_until = LazyAttribute(lambda o: o.available_from + timedelta(days=90))
 

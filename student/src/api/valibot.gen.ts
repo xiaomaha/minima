@@ -1320,7 +1320,13 @@ export const vCatalogSchema = v.object({
     public: v.boolean(),
     availableFrom: v.pipe(v.string(), v.isoTimestamp()),
     availableUntil: v.pipe(v.string(), v.isoTimestamp()),
-    itemCount: v.pipe(v.number(), v.integer())
+    itemCount: v.pipe(v.number(), v.integer()),
+    provider: v.picklist([
+        'public',
+        'personal',
+        'cohort'
+    ]),
+    cohortName: v.union([v.string(), v.null()])
 });
 
 /**
@@ -2237,10 +2243,12 @@ export const vContentV1SaveMediaNoteResponse = vNoteSchema;
 export const vContentV1GetWatchMediasData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
-    query: v.optional(v.object({
+    query: v.object({
+        start: v.pipe(v.string(), v.isoDate()),
+        end: v.pipe(v.string(), v.isoDate()),
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
-    }))
+    })
 });
 
 /**

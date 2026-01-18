@@ -13,6 +13,7 @@ from django.db.models import (
     CASCADE,
     SET_NULL,
     BooleanField,
+    Case,
     CharField,
     Count,
     DateTimeField,
@@ -26,6 +27,7 @@ from django.db.models import (
     TextField,
     UniqueConstraint,
     Value,
+    When,
 )
 from django.db.models.functions import Concat, JSONObject
 from django.db.models.functions.math import Round
@@ -308,17 +310,30 @@ class Catalog(TimeStampedMixin):
     @classmethod
     def get_catalogs(cls, user_id: str):
         now = timezone.now()
+
+        user_cohort_name = CohortCatalog.objects.filter(
+            catalog=OuterRef("pk"), cohort__employees__user_id=user_id
+        ).values("cohort__name")[:1]
+
         return (
             cls.objects
             .filter(
                 Q(available_from__lte=now, available_until__gte=now, active=True)
                 & (
-                    Q(public=True)  # shared catalogs
-                    | Q(usercatalog__user_id=user_id)  # user specific catalogs
-                    | Q(cohortcatalog__cohort__employees__user_id=user_id)  #  partner's cohort catalogs
+                    Q(public=True)
+                    | Q(usercatalog__user_id=user_id)
+                    | Q(cohortcatalog__cohort__employees__user_id=user_id)
                 )
             )
-            .annotate(item_count=Count("catalogitem", distinct=True))
+            .annotate(item_count=Count("catalogitem", distinct=True), cohort_name=Subquery(user_cohort_name))
+            .annotate(
+                provider=Case(
+                    When(public=True, then=Value("public")),
+                    When(cohort_name__isnull=True, then=Value("personal")),
+                    default=Value("cohort"),
+                    output_field=CharField(),
+                )
+            )
             .distinct()
             .order_by("-id")
         )

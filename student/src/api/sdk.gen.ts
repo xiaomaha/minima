@@ -363,7 +363,7 @@ export const contentV1SaveMediaNote = <ThrowOnError extends boolean = true>(opti
 /**
  * Get Watch Medias
  */
-export const contentV1GetWatchMedias = <ThrowOnError extends boolean = true>(options?: Options<ContentV1GetWatchMediasData, ThrowOnError>) => (options?.client ?? client).get<ContentV1GetWatchMediasResponses, unknown, ThrowOnError>({ url: '/api/v1/content/watch', ...options });
+export const contentV1GetWatchMedias = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetWatchMediasData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetWatchMediasResponses, unknown, ThrowOnError>({ url: '/api/v1/content/watch', ...options });
 
 /**
  * Search Suggestion

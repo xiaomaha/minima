@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic.root_model import RootModel
 
@@ -40,6 +41,8 @@ class CatalogSchema(TimeStampedMixinSchema):
     available_from: datetime
     available_until: datetime
     item_count: int
+    provider: Literal["public", "personal", "cohort"]
+    cohort_name: str | None
 
 
 class CatalogItemSchema(TimeStampedMixinSchema):
