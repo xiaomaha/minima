@@ -1,6 +1,7 @@
 import logging
 from typing import TYPE_CHECKING, cast
 
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
@@ -368,9 +369,17 @@ class GroupAdmin(HiddenModelAdmin[Group]):
 
 
 class CustomAdminSite(UnfoldAdminSite):
+    def each_context(self, request):
+        context = super().each_context(request)
+        context["PLATFORM_NAME"] = settings.PLATFORM_NAME
+        return context
+
     def get_app_list(self, request, app_label=None):
         app_dict = self._build_app_dict(request, app_label)
         app_list = list(app_dict.values())
+
+        # reorder
+        app_list = sorted(app_list, key=lambda app: app["app_label"] == "django_celery_results")
         return app_list
 
 

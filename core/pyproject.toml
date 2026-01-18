@@ -76,7 +76,8 @@ preview = true
 skip-magic-trailing-comma = true
 
 [tool.djlint]
-profile="django"
+profile = "django"
+blank_line_after_tag = "load,extends,include"
 
 [tool.ty.src]
 exclude = ["**/migrations/**"]

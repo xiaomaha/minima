@@ -12,7 +12,7 @@ Moodle, Canvas, Open edX의 가볍고 빠른 대안.
 ## 주요 기능
 
 - 현대적인 마이크로러닝 학습 관리 시스템
-  - 문서 (현재 진행 중)
+  - [https://cobel1024.github.io/minima-docs/ko/](https://cobel1024.github.io/minima-docs/ko/)
 
 - 기술 스택
   - Django 6.x

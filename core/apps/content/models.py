@@ -121,7 +121,7 @@ class Media(LearningObjectMixin):
 
 
 @pghistory.track()
-class PublicAccessMedia(Model):
+class PublicAccessMedia(TimeStampedMixin):
     media = OneToOneField(Media, CASCADE, verbose_name=_("Media"))
     start = DateTimeField(_("Start"), default=timezone.now)
     end = DateTimeField(_("End"))
