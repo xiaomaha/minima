@@ -21,7 +21,10 @@ chmod +x dev.sh
 ./dev.sh up
 ```
 
-Access at: http://localhost:5173 (admin@example.com / 1111)
+Access at:
+
+- student: [http://localhost:5173](http://localhost:5173)
+- admin: [http://localhost:8000](http://localhost:8000/admin/)
 
 ## Screenshots
 
@@ -35,7 +38,7 @@ Access at: http://localhost:5173 (admin@example.com / 1111)
 
 - Django 6.x + Django Ninja
 - PostgreSQL, OpenSearch, Redis, MinIO
-- Celery, Gemini/OpenAI/Anthropic
+- AI Plugin Architecture, Gemini/OpenAI/Anthropic
 
 ### Frontend
 
