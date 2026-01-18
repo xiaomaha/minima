@@ -2974,6 +2974,14 @@ export type CatalogSchema = {
      * Itemcount
      */
     itemCount: number;
+    /**
+     * Provider
+     */
+    provider: 'public' | 'personal' | 'cohort';
+    /**
+     * Cohortname
+     */
+    cohortName: string | null;
 };
 
 /**
@@ -4931,7 +4939,15 @@ export type ContentV1SaveMediaNoteResponse = ContentV1SaveMediaNoteResponses[key
 export type ContentV1GetWatchMediasData = {
     body?: never;
     path?: never;
-    query?: {
+    query: {
+        /**
+         * Start
+         */
+        start: string;
+        /**
+         * End
+         */
+        end: string;
         /**
          * Page
          */

@@ -1,7 +1,7 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
-import { createSignal, For, Show, Suspense } from 'solid-js'
+import { createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import {
   type CatalogItemSchema,
@@ -59,6 +59,24 @@ const CatalogCard = (props: CatalogCardProps) => {
           <h2 class="card-title mt-0">{props.catalog.name}</h2>
           <p class="text-base-content/60">{props.catalog.description}</p>
           <div class="flex gap-8">
+            <div class="space-y-1">
+              <div class="label">{t('Provider')}</div>
+              <p class="font-semibold">
+                <Switch>
+                  <Match when={props.catalog.provider === 'public'}>
+                    <span class="badge badge-sm badge-soft">{t('Public Catalog')}</span>
+                  </Match>
+                  <Match when={props.catalog.provider === 'personal'}>
+                    <span class="badge badge-sm badge-warning">{t('Personal Catalog')}</span>
+                  </Match>
+                  <Match when={props.catalog.provider === 'cohort'}>
+                    <div class="tooltip tooltip-bottom" data-tip={t("Provided by Partner's Cohort")}>
+                      <span class="badge badge-sm badge-info">{props.catalog.cohortName}</span>
+                    </div>
+                  </Match>
+                </Switch>
+              </p>
+            </div>
             <div class="space-y-1">
               <div class="label">{t('Available Period')}</div>
               <p class="font-semibold">

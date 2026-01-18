@@ -9,6 +9,7 @@ from apps.common.admin import (
     ImportExportModelAdmin,
     ModelAdmin,
     ReadOnlyHiddenModelAdmin,
+    ReadOnlyTabularInline,
     TabularInline,
 )
 from apps.partner.import_export import EmployeeResource
@@ -41,7 +42,7 @@ class EmployeeAdmin(ImportExportModelAdmin[Employee]):
     class CohortEmployeeInline(TabularInline[CohortEmployee]):
         model = CohortEmployee
 
-    class EmployeeEventInline(TabularInline[Employee.pgh_event_model]):
+    class EmployeeEventInline(ReadOnlyTabularInline[Employee.pgh_event_model]):
         model = Employee.pgh_event_model
 
     inlines = (CohortEmployeeInline, EmployeeEventInline)

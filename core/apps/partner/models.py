@@ -121,14 +121,14 @@ class Employee(TimeStampedMixin):
         return decrypted == id_number
 
     def __str__(self):
-        return f"{self.name} {self.email}>"
+        return f"{self.name} <{self.email}>"
 
 
 @pghistory.track()
 class Cohort(TimeStampedMixin):
     name = CharField(_("Name"), max_length=50, unique=True)
     description = TextField(_("Description"), blank=True, default="")
-    employees = ManyToManyField(Employee, verbose_name=_("Employees"))
+    employees = ManyToManyField(Employee, through="CohortEmployee", verbose_name=_("Employees"))
     staffs = ManyToManyField(User, through="CohortStaff", blank=True, verbose_name=_("Staffs"))
 
     class Meta(TimeStampedMixin.Meta):

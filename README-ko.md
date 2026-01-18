@@ -21,7 +21,10 @@ chmod +x dev.sh
 ./dev.sh up
 ```
 
-접속: http://localhost:5173 (admin@example.com / 1111)
+접속:
+
+- 학습자: [http://localhost:5173](http://localhost:5173)
+- 어드민: [http://localhost:8000](http://localhost:8000/admin/)
 
 ## 스크린샷
 
@@ -34,7 +37,7 @@ chmod +x dev.sh
 
 - Django 6.x + Django Ninja
 - PostgreSQL, OpenSearch, Redis, MinIO
-- Celery, Gemini/OpenAI/Anthropic
+- AI Plugin Architecture, Gemini/OpenAI/Anthropic
 
 ### 프론트엔드
 

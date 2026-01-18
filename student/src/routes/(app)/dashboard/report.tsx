@@ -11,6 +11,7 @@ export const Route = createFileRoute('/(app)/dashboard/report')({
   component: RouteComponent,
 })
 
+import { IconRefresh } from '@tabler/icons-solidjs'
 import { endOfDay, endOfMonth, endOfWeek, format, startOfDay, startOfMonth, startOfWeek } from 'date-fns'
 
 function RouteComponent() {
@@ -29,7 +30,7 @@ function RouteComponent() {
     return { start: formatDate(startOfMonth(now)), end: formatDate(endOfMonth(now)) }
   })
 
-  const [report] = createCachedStore(
+  const [report, { refetch: refetchReport }] = createCachedStore(
     'learningV1GetReport',
     () => ({ query: range() }),
     async (options) => {
@@ -38,7 +39,7 @@ function RouteComponent() {
     },
   )
 
-  const [watched, setObserverEl] = createCachedInfiniteStore(
+  const [watched, setObserverEl, { refetch: refetchWatched }] = createCachedInfiniteStore(
     'contentV1GetWatchMedias',
     () => ({ query: range() }),
     async (options, page) => {
@@ -52,6 +53,12 @@ function RouteComponent() {
       to: `/media/${watched.mediaId}`,
       search: watched.context ? Object.fromEntries(new URLSearchParams(watched.context)) : undefined,
     })
+  }
+
+  const handleRefresh = () => {
+    setPeriod('month')
+    refetchReport()
+    refetchWatched()
   }
 
   return (
@@ -146,7 +153,12 @@ function RouteComponent() {
 
       <div class=" mx-auto space-y-2 flex flex-col w-full">
         <Show when={!watched.loading} fallback={<div class="skeleton h-5 w-30"></div>}>
-          <div class="label text-sm">{t('{{count}} watched history found', { count: watched.count })}</div>
+          <div class="label text-sm w-full relative">
+            {t('{{count}} watched history found', { count: watched.count })}
+            <button type="button" class="btn btn-sm btn-ghost btn-circle absolute right-0" onClick={handleRefresh}>
+              <IconRefresh size={20} />
+            </button>
+          </div>
         </Show>
 
         <For each={watched.items}>{(item) => <Card media={item} onclick={() => goToMedia(item)} />}</For>
