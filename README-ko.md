@@ -21,7 +21,7 @@ chmod +x dev.sh
 ./dev.sh up
 ```
 
-접속:
+접속 username `admin@example.com` and password `1111`
 
 - 학습자: [http://localhost:5173](http://localhost:5173)
 - 어드민: [http://localhost:8000](http://localhost:8000/admin/)

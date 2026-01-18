@@ -21,7 +21,7 @@ chmod +x dev.sh
 ./dev.sh up
 ```
 
-Access at:
+Access with username `admin@example.com` and password `1111`
 
 - student: [http://localhost:5173](http://localhost:5173)
 - admin: [http://localhost:8000](http://localhost:8000/admin/)
