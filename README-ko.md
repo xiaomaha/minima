@@ -28,8 +28,8 @@ chmod +x dev.sh
 
 ## 스크린샷
 
-![대시보드](./screenshot/student.dashboard.learning.png)
-![관리자 패널](screenshot/admin.ko.sample.png)
+![대시보드](./screenshot/student.ko.webp)
+![관리자 패널](screenshot/admin.ko.webp)
 
 ## 기술 스택
 

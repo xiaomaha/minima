@@ -115,7 +115,7 @@ class Question(Model):
         solution: "Solution"
 
     def __str__(self):
-        return f"{self.question[:30]} {'...' if len(self.question) > 30 else ''}"
+        return f"({self.pk}) {self.question[:30]} {'...' if len(self.question) > 30 else ''}"
 
 
 @pghistory.track()
