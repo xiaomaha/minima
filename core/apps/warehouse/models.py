@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 
 
 def _timezone_date(from_days_ago: int = 1):
-    today = timezone.now().date() - timedelta(days=from_days_ago)
+    today = timezone.localtime().date() - timedelta(days=from_days_ago)
     start = datetime.combine(today, datetime.min.time(), tzinfo=timezone.get_default_timezone())
     end = start + timedelta(days=1)
     return today, start, end

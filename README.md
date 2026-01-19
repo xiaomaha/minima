@@ -28,9 +28,8 @@ Access with username `admin@example.com` and password `1111`
 
 ## Screenshots
 
-![Dashboard](./screenshot/student.dashboard.learning.png)
-
-![Admin Panel](screenshot/admin.en.sample.png)
+![Dashboard](./screenshot/student.en.webp)
+![Admin Panel](screenshot/admin.en.webp)
 
 ## Tech Stack
 

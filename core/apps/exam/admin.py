@@ -70,6 +70,9 @@ class AttemptAdmin(ModelAdmin[Attempt]):
         verbose_name_plural = _("Questions")
         ordering = ("id",)
 
+        def get_queryset(self, request):
+            return super().get_queryset(request).order_by("question_id")  # not id but question_id
+
     inlines = (QuestionInline, TempAnswerInline, SubmissionInline, GradeInline)
 
     def get_fields(self, request, obj=None):
