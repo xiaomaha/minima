@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 
 import pghistory
 from django.contrib.auth import get_user_model
@@ -199,6 +199,7 @@ class Order(TimeStampedMixin):
 
     if TYPE_CHECKING:
         orderproduct_set: "QuerySet[OrderProduct]"
+        _prefetched_objects_cache: dict[str, Sequence[OrderProduct]]
 
     @classmethod
     def create_from_cart(cls, cart: "Cart", coupon_codes: list[str], dry_run: bool):
@@ -235,7 +236,7 @@ class Order(TimeStampedMixin):
         if not dry_run:
             order_products = OrderProduct.objects.bulk_create(order_products)
 
-        setattr(order, "_prefetched_objects_cache", {"orderproduct_set": order_products})
+        order._prefetched_objects_cache = {"orderproduct_set": order_products}
 
         if coupon_codes:
             order.apply_coupons(coupon_codes, dry_run=dry_run)

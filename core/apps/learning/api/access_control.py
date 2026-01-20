@@ -79,7 +79,7 @@ def access_date(app_label, model, *, id_field: str = "id"):
                     raise ValueError(ErrorCode.CONTENT_READ_ONLY)
 
             # pass access date
-            setattr(request, "access_date", accessible)
+            request.access_date = accessible
             return await func(request, *args, **kwargs)
 
         return wrapper

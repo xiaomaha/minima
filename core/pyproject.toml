@@ -61,7 +61,7 @@ dev = [
   "pytest-mock",
   "httpx",
   "boto3-stubs[s3]",
-  "django-stubs>=5.2.8",
+  "django-stubs",
 ]
 
 [tool.django-stubs]

@@ -1,0 +1,11 @@
+pre-commit:
+  commands:
+    frontend:
+      glob: "student/**/*.{ts,tsx}"
+      root: "student/"
+      run: "./node_modules/.bin/biome check --write --staged --no-errors-on-unmatched {staged_files}"
+
+    backend:
+      glob: "core/**/*.py"
+      root: "core/"
+      run: ". .venv/bin/activate && python dev.py lint"
