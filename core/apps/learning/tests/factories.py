@@ -18,6 +18,7 @@ from apps.course.models import Course
 from apps.discussion.models import Discussion
 from apps.exam.models import Exam
 from apps.learning.models import ENROLLABLE_MODELS, Catalog, CatalogItem, Enrollment, UserCatalog
+from apps.quiz.models import Quiz
 from apps.survey.models import Survey
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
@@ -29,6 +30,7 @@ ENROLLABLE_FACTORY_MAP: dict[Type, str] = {
     Assignment: "apps.assignment.tests.factories.AssignmentFactory",
     Discussion: "apps.discussion.tests.factories.DiscussionFactory",
     Survey: "apps.survey.tests.factories.SurveyFactory",
+    Quiz: "apps.quiz.tests.factories.QuizFactory",
 }
 
 

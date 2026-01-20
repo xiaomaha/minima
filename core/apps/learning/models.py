@@ -60,7 +60,7 @@ from apps.survey.models import Survey
 
 User = get_user_model()
 
-ENROLLABLE_MODELS = [Course, Media, Exam, Assignment, Discussion, Survey]
+ENROLLABLE_MODELS = [Course, Media, Exam, Assignment, Discussion, Quiz, Survey]
 ENROLLABLE_MODEL_MAP = {(m._meta.app_label.lower(), m._meta.model.__name__.lower()): m for m in ENROLLABLE_MODELS}
 
 # cf Course.ASSESSIBLE_GRADE_MODELS

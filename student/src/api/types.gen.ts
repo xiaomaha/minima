@@ -361,6 +361,10 @@ export type AssignmentAttemptSchema = {
      * Active
      */
     active: boolean;
+    /**
+     * Retry
+     */
+    retry: number;
 };
 
 /**
@@ -2114,6 +2118,10 @@ export type DiscussionAttemptSchema = {
      * Active
      */
     active: boolean;
+    /**
+     * Retry
+     */
+    retry: number;
 };
 
 /**
@@ -2520,6 +2528,10 @@ export type ExamAttemptSchema = {
      * Active
      */
     active: boolean;
+    /**
+     * Retry
+     */
+    retry: number;
 };
 
 /**
@@ -4003,6 +4015,251 @@ export type PagedCommentBriefSchema = {
      * Pages
      */
     pages: number;
+};
+
+/**
+ * QuizAttemptSchema
+ */
+export type QuizAttemptSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Questions
+     */
+    questions: Array<QuizQuestionSchema>;
+    /**
+     * Started
+     */
+    started: string;
+    /**
+     * Active
+     */
+    active: boolean;
+    /**
+     * Retry
+     */
+    retry: number;
+};
+
+/**
+ * QuizGradeSchema
+ */
+export type QuizGradeSchema = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Earneddetails
+     */
+    earnedDetails: {
+        [key: string]: number | null;
+    };
+    /**
+     * Possiblepoint
+     */
+    possiblePoint: number;
+    /**
+     * Earnedpoint
+     */
+    earnedPoint: number;
+    /**
+     * Score
+     */
+    score: number;
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Feedback
+     */
+    feedback: {
+        [key: string]: string;
+    };
+    /**
+     * Completed
+     */
+    completed: string | null;
+    /**
+     * Confirmed
+     */
+    confirmed: string | null;
+    /**
+     * Id
+     */
+    id: number;
+};
+
+/**
+ * QuizQuestionSchema
+ */
+export type QuizQuestionSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Options
+     */
+    options: Array<string>;
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Supplement
+     */
+    supplement: string;
+    /**
+     * Point
+     */
+    point: number;
+};
+
+/**
+ * QuizSchema
+ */
+export type QuizSchema = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Audience
+     */
+    audience: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string | null;
+    /**
+     * Featured
+     */
+    featured: boolean;
+    /**
+     * Format
+     */
+    format: string;
+    /**
+     * Durationseconds
+     */
+    durationSeconds: number | null;
+    /**
+     * Passingpoint
+     */
+    passingPoint: number;
+    /**
+     * Maxattempts
+     */
+    maxAttempts: number;
+    /**
+     * Verificationrequired
+     */
+    verificationRequired: boolean;
+    /**
+     * Id
+     */
+    id: string;
+    owner: OwnerSchema;
+    /**
+     * Questioncount
+     */
+    questionCount: number;
+};
+
+/**
+ * QuizSessionSchema
+ */
+export type QuizSessionSchema = {
+    accessDate: AccessDateSchema;
+    step: LearningSessionStep;
+    quiz: QuizSchema;
+    attempt?: QuizAttemptSchema;
+    submission?: QuizSubmissionSchema;
+    grade?: QuizGradeSchema;
+    /**
+     * Solutions
+     */
+    solutions?: {
+        [key: string]: QuizSolutionSchema;
+    };
+    /**
+     * Analysis
+     */
+    analysis?: {
+        [key: string]: {
+            [key: string]: number;
+        };
+    };
+    stats?: ScoreStatsSchema;
+};
+
+/**
+ * QuizSolutionSchema
+ */
+export type QuizSolutionSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Correctanswers
+     */
+    correctAnswers: Array<string>;
+    /**
+     * Explanation
+     */
+    explanation: string;
+};
+
+/**
+ * QuizSubmissionSchema
+ */
+export type QuizSubmissionSchema = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Answers
+     */
+    answers: {
+        [key: string]: string;
+    };
+};
+
+/**
+ * QuizAttemptAnswersSchema
+ */
+export type QuizAttemptAnswersSchema = {
+    [key: string]: string;
 };
 
 /**
@@ -6093,6 +6350,96 @@ export type OperationV1GetCommentsResponses = {
 };
 
 export type OperationV1GetCommentsResponse = OperationV1GetCommentsResponses[keyof OperationV1GetCommentsResponses];
+
+export type QuizV1GetSessionData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/quiz/{id}/session';
+};
+
+export type QuizV1GetSessionResponses = {
+    /**
+     * OK
+     */
+    200: QuizSessionSchema;
+};
+
+export type QuizV1GetSessionResponse = QuizV1GetSessionResponses[keyof QuizV1GetSessionResponses];
+
+export type QuizV1StartAttemptData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/quiz/{id}/attempt';
+};
+
+export type QuizV1StartAttemptResponses = {
+    /**
+     * OK
+     */
+    200: QuizAttemptSchema;
+};
+
+export type QuizV1StartAttemptResponse = QuizV1StartAttemptResponses[keyof QuizV1StartAttemptResponses];
+
+export type QuizV1SubmitAttemptData = {
+    body: QuizAttemptAnswersSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/quiz/{id}/attempt/submit';
+};
+
+export type QuizV1SubmitAttemptResponses = {
+    /**
+     * OK
+     */
+    200: QuizSessionSchema;
+};
+
+export type QuizV1SubmitAttemptResponse = QuizV1SubmitAttemptResponses[keyof QuizV1SubmitAttemptResponses];
+
+export type QuizV1DeactivateAttemptData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        course?: string;
+    };
+    url: '/api/v1/quiz/{id}/attempt/deactivate';
+};
+
+export type QuizV1DeactivateAttemptResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type SurveyV1GetSurveyData = {
     body?: never;

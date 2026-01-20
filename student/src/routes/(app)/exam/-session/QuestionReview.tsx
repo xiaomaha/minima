@@ -28,19 +28,6 @@ export const QuestionReview = (props: Props) => {
   const answer = s().submission!.answers[questionId] ?? ''
   const feedback = s().grade!.feedback[questionId] ?? ''
 
-  // selection rate
-  const selectionData = s().analysis![questionId] ?? {}
-  const totalSubmissions = Object.values(selectionData).reduce((sum, count) => sum + count, 0)
-  const selectionRates =
-    question.format === 'single_choice' && totalSubmissions > 0
-      ? Object.fromEntries(
-          Object.entries(selectionData).map(([option, count]) => [
-            option,
-            `${Math.round((count / totalSubmissions) * 100)}%`,
-          ]),
-        )
-      : {}
-
   const onCreateAppeal = (appeal: AppealSchema) => {
     setStore('data', 'appeals', String(appeal.questionId), appeal)
   }
@@ -67,21 +54,45 @@ export const QuestionReview = (props: Props) => {
                 <For each={question.options}>
                   {(option, i) => {
                     const correctAnswer = solution?.correctAnswers.includes(String(i() + 1))
+
+                    const selectionData = s().analysis?.[questionId] ?? {}
+                    const totalSubmissions = Object.values(selectionData).reduce((sum, count) => sum + count, 0)
+
+                    const selectionRates =
+                      totalSubmissions > 0
+                        ? Object.fromEntries(
+                            Object.entries(selectionData).map(([option, count]) => [
+                              option,
+                              Math.round((count / totalSubmissions) * 100),
+                            ]),
+                          )
+                        : {}
+
                     return (
-                      <label class="label cursor-pointer flex gap-4">
-                        <input
-                          type="radio"
-                          checked={answer === String(i() + 1) || correctAnswer}
-                          class="radio radio-sm"
-                          classList={{ 'radio-primary': correctAnswer }}
-                        />
-                        <span class="flex-1 text-base" classList={{ 'text-primary': correctAnswer }}>
-                          {option}
-                        </span>
-                        <span title={t('Selection rate')} class="text-xs min-w-8 ml-8">
-                          {selectionRates[i() + 1] ?? ''}
-                        </span>
-                      </label>
+                      <div class="flex items-center gap-8">
+                        <label class="label cursor-pointer flex gap-4 flex-1">
+                          <input
+                            type="radio"
+                            checked={answer === String(i() + 1) || correctAnswer}
+                            class="radio radio-sm"
+                            classList={{ 'radio-primary': correctAnswer }}
+                          />
+                          <span class="flex-1 text-base" classList={{ 'text-primary': correctAnswer }}>
+                            {option}
+                          </span>
+                        </label>
+
+                        <Show when={totalSubmissions > 0}>
+                          <div class="flex flex-col items-end gap-1">
+                            <span class="text-xs label">{selectionRates[String(i() + 1)] ?? 0}%</span>
+                            <progress
+                              class="progress progress-accent w-24"
+                              value={selectionRates[String(i() + 1)] ?? 0}
+                              max="100"
+                            ></progress>
+                          </div>
+                        </Show>
+                      </div>
                     )
                   }}
                 </For>
@@ -161,9 +172,12 @@ export const QuestionReview = (props: Props) => {
         </table>
       </div>
 
-      <Dialog 
-      title={t(`Question ${props.numbering}.`)}
-      boxClass="max-w-3xl" open={!!appealDialogOpen()} onClose={() => setAppealDialogOpen(false)}>
+      <Dialog
+        title={t(`Question ${props.numbering}.`)}
+        boxClass="max-w-3xl"
+        open={!!appealDialogOpen()}
+        onClose={() => setAppealDialogOpen(false)}
+      >
         <Appeal appeal={appeal()} appLabel="exam" model="question" questionId={question.id} onCreate={onCreateAppeal} />
       </Dialog>
     </div>

@@ -1,20 +1,25 @@
 import random
-from typing import TYPE_CHECKING
+from datetime import timedelta
+from typing import TYPE_CHECKING, NotRequired, Sequence, TypedDict
 
 import pghistory
+from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from django.db import IntegrityError
 from django.db.models import (
     CASCADE,
     BooleanField,
     CharField,
     DateTimeField,
+    F,
     ForeignKey,
     JSONField,
     ManyToManyField,
     Model,
     OneToOneField,
     PositiveSmallIntegerField,
+    Prefetch,
     Q,
     QuerySet,
     TextField,
@@ -23,9 +28,24 @@ from django.db.models import (
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import AccessDate, LearningSessionStep, ScoreStatsDict, get_score_stats
+from apps.quiz.trigger import attempt_retry_count
 
 User = get_user_model()
+
+
+class SessionDict(TypedDict):
+    access_date: AccessDate
+    step: LearningSessionStep
+    quiz: "Quiz"
+    attempt: NotRequired["Attempt"]
+    submission: NotRequired["Submission"]
+    grade: NotRequired["Grade"]
+    solutions: NotRequired[dict[str, Solution]]
+    analysis: NotRequired[dict[str, dict[str, int]]]
+    stats: NotRequired[ScoreStatsDict]
 
 
 @pghistory.track()
@@ -43,10 +63,11 @@ class QuestionPool(Model):
     if TYPE_CHECKING:
         question_set: "QuerySet[Question]"
 
-    def select_questions(self):
-        questions = list(self.question_set.all())
-        count = min(self.select_count, len(questions))
-        return random.sample(questions, count)
+    async def select_questions(self):
+        all_question_ids = [q async for q in self.question_set.values_list("id", flat=True)]
+        random.shuffle(all_question_ids)
+        question_ids = all_question_ids[: self.select_count]
+        return Question.objects.filter(id__in=question_ids)
 
 
 @pghistory.track()
@@ -87,6 +108,46 @@ class Quiz(LearningObjectMixin):
         verbose_name_plural = _("Quizzes")
         constraints = [UniqueConstraint(fields=["owner", "title"], name="quiz_quiz_ow_ti_uniq")]
 
+    @classmethod
+    async def get_session(cls, *, quiz_id: str, learner_id: str, context: str, access_date: AccessDate):
+        quiz = await Quiz.objects.select_related("owner", "question_pool").aget(id=quiz_id)
+        session = SessionDict(access_date=access_date, step=LearningSessionStep.READY, quiz=quiz)
+
+        attempt = (
+            await Attempt.objects
+            .filter(quiz=quiz, learner_id=learner_id, context=context, active=True)
+            .select_related("quiz", "submission", "grade")
+            .prefetch_related(
+                Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
+            )
+            .alast()
+        )
+
+        if not attempt:
+            return session
+
+        session["attempt"] = attempt
+
+        if not hasattr(attempt, "submission"):
+            session["step"] = LearningSessionStep.SITTING
+            return session
+
+        session["submission"] = attempt.submission
+        session["grade"] = attempt.grade
+        session["solutions"] = {str(q.pk): q.solution async for q in attempt.questions.all()}
+        session["analysis"] = await quiz.analyze_answers([q.pk for q in attempt.questions.all()])
+        session["stats"] = await get_score_stats(
+            base_model=Quiz, base_model_id=quiz_id, grade_model=Grade, attempt_model=Attempt
+        )
+        session["step"] = LearningSessionStep.FINAL
+
+        return session
+
+    async def analyze_answers(self, question_ids: Sequence[int]):
+        from apps.quiz.documents import SubmissionDocument
+
+        return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
+
 
 @pghistory.track()
 class Attempt(TimeStampedMixin):
@@ -96,6 +157,7 @@ class Attempt(TimeStampedMixin):
     questions = ManyToManyField(Question, verbose_name=_("Questions"))
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+    retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Attempt")
@@ -109,6 +171,85 @@ class Attempt(TimeStampedMixin):
     if TYPE_CHECKING:
         learner_id: str
         submission: "Submission"
+
+    @classmethod
+    async def start(cls, *, quiz_id: str, learner_id: str, context: str):
+        quiz = await Quiz.objects.prefetch_related("question_pool__question_set").aget(id=quiz_id)
+        questions = await quiz.question_pool.select_questions()
+
+        try:
+            attempt = await Attempt.objects.acreate(
+                quiz=quiz,
+                learner_id=learner_id,
+                context=context,
+                active=True,
+                started=timezone.now() + timedelta(seconds=1),
+            )
+        except IntegrityError:
+            raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)
+
+        await attempt.questions.aset(questions)
+
+        attempt._prefetched_objects_cache = {"questions": questions}
+        attempt._state.fields_cache["submission"] = None
+
+        return attempt
+
+    @classmethod
+    async def submit(cls, *, quiz_id: str, learner_id: str, context: str, answers: dict, access_date: AccessDate):
+        if not answers:
+            raise ValueError(ErrorCode.NO_ANSWERS)
+
+        attempt = (
+            await cls.objects
+            .select_related("quiz__owner", "quiz__question_pool")
+            .prefetch_related(
+                Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
+            )
+            .aget(quiz_id=quiz_id, learner_id=learner_id, context=context, active=True)
+        )
+
+        try:
+            submission = await Submission.objects.acreate(attempt=attempt, answers=answers)
+        except IntegrityError:
+            raise ValueError(ErrorCode.ATTEMPT_ALREADY_SUBMITTED)
+
+        grade = Grade(attempt=attempt)
+        await grade.grade()
+
+        session = SessionDict(
+            access_date=access_date,
+            step=LearningSessionStep.FINAL,
+            quiz=attempt.quiz,
+            attempt=attempt,
+            submission=submission,
+            grade=grade,
+            solutions={str(q.pk): q.solution async for q in attempt.questions.all()},
+            analysis=await attempt.quiz.analyze_answers([q.pk for q in attempt.questions.all()]),
+            stats=await get_score_stats(
+                base_model=Quiz, base_model_id=quiz_id, grade_model=Grade, attempt_model=Attempt
+            ),
+        )
+
+        return session
+
+    @classmethod
+    async def deactivate(cls, *, quiz_id: str, learner_id: str, context: str):
+        attempt = (
+            await cls.objects
+            .filter(quiz_id=quiz_id, learner_id=learner_id, context=context)
+            .annotate(max_attempts=F("quiz__max_attempts"))
+            .aget(active=True)
+        )
+
+        if attempt.max_attempts and attempt.max_attempts - 1 <= attempt.retry:
+            raise ValueError(ErrorCode.MAX_ATTEMPTS_REACHED)
+
+        attempt.active = False
+        await attempt.asave()
+
+
+setattr(Attempt._meta, "triggers", [attempt_retry_count(Attempt._meta.db_table)])
 
 
 @pghistory.track()
@@ -131,9 +272,10 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
 
     if TYPE_CHECKING:
         pk: int
+        attempt_id: int
 
-    def grade(self):
-        questions = list(self.attempt.questions.select_related("solution").order_by("id"))
+    async def grade(self):
+        questions = [q async for q in self.attempt.questions.all()]
         if not questions:
             raise ValueError("No question found")
 
@@ -160,4 +302,5 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.score = self.earned_point * 100.0 / self.possible_point if self.possible_point else 0.0
         self.passed = self.score >= (self.attempt.quiz.passing_point or 0)
         self.completed = timezone.now()
-        self.save()
+        self.confirmed = self.completed
+        await self.asave()

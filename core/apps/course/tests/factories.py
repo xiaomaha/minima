@@ -83,7 +83,6 @@ class CourseFactory(LearningObjectFactory[Course]):
         self.related_courses.set(Course.objects.exclude(id=self.pk).order_by("?")[: generic.random.randint(1, 2)])
         self.certificates.set(Certificate.objects.order_by("?")[: generic.random.randint(1, 2)])
 
-        # instructor
         instructors = InstructorFactory.create_batch(generic.random.randint(1, 3))
         if instructors:
             CourseInstructor.objects.bulk_create(
@@ -94,8 +93,8 @@ class CourseFactory(LearningObjectFactory[Course]):
                 ignore_conflicts=True,
             )
 
-        # lesson
-        medias = Media.objects.order_by("?")[: generic.random.choice([8, 16, 32])]
+        count = generic.random.choice([8, 16, 32])
+        medias = list(Media.objects.order_by("?")[:count])
         last_lesson_start_offset = 0
 
         for i, media in enumerate(medias):
@@ -112,7 +111,6 @@ class CourseFactory(LearningObjectFactory[Course]):
                     media = MediaFactory.create(owner=self.owner, url=f"{generic.internet.url()}/{uuid4().hex}.mp4")
                     LessonMedia(lesson=lesson, media=media, ordering=i).save()
 
-        # survey
         surveys = SurveyFactory.create_batch(2)
         if surveys:
             CourseSurvey.objects.bulk_create(
@@ -125,7 +123,6 @@ class CourseFactory(LearningObjectFactory[Course]):
                 ignore_conflicts=True,
             )
 
-        # assessment
         discussions = Discussion.objects.order_by("?")[: generic.random.randint(1, 2)]
         exams = Exam.objects.order_by("?")[: generic.random.randint(1, 2)]
         assignments = Assignment.objects.order_by("?")[: generic.random.randint(1, 2)]

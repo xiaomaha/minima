@@ -3,6 +3,7 @@ import { createForm, getValue, toCustom, validate, valiForm } from '@modular-for
 import { For, type JSX, onMount, Show } from 'solid-js'
 import type * as v from 'valibot'
 import {
+  learningV1GetRecords,
   type SurveySchema,
   surveyV1Results,
   surveyV1ResultsAnonymous,
@@ -11,7 +12,7 @@ import {
 } from '@/api'
 import { vSurveyAnswersSchema } from '@/api/valibot.gen'
 import { accessContext } from '@/context'
-import { getProgress, setProgress } from '@/routes/(app)/-shared/record'
+import { getProgress, setProgress, setRecords } from '@/routes/(app)/-shared/record'
 import { store as accountStore } from '@/routes/(app)/account/-store'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
@@ -46,6 +47,21 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
 
   onMount(() => queueMicrotask(() => validate(submitForm)))
 
+  onMount(async () => {
+    // Because survey is outside of app route
+    if (user) {
+      createCachedStore(
+        'learningV1GetRecords',
+        () => ({}),
+        async (options) => {
+          const { data } = await learningV1GetRecords(options)
+          setRecords(data)
+          return data
+        },
+      )
+    }
+  })
+
   const submitted = () => !!getProgress(props.survey.id, accessContext())
 
   const [results] = createCachedStore(
@@ -57,27 +73,6 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
       return data
     },
   )
-
-  const _calculateSelectionRates = (questionId: number) => {
-    if (!results.data) return null
-
-    const questionResults = results.data[String(questionId)]
-    if (!questionResults) return null
-
-    const total = Object.values(questionResults).reduce(
-      (sum, count) => sum + (typeof count === 'number' ? count : 0),
-      0,
-    )
-    if (total === 0) return null
-
-    return Object.entries(questionResults).reduce(
-      (acc, [key, count]) => {
-        acc[key] = Math.round(((count as number) / total) * 100)
-        return acc
-      },
-      {} as Record<string, number>,
-    )
-  }
 
   return (
     <>
@@ -103,9 +98,21 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
                   {(field, props) => {
                     let input: JSX.Element
 
-                    const selectionRates = _calculateSelectionRates(question.id)
-
                     if (question.format === 'single_choice') {
+                      const questionId = String(question.id)
+                      const selectionData = results.data?.[questionId] ?? {}
+                      const totalSubmissions = Object.values(selectionData).reduce((sum, count) => sum + count, 0)
+
+                      const selectionRates =
+                        totalSubmissions > 0
+                          ? Object.fromEntries(
+                              Object.entries(selectionData).map(([option, count]) => [
+                                option,
+                                Math.round((count / totalSubmissions) * 100),
+                              ]),
+                            )
+                          : {}
+
                       input = (
                         <div class="space-y-4 validator">
                           <For each={question.options}>
@@ -123,12 +130,12 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
                                   <span class="text-base-content/70">{option}</span>
                                 </label>
 
-                                <Show when={selectionRates !== null}>
+                                <Show when={totalSubmissions > 0}>
                                   <div class="flex flex-col items-end gap-1">
-                                    <span class="text-xs label">{selectionRates![String(j() + 1)] ?? 0}%</span>
+                                    <span class="text-xs label">{selectionRates[String(j() + 1)] ?? 0}%</span>
                                     <progress
                                       class="progress progress-accent w-24"
-                                      value={selectionRates![String(j() + 1)] ?? 0}
+                                      value={selectionRates[String(j() + 1)] ?? 0}
                                       max="100"
                                     ></progress>
                                   </div>

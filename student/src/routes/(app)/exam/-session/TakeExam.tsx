@@ -82,10 +82,10 @@ export const TakeExam = () => {
 
                     if (question.format === 'single_choice') {
                       input = (
-                        <div class="space-y-4 validator">
+                        <div class="space-y-2 validator">
                           <For each={question.options}>
                             {(option, j) => (
-                              <label class="label text-base-content cursor-pointer text-lg flex gap-4 max-w-full">
+                              <label class="label text-base-content cursor-pointer text-lg flex gap-4 max-w-full py-1">
                                 <input
                                   {...props}
                                   checked={field.value === String(j() + 1)}

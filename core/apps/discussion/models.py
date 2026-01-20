@@ -19,6 +19,7 @@ from django.db.models import (
     Model,
     OneToOneField,
     OuterRef,
+    PositiveSmallIntegerField,
     Q,
     QuerySet,
     Subquery,
@@ -37,6 +38,7 @@ from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
+from apps.discussion.trigger import attempt_retry_count
 from apps.operation.models import Appeal, AttachmentMixin, HonorCode
 
 User = get_user_model()
@@ -207,6 +209,7 @@ class Attempt(Model):
     started = DateTimeField(_("Attempt Start"))
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+    retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
         verbose_name = _("Attempt")
@@ -255,11 +258,14 @@ class Attempt(Model):
 
     @classmethod
     async def deactivate(cls, *, discussion_id: str, learner_id: str, context: str):
-        qs = cls.objects.filter(discussion_id=discussion_id, learner_id=learner_id, context=context)
-        attempt = await qs.annotate(max_attempts=F("discussion__max_attempts")).aget(active=True)
-        total_count = await qs.acount()
+        attempt = (
+            await cls.objects
+            .filter(discussion_id=discussion_id, learner_id=learner_id, context=context)
+            .annotate(max_attempts=F("discussion__max_attempts"))
+            .aget(active=True)
+        )
 
-        if attempt.max_attempts and attempt.max_attempts <= total_count:
+        if attempt.max_attempts and attempt.max_attempts - 1 <= attempt.retry:
             raise ValueError(ErrorCode.MAX_ATTEMPTS_REACHED)
 
         attempt.active = False
@@ -309,6 +315,9 @@ class Attempt(Model):
             ),
         )
         return cast(PostCountDict, counts)
+
+
+setattr(Attempt._meta, "triggers", [attempt_retry_count(Attempt._meta.db_table)])
 
 
 @pghistory.track()

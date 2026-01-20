@@ -51,7 +51,7 @@ class AttemptAdmin(ModelAdmin[Attempt]):
         verbose_name_plural = _("Questions")
         ordering = ("id",)
 
-    inlines = (SubmissionInline, GradeInline, QuestionInline)
+    inlines = (QuestionInline, SubmissionInline, GradeInline)
 
     def get_fields(self, request, obj=None):
         return [f for f in super().get_fields(request, obj=obj) if f not in ("questions",)]

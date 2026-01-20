@@ -309,7 +309,8 @@ export const vAssignmentAttemptSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     question: vAssignmentQuestionSchema,
     started: v.pipe(v.string(), v.isoTimestamp()),
-    active: v.boolean()
+    active: v.boolean(),
+    retry: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -1017,7 +1018,8 @@ export const vDiscussionAttemptSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     question: vDiscussionQuestionSchema,
     started: v.pipe(v.string(), v.isoTimestamp()),
-    active: v.boolean()
+    active: v.boolean(),
+    retry: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -1177,7 +1179,8 @@ export const vExamAttemptSchema = v.object({
     savedAnswers: v.union([v.record(v.string(), v.string()), v.null()]),
     questions: v.array(vExamQuestionSchema),
     started: v.pipe(v.string(), v.isoTimestamp()),
-    active: v.boolean()
+    active: v.boolean(),
+    retry: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -1750,6 +1753,105 @@ export const vPagedCommentBriefSchema = v.object({
     page: v.pipe(v.number(), v.integer()),
     pages: v.pipe(v.number(), v.integer())
 });
+
+/**
+ * QuizGradeSchema
+ */
+export const vQuizGradeSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    earnedDetails: v.object({}),
+    possiblePoint: v.pipe(v.number(), v.integer()),
+    earnedPoint: v.pipe(v.number(), v.integer()),
+    score: v.number(),
+    passed: v.boolean(),
+    feedback: v.record(v.string(), v.string()),
+    completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    confirmed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    id: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * QuizQuestionSchema
+ */
+export const vQuizQuestionSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    options: v.array(v.string()),
+    question: v.string(),
+    supplement: v.string(),
+    point: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * QuizAttemptSchema
+ */
+export const vQuizAttemptSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    questions: v.array(vQuizQuestionSchema),
+    started: v.pipe(v.string(), v.isoTimestamp()),
+    active: v.boolean(),
+    retry: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * QuizSchema
+ */
+export const vQuizSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    title: v.string(),
+    description: v.string(),
+    audience: v.string(),
+    thumbnail: v.union([v.string(), v.null()]),
+    featured: v.boolean(),
+    format: v.string(),
+    durationSeconds: v.union([v.number(), v.null()]),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    maxAttempts: v.pipe(v.number(), v.integer()),
+    verificationRequired: v.boolean(),
+    id: v.string(),
+    owner: vOwnerSchema,
+    questionCount: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * QuizSolutionSchema
+ */
+export const vQuizSolutionSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    correctAnswers: v.array(v.string()),
+    explanation: v.string()
+});
+
+/**
+ * QuizSubmissionSchema
+ */
+export const vQuizSubmissionSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    answers: v.record(v.string(), v.string())
+});
+
+/**
+ * QuizSessionSchema
+ */
+export const vQuizSessionSchema = v.object({
+    accessDate: vAccessDateSchema,
+    step: vLearningSessionStep,
+    quiz: vQuizSchema,
+    attempt: v.optional(vQuizAttemptSchema),
+    submission: v.optional(vQuizSubmissionSchema),
+    grade: v.optional(vQuizGradeSchema),
+    solutions: v.optional(v.object({})),
+    analysis: v.optional(v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer())))),
+    stats: v.optional(vScoreStatsSchema)
+});
+
+/**
+ * QuizAttemptAnswersSchema
+ */
+export const vQuizAttemptAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
 
 /**
  * SurveyQuestionSchema
@@ -2860,6 +2962,61 @@ export const vOperationV1GetCommentsData = v.object({
  * OK
  */
 export const vOperationV1GetCommentsResponse = vPagedCommentBriefSchema;
+
+export const vQuizV1GetSessionData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
+
+/**
+ * OK
+ */
+export const vQuizV1GetSessionResponse = vQuizSessionSchema;
+
+export const vQuizV1StartAttemptData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
+
+/**
+ * OK
+ */
+export const vQuizV1StartAttemptResponse = vQuizAttemptSchema;
+
+export const vQuizV1SubmitAttemptData = v.object({
+    body: vQuizAttemptAnswersSchema,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
+
+/**
+ * OK
+ */
+export const vQuizV1SubmitAttemptResponse = vQuizSessionSchema;
+
+export const vQuizV1DeactivateAttemptData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        course: v.optional(v.string())
+    }))
+});
 
 export const vSurveyV1GetSurveyData = v.object({
     body: v.optional(v.never()),

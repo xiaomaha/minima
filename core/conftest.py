@@ -89,7 +89,7 @@ class AdminUser:
 
         secret_base32 = base64.b32encode(bytes.fromhex(self.otp_secret_key)).decode().rstrip("=")
         totp = pyotp.TOTP(secret_base32)
-        code = totp.at(int(timezone.now().timestamp() + 31))
+        code = totp.now()
         res = self.client.post(
             "/api/v1/account/otp/verify",
             data=json.dumps({"token": token, "code": code, "fingerprint": "a" * 32}),

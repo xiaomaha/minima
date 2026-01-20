@@ -40,6 +40,7 @@ from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
+from apps.exam.trigger import attempt_retry_count
 from apps.operation.models import Appeal, HonorCode
 
 User = get_user_model()
@@ -235,6 +236,7 @@ class Attempt(Model):
     started = DateTimeField(_("Attempt Start"))
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+    retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
         verbose_name = _("Attempt")
@@ -318,11 +320,14 @@ class Attempt(Model):
 
     @classmethod
     async def deactivate(cls, *, exam_id: str, learner_id: str, context: str):
-        qs = cls.objects.filter(exam_id=exam_id, learner_id=learner_id, context=context)
-        attempt = await qs.annotate(max_attempts=F("exam__max_attempts")).aget(active=True)
-        total_count = await qs.acount()
+        attempt = (
+            await cls.objects
+            .filter(exam_id=exam_id, learner_id=learner_id, context=context)
+            .annotate(max_attempts=F("exam__max_attempts"))
+            .aget(active=True)
+        )
 
-        if attempt.max_attempts and attempt.max_attempts <= total_count:
+        if attempt.max_attempts and attempt.max_attempts - 1 <= attempt.retry:
             raise ValueError(ErrorCode.MAX_ATTEMPTS_REACHED)
 
         attempt.active = False
@@ -344,6 +349,9 @@ class Attempt(Model):
         if not created:
             temp_answer.answers.update(answers)
             await temp_answer.asave(update_fields=["answers"])
+
+
+setattr(Attempt._meta, "triggers", [attempt_retry_count(Attempt._meta.db_table)])
 
 
 @pghistory.track()
@@ -384,9 +392,10 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
     if TYPE_CHECKING:
         pk: int
         pgh_event_model: PghEventModel
+        attempt_id: int
 
     async def grade(self, earned_existing: dict[str, int | None] | None = None, grader: User | None = None):
-        questions = [q async for q in self.attempt.questions.select_related("solution").order_by("id")]
+        questions = [q async for q in self.attempt.questions.all()]
         if not questions:
             raise ValueError(ErrorCode.NO_QUESTION)
 

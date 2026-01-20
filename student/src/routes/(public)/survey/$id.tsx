@@ -14,14 +14,14 @@ export const Route = createFileRoute('/(public)/survey/$id')({
 })
 
 function RouteComponent() {
-  const path = Route.useParams()
+  const params = Route.useParams()
   const canGoBack = useCanGoBack()
   const router = useRouter()
 
   const user = accountStore.user
   const [survey] = createCachedStore(
     user ? 'surveyV1GetSurvey' : 'surveyV1GetAnonymousSurvey',
-    () => ({ path: { id: path().id } }),
+    () => ({ path: { id: params().id } }),
     async (options) => {
       const api = user ? surveyV1GetSurvey : surveyV1GetAnonymousSurvey
       const { data } = await api(options)

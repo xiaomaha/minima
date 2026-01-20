@@ -51,6 +51,7 @@ class ExamAttemptSchema(Schema):
     questions: list[ExamQuestionSchema]
     started: datetime
     active: bool
+    retry: int
 
 
 class ExamGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):

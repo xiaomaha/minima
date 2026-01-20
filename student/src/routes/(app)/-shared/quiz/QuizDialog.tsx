@@ -1,0 +1,49 @@
+import { useTransContext } from '@mbarzda/solid-i18next'
+import { Match, Show, Switch } from 'solid-js'
+import { type LearningSessionStep, quizV1GetSession } from '@/api'
+import { Dialog } from '@/shared/Diaglog'
+import { LoadingOverlay } from '@/shared/LoadingOverlay'
+import { createCachedStore } from '@/shared/solid/cached-store'
+import { GettingStarted } from './GettingStarted'
+import { QuizForm } from './QuizForm'
+
+interface Props {
+  id: string
+  open: boolean
+  onClose: () => void
+}
+
+const SITTING = 1 as LearningSessionStep
+
+export const QuizDialog = (props: Props) => {
+  const [t] = useTransContext()
+
+  const [session, { setStore }] = createCachedStore(
+    'quizV1GetSession',
+    () => ({ path: { id: props.id } }),
+    async (options) => {
+      const { data } = await quizV1GetSession(options)
+      return data
+    },
+  )
+
+  const s = () => session.data
+
+  return (
+    <Dialog title={t('Quiz')} boxClass="max-w-3xl h-130 max-h-screen" open={props.open} onClose={props.onClose}>
+      <Show when={s()} fallback={<LoadingOverlay class="static" />}>
+        {(ss) => (
+          <Switch>
+            <Match when={ss().step < SITTING}>
+              <GettingStarted session={ss()} setStore={setStore} />
+            </Match>
+
+            <Match when={ss().step >= SITTING}>
+              <QuizForm session={ss()} setStore={setStore} />
+            </Match>
+          </Switch>
+        )}
+      </Show>
+    </Dialog>
+  )
+}
