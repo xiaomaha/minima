@@ -7,7 +7,6 @@ import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test.client import Client
-from django.utils import timezone
 from mimesis import Generic, random
 from pytest_django import DjangoDbBlocker
 from pytest_mock import MockerFixture
