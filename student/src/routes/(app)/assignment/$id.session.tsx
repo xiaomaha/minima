@@ -150,7 +150,7 @@ function RouteComponent() {
                   <GradingReview />
                 </Match>
                 <Match when={activeStep() === 3}>
-                  <FinalScore session={s()} />
+                  <FinalScore session={s()} passingPoint={s().assignment.passingPoint} />
                 </Match>
               </Switch>
             </div>

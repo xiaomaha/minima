@@ -35,6 +35,7 @@ from pghistory.models import PghEventModel
 from tika import parser
 
 from apps.account.models import OtpLog
+from apps.assignment.trigger import attempt_retry_count
 from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
@@ -278,6 +279,7 @@ class Attempt(Model):
     started = DateTimeField(_("Attempt Start"))
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+    retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
         verbose_name = _("Attempt")
@@ -371,15 +373,21 @@ class Attempt(Model):
 
     @classmethod
     async def deactivate(cls, *, assignment_id: str, learner_id: str, context: str):
-        qs = cls.objects.filter(assignment_id=assignment_id, learner_id=learner_id, context=context)
-        attempt = await qs.annotate(max_attempts=F("assignment__max_attempts")).aget(active=True)
-        total_count = await qs.acount()
+        attempt = (
+            await cls.objects
+            .filter(assignment_id=assignment_id, learner_id=learner_id, context=context)
+            .annotate(max_attempts=F("assignment__max_attempts"))
+            .aget(active=True)
+        )
 
-        if attempt.max_attempts and attempt.max_attempts <= total_count:
+        if attempt.max_attempts and attempt.max_attempts - 1 <= attempt.retry:
             raise ValueError(ErrorCode.MAX_ATTEMPTS_REACHED)
 
         attempt.active = False
         await attempt.asave()
+
+
+setattr(Attempt._meta, "triggers", [attempt_retry_count(Attempt._meta.db_table)])
 
 
 @pghistory.track()

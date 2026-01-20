@@ -239,6 +239,12 @@ class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):
             grade.feedback = feedback
 
             # grade
+            grade.attempt = (
+                Attempt.objects
+                .select_related("exam", "submission")
+                .prefetch_related("questions__solution")
+                .get(id=grade.attempt_id)
+            )
             async_to_sync(grade.grade)(earned_existing=earned_details)
 
             # zero earned

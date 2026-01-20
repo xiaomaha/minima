@@ -38,7 +38,7 @@ class MsgSpecParser(Parser):
         return msgspec.json.decode(request.body)
 
 
-async def cookie_auth(request):
+def cookie_auth(request):
     # from middleware
     return getattr(request, "auth", "")
 

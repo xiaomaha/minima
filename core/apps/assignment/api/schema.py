@@ -49,6 +49,7 @@ class AssignmentAttemptSchema(Schema):
     question: AssignmentQuestionSchema
     started: datetime
     active: bool
+    retry: int
 
 
 class AssignmentGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):

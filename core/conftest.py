@@ -7,7 +7,6 @@ import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test.client import Client
-from django.utils import timezone
 from mimesis import Generic, random
 from pytest_django import DjangoDbBlocker
 from pytest_mock import MockerFixture
@@ -89,7 +88,7 @@ class AdminUser:
 
         secret_base32 = base64.b32encode(bytes.fromhex(self.otp_secret_key)).decode().rstrip("=")
         totp = pyotp.TOTP(secret_base32)
-        code = totp.at(int(timezone.now().timestamp() + 31))
+        code = totp.now()
         res = self.client.post(
             "/api/v1/account/otp/verify",
             data=json.dumps({"token": token, "code": code, "fingerprint": "a" * 32}),

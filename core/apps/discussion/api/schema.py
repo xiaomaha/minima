@@ -43,6 +43,7 @@ class DiscussionAttemptSchema(Schema):
     question: DiscussionQuestionSchema
     started: datetime
     active: bool
+    retry: int
 
 
 class DiscussionEarnedDetailsSchema(Schema):

@@ -21,9 +21,9 @@ export const ProgressBar = (props: Props) => {
           }
           classList={{
             '[&::-webkit-progress-value]:bg-green-600! [&::-moz-progress-bar]:bg-green-600!':
-              s() > (props.passingPoint ?? 0),
+              s() >= (props.passingPoint ?? 0),
             '[&::-webkit-progress-value]:bg-red-500! [&::-moz-progress-bar]:bg-red-500!':
-              s() <= (props.passingPoint ?? 0),
+              s() < (props.passingPoint ?? 0),
           }}
           value={progress()}
           max="100"

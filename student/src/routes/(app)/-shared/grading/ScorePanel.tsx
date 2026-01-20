@@ -4,6 +4,7 @@ import type { AssignmentGradeSchema, DiscussionGradeSchema, ExamGradeSchema } fr
 interface Props {
   grade: AssignmentGradeSchema | ExamGradeSchema | DiscussionGradeSchema
   passingScore: number
+  compact?: boolean
 }
 
 export const ScorePanel = (props: Props) => {
@@ -17,21 +18,26 @@ export const ScorePanel = (props: Props) => {
       <div class="stats shadow mx-auto w-full">
         <div class="stat place-items-center">
           <div class="stat-title">{t('Earned Points')}</div>
-          <div class="stat-value">
+          <div class="stat-value font-semibold">
             {grade.earnedPoint} / {grade.possiblePoint}
           </div>
           <div class="stat-desc"></div>
         </div>
         <div class="stat place-items-center">
           <div class="stat-title">{t('Standard Score')}</div>
-          <div class="stat-value text-5xl py-2">{t('{{count}} point', { count: Number(grade.score.toFixed(1)) })}</div>
+          <div
+            class="stat-value text-5xl py-2 text-primary"
+            classList={{ 'text-5xl': !props.compact, 'text-3xl': props.compact }}
+          >
+            {t('{{count}} point', { count: Number(grade.score.toFixed(1)) })}
+          </div>
           <div class="stat-desc" classList={{ 'text-error': !grade.confirmed }}>
             {grade.confirmed ? t('Final Score') : t('Provisional Score')}
           </div>
         </div>
         <div class="stat place-items-center">
           <div class="stat-title">{t('Passing Score')}</div>
-          <div class="stat-value">{t('{{count}} point', { count: props.passingScore })}</div>
+          <div class="stat-value font-semibold">{props.passingScore}</div>
           <div class="stat-desc"></div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, cast
 
 import mimesis
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.db.models import QuerySet
 from django.utils import timezone
@@ -79,7 +80,7 @@ class SolutionFactory(DjangoModelFactory[Solution]):
 
 class QuizFactory(LearningObjectFactory[Quiz]):
     passing_point = FactoryField("choice", items=[60, 80])
-    max_attempts = FactoryField("choice", items=[1, 2])
+    max_attempts = FactoryField("choice", items=[1, 5, 0])  # 0 means unlimited
     verification_required = False
 
     owner = SubFactory("account.tests.factories.UserFactory")
@@ -120,7 +121,7 @@ class AttemptFactory(DjangoModelFactory[Attempt]):
         if TYPE_CHECKING:
             self = cast(Attempt, self)
 
-        self.questions.set(self.quiz.question_pool.select_questions())
+        self.questions.set(async_to_sync(self.quiz.question_pool.select_questions)())
 
         SubmissionFactory.create(attempt=self)
 
@@ -172,7 +173,15 @@ class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):
             grade = Grade.objects.get(attempt=kwargs["attempt"])
         except Grade.DoesNotExist:
             grade = super().build(**kwargs)
-            grade.grade()
+
+            grade.attempt = (
+                Attempt.objects
+                .select_related("quiz", "submission")
+                .prefetch_related("questions__solution")
+                .get(id=grade.attempt_id)
+            )
+
+            async_to_sync(grade.grade)()
 
             # zero earned
             failed_q_id: list[int] = []

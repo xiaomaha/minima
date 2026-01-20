@@ -1,5 +1,6 @@
 from asgiref.sync import async_to_sync
 from django.contrib import admin
+from django.db.models import Prefetch
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_jsonform.forms.fields import JSONFormField
@@ -117,7 +118,14 @@ class GradeAdmin(ModelAdmin[Grade]):
 
     @action(description=_("Grade"), permissions=["grade"])  # type: ignore
     def grade(self, request: HttpRequest, obj: Grade):
-        grade = Grade.objects.select_related("attempt__submission", "attempt__exam").get(pk=obj.pk)
+        grade = (
+            Grade.objects
+            .select_related("attempt__submission", "attempt__exam")
+            .prefetch_related(
+                Prefetch("attempt__questions", queryset=Question.objects.select_related("solution").order_by("id"))
+            )
+            .get(pk=obj.pk)
+        )
         async_to_sync(grade.grade)(grader=request.user)
 
     def has_grade_permission(self, request: AuthenticatedRequest, object_id: str | int):

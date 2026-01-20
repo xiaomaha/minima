@@ -8,6 +8,7 @@ import { setRecords } from '@/routes/(app)/-shared/record'
 import { SearchBox } from '@/routes/(app)/-shared/SearchBox'
 import { store as accountStore, setUser } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
+import { createCachedStore } from '@/shared/solid/cached-store'
 import { Chat } from './-shared/aichat/Chat'
 
 const searchSchema = v.object({
@@ -34,8 +35,15 @@ function RouteComponent() {
   const navigate = Route.useNavigate()
 
   onMount(async () => {
-    const { data } = await learningV1GetRecords()
-    setRecords(data)
+    createCachedStore(
+      'learningV1GetRecords',
+      () => ({}),
+      async (options) => {
+        const { data } = await learningV1GetRecords(options)
+        setRecords(data)
+        return data
+      },
+    )
   })
 
   createEffect(() => {
