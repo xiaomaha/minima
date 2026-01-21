@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
 import { createSignal, Match, Show, Switch } from 'solid-js'
 import type * as v from 'valibot'
@@ -8,6 +7,7 @@ import { APPEAL_MIN_CHARACTERS, ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../editor/TextEditor'
 
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const Appeal = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
   const [appealForm, { Form, Field }] = createForm<v.InferInput<typeof vAppealCreateSchema>>({

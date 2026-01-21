@@ -69,5 +69,5 @@ async def enroll_catalog_item(request: HttpRequest, id: int, data: CatalogItemEn
 
 
 @router.get("/report", response=LearningReportSchema)
-def get_report(request: HttpRequest, start: date, end: date):
+def get_report(request: HttpRequest, start: date | None = None, end: date | None = None):
     return Enrollment.get_report(user_id=request.auth, start=start, end=end)

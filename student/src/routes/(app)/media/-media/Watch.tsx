@@ -1,9 +1,9 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconPlayerSkipBack } from '@tabler/icons-solidjs'
 import { gunzipSync, gzipSync, strFromU8, strToU8 } from 'fflate'
 import { createEffect, createMemo, createSignal, For, on, onCleanup, Show, untrack } from 'solid-js'
 import { type ContentV1UpdateMediaWatchData, contentV1GetMediaWatch, type WatchInSchema } from '@/api'
 import { accessContext } from '@/context'
+import { useTranslation } from '@/shared/solid/i18n'
 import { getProgress, setProgress } from '../../-shared/record'
 import { getWatch, markWatched, setLastPosition, setWatch, type Watch as WatchCache } from './store'
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const Watch = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const context = accessContext()
 
   // progress

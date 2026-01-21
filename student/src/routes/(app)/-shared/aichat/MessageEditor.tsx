@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, reset, valiForm } from '@modular-forms/solid'
 import { IconPlus, IconSettings, IconX } from '@tabler/icons-solidjs'
 import { createSignal, onMount, Show } from 'solid-js'
@@ -9,6 +8,7 @@ import { vChatMessageCreateSchema } from '@/api/valibot.gen'
 import { AI_CHAT_MAX_CHARACTERS, AI_CHAT_MIN_CHARACTERS, ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from '@/config'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { initCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../editor/TextEditor'
@@ -17,7 +17,7 @@ import { Message } from './Message'
 import { Settings } from './Settings'
 
 export const MessageEditor = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
   const [isStreaming, setIsStreaming] = createSignal(false)
   const [streamMessage, setStreamMessage] = createSignal<ChatMessageSchema | null>(null)

@@ -1,9 +1,9 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createMemo, createSignal, For, Show } from 'solid-js'
 import { contentV1GetWatchMedias, learningV1GetReport, type WatchedMediaSchema } from '@/api'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { toHHMMSS } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
 
@@ -16,10 +16,10 @@ import { endOfDay, endOfMonth, endOfWeek, format, startOfDay, startOfMonth, star
 import { NoContent } from '@/shared/NoContent'
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
-  const [period, setPeriod] = createSignal<'today' | 'week' | 'month'>('month')
+  const [period, setPeriod] = createSignal<'today' | 'week' | 'month' | 'all'>('month')
 
   const range = createMemo(() => {
     const now = new Date()
@@ -28,7 +28,8 @@ function RouteComponent() {
     const p = period()
     if (p === 'today') return { start: formatDate(startOfDay(now)), end: formatDate(endOfDay(now)) }
     if (p === 'week') return { start: formatDate(startOfWeek(now)), end: formatDate(endOfWeek(now)) }
-    return { start: formatDate(startOfMonth(now)), end: formatDate(endOfMonth(now)) }
+    if (p === 'month') return { start: formatDate(startOfMonth(now)), end: formatDate(endOfMonth(now)) }
+    return {}
   })
 
   const [report, { refetch: refetchReport }] = createCachedStore(
@@ -92,6 +93,14 @@ function RouteComponent() {
             checked={period() === 'month'}
             onChange={() => setPeriod('month')}
           />
+          <input
+            class="join-item btn btn-sm h-6 rounded border-0"
+            type="radio"
+            name="options"
+            aria-label={t('All time')}
+            checked={period() === 'all'}
+            onChange={() => setPeriod('all')}
+          />
         </div>
 
         <div class="label text-base items-end gap-4">
@@ -103,9 +112,11 @@ function RouteComponent() {
                 ? t("This month's Activities")
                 : t('All time')}
 
-          <span class="text-sm">
-            {range().start} - {range().end}
-          </span>
+          <Show when={range()}>
+            <span class="text-sm">
+              {range()!.start} - {range()!.end}
+            </span>
+          </Show>
         </div>
 
         <div class="stats shadow text-center">
@@ -180,7 +191,7 @@ interface CardProps {
 }
 
 const Card = (props: CardProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   return (
     <div class="flex gap-4 w-full cursor-pointer py-2 hover:bg-base-200" onclick={props.onclick}>

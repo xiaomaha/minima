@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, reset, setValue, valiForm } from '@modular-forms/solid'
 import { IconTrash } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
@@ -9,6 +8,7 @@ import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE, COMMENT_MIN_CHARACTERS } fro
 import { store as accountStore } from '@/routes/(app)/account/-store'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { initCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../editor/TextEditor'
 import { useThreadContext } from './context'
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const CommentEditor = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
   const { threadStore, commentStore, context } = useThreadContext()

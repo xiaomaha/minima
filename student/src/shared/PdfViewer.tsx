@@ -1,6 +1,5 @@
 import { type PDFSlickState, usePDFSlick } from '@pdfslick/solid'
 import '@pdfslick/solid/dist/pdf_viewer.css'
-import { useTransContext } from '@mbarzda/solid-i18next'
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -10,6 +9,7 @@ import {
   IconPlus,
 } from '@tabler/icons-solidjs'
 import { createEffect, createSignal, onCleanup, onMount } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 import { toHHMMSS } from '@/shared/utils'
 
 interface MediaPlayerAPI {
@@ -183,7 +183,7 @@ export function PdfViewer(props: PdfViewerProps) {
 }
 
 function Toolbar(props: { store: PDFSlickState }) {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [pageInput, setPageInput] = createSignal('')
 
   const handlePageSubmit = (e: Event) => {

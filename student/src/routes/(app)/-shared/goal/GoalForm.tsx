@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, getValue, reset, setValue, valiForm } from '@modular-forms/solid'
 import { IconTrash } from '@tabler/icons-solidjs'
 import { For, Show } from 'solid-js'
@@ -17,6 +16,7 @@ import { FormInput } from '@/shared/FormInput'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { type CachedStoreState, createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   classIdForSkills: number
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export const GoalForm = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [skills] = createCachedStore(
     'competencyV1GetClassificationSkillsData',

@@ -4,6 +4,8 @@ export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5173'
 
 export const DEFAULT_LANGUAGE = import.meta.env.VITE_DEFAULT_LANGUAGE || 'en'
 
+export const TEST_MAILER_URL = import.meta.env.VITE_TEST_MAILER_URL || 'http://localhost:8025'
+
 export const LOGIN_REDIRECT_URL = '/dashboard'
 
 export const ATTACHMENT_MAX_SIZE = 1024 * 1024 * 3

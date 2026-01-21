@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, getValue, toCustom, validate, valiForm } from '@modular-forms/solid'
 import { For, type JSX, onMount, Show } from 'solid-js'
 import type * as v from 'valibot'
@@ -17,10 +16,11 @@ import { store as accountStore } from '@/routes/(app)/account/-store'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { WordFrequency } from '@/shared/WordFrequency'
 
 export const SurveyForm = (props: { survey: SurveySchema }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const user = accountStore.user
 
   const [submitForm, { Form, Field }] = createForm<v.InferInput<typeof vSurveyAnswersSchema>>({

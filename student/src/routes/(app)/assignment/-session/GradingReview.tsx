@@ -1,8 +1,8 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconHandStop } from '@tabler/icons-solidjs'
 import { createMemo, createSignal, For, Show } from 'solid-js'
 import type { AppealSchema } from '@/api'
 import { Dialog } from '@/shared/Diaglog'
+import { useTranslation } from '@/shared/solid/i18n'
 import { Appeal } from '../../-shared/grading/Appeal'
 import { ScorePanel } from '../../-shared/grading/ScorePanel'
 import { useSession } from './context'
@@ -18,7 +18,7 @@ interface RubricTableData {
 }
 
 export const GradingReview = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session, { setStore }] = useSession()
   const s = () => session.data!
@@ -29,7 +29,7 @@ export const GradingReview = () => {
   const rubricData = solution.rubricData
 
   const possiblePoint = grade.possiblePoint
-  const passingScore = assignment.passingPoint ?? 0
+  const passingPoint = assignment.passingPoint ?? 0
 
   const rubricTableData: () => Array<RubricTableData> = createMemo(() =>
     rubricData.criteria.flatMap((criterion) =>
@@ -56,7 +56,7 @@ export const GradingReview = () => {
   return (
     <>
       <div class="w-full space-y-12">
-        <ScorePanel grade={grade} passingScore={passingScore} />
+        <ScorePanel grade={grade} passingPoint={passingPoint} />
 
         <Show when={solution.explanation}>
           <div class="label my-1 text-sm">{t('Explanation')}</div>

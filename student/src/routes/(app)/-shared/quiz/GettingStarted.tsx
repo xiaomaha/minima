@@ -1,7 +1,7 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createSignal } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import { type LearningSessionStep, type QuizSessionSchema, quizV1StartAttempt } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 
 const SITTING = 1 as LearningSessionStep
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const GettingStarted = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const session = props.session
 
   const [loading, setLoading] = createSignal(false)

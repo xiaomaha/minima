@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import type { CropperSelection } from 'cropperjs'
 import { createEffect, createSignal, on, onMount, Show } from 'solid-js'
 import { accountV1UploadAvatar } from '@/api'
@@ -6,9 +5,10 @@ import { AVATAR_MAX_SIZE } from '@/config'
 import { store as accountStore, setStore as setAccountStore } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { Dialog } from '@/shared/Diaglog'
+import { useTranslation } from '@/shared/solid/i18n'
 
 export const AvatarEdit = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [file, setFile] = createSignal<File | null>(null)
   const [error, setError] = createSignal<string | null>(null)

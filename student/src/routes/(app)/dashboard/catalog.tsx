@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
@@ -16,6 +15,7 @@ import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize, extractText, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
 import { useNewEnrollment } from './-context'
@@ -25,7 +25,7 @@ export const Route = createFileRoute('/(app)/dashboard/catalog')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [catalogs] = createCachedStore(
     'learningV1GetCatalogs',
@@ -54,7 +54,7 @@ interface CatalogCardProps {
 }
 
 const CatalogCard = (props: CatalogCardProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [open, setOpen] = createSignal(false)
 
   return (
@@ -119,7 +119,7 @@ interface ItemListProps {
 }
 
 const ItemList = (props: ItemListProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [items, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'learningV1GetCatalogItems',
@@ -176,7 +176,7 @@ interface ItemCardProps {
 }
 
 const ItemCard = (props: ItemCardProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const content = props.item.content
 
   const newNewEnrollments = useNewEnrollment()

@@ -234,47 +234,63 @@ class Enrollment(TimeStampedMixin):
         return records
 
     @classmethod
-    def get_report(cls, user_id: str, start: date, end: date):
-        start_dt = timezone.make_aware(datetime.combine(start, time.min))
-        end_dt = timezone.make_aware(datetime.combine(end, time.max))
+    def get_report(cls, user_id: str, start: date | None, end: date | None):
+        params = {"user_id": user_id}
+
+        date_conditions = []
+        if start:
+            params["start"] = timezone.make_aware(datetime.combine(start, time.min))
+            date_conditions.append("%(start)s")
+        if end:
+            params["end"] = timezone.make_aware(datetime.combine(end, time.max))
+            date_conditions.append("%(end)s")
+
+        def date_filter(field: str):
+            if not date_conditions:
+                return ""
+            if len(date_conditions) == 2:
+                return f"AND {field} BETWEEN %(start)s AND %(end)s"
+            if start:
+                return f"AND {field} >= %(start)s"
+            return f"AND {field} <= %(end)s"
 
         query = f"""
             SELECT
                 (SELECT COUNT(*) FROM {cls._meta.db_table}
-                 WHERE user_id = %(user_id)s AND active = true AND enrolled BETWEEN %(start)s AND %(end)s)
+                 WHERE user_id = %(user_id)s AND active = true {date_filter("enrolled")})
                     AS enrollment_count,
 
                 (SELECT COUNT(*) FROM {ExamAttempt._meta.db_table}
-                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                 WHERE learner_id = %(user_id)s AND active = true {date_filter("started")})
                     AS exam_attempt_count,
 
                 (SELECT COUNT(*) FROM {DiscussionAttempt._meta.db_table}
-                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                 WHERE learner_id = %(user_id)s AND active = true {date_filter("started")})
                     AS discussion_attempt_count,
 
                 (SELECT COUNT(*) FROM {AssignmentAttempt._meta.db_table}
-                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                 WHERE learner_id = %(user_id)s AND active = true {date_filter("started")})
                     AS assignment_attempt_count,
 
                 (SELECT COUNT(*) FROM {QuziAttempt._meta.db_table}
-                 WHERE learner_id = %(user_id)s AND active = true AND started BETWEEN %(start)s AND %(end)s)
+                 WHERE learner_id = %(user_id)s AND active = true {date_filter("started")})
                     AS quiz_attempt_count,
 
                 (SELECT COUNT(*) FROM {SurveySubmission._meta.db_table}
-                 WHERE respondent_id = %(user_id)s AND active = true AND created BETWEEN %(start)s AND %(end)s)
+                 WHERE respondent_id = %(user_id)s AND active = true {date_filter("created")})
                     AS survey_submission_count,
 
                 (SELECT COUNT(*) FROM {Watch._meta.db_table}
-                 WHERE user_id = %(user_id)s AND created BETWEEN %(start)s AND %(end)s)
+                 WHERE user_id = %(user_id)s {date_filter("created")})
                     AS watch_media_count,
 
                 (SELECT COALESCE(SUM(BIT_COUNT(watch_bits)), 0) FROM {Watch._meta.db_table}
-                 WHERE user_id = %(user_id)s AND created BETWEEN %(start)s AND %(end)s)
+                 WHERE user_id = %(user_id)s {date_filter("created")})
                     AS watch_seconds
         """
 
         with connection.cursor() as cursor:
-            cursor.execute(query, {"user_id": user_id, "start": start_dt, "end": end_dt})
+            cursor.execute(query, params)
             row = cursor.fetchone()
             columns = [col[0] for col in cursor.description]
 

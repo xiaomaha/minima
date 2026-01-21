@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
 import {
   IconChevronDown,
@@ -24,6 +23,7 @@ import { FormInput } from '@/shared/FormInput'
 import { NoContent } from '@/shared/NoContent'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from './editor/TextEditor'
 
@@ -31,6 +31,7 @@ interface Props {
   appLabel?: string
   model?: string
   contentId?: string | number
+  disabled?: boolean
 }
 
 interface EditorOptions {
@@ -52,7 +53,7 @@ const useInquiryContext = () => {
 }
 
 export const Inquiry = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [editorOpen, setEditorOpen] = createSignal<EditorOptions | null>(null)
 
   const [inquiries, setObserverEl, { setStore }] = createCachedInfiniteStore(
@@ -72,10 +73,16 @@ export const Inquiry = (props: Props) => {
   return (
     <InquiryContext.Provider value={{ appLabel, model, contentId }}>
       <Show when={accountStore.user}>
-        <button type="button" class="flex mx-auto btn btn-ghost my-8 rounded-full" onClick={() => setEditorOpen({})}>
+        <button
+          type="button"
+          class="flex mx-auto btn btn-ghost my-8 rounded-full"
+          onClick={() => setEditorOpen({})}
+          disabled={props.disabled}
+        >
           <IconPlus />
           {t('Write Inquiry')}
         </button>
+
         <Dialog boxClass="max-w-4xl" open={!!editorOpen()} onClose={() => setEditorOpen(null)}>
           <InquiryEditor
             inquiryId={editorOpen()?.inquiryId}
@@ -88,7 +95,10 @@ export const Inquiry = (props: Props) => {
 
         <div class="max-w-4xl mx-auto space-y-12">
           <For each={inquiries.items}>
-            {(item, i) => <Item inquiry={item} numbering={inquiries.items.length - i()} onEdit={setEditorOpen} />}
+            {(item, i) => {
+              if (i() === 0) setOpen(item.id, true)
+              return <Item inquiry={item} numbering={inquiries.items.length - i()} onEdit={setEditorOpen} />
+            }}
           </For>
 
           <Show when={inquiries.items?.length === 0}>
@@ -115,7 +125,7 @@ type InquiryEditorProps = {
 }
 
 const InquiryEditor = (props: InquiryEditorProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const inquiryContext = useInquiryContext()
   const [files, setFiles] = createSignal<File[]>([])
 
@@ -216,7 +226,7 @@ const { open, setOpen } = createRoot(() => {
 })
 
 const Item = (props: ItemProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const inquiryContext = useInquiryContext()
   const navigate = useNavigate()
 

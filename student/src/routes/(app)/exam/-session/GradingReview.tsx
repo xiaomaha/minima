@@ -1,7 +1,7 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createSignal, Match, Show, Switch } from 'solid-js'
 import type { ExamQuestionSchema } from '@/api'
 import { Dialog } from '@/shared/Diaglog'
+import { useTranslation } from '@/shared/solid/i18n'
 import { ScorePanel } from '../../-shared/grading/ScorePanel'
 import { useSession } from './context'
 import { QuestionReview } from './QuestionReview'
@@ -12,7 +12,7 @@ interface SelectedQuestion {
 }
 
 export const GradingReview = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [selectedQuestion, setSelectedQuestion] = createSignal<SelectedQuestion | null>(null)
 
   const [session] = useSession()
@@ -24,12 +24,12 @@ export const GradingReview = () => {
   const solutions = s().solutions!
   const analysis = s().analysis!
 
-  const passingScore = exam.passingPoint ?? 0
+  const passingPoint = exam.passingPoint ?? 0
 
   return (
     <>
       <div class="w-full space-y-12">
-        <ScorePanel grade={grade} passingScore={passingScore} />
+        <ScorePanel grade={grade} passingPoint={passingPoint} />
 
         <div class="overflow-x-auto">
           <div class="label my-1 text-sm">{t('Question Breakdown')}</div>

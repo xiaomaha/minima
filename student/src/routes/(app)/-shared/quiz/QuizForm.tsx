@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, getValue, validate, valiForm } from '@modular-forms/solid'
 import { IconArrowLeft, IconRefresh } from '@tabler/icons-solidjs'
 import { createEffect, For, onMount, Show } from 'solid-js'
@@ -14,6 +13,7 @@ import {
 import { vQuizAttemptAnswersSchema } from '@/api/valibot.gen'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { FinalScore } from '../grading/FinalScore'
 import { setProgress } from '../record'
 
@@ -25,7 +25,7 @@ interface Props {
 }
 
 export const QuizForm = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const s = () => props.session
 

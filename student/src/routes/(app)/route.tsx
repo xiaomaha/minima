@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconBrightnessUp, IconHazeMoon, IconLogout, IconUser } from '@tabler/icons-solidjs'
 import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
 import { createEffect, onMount, Show, Suspense } from 'solid-js'
@@ -9,6 +8,7 @@ import { SearchBox } from '@/routes/(app)/-shared/SearchBox'
 import { store as accountStore, setUser } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { Chat } from './-shared/aichat/Chat'
 
 const searchSchema = v.object({
@@ -91,7 +91,7 @@ function RouteComponent() {
 }
 
 const AccountButton = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
   const closeDropdown = () => {

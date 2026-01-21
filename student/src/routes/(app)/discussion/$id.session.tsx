@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconClock, IconClockPause, IconPencil } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createEffect, createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
@@ -7,6 +6,7 @@ import { LEARNING_STEP_MAP } from '@/config'
 import { accessContextParam } from '@/context'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { safeLocaleString } from '@/shared/utils'
 import { FinalScore } from '../-shared/grading/FinalScore'
 import { SessionProvider } from './-session/context'
@@ -19,7 +19,7 @@ export const Route = createFileRoute('/(app)/discussion/$id/session')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const params = Route.useParams()
 
   const store = createCachedStore(

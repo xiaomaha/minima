@@ -1,16 +1,16 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconAlertCircle, IconCheck, IconDownload, IconInfoCircle } from '@tabler/icons-solidjs'
-import type { TFunction } from 'i18next'
+import type { TOptions } from 'i18next'
 import { createEffect, createResource, createSignal, For, Match, Show, Switch } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { accountV1CompleteOtpSetup, accountV1ResetOtp, accountV1SetupOtp, type OtpSetupSchema } from '@/api'
 import { store as accountStore, setStore as setAccountStore } from '@/routes/(app)/account/-store'
 import { Dialog } from '@/shared/Diaglog'
 import { PinInput } from '@/shared/PinInput'
+import { useTranslation } from '@/shared/solid/i18n'
 import { forceDownload, generateFingerprint } from '@/shared/utils'
 
 export const OtpSetup = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [state, setState] = createStore({ isOpen: false, step: 0, pin: '' })
 
@@ -139,7 +139,12 @@ export const OtpSetup = () => {
   )
 }
 
-const InstallAppStep = (props: { onNext: () => void; t: TFunction }) => {
+interface InstallAppStepProps {
+  onNext: () => void
+  t: (key: string, options?: TOptions) => string
+}
+
+const InstallAppStep = (props: InstallAppStepProps) => {
   return (
     <div class="space-y-4 pl-4">
       <p class="text-sm">{props.t("Install an authenticator app on your mobile device if you haven't already:")}</p>
@@ -219,7 +224,7 @@ const ScanQrStep = (props: {
   onPinChange: (pin: string) => void
   onComplete: (code: string) => void
   isCompleting: boolean
-  t: TFunction
+  t: (key: string, options?: TOptions) => string
 }) => {
   return (
     <div class="space-y-6 flex flex-col items-center mb-8">
@@ -242,7 +247,7 @@ const ScanQrStep = (props: {
 }
 
 const BackupCodesStep = (props: { backupCodes: string[]; onDownload: () => void }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   return (
     <div class="space-y-6">
       <div class="alert alert-success">

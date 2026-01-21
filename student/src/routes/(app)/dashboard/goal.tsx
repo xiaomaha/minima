@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconChevronDown, IconChevronUp, IconListCheck } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
@@ -7,6 +6,7 @@ import { competencyV1GetCompetencyGoals } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { CategorySelect } from '../-shared/goal/CategorySelect'
 import { GoalForm } from '../-shared/goal/GoalForm'
 
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/(app)/dashboard/goal')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [goals, { setStore }] = createCachedStore(
     'competencyV1GetCompetencyGoals',

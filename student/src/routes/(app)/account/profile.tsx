@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, reset, setValue, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
@@ -10,6 +9,7 @@ import { store as accountStore, setUser } from '@/routes/(app)/account/-store'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { AvatarEdit } from './-profile/AvatarEdit'
 import { OtpSetup } from './-profile/OtpSetup'
 
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/(app)/account/profile')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
   const [updateForm, { Form, Field }] = createForm<v.InferInput<typeof vUserUpdateSchema>>({

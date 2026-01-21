@@ -1,10 +1,10 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconArrowNarrowRight, IconX } from '@tabler/icons-solidjs'
 import { createMemo, For, type Setter } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { competencyV1GetClassificationTree } from '@/api'
 import { AutocompleteInput } from '@/shared/AutocompleteInput'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 
 export interface SelectionType {
   firstLevel: number
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const CategorySelect = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [classifications] = createCachedStore(
     'competencyV1GetClassificationTree',

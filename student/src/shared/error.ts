@@ -1,6 +1,6 @@
 import type { FieldPath } from '@modular-forms/solid'
 import { type FieldValues, type FormStore, setError } from '@modular-forms/solid'
-import type { TFunction } from 'i18next'
+import type { TOptions } from 'i18next'
 import i18n from '@/i18n.ts'
 import { showToast } from '@/shared/toast/store.ts'
 
@@ -59,10 +59,13 @@ interface ValidationError {
   msg: string
 }
 
-export const handleFormErrors = <T extends FieldValues>(form: FormStore<T>, error: unknown, t: TFunction): void => {
+export const handleFormErrors = <T extends FieldValues>(
+  form: FormStore<T>,
+  error: unknown,
+  t: (key: string, options?: TOptions) => string,
+): void => {
   const detail = (error as { detail?: ValidationError[] | string }).detail
 
-  // server field validation error
   if (Array.isArray(detail)) {
     detail.forEach((err) => {
       const fieldName = err.loc[err.loc.length - 1]

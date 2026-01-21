@@ -1,7 +1,7 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconStopwatch } from '@tabler/icons-solidjs'
 import { createEffect, createResource, createSignal, ErrorBoundary, onCleanup, Show } from 'solid-js'
 import { examV1GetTimestamp } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 import { toHHMMSS } from '@/shared/utils'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const StopWatch = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   return (
     <ErrorBoundary

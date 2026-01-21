@@ -1,13 +1,13 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { useNavigate } from '@tanstack/solid-router'
 import { createSignal } from 'solid-js'
 import { contentV1SearchSuggestion } from '@/api'
 import { SEARCH_SUGGESTION_DEBOUNCE } from '@/config'
 import { AutocompleteInput } from '@/shared/AutocompleteInput'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 
 export const SearchBox = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const hasIncompleteKorean = (str: string) => {

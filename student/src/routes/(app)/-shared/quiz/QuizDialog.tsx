@@ -1,9 +1,9 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { Match, Show, Switch } from 'solid-js'
 import { type LearningSessionStep, quizV1GetSession } from '@/api'
 import { Dialog } from '@/shared/Diaglog'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { GettingStarted } from './GettingStarted'
 import { QuizForm } from './QuizForm'
 
@@ -16,7 +16,7 @@ interface Props {
 const SITTING = 1 as LearningSessionStep
 
 export const QuizDialog = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session, { setStore }] = createCachedStore(
     'quizV1GetSession',

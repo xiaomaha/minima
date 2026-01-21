@@ -1,11 +1,11 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { For } from 'solid-js'
 import { Portal } from 'solid-js/web'
+import { useTranslation } from '@/shared/solid/i18n'
 import { WindowButton } from '../WindowButtion'
 import { removeToast, toasts } from './store'
 
 export const ToastContainer = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   return (
     <Portal>
       <div class="z-1000 min-w-sm fixed bottom-10 left-1/2 -translate-x-1/2 flex flex-col gap-2">

@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
 import { createFileRoute, Link, useLocation } from '@tanstack/solid-router'
 import * as v from 'valibot'
@@ -8,6 +7,7 @@ import { LOGIN_REDIRECT_URL } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { setUser } from '../(app)/account/-store'
 
 const searchSchema = v.object({
@@ -20,7 +20,7 @@ export const Route = createFileRoute('/(auth)/login')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const params = Route.useSearch()
   const navigate = Route.useNavigate()
   const location = useLocation()

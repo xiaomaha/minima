@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, getValue, toCustom, validate, valiForm } from '@modular-forms/solid'
 import { debounce } from '@solid-primitives/scheduled'
 import { For, type JSX, onMount, Show } from 'solid-js'
@@ -8,13 +7,14 @@ import { vExamAttemptAnswersSchema } from '@/api/valibot.gen'
 import { SAVE_ATTEMPT_INTERVAL_SECONDS } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { useSession } from './context'
 
 const SITTING = 1 as LearningSessionStep
 const GRADING = 3 as LearningSessionStep
 
 export const TakeExam = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session, { setStore }] = useSession()
   const s = () => session.data!

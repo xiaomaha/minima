@@ -1,6 +1,6 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { For, Show } from 'solid-js'
 import type { CertificateAwardSchema } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   awards: CertificateAwardSchema[]
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const CertificateAwardList = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   return (
     <div class={`${props.class ?? ''}`}>
@@ -41,7 +41,7 @@ export const CertificateAwardList = (props: Props) => {
       </div>
       <Show when={props.awards.length}>
         <div class="text-center mt-8 text-primary">
-          {t('Congratulations! You have earned {{count}} certificates', { count: props.awards.length })}
+          {t('Congratulations! You have earned {{count}} certificate', { count: props.awards.length })}
         </div>
       </Show>
     </div>

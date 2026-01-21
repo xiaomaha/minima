@@ -1,6 +1,6 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { For, Show } from 'solid-js'
 import type { AssignmentSessionSchema, DiscussionSessionSchema, ExamSessionSchema, QuizSessionSchema } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 import { ScorePanel } from './ScorePanel'
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const FinalScore = ({ session, passingPoint, compact = false }: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const grade = session.grade!
   const stats = session.stats!
@@ -21,7 +21,7 @@ export const FinalScore = ({ session, passingPoint, compact = false }: Props) =>
   return (
     <div class="w-full" classList={{ 'space-y-16': !compact, 'space-y-6': compact }}>
       <div class="space-y-4">
-        <ScorePanel grade={grade} passingScore={passingPoint} compact={compact} />
+        <ScorePanel grade={grade} passingPoint={passingPoint} compact={compact} />
         <div class="flex justify-center items-center gap-4">
           <span class="text-sm label">{new Date(grade.confirmed!).toLocaleString()}</span>
           <div

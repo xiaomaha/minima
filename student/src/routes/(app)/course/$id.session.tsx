@@ -1,9 +1,9 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createEffect, createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
 import { courseV1GetSession } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { Inquiry } from '../-shared/Inquiry'
 import { Achievement } from './-session/Achievement'
 import { Comment } from './-session/Comment'
@@ -19,7 +19,7 @@ export const Route = createFileRoute('/(app)/course/$id/session')({
 })
 
 export default function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const params = Route.useParams()
 
   const store = createCachedStore(
@@ -91,7 +91,7 @@ export default function RouteComponent() {
                     <Comment />
                   </Match>
                   <Match when={activeTab() === 'inquiry'}>
-                    <Inquiry appLabel="course" model="course" contentId={s().course.id} />
+                    <Inquiry appLabel="course" model="course" contentId={s().course.id} disabled={!s().engagement} />
                   </Match>
                   <Match when={activeTab() === 'detail'}>
                     <CourseDetail />

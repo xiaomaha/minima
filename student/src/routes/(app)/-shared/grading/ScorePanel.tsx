@@ -1,14 +1,14 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import type { AssignmentGradeSchema, DiscussionGradeSchema, ExamGradeSchema } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   grade: AssignmentGradeSchema | ExamGradeSchema | DiscussionGradeSchema
-  passingScore: number
+  passingPoint: number
   compact?: boolean
 }
 
 export const ScorePanel = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const grade = props.grade
 
@@ -36,8 +36,8 @@ export const ScorePanel = (props: Props) => {
           </div>
         </div>
         <div class="stat place-items-center">
-          <div class="stat-title">{t('Passing Score')}</div>
-          <div class="stat-value font-semibold">{props.passingScore}</div>
+          <div class="stat-title">{t('Passing Point')}</div>
+          <div class="stat-value font-semibold">{props.passingPoint}</div>
           <div class="stat-desc"></div>
         </div>
       </div>

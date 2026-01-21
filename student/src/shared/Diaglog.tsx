@@ -1,5 +1,5 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { type JSX, Show } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 import { WindowButton } from './WindowButtion'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const Dialog = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   return (
     <dialog class="modal" open={props.open}>
       <form method="dialog" class="modal-backdrop">

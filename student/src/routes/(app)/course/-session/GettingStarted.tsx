@@ -1,10 +1,10 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { courseV1StartEngagement } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 import { SessionStart } from '../../-shared/grading/SessionStart'
 import { useSession } from './context'
 
 export const GettingStarted = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session, { setStore, refetch }] = useSession()
   const s = () => session.data!

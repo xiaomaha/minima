@@ -1,6 +1,6 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createRootRoute, Outlet } from '@tanstack/solid-router'
 import { PLATFORM_NAME } from '@/config'
+import { useTranslation } from '@/shared/solid/i18n'
 import { ToastContainer } from '@/shared/toast/ToastContainer'
 
 const startYear = 2025
@@ -8,7 +8,7 @@ const currentYear = new Date().getFullYear()
 const yearText = startYear === currentYear ? `${startYear}` : `${startYear}–${currentYear}`
 
 const RootLayout = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   return (
     <div class="flex flex-col min-h-screen">

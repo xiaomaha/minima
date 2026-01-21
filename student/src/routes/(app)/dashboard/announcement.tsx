@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createVisibilityObserver } from '@solid-primitives/intersection-observer'
 import { IconSpeakerphone } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
@@ -8,6 +7,7 @@ import { type AnnounceSchema, operationV1GetAnnouncements, operationV1ReadAnnoun
 import { ContentViewer } from '@/shared/ContentViewer'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { toYYYYMMDD } from '@/shared/utils'
 
 export const Route = createFileRoute('/(app)/dashboard/announcement')({
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/(app)/dashboard/announcement')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [announcements, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'operationV1GetAnnouncements',
@@ -54,7 +54,7 @@ interface AnnouncementItemProps {
 }
 
 const AnnouncementItem = (props: AnnouncementItemProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   let articleRef: HTMLElement | undefined
   let timeoutId: number | undefined

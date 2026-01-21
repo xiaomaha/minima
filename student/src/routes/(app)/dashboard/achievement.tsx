@@ -1,10 +1,10 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconCertificate, IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
 import { competencyV1GetCertificateAwards } from '@/api'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { CertificateAwardList } from '../-shared/CertificateAwardList'
 
 export const Route = createFileRoute('/(app)/dashboard/achievement')({
@@ -12,7 +12,7 @@ export const Route = createFileRoute('/(app)/dashboard/achievement')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [certificates, setObserverEl, { refetch }] = createCachedInfiniteStore(
     'competencyV1GetCertificateAwards',

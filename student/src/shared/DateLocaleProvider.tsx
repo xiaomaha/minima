@@ -1,7 +1,7 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { setDefaultOptions } from 'date-fns'
 import { enUS, ko, type Locale } from 'date-fns/locale'
 import { createContext, createEffect, type ParentComponent, useContext } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 
 type LocaleKey = 'ko' | 'en'
 
@@ -17,10 +17,10 @@ interface DateLocaleContextValue {
 const DateLocaleContext = createContext<DateLocaleContextValue>()
 
 export const DateLocaleProvider: ParentComponent = (props) => {
-  const [, { getI18next }] = useTransContext()
+  const { i18next } = useTranslation()
 
   const getLocaleKey = (): LocaleKey => {
-    const i18nLang = getI18next().language
+    const i18nLang = i18next.language
     return (i18nLang.split('-')[0] || 'en') as LocaleKey
   }
 

@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconDragDrop2 } from '@tabler/icons-solidjs'
 import { Editor } from '@tiptap/core'
 import Highlight from '@tiptap/extension-highlight'
@@ -11,6 +10,7 @@ import StarterKit from '@tiptap/starter-kit'
 import type { JSX, Setter } from 'solid-js'
 import { createEffect, createSignal, onCleanup, onMount, Show, untrack } from 'solid-js'
 import ImageResize from 'tiptap-extension-resize-image'
+import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { uniqueFilename } from '@/shared/utils'
 import { Attachment } from './Attachment'
@@ -37,7 +37,7 @@ interface Props {
 }
 
 export const TextEditor = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   let containerRef: HTMLDivElement | undefined
   let editorWrapperRef: HTMLDivElement | undefined

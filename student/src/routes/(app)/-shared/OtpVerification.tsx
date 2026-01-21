@@ -1,13 +1,13 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createSignal, Show } from 'solid-js'
 import { accountV1VerifyOtp } from '@/api'
 import { OtpSetup } from '@/routes/(app)/account/-profile/OtpSetup'
 import { store as accountStore } from '@/routes/(app)/account/-store'
 import { PinInput } from '@/shared/PinInput'
+import { useTranslation } from '@/shared/solid/i18n'
 import { generateFingerprint } from '@/shared/utils'
 
 export const OtpVerification = (props: { token: string; disabled?: boolean; onVerified: () => void }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [value, setValue] = createSignal('')
   const [verified, setVerified] = createSignal(false)
 

@@ -5208,15 +5208,15 @@ export type ContentV1SaveMediaNoteResponse = ContentV1SaveMediaNoteResponses[key
 export type ContentV1GetWatchMediasData = {
     body?: never;
     path?: never;
-    query: {
+    query?: {
         /**
          * Start
          */
-        start: string;
+        start?: string | null;
         /**
          * End
          */
-        end: string;
+        end?: string | null;
         /**
          * Page
          */
@@ -5885,15 +5885,15 @@ export type LearningV1EnrollCatalogItemResponse = LearningV1EnrollCatalogItemRes
 export type LearningV1GetReportData = {
     body?: never;
     path?: never;
-    query: {
+    query?: {
         /**
          * Start
          */
-        start: string;
+        start?: string | null;
         /**
          * End
          */
-        end: string;
+        end?: string | null;
     };
     url: '/api/v1/learning/report';
 };

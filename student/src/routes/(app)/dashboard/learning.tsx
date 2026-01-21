@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconDotsVertical } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createEffect, createSignal, For, Show } from 'solid-js'
@@ -7,6 +6,7 @@ import { type EnrollmentSchema, learningV1GetEnrolled, learningV1Unenroll } from
 import { Avatar } from '@/shared/Avatar'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { Trans, useTranslation } from '@/shared/solid/i18n'
 import { capitalize, toHHMMSS } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
 import { QuizDialog } from '../-shared/quiz/QuizDialog'
@@ -17,7 +17,8 @@ export const Route = createFileRoute('/(app)/dashboard/learning')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
+  const navigate = Route.useNavigate()
 
   const [enrollments, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'learningV1GetEnrolled',
@@ -51,7 +52,34 @@ function RouteComponent() {
       </div>
 
       <Show when={enrollments.items.length === 0}>
-        <NoContent message={t('No content enrolled yet.')} />
+        <NoContent message={t('No content enrolled yet.')}>
+          <div class="mt-8 text-base-content/70">
+            <div class="flex items-center justify-center">
+              <Trans>
+                Search for public media in{' '}
+                <button
+                  type="button"
+                  class="ml-1 btn btn-link p-0 text-base no-underline"
+                  onclick={() => navigate({ to: '/dashboard/search' })}
+                >
+                  the Search tab
+                </button>
+              </Trans>
+            </div>
+            <div class="flex items-center justify-center">
+              <Trans>
+                Enroll content from the catalogs in{' '}
+                <button
+                  type="button"
+                  class="ml-1 btn btn-link p-0 text-base no-underline"
+                  onclick={() => navigate({ to: '/dashboard/catalog' })}
+                >
+                  the Catalog tab
+                </button>
+              </Trans>
+            </div>
+          </div>
+        </NoContent>
       </Show>
 
       <Show when={!enrollments.end}>
@@ -69,7 +97,7 @@ interface ContentCardProps {
 }
 
 const ContentCard = (props: ContentCardProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
   const contentPath = () => {
