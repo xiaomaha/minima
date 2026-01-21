@@ -1,9 +1,9 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
+import { useTranslation } from '@/shared/solid/i18n'
 import { Thread } from '../../-shared/thread/Thread'
 import { useSession } from './context'
 
 export const Comment = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!
@@ -17,7 +17,7 @@ export const Comment = () => {
         title={s().course.title}
         description={t('Write a comment about this course.')}
         options={{
-          readOnly: new Date() > new Date(s().accessDate.end),
+          readOnly: new Date() > new Date(s().accessDate.end) || !s().engagement,
           rating: true,
           reply: true,
         }}

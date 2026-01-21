@@ -1,13 +1,15 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
+import { IconCertificate } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
 import { competencyV1GetCertificates, courseV1RequestCertificate } from '@/api'
 import { Avatar } from '@/shared/Avatar'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { CertificateAwardList } from '../../-shared/CertificateAwardList'
 import { useSession } from './context'
 
 export const Achievement = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!
@@ -28,6 +30,11 @@ export const Achievement = () => {
       </Show>
       <div>
         <div class="font-bold mb-6 text-sm">{t('Course Certificates')}</div>
+
+        <Show when={certificates.data?.length === 0}>
+          <NoContent icon={IconCertificate} message={t('This course has no certificates.')} />
+        </Show>
+
         <div class="space-y-6">
           <For each={certificates.data}>
             {(cert) => (
@@ -122,7 +129,7 @@ interface CertificateButtonProps {
 
 const CertificateButton = (props: CertificateButtonProps) => {
   const [session, { setStore }] = useSession()
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [isPending, setIsPending] = createSignal(false)
   const requestCertificate = async () => {

@@ -1,12 +1,12 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconTrash } from '@tabler/icons-solidjs'
 import { For, Show } from 'solid-js'
 import { assistantV1DeleteChat, assistantV1SaveAssistantNote, type ChatSchema } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 import { WindowButton } from '@/shared/WindowButtion'
 import { useChatContext } from './context'
 
 export const Settings = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [chatList, { setStore: setChatList }] = useChatContext().chatListStore
 

@@ -1,8 +1,8 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createEffect, createSignal, type JSX, Show } from 'solid-js'
 import { OTP_VERIFICATION_EXPIRY_SECONDS } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
 import { OtpVerification } from '../OtpVerification'
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const SessionStart = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [isPending, setIsPending] = createSignal(false)
   const [honorCodeAgreed, setHonorCodeAgreed] = createSignal(false)

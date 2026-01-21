@@ -1,14 +1,14 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createSignal, For, Show } from 'solid-js'
 import { type CourseDetailSchema, courseV1GetDetail } from '@/api'
 import { COURSE_PREVIEW_FALLBACK_URL } from '@/config'
 import { Avatar } from '@/shared/Avatar'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { VideoPlayer } from '@/shared/VideoPlayer'
 import { useSession } from './context'
 
 export const CourseDetail = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!
@@ -61,7 +61,7 @@ export const CourseDetail = () => {
 }
 
 const Introduction = (props: { course: CourseDetailSchema }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   return (
     <div class="flex flex-col gap-6">
@@ -96,7 +96,7 @@ const Introduction = (props: { course: CourseDetailSchema }) => {
 }
 
 const Certificate = (props: { course: CourseDetailSchema }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const certificates = () => props.course.certificates
 
   return (
@@ -177,7 +177,7 @@ const Faq = (props: { course: CourseDetailSchema }) => {
 }
 
 const Instructors = (props: { course: CourseDetailSchema }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const instructors = () => props.course.instructors
 
   return (

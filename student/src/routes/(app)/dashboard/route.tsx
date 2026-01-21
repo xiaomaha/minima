@@ -1,6 +1,6 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createFileRoute, Outlet, useLocation } from '@tanstack/solid-router'
 import { For } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 import { NewEnrollmentProvider } from './-context'
 
 export const Route = createFileRoute('/(app)/dashboard')({
@@ -8,7 +8,7 @@ export const Route = createFileRoute('/(app)/dashboard')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
   const location = useLocation()
 
@@ -34,7 +34,7 @@ function RouteComponent() {
         <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box mb-6 space-x-2 gap-y-2">
           <For each={Object.keys(tabLabels)}>
             {(tab) => (
-              <li>
+              <li class="mb-0">
                 <button
                   type="button"
                   class="min-w-16 justify-center"

@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconAi, IconQuestionMark } from '@tabler/icons-solidjs'
 import { createSignal, Show, Suspense } from 'solid-js'
 import { Portal } from 'solid-js/web'
@@ -7,12 +6,13 @@ import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { ResizableWindow } from '@/shared/ResizableWindow'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { ChatProvider } from './context'
 import { MessageEditor } from './MessageEditor'
 import { MessageList } from './MessageList'
 
 export const Chat = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [open, setOpen] = createSignal(false)
 
   const chatListStore = createCachedStore(

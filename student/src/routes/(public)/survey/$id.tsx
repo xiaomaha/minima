@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconChevronLeft, IconHelpCircle } from '@tabler/icons-solidjs'
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/solid-router'
 import { Show, Suspense } from 'solid-js'
@@ -7,6 +6,7 @@ import { store as accountStore } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { SurveyForm } from './-SurveyForm'
 
 export const Route = createFileRoute('/(public)/survey/$id')({
@@ -70,7 +70,7 @@ function RouteComponent() {
 }
 
 const SurveyInfo = (props: { survey: SurveySchema }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const survey = props.survey
 
@@ -91,7 +91,7 @@ const SurveyInfo = (props: { survey: SurveySchema }) => {
           </tr>
           <tr>
             <th>{t('Results Available')}</th>
-            <td>{survey.showResults ? t('immediately after response') : t('Not available')}</td>
+            <td>{survey.showResults ? t('Immediately after response') : t('Not provided')}</td>
           </tr>
           <tr>
             <th>{t('Question Count')}</th>

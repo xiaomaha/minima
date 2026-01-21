@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import {
   IconAlignCenter,
   IconAlignJustified,
@@ -18,6 +17,7 @@ import {
 } from '@tabler/icons-solidjs'
 import type { Editor } from '@tiptap/core'
 import { type Component, createEffect, createSignal, For, onCleanup, Show } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   editor: () => Editor | undefined
@@ -28,7 +28,7 @@ interface Props {
 }
 
 export const Toolbar = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [showHeadingDropdown, setShowHeadingDropdown] = createSignal(false)
   const [showAlignDropdown, setShowAlignDropdown] = createSignal(false)
 

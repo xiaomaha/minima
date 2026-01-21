@@ -1,5 +1,5 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createSignal, type JSX, onCleanup, onMount, Show } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 import { WindowButton } from './WindowButtion'
 
 type ResizableWindowProps = {
@@ -19,7 +19,7 @@ type ResizableWindowProps = {
 let savedWindowState: { width: number; height: number; x: number; y: number } | null = null
 
 export const ResizableWindow = (props: ResizableWindowProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const defaultWidth = props.defaultWidth ?? 450
   const defaultHeight = props.defaultHeight ?? 700
   const marginRight = props.marginRight ?? 16

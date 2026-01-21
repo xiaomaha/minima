@@ -1,23 +1,23 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconHandStop } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
 import { type AppealSchema, discussionV1GetOwnPosts } from '@/api'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { Appeal } from '../../-shared/grading/Appeal'
 import { ScorePanel } from '../../-shared/grading/ScorePanel'
 import { useSession } from './context'
 
 export const GradingReview = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [session, { setStore }] = useSession()
   const s = () => session.data!
 
   const discussion = s().discussion
   const grade = s().grade!
   const possiblePoint = grade.possiblePoint
-  const passingScore = discussion.passingPoint ?? 0
+  const passingPoint = discussion.passingPoint ?? 0
   const postCount = s().postCount!
 
   const [posts] = createCachedStore(
@@ -40,7 +40,7 @@ export const GradingReview = () => {
   return (
     <>
       <div class="w-full space-y-12">
-        <ScorePanel grade={grade} passingScore={passingScore} />
+        <ScorePanel grade={grade} passingPoint={passingPoint} />
 
         <div class="label my-1 text-sm">{t('Score Details')}</div>
         <div class="overflow-x-auto">

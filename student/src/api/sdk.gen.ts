@@ -363,7 +363,7 @@ export const contentV1SaveMediaNote = <ThrowOnError extends boolean = true>(opti
 /**
  * Get Watch Medias
  */
-export const contentV1GetWatchMedias = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetWatchMediasData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetWatchMediasResponses, unknown, ThrowOnError>({ url: '/api/v1/content/watch', ...options });
+export const contentV1GetWatchMedias = <ThrowOnError extends boolean = true>(options?: Options<ContentV1GetWatchMediasData, ThrowOnError>) => (options?.client ?? client).get<ContentV1GetWatchMediasResponses, unknown, ThrowOnError>({ url: '/api/v1/content/watch', ...options });
 
 /**
  * Search Suggestion
@@ -542,7 +542,7 @@ export const learningV1EnrollCatalogItem = <ThrowOnError extends boolean = true>
 /**
  * Get Report
  */
-export const learningV1GetReport = <ThrowOnError extends boolean = true>(options: Options<LearningV1GetReportData, ThrowOnError>) => (options.client ?? client).get<LearningV1GetReportResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/report', ...options });
+export const learningV1GetReport = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetReportData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetReportResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/report', ...options });
 
 /**
  * Get Announcements

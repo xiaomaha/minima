@@ -1,8 +1,8 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createSignal, For, Match, Show, Switch } from 'solid-js'
 import type { AppealSchema, ExamQuestionSchema } from '@/api'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
+import { useTranslation } from '@/shared/solid/i18n'
 import { WordFrequency } from '@/shared/WordFrequency'
 import { Appeal } from '../../-shared/grading/Appeal'
 import { useSession } from './context'
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const QuestionReview = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session, { setStore }] = useSession()
   const s = () => session.data!

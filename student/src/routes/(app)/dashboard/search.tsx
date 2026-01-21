@@ -1,10 +1,11 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createFileRoute, useNavigate } from '@tanstack/solid-router'
 import { createEffect, createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import { contentV1Search, type SearchedMediaSchema } from '@/api'
 import { Avatar } from '@/shared/Avatar'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { extractText, timeToSeconds, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
@@ -21,7 +22,7 @@ export const Route = createFileRoute('/(app)/dashboard/search')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
   const q_ = () => search().q
@@ -60,6 +61,10 @@ function RouteComponent() {
 
       <For each={medias.items}>{(item) => <Card media={item} q={q()} onclick={() => goToMedia(item)} />}</For>
 
+      <Show when={medias.items.length === 0}>
+        <NoContent message={t('No media found')} />
+      </Show>
+
       <Show when={!medias.end}>
         <div ref={setObserverEl} class="flex justify-center py-8">
           <span class="loading loading-spinner loading-lg" />
@@ -76,7 +81,7 @@ interface CardProps {
 }
 
 const Card = (props: CardProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   return (

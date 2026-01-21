@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { debounce } from '@solid-primitives/scheduled'
 import { IconCheck, IconCopy, IconSearch } from '@tabler/icons-solidjs'
 import { getRegExp } from 'korean-regexp'
@@ -6,6 +5,7 @@ import { createEffect, createMemo, createSignal, For, onCleanup, Show } from 'so
 import { contentV1GetSubtitles, type SubtitleSchema } from '@/api'
 import { getPreferences, setPreferences } from '@/routes/(app)/account/-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   mediaId: string
@@ -20,7 +20,7 @@ interface Cue {
 }
 
 export const Subtitle = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [subtitles] = createCachedStore(
     'contentV1GetSubtitles',

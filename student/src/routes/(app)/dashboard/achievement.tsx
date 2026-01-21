@@ -1,9 +1,10 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
-import { IconRefresh } from '@tabler/icons-solidjs'
+import { IconCertificate, IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
 import { competencyV1GetCertificateAwards } from '@/api'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { CertificateAwardList } from '../-shared/CertificateAwardList'
 
 export const Route = createFileRoute('/(app)/dashboard/achievement')({
@@ -11,7 +12,7 @@ export const Route = createFileRoute('/(app)/dashboard/achievement')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [certificates, setObserverEl, { refetch }] = createCachedInfiniteStore(
     'competencyV1GetCertificateAwards',
@@ -32,6 +33,10 @@ function RouteComponent() {
       </div>
 
       <CertificateAwardList awards={certificates.items} />
+
+      <Show when={certificates.items.length === 0}>
+        <NoContent icon={IconCertificate} message={t('No certificate awarded yet.')} />
+      </Show>
 
       <Show when={!certificates.end}>
         <div ref={setObserverEl} class="flex justify-center py-8">

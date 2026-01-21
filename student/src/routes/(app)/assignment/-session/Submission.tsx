@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
 import { createSignal, For, Show } from 'solid-js'
 import type * as v from 'valibot'
@@ -8,6 +7,7 @@ import { ASSIGNMENT_ATTACHMENT_MAX_SIZE } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { TextEditor } from '../../-shared/editor/TextEditor'
 import { useSession } from './context'
 
@@ -15,7 +15,7 @@ const SITTING = 1
 const GRADING = 3
 
 export const Submission = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
   const [session, { setStore }] = useSession()

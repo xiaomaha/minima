@@ -2357,12 +2357,12 @@ export const vContentV1SaveMediaNoteResponse = vNoteSchema;
 export const vContentV1GetWatchMediasData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
-    query: v.object({
-        start: v.pipe(v.string(), v.isoDate()),
-        end: v.pipe(v.string(), v.isoDate()),
+    query: v.optional(v.object({
+        start: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
+        end: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
-    })
+    }))
 });
 
 /**
@@ -2739,10 +2739,10 @@ export const vLearningV1EnrollCatalogItemResponse = vEnrollmentSuccessSchema;
 export const vLearningV1GetReportData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
-    query: v.object({
-        start: v.pipe(v.string(), v.isoDate()),
-        end: v.pipe(v.string(), v.isoDate())
-    })
+    query: v.optional(v.object({
+        start: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
+        end: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()]))
+    }))
 });
 
 /**

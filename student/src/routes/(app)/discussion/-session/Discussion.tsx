@@ -1,11 +1,11 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { Show } from 'solid-js'
 import { ContentViewer } from '@/shared/ContentViewer'
+import { useTranslation } from '@/shared/solid/i18n'
 import { useSession } from './context'
 import { Thread } from './Thread'
 
 export const Discussion = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!
@@ -23,7 +23,7 @@ export const Discussion = () => {
           <div class="badge badge-sm badge-outline">{t('{{count}} point', { count: possiblePoint })}</div>
         </div>
 
-        <div class="card-title">{question.directive}</div>
+        <div class="text-base/relaxed">{question.directive}</div>
 
         <Show when={question.supplement}>
           <ContentViewer content={question.supplement!} class="bg-base-content/5 rounded-box p-8" />
@@ -59,7 +59,7 @@ export const Discussion = () => {
               </div>
             </li>
             <li>
-              <span>{t('Tutor assessment')}</span>
+              <span>{t('Tutor Assessment')}</span>
               <div class="ml-2 badge badge-sm badge-outline">
                 {t('{{count}} point', { count: pointRequirements.tutorAssessment })}
               </div>

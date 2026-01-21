@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createResource, Show } from 'solid-js'
@@ -9,6 +8,7 @@ import { BASE_URL } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { LoginLink } from './-LoginLink'
 
@@ -32,7 +32,7 @@ function RouteComponent() {
 }
 
 const RequestActivation = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
   const [requestForm, { Form, Field }] = createForm<v.InferInput<typeof vRequestActivationSchema>>({
@@ -90,7 +90,7 @@ const RequestActivation = () => {
 }
 
 const Activate = (props: { token: string }) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
   createResource(async () => {

@@ -1,20 +1,20 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconHelpCircle, IconSquareCheck } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize, toYYYYMMDD } from '@/shared/utils'
 import { getAverageProgress, getProgress } from '../../-shared/record'
 import { useSession } from './context'
 
 export const Outline = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const [session] = useSession()
   const s = () => session.data!
 
   const gradebook = s().engagement?.gradebook
-  const passingScore = s().course.passingPoint || 0
+  const passingPoint = s().course.passingPoint || 0
   const passingProgressRate = s().course.gradingCriteria.find((p) => p.model === 'completion')?.passingPoint
   const now = new Date()
 
@@ -55,7 +55,7 @@ export const Outline = () => {
               {gradebook!.completionRate.toFixed(1)}
             </Show>
           </div>
-          <div class="stat-desc">{t('Passing score: {{num}}', { num: passingScore })}</div>
+          <div class="stat-desc">{t('Passing point: {{num}}', { num: passingPoint })}</div>
         </div>
       </div>
 

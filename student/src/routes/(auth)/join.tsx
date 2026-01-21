@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, getValue, setValue, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
@@ -6,13 +5,14 @@ import type * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
 import { accountV1Join, operationV1GetPoliciesToJoin } from '@/api'
 import { vJoinSchema } from '@/api/valibot.gen'
-import { BASE_URL } from '@/config'
+import { BASE_URL, TEST_MAILER_URL } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { ActivationLink } from './-ActivationLink'
 import { LoginLink } from './-LoginLink'
@@ -22,7 +22,7 @@ export const Route = createFileRoute('/(auth)/join')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
   const [joinForm, { Form, Field }] = createForm<v.InferInput<typeof vJoinSchema> & { passwordConfirm: string }>({
@@ -41,7 +41,10 @@ function RouteComponent() {
 
   const [selectedPolicy, setSelectedPolicy] = createSignal<SitePolicySchema>()
 
-  const join = async (values: v.InferInput<typeof vJoinSchema>) => {
+  const join = async ({
+    passwordConfirm,
+    ...values
+  }: v.InferInput<typeof vJoinSchema> & { passwordConfirm: string }) => {
     const { error } = await accountV1Join({ body: values, throwOnError: false })
     if (error) {
       handleFormErrors(joinForm, error, t)
@@ -57,6 +60,10 @@ function RouteComponent() {
       duration: 1000 * 60,
     })
     navigate({ to: '/login' })
+
+    if (import.meta.env.DEV) {
+      window.open(TEST_MAILER_URL, '_blank')
+    }
   }
 
   const agreeAll = () => {

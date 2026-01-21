@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createMediaQuery } from '@solid-primitives/media'
 import { createElementSize } from '@solid-primitives/resize-observer'
 import { createFileRoute } from '@tanstack/solid-router'
@@ -12,6 +11,7 @@ import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { PdfViewer } from '@/shared/PdfViewer'
 import { createResizable } from '@/shared/resizable'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { VideoPlayer } from '@/shared/VideoPlayer'
 import { Thread } from '../-shared/thread/Thread'
 import { Note } from './-media/Note'
@@ -34,7 +34,7 @@ interface MediaPlayerAPI {
 }
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const params = Route.useParams()
   const search = Route.useSearch()
 

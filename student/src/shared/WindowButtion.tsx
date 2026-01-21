@@ -1,4 +1,4 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   title: string
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const WindowButton = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   return (
     <button type="button" onClick={() => props.onClick()} class={`cursor-pointer group ${props.class ?? ''}`}>

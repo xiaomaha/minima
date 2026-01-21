@@ -1,7 +1,7 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconCircle, IconCircleCheckFilled, IconHelpCircle } from '@tabler/icons-solidjs'
 import { differenceInDays, format, isValid, parseISO } from 'date-fns'
 import { createMemo, For, Show } from 'solid-js'
+import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
 import { useSession } from './context'
 
@@ -32,7 +32,7 @@ const getEventColor = (event: CalendarEvent): string => {
 }
 
 export const Schedule = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!

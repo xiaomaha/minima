@@ -1,11 +1,12 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-solidjs'
+import { IconChevronDown, IconChevronUp, IconListCheck } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
 import { createSignal, For, Show } from 'solid-js'
 import { competencyV1GetCompetencyGoals } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { CategorySelect } from '../-shared/goal/CategorySelect'
 import { GoalForm } from '../-shared/goal/GoalForm'
 
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/(app)/dashboard/goal')({
 })
 
 function RouteComponent() {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [goals, { setStore }] = createCachedStore(
     'competencyV1GetCompetencyGoals',
@@ -51,10 +52,11 @@ function RouteComponent() {
       </div>
 
       <Show when={!goals.loading} fallback={<LoadingOverlay class="static" />}>
-        <Show
-          when={goals.data?.length}
-          fallback={<div class="text-center">{t('No competency goal created yet.')}</div>}
-        >
+        <Show when={goals.data?.length === 0}>
+          <NoContent icon={IconListCheck} message={t('No competency goal created yet.')} />
+        </Show>
+
+        <Show when={goals.data?.length}>
           <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
             <table class="table w-full">
               <tbody>

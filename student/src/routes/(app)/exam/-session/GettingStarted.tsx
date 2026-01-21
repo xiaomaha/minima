@@ -1,5 +1,5 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { examV1StartAttempt, type LearningSessionStep } from '@/api'
+import { useTranslation } from '@/shared/solid/i18n'
 import { toHHMMSS } from '@/shared/utils'
 import { SessionStart } from '../../-shared/grading/SessionStart'
 import { useSession } from './context'
@@ -7,7 +7,7 @@ import { useSession } from './context'
 const SITTING = 1 as LearningSessionStep
 
 export const GettingStarted = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session, { setStore, refetch }] = useSession()
   const s = () => session.data!
@@ -54,7 +54,7 @@ export const GettingStarted = () => {
               <td>{`${new Date(s().gradingDate.confirmDue).toLocaleDateString()}`}</td>
             </tr>
             <tr>
-              <td>{t('Duration / Passing Score')}</td>
+              <td>{t('Duration / Passing Point')}</td>
               <td>
                 {t('{{minutes}} minutes', { minutes: toHHMMSS(s().exam.durationSeconds) })}
                 {' / '}

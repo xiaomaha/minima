@@ -1,11 +1,13 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createVisibilityObserver } from '@solid-primitives/intersection-observer'
+import { IconSpeakerphone } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createEffect, For, onCleanup, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import { type AnnounceSchema, operationV1GetAnnouncements, operationV1ReadAnnouncement } from '@/api'
 import { ContentViewer } from '@/shared/ContentViewer'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { toYYYYMMDD } from '@/shared/utils'
 
 export const Route = createFileRoute('/(app)/dashboard/announcement')({
@@ -13,6 +15,8 @@ export const Route = createFileRoute('/(app)/dashboard/announcement')({
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
+
   const [announcements, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'operationV1GetAnnouncements',
     () => ({}),
@@ -27,6 +31,10 @@ function RouteComponent() {
       <For each={announcements.items}>
         {(item, i) => <AnnouncementItem item={item} numbering={announcements.count - i()} setStore={setStore} />}
       </For>
+
+      <Show when={announcements.items.length === 0}>
+        <NoContent icon={IconSpeakerphone} message={t('No announcement')} />
+      </Show>
 
       <Show when={!announcements.end}>
         <div ref={setObserverEl} class="flex justify-center py-8">
@@ -46,7 +54,7 @@ interface AnnouncementItemProps {
 }
 
 const AnnouncementItem = (props: AnnouncementItemProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   let articleRef: HTMLElement | undefined
   let timeoutId: number | undefined

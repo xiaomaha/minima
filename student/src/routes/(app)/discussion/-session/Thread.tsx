@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
 import { IconEdit, IconHelpCircleFilled, IconMessage, IconPlus } from '@tabler/icons-solidjs'
 import { formatDistanceToNow } from 'date-fns'
@@ -21,12 +20,13 @@ import { Dialog } from '@/shared/Diaglog'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../../-shared/editor/TextEditor'
 import { useSession } from './context'
 
 export const Thread = () => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!
@@ -117,7 +117,7 @@ interface PostCardProps {
 }
 
 const PostCard = (props: PostCardProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const displayName = () => props.post.learner.nickname || props.post.learner.name
 
@@ -164,7 +164,7 @@ interface PostThreadProps {
 }
 
 const PostThread = (props: PostThreadProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const [session] = useSession()
   const s = () => session.data!
@@ -305,7 +305,7 @@ interface ContentEditorProps extends ContentEditorOptions {
 }
 
 const ContentEditor = (props: ContentEditorProps) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
   // session

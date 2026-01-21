@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconExclamationCircle, IconPencil, IconPlus } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
 import { Portal } from 'solid-js/web'
@@ -7,13 +6,14 @@ import { CHILD_COMMENT_MAX_COUNT } from '@/config'
 import { store as accountStore } from '@/routes/(app)/account/-store'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { Comment } from './Comment'
 import { CommentEditor } from './CommentEditor'
 import { type ThreadContextValue, ThreadProvider, useThreadContext } from './context'
 import { Rating } from './Rating'
 
 export const Thread = (props: ThreadContextValue['context']) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const { appLabel, model, subjectId, options } = props
 
   const threadStore = createCachedStore(

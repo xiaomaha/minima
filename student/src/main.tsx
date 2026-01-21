@@ -1,15 +1,14 @@
 import { createRouter, RouterProvider } from '@tanstack/solid-router'
 import ky from 'ky'
 import { render } from 'solid-js/web'
-import i18next from './i18n'
 import { routeTree } from './routeTree.gen'
 import './styles.css'
-import { TransProvider } from '@mbarzda/solid-i18next'
 import { client } from './api/client.gen'
 import { accessContextParam } from './context'
 import { getUserLanguage } from './routes/(app)/account/-store'
 import { DateLocaleProvider } from './shared/DateLocaleProvider'
 import { handleApiError } from './shared/error'
+import { I18nProvider } from './shared/solid/i18n'
 
 // error
 client.interceptors.error.use(handleApiError)
@@ -51,11 +50,11 @@ const rootElement = document.getElementById('app')
 if (rootElement) {
   render(
     () => (
-      <TransProvider instance={i18next}>
+      <I18nProvider>
         <DateLocaleProvider>
           <RouterProvider router={router} />
         </DateLocaleProvider>
-      </TransProvider>
+      </I18nProvider>
     ),
     rootElement,
   )

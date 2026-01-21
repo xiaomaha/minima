@@ -1,5 +1,5 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { IconCheck, IconCopy } from '@tabler/icons-solidjs'
+import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
   onCopy: (e: MouseEvent) => void
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const CopyButton = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
 
   const handleCopy = (e: MouseEvent) => {
     e.stopPropagation()

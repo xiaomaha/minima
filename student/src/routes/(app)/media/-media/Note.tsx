@@ -1,4 +1,3 @@
-import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, reset, valiForm } from '@modular-forms/solid'
 import type { Editor } from '@tiptap/core'
 import { createEffect, createSignal } from 'solid-js'
@@ -9,6 +8,7 @@ import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from '@/config'
 import { accessContextParam } from '@/context'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { useTranslation } from '@/shared/solid/i18n'
 import { TextEditor } from '../../-shared/editor/TextEditor'
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const Note = (props: Props) => {
-  const [t] = useTransContext()
+  const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
   const [contentForm, { Form, Field }] = createForm<v.InferInput<typeof vNoteSaveSchema>>({
