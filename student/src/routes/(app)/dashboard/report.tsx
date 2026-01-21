@@ -119,17 +119,17 @@ function RouteComponent() {
           </Show>
         </div>
 
-        <div class="stats shadow text-center">
-          <span class="stat">
+        <div class="stats shadow text-center flex">
+          <span class="stat flex-1">
             <div class="stat-title">{t('Enrolled Count')}</div>
-            <div class="stat-value text-6xl text-success">{d()?.enrollmentCount ?? 0}</div>
+            <div class="stat-value text-6xl text-success min-h-15">{d()?.enrollmentCount}</div>
           </span>
 
-          <div class="stat">
+          <div class="stat flex-1">
             <div class="stat-title">{t('Watch Media Count')}</div>
-            <div class="stat-value">{d()?.watchMediaCount ?? 0}</div>
+            <div class="stat-value">{d()?.watchMediaCount}</div>
           </div>
-          <div class="stat">
+          <div class="stat flex-1">
             <div class="stat-title">{t('Watch Time')}</div>
             <div class="stat-value">{toHHMMSS(d()?.watchSeconds ?? 0)}</div>
           </div>
@@ -138,23 +138,23 @@ function RouteComponent() {
         <div class="stats shadow text-center">
           <div class="stat">
             <div class="stat-title">{t('Exam')}</div>
-            <div class="stat-value">{d()?.examAttemptCount ?? 0}</div>
+            <div class="stat-value min-h-12">{d()?.examAttemptCount}</div>
           </div>
           <div class="stat">
             <div class="stat-title">{t('Assignment')}</div>
-            <div class="stat-value">{d()?.assignmentAttemptCount ?? 0}</div>
+            <div class="stat-value">{d()?.assignmentAttemptCount}</div>
           </div>
           <div class="stat">
             <div class="stat-title">{t('Discussion')}</div>
-            <div class="stat-value">{d()?.discussionAttemptCount ?? 0}</div>
+            <div class="stat-value">{d()?.discussionAttemptCount}</div>
           </div>
           <div class="stat">
             <div class="stat-title">{t('Quiz')}</div>
-            <div class="stat-value">{d()?.quizAttemptCount ?? 0}</div>
+            <div class="stat-value">{d()?.quizAttemptCount}</div>
           </div>
           <div class="stat">
             <div class="stat-title">{t('Survey')}</div>
-            <div class="stat-value">{d()?.surveySubmissionCount ?? 0}</div>
+            <div class="stat-value">{d()?.surveySubmissionCount}</div>
           </div>
         </div>
       </div>
@@ -171,7 +171,7 @@ function RouteComponent() {
 
         <For each={watched.items}>{(item) => <Card media={item} onclick={() => goToMedia(item)} />}</For>
 
-        <Show when={watched.items?.length === 0}>
+        <Show when={watched.end && watched.count === 0}>
           <NoContent message={t('No watched media yet.')} />
         </Show>
 

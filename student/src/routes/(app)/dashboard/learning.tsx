@@ -51,7 +51,7 @@ function RouteComponent() {
         <For each={enrollments.items}>{(item) => <ContentCard item={item} setStore={setStore} />}</For>
       </div>
 
-      <Show when={enrollments.items.length === 0}>
+      <Show when={enrollments.end && enrollments.count === 0}>
         <NoContent message={t('No content enrolled yet.')}>
           <div class="mt-8 text-base-content/70">
             <div class="flex items-center justify-center">
@@ -93,7 +93,7 @@ function RouteComponent() {
 
 interface ContentCardProps {
   item: EnrollmentSchema
-  setStore: SetStoreFunction<{ items: EnrollmentSchema[] }>
+  setStore: SetStoreFunction<{ items: EnrollmentSchema[]; count: number }>
 }
 
 const ContentCard = (props: ContentCardProps) => {
@@ -116,6 +116,7 @@ const ContentCard = (props: ContentCardProps) => {
   const deactivate = async () => {
     await learningV1Unenroll({ path: { id: props.item.id } })
     props.setStore('items', (prev) => prev.filter((item) => item.id !== props.item.id))
+    props.setStore('count', (prev) => prev - 1)
   }
 
   const openContent = () => {

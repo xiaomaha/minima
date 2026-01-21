@@ -34,7 +34,7 @@ function RouteComponent() {
 
       <CertificateAwardList awards={certificates.items} />
 
-      <Show when={certificates.items.length === 0}>
+      <Show when={certificates.end && certificates.count === 0}>
         <NoContent icon={IconCertificate} message={t('No certificate awarded yet.')} />
       </Show>
 

@@ -32,7 +32,7 @@ function RouteComponent() {
         {(item, i) => <AnnouncementItem item={item} numbering={announcements.count - i()} setStore={setStore} />}
       </For>
 
-      <Show when={announcements.items.length === 0}>
+      <Show when={announcements.end && announcements.count === 0}>
         <NoContent icon={IconSpeakerphone} message={t('No announcement')} />
       </Show>
 

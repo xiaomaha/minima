@@ -64,6 +64,8 @@ function RouteComponent() {
   // by media format
   const playerResizable = createResizable(() => media.data?.format)
 
+  const ratio = () => (media.data?.format === 'pdf' ? 1 : 9 / 16)
+
   return (
     <div class="mx-auto flex max-w-460 flex-col lg:flex-row gap-x-4 gap-y-8">
       <div class="space-y-6 w-full md:min-w-160">
@@ -71,7 +73,7 @@ function RouteComponent() {
           <div
             ref={setContentContainerRef}
             class="bg-base-content mb-2 w-full aspect-video rounded-xl overflow-hidden flex justify-center items-center"
-            style={{ height: `${((size.width ?? 0) * 9) / 16 + playerResizable.heightOffset()}px` }}
+            style={{ height: `${(size.width ?? 0) * ratio() + playerResizable.heightOffset()}px` }}
           >
             <Show when={media.data}>
               {(m) => (

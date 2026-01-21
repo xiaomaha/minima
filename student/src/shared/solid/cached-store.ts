@@ -96,7 +96,7 @@ export function createCachedStore<TData, TParams>(
             })
           } else {
             setStore({
-              data: undefined,
+              // data: undefined, use stale data to avoid flickering
               loading: false,
               error: undefined,
             })

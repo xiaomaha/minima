@@ -101,7 +101,7 @@ export const Inquiry = (props: Props) => {
             }}
           </For>
 
-          <Show when={inquiries.items?.length === 0}>
+          <Show when={inquiries.end && inquiries.count === 0}>
             <NoContent icon={IconQuestionMark} message={t('No inquiry created yet.')} />
           </Show>
 
