@@ -1,6 +1,7 @@
 import { createRootRoute, Outlet } from '@tanstack/solid-router'
 import { PLATFORM_NAME } from '@/config'
-import { useTranslation } from '@/shared/solid/i18n'
+import { DateLocaleProvider } from '@/shared/DateLocaleProvider'
+import { I18nProvider, useTranslation } from '@/shared/solid/i18n'
 import { ToastContainer } from '@/shared/toast/ToastContainer'
 
 const startYear = 2025
@@ -9,7 +10,6 @@ const yearText = startYear === currentYear ? `${startYear}` : `${startYear}–${
 
 const RootLayout = () => {
   const { t } = useTranslation()
-
   return (
     <div class="flex flex-col min-h-screen">
       <Outlet />
@@ -24,5 +24,11 @@ const RootLayout = () => {
 }
 
 export const Route = createRootRoute({
-  component: RootLayout,
+  component: () => (
+    <I18nProvider>
+      <DateLocaleProvider>
+        <RootLayout />
+      </DateLocaleProvider>
+    </I18nProvider>
+  ),
 })
