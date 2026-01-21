@@ -358,7 +358,7 @@ class Post(TimeStampedMixin, AttachmentMixin):
         post = await Post.objects.acreate(attempt=attempt, title=title, parent_id=parent_id, body=body)
         await post.update_attachments(files=files, owner_id=learner_id, content=post.body)
         post._state.fields_cache["attempt"] = attempt
-        setattr(post, "post_count", await post.attempt.post_count())
+        post.post_count = await post.attempt.post_count()
         return post
 
     @classmethod

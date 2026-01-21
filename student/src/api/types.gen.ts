@@ -109,9 +109,9 @@ export type JoinSchema = {
 };
 
 /**
- * RequestactivationSchema
+ * RequestActivationSchema
  */
-export type RequestactivationSchema = {
+export type RequestActivationSchema = {
     /**
      * Email
      */
@@ -120,6 +120,16 @@ export type RequestactivationSchema = {
      * Callbackurl
      */
     callbackUrl: string;
+};
+
+/**
+ * AccountActivatedSchema
+ */
+export type AccountActivatedSchema = {
+    /**
+     * Email
+     */
+    email: string;
 };
 
 /**
@@ -4419,7 +4429,7 @@ export type AccountV1JoinResponses = {
 };
 
 export type AccountV1RequestActivationData = {
-    body: RequestactivationSchema;
+    body: RequestActivationSchema;
     path?: never;
     query?: never;
     url: '/api/v1/account/requestactivation';
@@ -4443,8 +4453,10 @@ export type AccountV1ActivateResponses = {
     /**
      * OK
      */
-    200: unknown;
+    200: AccountActivatedSchema;
 };
+
+export type AccountV1ActivateResponse = AccountV1ActivateResponses[keyof AccountV1ActivateResponses];
 
 export type AccountV1GetMeData = {
     body?: never;

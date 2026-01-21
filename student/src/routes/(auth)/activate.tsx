@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/solid-router'
 import { createResource, Show } from 'solid-js'
 import * as v from 'valibot'
 import { accountV1Activate, accountV1RequestActivation } from '@/api'
-import { vRequestactivationSchema } from '@/api/valibot.gen'
+import { vRequestActivationSchema } from '@/api/valibot.gen'
 import { BASE_URL } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
@@ -35,12 +35,12 @@ const RequestActivation = () => {
   const [t] = useTransContext()
   const navigate = Route.useNavigate()
 
-  const [requestForm, { Form, Field }] = createForm<v.InferInput<typeof vRequestactivationSchema>>({
+  const [requestForm, { Form, Field }] = createForm<v.InferInput<typeof vRequestActivationSchema>>({
     initialValues: { callbackUrl: `${BASE_URL}${Route.fullPath}` },
-    validate: valiForm(vRequestactivationSchema),
+    validate: valiForm(vRequestActivationSchema),
   })
 
-  const requestActivation = async (values: v.InferInput<typeof vRequestactivationSchema>) => {
+  const requestActivation = async (values: v.InferInput<typeof vRequestActivationSchema>) => {
     const { error } = await accountV1RequestActivation({ body: values, throwOnError: false })
     if (error) {
       handleFormErrors(requestForm, error, t)
@@ -94,7 +94,7 @@ const Activate = (props: { token: string }) => {
   const navigate = Route.useNavigate()
 
   createResource(async () => {
-    const { error } = await accountV1Activate({ body: { token: props.token }, throwOnError: false })
+    const { data, error } = await accountV1Activate({ body: { token: props.token }, throwOnError: false })
     if (error) {
       navigate({ to: '/login', replace: true })
       return
@@ -106,7 +106,7 @@ const Activate = (props: { token: string }) => {
       type: 'success',
       duration: 1000 * 5,
     })
-    navigate({ to: '/login', replace: true })
+    navigate({ to: '/login', replace: true, state: { email: data?.email } })
   })
 
   return null

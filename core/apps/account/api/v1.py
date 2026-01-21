@@ -7,6 +7,7 @@ from ninja.params import functions
 from ninja.router import Router
 
 from apps.account.api.schema import (
+    AccountActivatedSchema,
     AccountActivateSchema,
     ApplyEmailChangeSchema,
     ApplyPasswordChangeSchema,
@@ -15,7 +16,7 @@ from apps.account.api.schema import (
     OtpSetupCompleteSchema,
     OtpSetupSchema,
     OtpVerifySchema,
-    RequestactivationSchema,
+    RequestActivationSchema,
     RequestEmailChangeSchema,
     RequestPasswordChangeSchema,
     TOTPDeviceSchema,
@@ -48,16 +49,16 @@ async def join(request: HttpRequest, data: JoinSchema):
 
 
 @router.post("/requestactivation", auth=no_auth_required)
-async def request_activation(request: HttpRequest, data: RequestactivationSchema):
+async def request_activation(request: HttpRequest, data: RequestActivationSchema):
     user = await User.get_user(email=data.email, is_active=False)
     await user.request_activation(callback_url=str(data.callback_url))
 
 
-@router.post("/activate", auth=no_auth_required)
+@router.post("/activate", auth=no_auth_required, response=AccountActivatedSchema)
 async def activate(request: HttpRequest, data: AccountActivateSchema):
     payload = User.decode_auth_token(data.token, "activation")
     user = await User.get_user(id=payload["sub"], is_active=False)
-    await user.activate()
+    return await user.activate()
 
 
 @router.get("/me", response=UserSchema)

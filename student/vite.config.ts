@@ -33,10 +33,27 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          pdfjs: ['pdfjs-dist'],
+        manualChunks(id) {
+          if (id.includes('pdfjs-dist')) return 'pdf'
+          if (id.includes('pdf.worker')) return 'pdf-worker'
+          if (id.includes('@cropper') || id.includes('cropper')) return 'cropper'
+          if (id.includes('@tiptap') || id.includes('tiptap')) return 'editor'
+          if (id.includes('date-fns')) return 'date'
+          if (id.includes('i18next')) return 'i18n'
+
+          if (id.includes('node_modules/solid-js')) return 'solid'
+          if (id.includes('node_modules/@solidjs/router')) return 'router'
+          if (id.includes('@solid-primitives')) return 'primitives'
+          if (id.includes('@tanstack')) return 'tanstack'
+
+          if (id.includes('/icons/') || id.includes('tabler-icons')) return 'icons'
+          if (id.includes('valibot')) return 'validation'
+          if (id.includes('ky/')) return 'http'
+
+          if (id.includes('node_modules')) return 'vendor'
         },
       },
     },
+    chunkSizeWarningLimit: 600,
   },
 })

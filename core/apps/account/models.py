@@ -262,6 +262,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
     async def activate(self):
         self.is_active = True
         await self.asave()
+        return self
 
     async def change_password(self, *, password: str):
         self.set_password(password)

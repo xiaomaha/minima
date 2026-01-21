@@ -46,11 +46,18 @@ export const vJoinSchema = v.object({
 });
 
 /**
- * RequestactivationSchema
+ * RequestActivationSchema
  */
-export const vRequestactivationSchema = v.object({
+export const vRequestActivationSchema = v.object({
     email: v.pipe(v.string(), v.email()),
     callbackUrl: v.pipe(v.string(), v.url(), v.minLength(1), v.maxLength(2083))
+});
+
+/**
+ * AccountActivatedSchema
+ */
+export const vAccountActivatedSchema = v.object({
+    email: v.string()
 });
 
 /**
@@ -1922,7 +1929,7 @@ export const vAccountV1JoinData = v.object({
 });
 
 export const vAccountV1RequestActivationData = v.object({
-    body: vRequestactivationSchema,
+    body: vRequestActivationSchema,
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
@@ -1932,6 +1939,11 @@ export const vAccountV1ActivateData = v.object({
     path: v.optional(v.never()),
     query: v.optional(v.never())
 });
+
+/**
+ * OK
+ */
+export const vAccountV1ActivateResponse = vAccountActivatedSchema;
 
 export const vAccountV1GetMeData = v.object({
     body: v.optional(v.never()),

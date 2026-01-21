@@ -1,6 +1,6 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
-import { createFileRoute, Link } from '@tanstack/solid-router'
+import { createFileRoute, Link, useLocation } from '@tanstack/solid-router'
 import * as v from 'valibot'
 import { accountV1Login } from '@/api/sdk.gen'
 import { vLoginSchema } from '@/api/valibot.gen'
@@ -23,6 +23,7 @@ function RouteComponent() {
   const [t] = useTransContext()
   const params = Route.useSearch()
   const navigate = Route.useNavigate()
+  const location = useLocation()
 
   const [loginForm, { Form, Field }] = createForm<v.InferInput<typeof vLoginSchema>>({
     validate: valiForm(vLoginSchema),
@@ -45,7 +46,14 @@ function RouteComponent() {
         <Field name="email">
           {(field, props) => (
             <FormInput error={field.error}>
-              <input {...props} type="email" class="input" placeholder={t('Email')} autofocus />
+              <input
+                {...props}
+                type="email"
+                value={location().state?.email ?? ''}
+                class="input"
+                placeholder={t('Email')}
+                autofocus
+              />
             </FormInput>
           )}
         </Field>
