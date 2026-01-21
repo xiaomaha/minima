@@ -34,7 +34,7 @@ function RouteComponent() {
         <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box mb-6 space-x-2 gap-y-2">
           <For each={Object.keys(tabLabels)}>
             {(tab) => (
-              <li>
+              <li class="mb-0">
                 <button
                   type="button"
                   class="min-w-16 justify-center"

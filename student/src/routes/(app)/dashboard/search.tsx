@@ -4,6 +4,7 @@ import { createEffect, createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import { contentV1Search, type SearchedMediaSchema } from '@/api'
 import { Avatar } from '@/shared/Avatar'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { showToast } from '@/shared/toast/store'
 import { extractText, timeToSeconds, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
@@ -59,6 +60,10 @@ function RouteComponent() {
       </Show>
 
       <For each={medias.items}>{(item) => <Card media={item} q={q()} onclick={() => goToMedia(item)} />}</For>
+
+      <Show when={medias.items.length === 0}>
+        <NoContent message={t('No media found')} />
+      </Show>
 
       <Show when={!medias.end}>
         <div ref={setObserverEl} class="flex justify-center py-8">

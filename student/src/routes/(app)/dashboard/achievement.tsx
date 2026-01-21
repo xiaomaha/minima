@@ -1,8 +1,9 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
-import { IconRefresh } from '@tabler/icons-solidjs'
+import { IconCertificate, IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
 import { competencyV1GetCertificateAwards } from '@/api'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { CertificateAwardList } from '../-shared/CertificateAwardList'
 
@@ -32,6 +33,10 @@ function RouteComponent() {
       </div>
 
       <CertificateAwardList awards={certificates.items} />
+
+      <Show when={certificates.items.length === 0}>
+        <NoContent icon={IconCertificate} message={t('No certificate awarded yet.')} />
+      </Show>
 
       <Show when={!certificates.end}>
         <div ref={setObserverEl} class="flex justify-center py-8">

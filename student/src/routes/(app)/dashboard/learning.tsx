@@ -5,6 +5,7 @@ import { createEffect, createSignal, For, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import { type EnrollmentSchema, learningV1GetEnrolled, learningV1Unenroll } from '@/api'
 import { Avatar } from '@/shared/Avatar'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { capitalize, toHHMMSS } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
@@ -16,6 +17,8 @@ export const Route = createFileRoute('/(app)/dashboard/learning')({
 })
 
 function RouteComponent() {
+  const [t] = useTransContext()
+
   const [enrollments, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'learningV1GetEnrolled',
     () => ({ query: {} }),
@@ -46,6 +49,10 @@ function RouteComponent() {
       <div class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10">
         <For each={enrollments.items}>{(item) => <ContentCard item={item} setStore={setStore} />}</For>
       </div>
+
+      <Show when={enrollments.items.length === 0}>
+        <NoContent message={t('No content enrolled yet.')} />
+      </Show>
 
       <Show when={!enrollments.end}>
         <div ref={setObserverEl} class="flex justify-center py-8">

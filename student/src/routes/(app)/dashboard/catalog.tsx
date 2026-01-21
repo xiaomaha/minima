@@ -13,6 +13,7 @@ import {
 import { Avatar } from '@/shared/Avatar'
 import { Dialog } from '@/shared/Diaglog'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { capitalize, extractText, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
@@ -39,6 +40,10 @@ function RouteComponent() {
     <div class="max-w-5xl mx-auto space-y-8 flex flex-col">
       <div class="label text-sm">{t('You can enroll the content of the following catalogs')}</div>
       <For each={catalogs.data}>{(catalog) => <CatalogCard catalog={catalog} onclick={() => {}} />}</For>
+
+      <Show when={catalogs.data?.length === 0}>
+        <NoContent message={t('No available catalog')} />
+      </Show>
     </div>
   )
 }
@@ -134,7 +139,7 @@ const ItemList = (props: ItemListProps) => {
         </div>
       }
       boxClass="max-w-5xl"
-      open={items.items.length > 0}
+      open={props.open && !items.loading}
       onClose={() => props.setOpen(false)}
     >
       <div class="p-8 pt-2">
@@ -148,6 +153,11 @@ const ItemList = (props: ItemListProps) => {
           <For each={items.items}>
             {(item) => <ItemCard catalogId={props.catalog.id} item={item} setStore={setStore} />}
           </For>
+
+          <Show when={items.items.length === 0}>
+            <NoContent />
+          </Show>
+
           <Show when={!items.end}>
             <div ref={setObserverEl} class="flex justify-center py-8">
               <span class="loading loading-spinner loading-lg" />
@@ -218,7 +228,7 @@ const ItemCard = (props: ItemCardProps) => {
           </Show>
           <span>{content.title}</span>
         </div>
-        <div class="text-sm break-all text-base-content/70">{extractText(content.description)}</div>
+        <div class="text-sm break-all text-base-content/70 line-clamp-2">{extractText(content.description)}</div>
         <div class="flex items-center gap-2 mt-2">
           <Avatar user={content.owner} rounded size="sm" />
           <div>
@@ -226,7 +236,7 @@ const ItemCard = (props: ItemCardProps) => {
             <div class="text-xs">{toYYYYMMDD(new Date(content.modified))}</div>
           </div>
         </div>
-        <div class="label text-xs">{content.audience}</div>
+        <div class="label text-xs line-clamp-2">{content.audience}</div>
       </div>
       <div class="min-w-20 flex justify-center items-start mb-4">
         <Show when={!props.item.enrolled} fallback={<div class="text-xs text-base-content/40">{t('Enrolled')}</div>}>

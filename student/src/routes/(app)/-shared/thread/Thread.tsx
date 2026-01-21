@@ -1,10 +1,11 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
-import { IconExclamationCircle, IconPencil, IconPlus } from '@tabler/icons-solidjs'
+import { IconExclamationCircle, IconMessage, IconPencil, IconPlus } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
 import { Portal } from 'solid-js/web'
 import { type CommentNestedSchema, type CommentSchema, operationV1GetThread, operationV1GetThreadComments } from '@/api'
 import { CHILD_COMMENT_MAX_COUNT } from '@/config'
 import { store as accountStore } from '@/routes/(app)/account/-store'
+import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { Comment } from './Comment'
@@ -67,6 +68,7 @@ interface SelectedComment {
 }
 
 const CommentList = () => {
+  const [t] = useTransContext()
   const [commentList, setObserverRef] = useThreadContext().commentStore
 
   const [selectedComment, setSelectedComment] = createSignal<SelectedComment | null>(null)
@@ -90,6 +92,10 @@ const CommentList = () => {
     <>
       <CommentEditor />
       <div class="flex flex-col gap-8">
+        <Show when={commentList.items?.length === 0}>
+          <NoContent icon={IconMessage} message={t('Be the first to comment.')} />
+        </Show>
+
         <For each={commentList.items}>
           {(item) => (
             <div>

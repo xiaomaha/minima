@@ -139,7 +139,7 @@ class Enrollment(TimeStampedMixin):
             content_ids[(enrollment.content_type.app_label, enrollment.content_type.model)].add(enrollment.content_id)
 
         contents = await _fetch_enrollable_contents(content_ids)
-        await _attach_contents(paginated["items"], contents)
+        paginated["items"] = await _attach_contents(paginated["items"], contents)
 
         return paginated
 
@@ -366,7 +366,7 @@ class Catalog(TimeStampedMixin):
             content_ids[(item.content_type.app_label, item.content_type.model)].add(item.content_id)
 
         contents = await _fetch_enrollable_contents(content_ids)
-        await _attach_contents(paginated["items"], contents)
+        paginated["items"] = await _attach_contents(paginated["items"], contents)
 
         return paginated
 
@@ -521,6 +521,7 @@ async def _fetch_enrollable_contents(content_ids_by_type: dict):
 
 
 async def _attach_contents(items, contents):
+    valid_items = []
     for item in items:
         origin_content = contents.get(item.content_id)
         if not origin_content:
@@ -533,3 +534,6 @@ async def _attach_contents(items, contents):
         content_data = origin_content.copy()
         user = User(**content_data.pop("owner_obj"))
         item._content_cache = M(**content_data, owner=user)
+        valid_items.append(item)
+
+    return valid_items

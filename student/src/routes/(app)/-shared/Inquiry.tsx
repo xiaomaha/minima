@@ -1,6 +1,14 @@
 import { useTransContext } from '@mbarzda/solid-i18next'
 import { createForm, valiForm } from '@modular-forms/solid'
-import { IconChevronDown, IconChevronUp, IconEdit, IconLink, IconMessage, IconPlus } from '@tabler/icons-solidjs'
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconEdit,
+  IconLink,
+  IconMessage,
+  IconPlus,
+  IconQuestionMark,
+} from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
 import { createContext, createRoot, createSignal, For, Match, Show, Switch, useContext } from 'solid-js'
 import { createStore, type SetStoreFunction } from 'solid-js/store'
@@ -13,6 +21,7 @@ import { Avatar } from '@/shared/Avatar'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { FormInput } from '@/shared/FormInput'
+import { NoContent } from '@/shared/NoContent'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { extractText } from '@/shared/utils'
@@ -81,6 +90,10 @@ export const Inquiry = (props: Props) => {
           <For each={inquiries.items}>
             {(item, i) => <Item inquiry={item} numbering={inquiries.items.length - i()} onEdit={setEditorOpen} />}
           </For>
+
+          <Show when={inquiries.items?.length === 0}>
+            <NoContent icon={IconQuestionMark} message={t('No inquiry created yet.')} />
+          </Show>
 
           <Show when={!inquiries.end}>
             <div ref={setObserverEl} class="flex justify-center py-8">

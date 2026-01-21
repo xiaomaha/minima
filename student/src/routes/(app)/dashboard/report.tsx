@@ -13,6 +13,7 @@ export const Route = createFileRoute('/(app)/dashboard/report')({
 
 import { IconRefresh } from '@tabler/icons-solidjs'
 import { endOfDay, endOfMonth, endOfWeek, format, startOfDay, startOfMonth, startOfWeek } from 'date-fns'
+import { NoContent } from '@/shared/NoContent'
 
 function RouteComponent() {
   const [t] = useTransContext()
@@ -61,6 +62,8 @@ function RouteComponent() {
     refetchWatched()
   }
 
+  const d = () => report.data
+
   return (
     <div class="max-w-5xl mx-auto space-y-16 flex flex-col">
       <div class="flex flex-col gap-8">
@@ -91,68 +94,62 @@ function RouteComponent() {
           />
         </div>
 
-        <Show when={report.data}>
-          {(d) => (
-            <>
-              <div class="label text-base items-end gap-4">
-                {period() === 'today'
-                  ? t("Today's Activities")
-                  : period() === 'week'
-                    ? t("This week's Activities")
-                    : period() === 'month'
-                      ? t("This month's Activities")
-                      : t('All time')}
+        <div class="label text-base items-end gap-4">
+          {period() === 'today'
+            ? t("Today's Activities")
+            : period() === 'week'
+              ? t("This week's Activities")
+              : period() === 'month'
+                ? t("This month's Activities")
+                : t('All time')}
 
-                <span class="text-sm">
-                  {range().start} - {range().end}
-                </span>
-              </div>
+          <span class="text-sm">
+            {range().start} - {range().end}
+          </span>
+        </div>
 
-              <div class="stats shadow text-center">
-                <span class="stat">
-                  <div class="stat-title">{t('Enrolled Count')}</div>
-                  <div class="stat-value text-6xl text-success">{d().enrollmentCount}</div>
-                </span>
+        <div class="stats shadow text-center">
+          <span class="stat">
+            <div class="stat-title">{t('Enrolled Count')}</div>
+            <div class="stat-value text-6xl text-success">{d()?.enrollmentCount ?? 0}</div>
+          </span>
 
-                <div class="stat">
-                  <div class="stat-title">{t('Watch Media Count')}</div>
-                  <div class="stat-value">{d().watchMediaCount}</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-title">{t('Watch Time')}</div>
-                  <div class="stat-value">{toHHMMSS(d().watchSeconds)}</div>
-                </div>
-              </div>
+          <div class="stat">
+            <div class="stat-title">{t('Watch Media Count')}</div>
+            <div class="stat-value">{d()?.watchMediaCount ?? 0}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">{t('Watch Time')}</div>
+            <div class="stat-value">{toHHMMSS(d()?.watchSeconds ?? 0)}</div>
+          </div>
+        </div>
 
-              <div class="stats shadow text-center">
-                <div class="stat">
-                  <div class="stat-title">{t('Exam')}</div>
-                  <div class="stat-value">{d().examAttemptCount}</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-title">{t('Assignment')}</div>
-                  <div class="stat-value">{d().assignmentAttemptCount}</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-title">{t('Discussion')}</div>
-                  <div class="stat-value">{d().discussionAttemptCount}</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-title">{t('Quiz')}</div>
-                  <div class="stat-value">{d().quizAttemptCount}</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-title">{t('Survey')}</div>
-                  <div class="stat-value">{d().surveySubmissionCount}</div>
-                </div>
-              </div>
-            </>
-          )}
-        </Show>
+        <div class="stats shadow text-center">
+          <div class="stat">
+            <div class="stat-title">{t('Exam')}</div>
+            <div class="stat-value">{d()?.examAttemptCount ?? 0}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">{t('Assignment')}</div>
+            <div class="stat-value">{d()?.assignmentAttemptCount ?? 0}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">{t('Discussion')}</div>
+            <div class="stat-value">{d()?.discussionAttemptCount ?? 0}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">{t('Quiz')}</div>
+            <div class="stat-value">{d()?.quizAttemptCount ?? 0}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">{t('Survey')}</div>
+            <div class="stat-value">{d()?.surveySubmissionCount ?? 0}</div>
+          </div>
+        </div>
       </div>
 
       <div class=" mx-auto space-y-2 flex flex-col w-full">
-        <Show when={!watched.loading} fallback={<div class="skeleton h-5 w-30"></div>}>
+        <Show when={!watched.loading} fallback={<div class="skeleton h-5 w-48"></div>}>
           <div class="label text-sm w-full relative">
             {t('{{count}} watched history found', { count: watched.count })}
             <button type="button" class="btn btn-sm btn-ghost btn-circle absolute right-0" onClick={handleRefresh}>
@@ -162,6 +159,10 @@ function RouteComponent() {
         </Show>
 
         <For each={watched.items}>{(item) => <Card media={item} onclick={() => goToMedia(item)} />}</For>
+
+        <Show when={watched.items?.length === 0}>
+          <NoContent message={t('No watched media yet.')} />
+        </Show>
 
         <Show when={!watched.end}>
           <div ref={setObserverEl} class="flex justify-center py-8">
