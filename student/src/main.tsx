@@ -6,9 +6,7 @@ import './styles.css'
 import { client } from './api/client.gen'
 import { accessContextParam } from './context'
 import { getUserLanguage } from './routes/(app)/account/-store'
-import { DateLocaleProvider } from './shared/DateLocaleProvider'
 import { handleApiError } from './shared/error'
-import { I18nProvider } from './shared/solid/i18n'
 
 // error
 client.interceptors.error.use(handleApiError)
@@ -48,14 +46,5 @@ declare module '@tanstack/solid-router' {
 
 const rootElement = document.getElementById('app')
 if (rootElement) {
-  render(
-    () => (
-      <I18nProvider>
-        <DateLocaleProvider>
-          <RouterProvider router={router} />
-        </DateLocaleProvider>
-      </I18nProvider>
-    ),
-    rootElement,
-  )
+  render(() => <RouterProvider router={router} />, rootElement)
 }
