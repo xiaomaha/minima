@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import type * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
-import { accountV1Join, operationV1GetPoliciesToJoin } from '@/api/sdk.gen'
+import { accountV1Join, operationV1GetPoliciesToJoin } from '@/api'
 import { vJoinSchema } from '@/api/valibot.gen'
 import { BASE_URL } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
@@ -14,6 +14,7 @@ import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { showToast } from '@/shared/toast/store'
+import { ActivationLink } from './-ActivationLink'
 import { LoginLink } from './-LoginLink'
 
 export const Route = createFileRoute('/(auth)/join')({
@@ -38,7 +39,7 @@ function RouteComponent() {
     },
   )
 
-  const [selectedPolicy, setSelectedPolicy] = createSignal<SitePolicySchema | null>(null)
+  const [selectedPolicy, setSelectedPolicy] = createSignal<SitePolicySchema>()
 
   const join = async (values: v.InferInput<typeof vJoinSchema>) => {
     const { error } = await accountV1Join({ body: values, throwOnError: false })
@@ -50,7 +51,7 @@ function RouteComponent() {
       title: t('Thank you for joining!'),
       message: t(
         'Verification email has been sent to your email address.' +
-          ' Please check your email and click on the link to verify your account.',
+          ' Please check your email and click on the link to activate your account.',
       ),
       type: 'success',
       duration: 1000 * 60,
@@ -58,9 +59,14 @@ function RouteComponent() {
     navigate({ to: '/login' })
   }
 
+  const agreeAll = () => {
+    const allVersionIds = policies.data?.map((p) => String(p.effectiveVersion.id)) || []
+    setValue(joinForm, 'agreements', allVersionIds)
+  }
+
   return (
     <>
-      <Dialog boxClass="max-w-lg" open={!!selectedPolicy()} onClose={() => setSelectedPolicy(null)}>
+      <Dialog boxClass="max-w-xl" open={!!selectedPolicy()} onClose={() => setSelectedPolicy()}>
         <Show when={selectedPolicy()}>
           {(policy) => (
             <div class="p-4">
@@ -68,10 +74,11 @@ function RouteComponent() {
               <p class="py-2 text-sm">
                 <span class="label block">{policy().description}</span>
                 <span class="label block">
-                  {new Date(policy().effectiveVersion.effectiveDate!).toLocaleDateString()}
+                  {new Date(policy().effectiveVersion.effectiveDate).toLocaleDateString()}
                 </span>
               </p>
-              <ContentViewer content={policy().effectiveVersion.body!} />
+              <ContentViewer content={policy().effectiveVersion.body} />
+              <p class="text-xs label mt-8">{t('End')}</p>
             </div>
           )}
         </Show>
@@ -81,7 +88,7 @@ function RouteComponent() {
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-4">
           <legend class="fieldset-legend mb-0">{t('Join')}</legend>
 
-          <span class="label">{t('Please fill out the following information')}</span>
+          <span class="label">{t('Please fill out the form below to join.')}</span>
 
           <Field name="name">
             {(field, props) => (
@@ -94,7 +101,7 @@ function RouteComponent() {
           <Field name="email">
             {(field, props) => (
               <FormInput error={field.error}>
-                <input {...props} class="input" placeholder={t('Email address')} />
+                <input {...props} class="input" placeholder={t('Email')} />
               </FormInput>
             )}
           </Field>
@@ -116,7 +123,7 @@ function RouteComponent() {
           >
             {(field, props) => (
               <FormInput error={field.error}>
-                <input {...props} type="password" class="input" placeholder={t('Confirm password')} />
+                <input {...props} type="password" class="input" placeholder={t('Confirm Password')} />
               </FormInput>
             )}
           </Field>
@@ -128,14 +135,19 @@ function RouteComponent() {
               const mandatoryVersionIds =
                 policies.data?.filter((p) => p.mandatory).map((p) => String(p.effectiveVersion.id)) || []
               const allMandatoryAgreed = mandatoryVersionIds.every((id) => value?.includes(id))
-              return allMandatoryAgreed ? '' : t('Check your policy agreement')
+              return allMandatoryAgreed ? '' : t('Check all mandatory policies')
             }}
           >
             {(field) => (
               <div>
-                <span class={`label my-3 ${field.error ? 'text-error' : ''}`}>
-                  {t('Please agree to the following policies')}
-                </span>
+                <div class="flex items-center justify-between my-3">
+                  <span class={`label ${field.error ? 'text-error' : ''}`}>
+                    {t('Please agree to the following policies')}
+                  </span>
+                  <button type="button" class="btn btn-xs btn-link px-0" onClick={agreeAll}>
+                    {t('Agree to all')}
+                  </button>
+                </div>
                 <div class="space-y-3">
                   <For each={policies.data}>
                     {(policy) => {
@@ -158,7 +170,7 @@ function RouteComponent() {
                             />
                             {policy.title}
                             <Show when={!policy.mandatory}>
-                              <span class="text-xs ml-1">({t('Optional')})</span>
+                              <span class="text-xs ml-1">({t('optional')})</span>
                             </Show>
                           </label>
                           <button
@@ -186,7 +198,8 @@ function RouteComponent() {
             class="btn btn-neutral mt-4"
           />
 
-          <LoginLink />
+          <LoginLink class="mb-0" />
+          <ActivationLink />
         </fieldset>
       </Form>
     </>

@@ -48,13 +48,17 @@ class JoinSchema(Schema):
     callback_url: HttpUrl
 
 
-class RequestactivationSchema(Schema):
+class RequestActivationSchema(Schema):
     email: EmailStr
     callback_url: HttpUrl
 
 
 class AccountActivateSchema(Schema):
     token: Annotated[str, Field(min_length=32)]
+
+
+class AccountActivatedSchema(Schema):
+    email: str
 
 
 class UserUpdateSchema(Schema):

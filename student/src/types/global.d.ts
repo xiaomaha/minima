@@ -6,6 +6,12 @@ declare global {
   }
 }
 
+declare module '@tanstack/solid-router' {
+  interface HistoryState {
+    email?: string
+  }
+}
+
 declare module 'solid-js' {
   namespace JSX {
     interface IntrinsicElements {
