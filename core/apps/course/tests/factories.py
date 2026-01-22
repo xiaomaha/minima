@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, cast
-from uuid import uuid4
 
 import mimesis
 from django.conf import settings
@@ -12,7 +11,6 @@ from mimesis.plugins.factory import FactoryField
 from apps.assignment.models import Assignment
 from apps.common.factory import LearningObjectFactory
 from apps.competency.models import Certificate
-from apps.content.models import Media
 from apps.content.tests.factories import MediaFactory
 from apps.course.models import (
     TEMPLATE_SCHEDULES,
@@ -78,7 +76,6 @@ class CourseFactory(LearningObjectFactory[Course]):
         if TYPE_CHECKING:
             self = cast(Course, self)
 
-        # manytomany
         self.categories.set(Category.objects.filter(depth=3).order_by("?")[: generic.random.randint(1, 2)])
         self.related_courses.set(Course.objects.exclude(id=self.pk).order_by("?")[: generic.random.randint(1, 2)])
         self.certificates.set(Certificate.objects.order_by("?")[: generic.random.randint(1, 2)])
@@ -94,10 +91,10 @@ class CourseFactory(LearningObjectFactory[Course]):
             )
 
         count = generic.random.choice([8, 16, 32])
-        medias = list(Media.objects.order_by("?")[:count])
         last_lesson_start_offset = 0
 
-        for i, media in enumerate(medias):
+        for i in range(count):
+            media = MediaFactory.create(owner=self.owner)
             lesson, created = Lesson.objects.get_or_create(
                 course=self,
                 title=media.title,
@@ -108,8 +105,8 @@ class CourseFactory(LearningObjectFactory[Course]):
                 LessonMedia(lesson=lesson, media=media, ordering=0).save()
 
                 if i in [2, 4]:
-                    media = MediaFactory.create(owner=self.owner, url=f"{generic.internet.url()}/{uuid4().hex}.mp4")
-                    LessonMedia(lesson=lesson, media=media, ordering=i).save()
+                    extra_media = MediaFactory.create(owner=self.owner)
+                    LessonMedia(lesson=lesson, media=extra_media, ordering=1).save()
 
         surveys = SurveyFactory.create_batch(2)
         if surveys:

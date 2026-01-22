@@ -139,7 +139,7 @@ const ItemList = (props: ItemListProps) => {
         </div>
       }
       boxClass="max-w-5xl"
-      open={props.open && !items.loading}
+      open={items.items.length > 0 || (props.open && !items.loading)} // fix flickering
       onClose={() => props.setOpen(false)}
     >
       <div class="p-8 pt-2">
@@ -154,7 +154,7 @@ const ItemList = (props: ItemListProps) => {
             {(item) => <ItemCard catalogId={props.catalog.id} item={item} setStore={setStore} />}
           </For>
 
-          <Show when={items.items.length === 0}>
+          <Show when={items.end && items.count === 0}>
             <NoContent />
           </Show>
 

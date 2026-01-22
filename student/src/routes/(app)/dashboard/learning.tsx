@@ -51,7 +51,7 @@ function RouteComponent() {
         <For each={enrollments.items}>{(item) => <ContentCard item={item} setStore={setStore} />}</For>
       </div>
 
-      <Show when={enrollments.items.length === 0}>
+      <Show when={enrollments.end && enrollments.count === 0}>
         <NoContent message={t('No content enrolled yet.')}>
           <div class="mt-8 text-base-content/70">
             <div class="flex items-center justify-center">
@@ -93,7 +93,7 @@ function RouteComponent() {
 
 interface ContentCardProps {
   item: EnrollmentSchema
-  setStore: SetStoreFunction<{ items: EnrollmentSchema[] }>
+  setStore: SetStoreFunction<{ items: EnrollmentSchema[]; count: number }>
 }
 
 const ContentCard = (props: ContentCardProps) => {
@@ -116,6 +116,7 @@ const ContentCard = (props: ContentCardProps) => {
   const deactivate = async () => {
     await learningV1Unenroll({ path: { id: props.item.id } })
     props.setStore('items', (prev) => prev.filter((item) => item.id !== props.item.id))
+    props.setStore('count', (prev) => prev - 1)
   }
 
   const openContent = () => {
@@ -161,8 +162,8 @@ const ContentCard = (props: ContentCardProps) => {
             <Avatar user={props.item.content.owner} size="sm" rounded />
 
             <div class="flex-1 min-w-0">
-              <div class="text-base font-semibold line-clamp-2 mb-0.5">{props.item.content.title}</div>
-              <div class="text-sm opacity-70">{props.item.content.owner.nickname || props.item.content.owner.name}</div>
+              <div class="text-base/tight font-semibold line-clamp-2 mb-0.5">{props.item.content.title}</div>
+              <div class="text-sm opacity-70 mt-1">{props.item.content.owner.nickname || props.item.content.owner.name}</div>
             </div>
           </div>
           <div class="text-sm label my-2 w-full relative">
@@ -173,10 +174,10 @@ const ContentCard = (props: ContentCardProps) => {
             {/* TODO: Currenly only unenroll action is needed. */}
             <Show when={props.item.canDeactivate}>
               <details
-                class="hidden group-hover:block dropdown dropdown-end absolute right-0 bottom-0"
+                class="dropdown dropdown-end absolute right-0 bottom-0"
                 onclick={(e) => e.stopPropagation()}
               >
-                <summary class="btn btn-sm btn-circle">
+                <summary class="btn btn-sm btn-circle btn-ghost">
                   <IconDotsVertical />
                 </summary>
                 <ul class="menu dropdown-content opacity-100! bg-base-100 rounded-box z-100 w-52 p-2 shadow-2xl">

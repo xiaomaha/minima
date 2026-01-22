@@ -104,8 +104,8 @@ class CatalogItemFactory(DjangoModelFactory[CatalogItem]):
 
     @lazy_attribute
     def content_type(self):
-        Model = generic.random.choice(ENROLLABLE_MODELS)
-        return ContentType.objects.get_for_model(Model)
+        M = next(CONTENT_TYPE_MODEL_CYCLE)
+        return ContentType.objects.get_for_model(M)
 
     @lazy_attribute
     def content_id(self):

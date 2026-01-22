@@ -61,7 +61,7 @@ function RouteComponent() {
 
       <For each={medias.items}>{(item) => <Card media={item} q={q()} onclick={() => goToMedia(item)} />}</For>
 
-      <Show when={medias.items.length === 0}>
+      <Show when={medias.end && medias.count === 0}>
         <NoContent message={t('No media found')} />
       </Show>
 

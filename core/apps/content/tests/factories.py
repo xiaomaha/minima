@@ -1,5 +1,6 @@
 from datetime import timedelta
 from typing import TYPE_CHECKING, cast
+from uuid import uuid4
 
 import mimesis
 from django.conf import settings
@@ -28,10 +29,10 @@ class MediaFactory(LearningObjectFactory[Media]):
     @lazy_attribute
     def url(self):
         if self.format == Media.FormatChoices.PDF:
-            return staticfiles_storage.url(f"sample/sample.pdf?p={generic.random.randint(0, 7)}")
+            return staticfiles_storage.url(f"sample/sample.pdf?p={uuid4().hex}")
 
         elif self.format == Media.FormatChoices.VIDEO:
-            return f"https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4?p={generic.random.randint(0, 7)}"
+            return f"https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4?p={uuid4().hex}"
 
     class Meta:
         model = Media

@@ -395,15 +395,12 @@ class Catalog(TimeStampedMixin):
             await Catalog.objects
             .filter(id=catalog_id, available_from__lte=now, available_until__gte=now, active=True)
             .filter(
-                Q(public=True)
-                | (
-                    Q(usercatalog__user_id=user_id)
-                    & Q(
-                        catalogitem__content_id=content_id,
-                        catalogitem__content_type__app_label=app_label,
-                        catalogitem__content_type__model=model,
-                    )
-                )
+                Q(public=True) | Q(usercatalog__user_id=user_id) | Q(cohortcatalog__cohort__employees__user_id=user_id)
+            )
+            .filter(
+                catalogitem__content_id=content_id,
+                catalogitem__content_type__app_label=app_label,
+                catalogitem__content_type__model=model,
             )
             .annotate(
                 item_content_type_id=Subquery(
