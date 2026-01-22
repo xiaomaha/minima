@@ -145,6 +145,7 @@ class Command(BaseCommand):
             media.description = Truncator(info.get("description", "")).chars(5000)
             media.format = self.detect_format(info)
             media.duration = timedelta(seconds=info.get("duration", 0))
+            media.license = info.get("license", "")
             media.save()
 
             return media
@@ -160,6 +161,8 @@ class Command(BaseCommand):
             description=Truncator(info.get("description", "")).chars(5000),
             format=self.detect_format(info),
             duration=timedelta(seconds=info.get("duration", 0)),
+            license=info.get("license", ""),
+            channel=info.get("channel", ""),
             uploaded=True,
             thumbnail=thumbnail_file,
         )

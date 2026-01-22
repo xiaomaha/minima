@@ -1,4 +1,5 @@
 import hashlib
+import mimetypes
 import os
 import re
 from typing import TYPE_CHECKING, Sequence
@@ -45,7 +46,6 @@ from django.db.models import (
 from django.db.models.functions.window import RowNumber
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from openpyxl.packaging.manifest import mimetypes
 from taggit.managers import TaggableManager
 from taggit.models import CommonGenericTaggedItemBase, TagBase, TaggedItemBase
 from treebeard.mp_tree import MP_Node

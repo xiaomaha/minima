@@ -67,6 +67,8 @@ class Media(LearningObjectMixin):
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     format = CharField(_("Format"), max_length=30, choices=FormatChoices.choices)
     duration = DurationField(_("Duration"))
+    license = CharField(_("License"), max_length=255, blank=True, default="")
+    channel = CharField(_("Channel"), max_length=255, blank=True, default="")
     uploaded = BooleanField(_("Uploaded"), default=False)
     url = URLField(_("URL"), max_length=500, unique=True)
 

@@ -163,7 +163,9 @@ const ContentCard = (props: ContentCardProps) => {
 
             <div class="flex-1 min-w-0">
               <div class="text-base/tight font-semibold line-clamp-2 mb-0.5">{props.item.content.title}</div>
-              <div class="text-sm opacity-70 mt-1">{props.item.content.owner.nickname || props.item.content.owner.name}</div>
+              <div class="text-sm opacity-70 mt-1">
+                {props.item.content.owner.nickname || props.item.content.owner.name}
+              </div>
             </div>
           </div>
           <div class="text-sm label my-2 w-full relative">
@@ -173,10 +175,7 @@ const ContentCard = (props: ContentCardProps) => {
 
             {/* TODO: Currenly only unenroll action is needed. */}
             <Show when={props.item.canDeactivate}>
-              <details
-                class="dropdown dropdown-end absolute right-0 bottom-0"
-                onclick={(e) => e.stopPropagation()}
-              >
+              <details class="dropdown dropdown-end absolute right-0 bottom-0" onclick={(e) => e.stopPropagation()}>
                 <summary class="btn btn-sm btn-circle btn-ghost">
                   <IconDotsVertical />
                 </summary>

@@ -46,6 +46,7 @@ dependencies = [
   "django-stubs-ext",
   "fpdf2",
   "pypdfium2",
+  "webvtt-py",
 ]
 
 [dependency-groups]
