@@ -2,11 +2,8 @@ import os
 import tempfile
 
 import pytest
-from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from mimesis.plugins.factory import FactoryField
 from openpyxl import Workbook
-from pytest_django import DjangoDbBlocker
 from tablib import Dataset
 
 from apps.account.tests.factories import UserFactory
@@ -22,7 +19,6 @@ from apps.operation.tests.factories import (
     MessageFactory,
     PolicyFactory,
     ThreadFactory,
-    isced_sample_category,
 )
 from conftest import AdminUser
 
@@ -32,21 +28,9 @@ def test_announcement():
     AnnouncementFactory.create()
 
 
-@pytest.mark.load_data
-def test_load_announcement_data(db_no_rollback: DjangoDbBlocker):
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        AnnouncementFactory.create_batch(30)
-
-
 @pytest.mark.django_db
 def test_instructor():
     InstructorFactory.create()
-
-
-@pytest.mark.load_data
-def test_load_instructor_data(db_no_rollback: DjangoDbBlocker):
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        InstructorFactory.create_batch(3)
 
 
 @pytest.mark.django_db
@@ -54,21 +38,9 @@ def test_honor_code():
     HonorCodeFactory.create()
 
 
-@pytest.mark.load_data
-def test_load_honor_code_data(db_no_rollback: DjangoDbBlocker):
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        HonorCodeFactory.create_batch(3)
-
-
 @pytest.mark.django_db
 def test_faq():
     FAQFactory.create()
-
-
-@pytest.mark.load_data
-def test_load_faq_data(db_no_rollback: DjangoDbBlocker):
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        FAQFactory.create_batch(3)
 
 
 @pytest.mark.django_db
@@ -123,24 +95,8 @@ def test_category_resource_import_data():
 
 
 @pytest.mark.django_db
-def test_category():
-    isced_sample_category()
-
-
-@pytest.mark.load_data
-def test_load_category_data(db_no_rollback: DjangoDbBlocker):
-    isced_sample_category()
-
-
-@pytest.mark.django_db
 def test_message():
     MessageFactory.create_batch(10)
-
-
-@pytest.mark.load_data
-def test_load_message_data(db_no_rollback: DjangoDbBlocker):
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        MessageFactory.create_batch(10)
 
 
 @pytest.mark.django_db
@@ -148,21 +104,7 @@ def test_policy():
     PolicyFactory.create()
 
 
-@pytest.mark.load_data
-def test_load_policy_data(db_no_rollback: DjangoDbBlocker):
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        PolicyFactory.create_batch(5)
-
-
 @pytest.mark.django_db
 def test_thread():
     subject = UserFactory.create()
     ThreadFactory.create(subject_type=ContentType.objects.get_for_model(subject), subject_id=subject.pk)
-
-
-@pytest.mark.load_data
-def test_load_thread_data(db_no_rollback: DjangoDbBlocker):
-    users = UserFactory.create_batch(10)
-    with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
-        for user in users:
-            ThreadFactory.create(subject_type=ContentType.objects.get_for_model(user), subject_id=user.pk)

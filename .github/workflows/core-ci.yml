@@ -61,7 +61,7 @@ jobs:
                    python manage.py create_assistant_bot && \
                    python manage.py opensearch index create --force --ignore-error && \
                    python manage.py create_platform_partner && \
-                   python manage.py create_empty_policies && \
+                   python manage.py create_base_policies && \
                    python manage.py load_ncs_data"
           docker compose exec -T minima sh -c "$commands"
           docker compose restart minima worker
@@ -83,7 +83,6 @@ jobs:
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
         run: |
           docker compose exec -T minima pytest -v --cov
-          docker compose exec -T minima pytest -v -m load_data --cov
           docker compose exec -T minima pytest -v -m e2e --cov
 
       - name: Cleanup

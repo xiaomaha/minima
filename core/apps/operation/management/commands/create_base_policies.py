@@ -2,7 +2,6 @@ import logging
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.utils.translation import gettext as _
 
 from apps.operation.models import Policy
 
@@ -10,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = _("Create empty policies")
+    help = "Create empty policies"
 
     def handle(self, *args: object, **options: dict[str, object]):
         for i, (value, label) in enumerate(Policy.KindChoices.choices):
@@ -28,11 +27,11 @@ class Command(BaseCommand):
 
             if created:
                 policy.policyversion_set.create(
-                    body=_("Write your %s policy here") % label,
+                    body=f"Write your {label} policy here",
                     data_category={},
                     version="1.0",
                     effective_date=timezone.now(),
                 )
-                self.stdout.write(self.style.SUCCESS(_("Successfully created policy %s") % policy.title))
+                self.stdout.write(self.style.SUCCESS(f"Successfully created policy: {policy.title}"))
             else:
-                self.stdout.write(self.style.WARNING(_("Policy %s already exists") % policy.title))
+                self.stdout.write(self.style.WARNING(f"Policy already exists: {policy.title}"))

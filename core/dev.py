@@ -27,7 +27,7 @@ def bootstrap():
         "python manage.py create_assistant_bot",
         "python manage.py opensearch index create --force --ignore-error",
         "python manage.py create_platform_partner",
-        "python manage.py create_empty_policies",
+        "python manage.py create_base_policies",
         "python manage.py convert_mjml",
         "python manage.py load_ncs_data",
     ]

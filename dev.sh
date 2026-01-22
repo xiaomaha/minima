@@ -12,7 +12,6 @@ case "$1" in
     uv run dev.py up
     uv run dev.py bootstrap
     uv run dev.py download-images
-    docker compose exec minima pytest -m load_data
     
     echo "Starting student..."
     cd "$SCRIPT_DIR/student"

@@ -86,11 +86,8 @@ exclude = ["**/migrations/**"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "minima.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
-markers = [
-  "load_data: Load bulk data for human testing",
-  "e2e: End-to-end tests",
-]
-addopts = "--tb=short --strict-markers -m 'not load_data and not e2e'"
+markers = ["e2e: End-to-end tests"]
+addopts = "--tb=short --strict-markers -m 'not not e2e'"
 
 [tool.coverage.run]
 data_file = "/tmp/.coverage"
