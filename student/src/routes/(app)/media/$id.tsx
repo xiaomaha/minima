@@ -72,7 +72,7 @@ function RouteComponent() {
         <div class="relative">
           <div
             ref={setContentContainerRef}
-            class="bg-base-content mb-2 w-full aspect-video rounded-xl overflow-hidden flex justify-center items-center"
+            class="bg-base-content mb-2 w-full aspect-video rounded-xl overflow-hidden flex justify-center items-center max-h-[calc(100vh-150px)]"
             style={{ height: `${(size.width ?? 0) * ratio() + playerResizable.heightOffset()}px` }}
           >
             <Show when={media.data}>
