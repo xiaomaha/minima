@@ -1,6 +1,6 @@
-import { IconRefresh } from '@tabler/icons-solidjs'
+import { IconHelp, IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
-import { createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
+import { createSignal, For, Match, Show, Switch } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import {
   type CatalogItemSchema,
@@ -18,7 +18,7 @@ import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize, extractText, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
-import { useNewEnrollment } from './-context'
+import { useDashboard } from './-context'
 
 export const Route = createFileRoute('/(app)/dashboard/catalog')({
   component: RouteComponent,
@@ -41,8 +41,10 @@ function RouteComponent() {
       <div class="label text-sm">{t('You can enroll the content of the following catalogs')}</div>
       <For each={catalogs.data}>{(catalog) => <CatalogCard catalog={catalog} onclick={() => {}} />}</For>
 
-      <Show when={catalogs.data?.length === 0}>
-        <NoContent message={t('No available catalog')} />
+      <Show when={!catalogs.loading} fallback={<LoadingOverlay class="static" />}>
+        <Show when={catalogs.data?.length === 0}>
+          <NoContent message={t('No available catalog')} />
+        </Show>
       </Show>
     </div>
   )
@@ -60,54 +62,65 @@ const CatalogCard = (props: CatalogCardProps) => {
   return (
     <>
       <div class="card bg-base-100 w-full shadow-sm">
-        <div class="card-body">
-          <h2 class="card-title mt-0">{props.catalog.name}</h2>
-          <p class="text-base-content/60">{props.catalog.description}</p>
-          <div class="flex gap-8">
-            <div class="space-y-1">
-              <div class="label">{t('Provider')}</div>
-              <p class="font-semibold">
-                <Switch>
-                  <Match when={props.catalog.provider === 'public'}>
-                    <span class="badge badge-sm badge-soft">{t('Public Catalog')}</span>
-                  </Match>
-                  <Match when={props.catalog.provider === 'personal'}>
-                    <span class="badge badge-sm badge-warning">{t('Personal Catalog')}</span>
-                  </Match>
-                  <Match when={props.catalog.provider === 'cohort'}>
-                    <div class="tooltip tooltip-bottom" data-tip={t("Provided by Partner's Cohort")}>
-                      <span class="badge badge-sm badge-info">{props.catalog.cohortName}</span>
-                    </div>
-                  </Match>
-                </Switch>
-              </p>
+        <div class="card-body flex flex-col lg:flex-row gap-y-4 gap-x-8">
+          <img
+            src={props.catalog.thumbnail ?? ''}
+            class="max-w-120 lg:max-w-96 w-full aspect-video object-cover rounded-lg"
+            alt={props.catalog.name}
+          />
+
+          <div class="space-y-4">
+            <h2 class="card-title mt-0">{props.catalog.name}</h2>
+            <p class="text-base-content/60">{props.catalog.description}</p>
+            <div class="flex gap-12">
+              <div class="space-y-1">
+                <div class="label">{t('Provider')}</div>
+                <p class="font-semibold">
+                  <Switch>
+                    <Match when={props.catalog.provider === 'public'}>
+                      <span class="badge badge-sm badge-soft">{t('Public')}</span>
+                    </Match>
+                    <Match when={props.catalog.provider === 'personal'}>
+                      <span class="badge badge-sm badge-warning">{t('Personal')}</span>
+                    </Match>
+                    <Match when={props.catalog.provider === 'cohort'}>
+                      <div class="tooltip tooltip-bottom" data-tip={t("Provided by Partner's Cohort")}>
+                        <span class="badge badge-sm badge-info">
+                          {t('Cohort: {{cohort}}', { cohort: props.catalog.cohortName })}
+                        </span>
+                      </div>
+                    </Match>
+                  </Switch>
+                </p>
+              </div>
+              <div class="space-y-1">
+                <div class="label">
+                  {t('Available Period')}
+                  <div
+                    class="tooltip"
+                    data-tip={t('After this period ends, enrolled content will no longer be accessible.')}
+                  >
+                    <IconHelp size={16} class="text-info" />
+                  </div>
+                </div>
+                <p class="font-semibold">
+                  {new Date(props.catalog.availableFrom).toLocaleDateString()} ~{' '}
+                  {new Date(props.catalog.availableUntil).toLocaleDateString()}
+                </p>
+              </div>
+              <div class="space-y-1">
+                <div class="label">{t('Content Count')}</div>
+                <p class="font-semibold">{props.catalog.itemCount}</p>
+              </div>
             </div>
-            <div class="space-y-1">
-              <div class="label">{t('Available Period')}</div>
-              <p class="font-semibold">
-                {new Date(props.catalog.availableFrom).toLocaleDateString()} ~{' '}
-                {new Date(props.catalog.availableUntil).toLocaleDateString()}
-              </p>
-            </div>
-            <div class="space-y-1">
-              <div class="label">{t('Content Count')}</div>
-              <p class="font-semibold">{props.catalog.itemCount}</p>
-            </div>
-          </div>
-          <div class="card-actions justify-between flex-nowrap items-center">
-            <div class="label text-xs">
-              {t('After this period ends, enrolled content will no longer be accessible.')}
-            </div>
-            <button type="button" class="btn btn-primary" onClick={() => setOpen(true)}>
+            <button type="button" class="btn btn-primary self-end" onClick={() => setOpen(true)}>
               {t('View Catalog Content')}
             </button>
           </div>
         </div>
       </div>
 
-      <Suspense fallback={<LoadingOverlay />}>
-        <ItemList catalog={props.catalog} open={open()} setOpen={setOpen} />
-      </Suspense>
+      <ItemList catalog={props.catalog} open={open()} setOpen={setOpen} />
     </>
   )
 }
@@ -179,7 +192,7 @@ const ItemCard = (props: ItemCardProps) => {
   const { t } = useTranslation()
   const content = props.item.content
 
-  const newNewEnrollments = useNewEnrollment()
+  const { newEnrollments } = useDashboard()
 
   const [isLoadnig, setIsLoading] = createSignal(false)
   const enrollContent = async () => {
@@ -197,7 +210,7 @@ const ItemCard = (props: ItemCardProps) => {
       // update catalog cache
       props.setStore('items', (prev) => prev.id === props.item.id, 'enrolled', true)
       // update enrollment cache
-      newNewEnrollments.push({ ...data, content: props.item.content, contentType: props.item.contentType })
+      newEnrollments.push({ ...data, content: props.item.content, contentType: props.item.contentType })
     } catch (_) {
       // This error will be handled in global error handler
     } finally {
@@ -206,13 +219,13 @@ const ItemCard = (props: ItemCardProps) => {
   }
 
   return (
-    <div class="flex gap-4 flex-col sm:flex-row max-w-100 w-full sm:max-w-none mx-auto">
+    <div class="flex gap-4 flex-col sm:flex-row max-w-100 w-full sm:max-w-none mx-auto group">
       <div class="relative self-start flex-1 sm:max-w-60 overflow-hidden rounded-lg aspect-video border border-base-300">
-        <img class="w-full aspect-video object-cover" src={content.thumbnail!} alt={content.title} />
+        <img class="w-full aspect-video object-cover" src={content.thumbnail ?? ''} alt={content.title} />
         <ProgressBar
           contentId={props.item.content.id}
           passingPoint={props.item.content.passingPoint}
-          class="absolute bottom-0 left-0 w-full h-1.25 rounded-none "
+          class="absolute bottom-0 left-0 w-full h-1.25 group-hover:h-2 transition-[height] rounded-none"
         />
         <div class="badge badge-neutral absolute bottom-2 left-2 z-1 badge-sm">
           <span>{t(capitalize(content.format || props.item.contentType.model))}</span>
@@ -243,7 +256,7 @@ const ItemCard = (props: ItemCardProps) => {
           <button
             onClick={enrollContent}
             type="button"
-            class="btn btn-sm btn-primary"
+            class="btn btn-sm btn-primary rounded-full"
             data-tip={t('Enroll this content')}
           >
             <Show when={!isLoadnig()} fallback={<span class="loading loading-xs loading-spinner"></span>}>

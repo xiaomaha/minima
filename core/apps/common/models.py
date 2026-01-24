@@ -98,7 +98,7 @@ class OrderableMixin(Model):
 
 
 class BooleanNowField(DateTimeField):
-    def contribute_to_class(self, cls: type[Model], name: str, private_only: bool = False) -> None:  # type: ignore[override]
+    def contribute_to_class(self, cls: type[Model], name: str, private_only: bool = False):
         super().contribute_to_class(cls, name)
         if not hasattr(cls, "_boolean_now_from_db_patched"):
             self._patch_from_db(cls)

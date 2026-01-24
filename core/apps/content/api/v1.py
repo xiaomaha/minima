@@ -1,10 +1,9 @@
-from datetime import date, datetime, time
-from typing import Annotated
+from datetime import date
+from typing import Annotated, Literal
 
 from django.conf import settings
-from django.db.models import Count, F
+from django.db.models import Count
 from django.shortcuts import aget_object_or_404
-from django.utils import timezone
 from ninja.files import UploadedFile
 from ninja.pagination import paginate
 from ninja.params import Form, functions
@@ -99,26 +98,7 @@ async def save_media_note(
 @router.get("/watch", response=list[WatchedMediaSchema])
 @paginate(Pagination)
 async def get_watch_medias(request: HttpRequest, start: date | None = None, end: date | None = None):
-    qs = Watch.objects.filter(user_id=request.auth)
-    if start and end:
-        start_dt = timezone.make_aware(datetime.combine(start, time.min))
-        end_dt = timezone.make_aware(datetime.combine(end, time.max))
-        qs = qs.filter(created__range=(start_dt, end_dt))
-    elif start:
-        start_dt = timezone.make_aware(datetime.combine(start, time.min))
-        qs = qs.filter(created__gte=start_dt)
-    elif end:
-        end_dt = timezone.make_aware(datetime.combine(end, time.max))
-        qs = qs.filter(created__lte=end_dt)
-
-    return qs.annotate(
-        title=F("media__title"),
-        thumbnail=F("media__thumbnail"),
-        format=F("media__format"),
-        duration=F("media__duration"),
-        passing_point=F("media__passing_point"),
-        url=F("media__url"),
-    ).order_by("-created")
+    return await Watch.get_watched_medias(user_id=request.auth, start=start, end=end)
 
 
 @router.get("/searchsuggestion", response=list[str])
@@ -132,5 +112,6 @@ async def search(
     page: Annotated[int, functions.Query(1, ge=1)],
     size: Annotated[int, functions.Query(settings.DEFAULT_PAGINATION_SIZE, gte=1, le=100)],
     q: str = "",
+    filter: Literal["public", "all"] = "public",
 ):
-    return await Media.search(q=q, page=page, size=size)
+    return await Media.search(q=q, page=page, size=size, filter=filter)

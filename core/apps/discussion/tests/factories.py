@@ -1,17 +1,15 @@
-from typing import TYPE_CHECKING, Callable, cast
-
 import mimesis
 from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.db.models import QuerySet
 from django.utils import timezone
 from factory.declarations import LazyAttribute, LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import post_generation
 from mimesis.plugins.factory import FactoryField
 
-from apps.common.factory import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
+from apps.account.tests.factories import UserFactory
+from apps.common.tests.factories import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
 from apps.discussion.models import Attempt, Discussion, Grade, Post, Question, QuestionPool
 from apps.operation.tests.factories import HonorCodeFactory
 
@@ -21,18 +19,15 @@ generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
     title = FactoryField("text.title")
     description = FactoryField("text")
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
 
     class Meta:
         model = QuestionPool
         django_get_or_create = ("title",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        question_set: QuerySet[Question]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: QuestionPool, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
@@ -68,7 +63,7 @@ class DiscussionFactory(LearningObjectFactory[Discussion], GradeWorkflowFactory[
     max_attempts = 1
     verification_required = True
 
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
     honor_code = SubFactory(HonorCodeFactory)
     question_pool = SubFactory(QuestionPoolFactory)
 
@@ -87,7 +82,7 @@ class DiscussionFactory(LearningObjectFactory[Discussion], GradeWorkflowFactory[
 
 class AttemptFactory(DjangoModelFactory[Attempt]):
     discussion = SubFactory(DiscussionFactory)
-    learner = SubFactory("account.tests.factories.UserFactory")
+    learner = SubFactory(UserFactory)
     started = LazyFunction(lambda: timezone.now())
     question = LazyAttribute(lambda o: async_to_sync(o.discussion.question_pool.select_question)())
     active = True
@@ -131,16 +126,10 @@ class PostFactory(DjangoModelFactory[Post]):
         django_get_or_create = ("attempt", "title")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        update_attachments: Callable
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: Post, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(Post, self)
 
         if generic.random.randint(1, 4) == 1:
             files = [

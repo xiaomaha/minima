@@ -35,7 +35,7 @@ chmod +x dev.sh
 
 ### 백엔드
 
-- Django 6.x + Django Ninja
+- Django 6.x, Django Ninja, Django-unfold
 - PostgreSQL, OpenSearch, Redis, MinIO
 - AI Plugin Architecture, Gemini/OpenAI/Anthropic
 

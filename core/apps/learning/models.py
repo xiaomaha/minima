@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta
 from typing import TYPE_CHECKING
@@ -20,9 +21,12 @@ from django.db.models import (
     Exists,
     F,
     ForeignKey,
+    ImageField,
     Index,
+    Model,
     OuterRef,
     Q,
+    QuerySet,
     Subquery,
     TextField,
     UniqueConstraint,
@@ -34,7 +38,6 @@ from django.db.models.functions.math import Round
 from django.forms import ValidationError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from pghistory.models import PghEventModel
 
 from apps.assignment.models import Assignment
 from apps.assignment.models import Attempt as AssignmentAttempt
@@ -57,6 +60,8 @@ from apps.quiz.models import Grade as QuizGrade
 from apps.quiz.models import Quiz
 from apps.survey.models import Submission as SurveySubmission
 from apps.survey.models import Survey
+
+log = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -103,7 +108,7 @@ class Enrollment(TimeStampedMixin):
 
     if TYPE_CHECKING:
         content_type_id: int
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
         _content_cache: GenericForeignKey
         enrolled_by_id: str
         user_id: str
@@ -235,7 +240,7 @@ class Enrollment(TimeStampedMixin):
 
     @classmethod
     def get_report(cls, user_id: str, start: date | None, end: date | None):
-        params = {"user_id": user_id}
+        params: dict = {"user_id": user_id}
 
         date_conditions = []
         if start:
@@ -304,6 +309,7 @@ setattr(Enrollment._meta, "triggers", [content_exists_trigger(Enrollment._meta.d
 class Catalog(TimeStampedMixin):
     name = CharField(_("Name"), max_length=255, unique=True)
     description = TextField(_("Description"), blank=True, default="")
+    thumbnail = ImageField(_("Thumbnail"), null=True, blank=True)
     active = BooleanField(_("Active"), default=True)
     public = BooleanField(_("Public"), default=False)
     available_from = DateTimeField(_("Available From"), default=timezone.now)
@@ -315,6 +321,7 @@ class Catalog(TimeStampedMixin):
 
     if TYPE_CHECKING:
         item_content_type_id: int
+        catalogitem_set: QuerySet[CatalogItem]
 
     def is_available(self):
         if not self.active:
@@ -425,7 +432,8 @@ class Catalog(TimeStampedMixin):
                 content_id=content_id,
                 enrolled_by_id=enrolled_by_id,
             )
-        except IntegrityError:
+        except IntegrityError as e:
+            log.error(e, exc_info=True)
             raise ValueError(ErrorCode.ALREADY_EXISTS)
 
         return enrollment

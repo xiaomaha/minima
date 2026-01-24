@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+from typing import Iterable, Iterator
 
 import pyotp
 import pytest
@@ -8,7 +9,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test.client import Client
 from mimesis import Generic, random
-from pytest_django import DjangoDbBlocker
 from pytest_mock import MockerFixture
 
 from apps.common.error import ErrorCode
@@ -23,13 +23,6 @@ User = get_user_model()
 @pytest.fixture(scope="session")
 def django_db_setup():
     pass
-
-
-@pytest.fixture
-def db_no_rollback(django_db_setup: None, django_db_blocker: DjangoDbBlocker):
-    django_db_blocker.unblock()
-    yield
-    django_db_blocker.restore()
 
 
 @pytest.fixture
@@ -117,7 +110,10 @@ def token_spy(mocker: MockerFixture):
     return captured_tokens
 
 
-def parse_sse(chunks):
+def parse_sse(chunks: Iterable[bytes] | Iterator[bytes]) -> list[dict]:
+    if hasattr(chunks, "__iter__") and not isinstance(chunks, (list, tuple)):
+        chunks = list(chunks)
+
     buffer = b"".join(chunks).decode("utf-8")
     events = []
 

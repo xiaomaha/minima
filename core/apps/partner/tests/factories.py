@@ -1,16 +1,14 @@
 from itertools import cycle
-from typing import TYPE_CHECKING
 
 import mimesis
 from django.conf import settings
-from django.db.models import QuerySet
 from factory.declarations import LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import post_generation
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.models import User
-from apps.common.factory import lazy_avatar
+from apps.common.tests.factories import lazy_avatar
 from apps.common.util import tuid
 from apps.partner.models import BusinessSite, Cohort, CohortEmployee, CohortStaff, Employee, Partner
 
@@ -31,11 +29,8 @@ class PartnerFactory(DjangoModelFactory[Partner]):
         django_get_or_create = ("name",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        businesssite_set: QuerySet[BusinessSite]
-
     @post_generation
-    def cohort_set(self, create: bool, extracted, **kwargs):
+    def post_generation(self: Partner, create: bool, extracted, **kwargs):
         if not create:
             return
 
@@ -57,11 +52,8 @@ class BusinessSiteFactory(DjangoModelFactory[BusinessSite]):
         django_get_or_create = ("partner", "name")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        employee_set: QuerySet[Employee]
-
     @post_generation
-    def post_generation(self, create: bool, extracted, **kwargs):
+    def post_generation(self: BusinessSite, create: bool, extracted, **kwargs):
         if not create:
             return
 

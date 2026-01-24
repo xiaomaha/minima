@@ -11,8 +11,7 @@ case "$1" in
     [ ! -f .env ] && touch .env
     uv run dev.py up
     uv run dev.py bootstrap
-    uv run dev.py download-images
-    
+
     echo "Starting student..."
     cd "$SCRIPT_DIR/student"
     docker compose up -d

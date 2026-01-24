@@ -1,15 +1,11 @@
-from typing import TYPE_CHECKING, Sequence, cast
+from typing import Sequence
 
 from django_opensearch_dsl.documents import Document
 
 
 class AnswerAnalyzerMixin:
     @classmethod
-    def analyze_answers(cls, question_ids: Sequence[int | str]):
-
-        if TYPE_CHECKING:
-            cls = cast(type[Document], cls)
-
+    def analyze_answers(cls: Document, question_ids: Sequence[int | str]):
         ids = [str(qid) for qid in question_ids]
         search = cls.search().filter("nested", path="answers", query={"terms": {"answers.question_id": ids}})
         search = search.extra(size=0)

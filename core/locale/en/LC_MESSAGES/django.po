@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 16:20+0900\n"
+"POT-Creation-Date: 2026-01-23 14:50+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,11 +34,11 @@ msgstr ""
 msgid "Login Tokens"
 msgstr ""
 
-#: apps/account/admin.py:44 apps/account/models.py:574
+#: apps/account/admin.py:44 apps/account/models.py:573
 msgid "OTP Log"
 msgstr ""
 
-#: apps/account/admin.py:45 apps/account/models.py:575
+#: apps/account/admin.py:45 apps/account/models.py:574
 msgid "OTP Logs"
 msgstr ""
 
@@ -52,11 +52,11 @@ msgid ""
 "Temporary password created for {user}: {password}. Expires in {hours} hours."
 msgstr ""
 
-#: apps/account/admin.py:87 minima/settings.py:154
+#: apps/account/admin.py:87 minima/settings.py:153
 msgid "English"
 msgstr ""
 
-#: apps/account/admin.py:87 minima/settings.py:154
+#: apps/account/admin.py:87 minima/settings.py:153
 msgid "Korean"
 msgstr ""
 
@@ -201,166 +201,166 @@ msgid ""
 "copying and pasting the following link into your browser:"
 msgstr ""
 
-#: apps/account/models.py:111 apps/operation/models.py:162
-#: apps/operation/models.py:497 apps/partner/models.py:40
-#: apps/partner/models.py:80
+#: apps/account/models.py:110 apps/operation/models.py:162
+#: apps/operation/models.py:497 apps/partner/models.py:39
+#: apps/partner/models.py:79
 msgid "Email"
 msgstr ""
 
-#: apps/account/models.py:112 apps/assignment/models.py:497
-#: apps/assignment/models.py:515 apps/assignment/models.py:534
+#: apps/account/models.py:111 apps/assignment/models.py:496
+#: apps/assignment/models.py:514 apps/assignment/models.py:533
 #: apps/assistant/models.py:39 apps/competency/certificate.py:274
-#: apps/competency/models.py:61 apps/competency/models.py:105
-#: apps/competency/models.py:126 apps/competency/models.py:145
-#: apps/competency/models.py:175 apps/competency/models.py:241
-#: apps/learning/models.py:305 apps/operation/models.py:62
+#: apps/competency/models.py:61 apps/competency/models.py:104
+#: apps/competency/models.py:124 apps/competency/models.py:142
+#: apps/competency/models.py:172 apps/competency/models.py:238
+#: apps/learning/models.py:306 apps/operation/models.py:62
 #: apps/operation/models.py:161 apps/operation/models.py:195
-#: apps/partner/models.py:37 apps/partner/models.py:60
-#: apps/partner/models.py:79 apps/partner/models.py:129 apps/store/models.py:55
+#: apps/partner/models.py:36 apps/partner/models.py:59
+#: apps/partner/models.py:78 apps/partner/models.py:128 apps/store/models.py:55
 #: apps/store/models.py:102 apps/store/models.py:343
 msgid "Name"
 msgstr ""
 
-#: apps/account/models.py:113 apps/assistant/models.py:41
+#: apps/account/models.py:112 apps/assistant/models.py:41
 #: apps/operation/models.py:165
 msgid "Avatar"
 msgstr ""
 
-#: apps/account/models.py:114
+#: apps/account/models.py:113
 msgid "Nickname"
 msgstr ""
 
-#: apps/account/models.py:115 apps/partner/models.py:39
-#: apps/partner/models.py:83
+#: apps/account/models.py:114 apps/partner/models.py:38
+#: apps/partner/models.py:82
 msgid "Phone"
 msgstr ""
 
-#: apps/account/models.py:116 apps/competency/certificate.py:285
-#: apps/partner/models.py:81
+#: apps/account/models.py:115 apps/competency/certificate.py:285
+#: apps/partner/models.py:80
 msgid "Birth Date"
 msgstr ""
 
-#: apps/account/models.py:117 apps/content/models.py:145
+#: apps/account/models.py:116 apps/content/models.py:145
 msgid "Language"
 msgstr ""
 
-#: apps/account/models.py:118
+#: apps/account/models.py:117
 msgid "Preferences"
 msgstr ""
 
-#: apps/account/models.py:120 apps/assignment/models.py:280
-#: apps/assistant/models.py:69 apps/competency/models.py:178
-#: apps/competency/models.py:246 apps/course/models.py:504
-#: apps/discussion/models.py:210 apps/exam/models.py:237
-#: apps/learning/models.py:73 apps/learning/models.py:307
+#: apps/account/models.py:119 apps/assignment/models.py:279
+#: apps/assistant/models.py:69 apps/competency/models.py:175
+#: apps/competency/models.py:243 apps/course/models.py:505
+#: apps/discussion/models.py:209 apps/exam/models.py:236
+#: apps/learning/models.py:74 apps/learning/models.py:308
 #: apps/operation/models.py:166 apps/operation/models.py:214
 #: apps/operation/models.py:531 apps/quiz/models.py:158
 #: apps/store/models.py:107 apps/store/models.py:149 apps/survey/models.py:115
 msgid "Active"
 msgstr ""
 
-#: apps/account/models.py:121
+#: apps/account/models.py:120
 msgid "Staff"
 msgstr ""
 
-#: apps/account/models.py:122
+#: apps/account/models.py:121
 msgid "Superuser"
 msgstr ""
 
-#: apps/account/models.py:133 apps/account/models.py:529
-#: apps/account/models.py:540 apps/account/models.py:563
+#: apps/account/models.py:132 apps/account/models.py:528
+#: apps/account/models.py:539 apps/account/models.py:562
 #: apps/assistant/models.py:55 apps/assistant/models.py:68
-#: apps/competency/models.py:144 apps/content/models.py:156
-#: apps/content/models.py:270 apps/learning/models.py:72
-#: apps/learning/models.py:465 apps/operation/models.py:149
+#: apps/competency/models.py:141 apps/content/models.py:156
+#: apps/content/models.py:270 apps/learning/models.py:73
+#: apps/learning/models.py:467 apps/operation/models.py:149
 #: apps/operation/models.py:507 apps/operation/models.py:630
-#: apps/partner/admin.py:60 apps/partner/models.py:89
-#: apps/partner/models.py:161 apps/store/models.py:148
+#: apps/partner/admin.py:60 apps/partner/models.py:88
+#: apps/partner/models.py:160 apps/store/models.py:148
 msgid "User"
 msgstr ""
 
-#: apps/account/models.py:134
+#: apps/account/models.py:133
 msgid "Users"
 msgstr ""
 
-#: apps/account/models.py:277
+#: apps/account/models.py:276
 msgid "Account Activation"
 msgstr ""
 
-#: apps/account/models.py:295
+#: apps/account/models.py:294
 msgid "Email Change"
 msgstr ""
 
-#: apps/account/models.py:306
+#: apps/account/models.py:305
 msgid "Password Change"
 msgstr ""
 
-#: apps/account/models.py:530
+#: apps/account/models.py:529
 msgid "Password"
 msgstr ""
 
-#: apps/account/models.py:531 apps/account/models.py:542
-#: apps/account/models.py:554 apps/competency/models.py:227
-#: apps/competency/models.py:303 apps/store/models.py:345
+#: apps/account/models.py:530 apps/account/models.py:541
+#: apps/account/models.py:553 apps/competency/models.py:224
+#: apps/competency/models.py:300 apps/store/models.py:345
 msgid "Expires"
 msgstr ""
 
-#: apps/account/models.py:534
+#: apps/account/models.py:533
 msgid "Temporary Password"
 msgstr ""
 
-#: apps/account/models.py:535
+#: apps/account/models.py:534
 msgid "Temporary Passwords"
 msgstr ""
 
-#: apps/account/models.py:541 apps/account/models.py:547
-#: apps/account/models.py:553
+#: apps/account/models.py:540 apps/account/models.py:546
+#: apps/account/models.py:552
 msgid "Token"
 msgstr ""
 
-#: apps/account/models.py:543
+#: apps/account/models.py:542
 msgid "IP Address"
 msgstr ""
 
-#: apps/account/models.py:544
+#: apps/account/models.py:543
 msgid "User Agent"
 msgstr ""
 
-#: apps/account/models.py:548
+#: apps/account/models.py:547
 msgid "Tokens"
 msgstr ""
 
-#: apps/account/models.py:557
+#: apps/account/models.py:556
 msgid "Blacklisted Token"
 msgstr ""
 
-#: apps/account/models.py:558
+#: apps/account/models.py:557
 msgid "Blacklisted Tokens"
 msgstr ""
 
-#: apps/account/models.py:564 apps/competency/models.py:60
-#: apps/competency/models.py:104 apps/competency/models.py:125
+#: apps/account/models.py:563 apps/competency/models.py:60
+#: apps/competency/models.py:103 apps/competency/models.py:123
 #: apps/operation/models.py:183 apps/store/models.py:101
 msgid "Code"
 msgstr ""
 
-#: apps/account/models.py:565
+#: apps/account/models.py:564
 msgid "Success"
 msgstr ""
 
-#: apps/account/models.py:566
+#: apps/account/models.py:565
 msgid "Fingerprint"
 msgstr ""
 
-#: apps/account/models.py:567
+#: apps/account/models.py:566
 msgid "Device Type"
 msgstr ""
 
-#: apps/account/models.py:569
+#: apps/account/models.py:568
 msgid "Consumer Type"
 msgstr ""
 
-#: apps/account/models.py:570
+#: apps/account/models.py:569
 msgid "Consumer ID"
 msgstr ""
 
@@ -448,10 +448,10 @@ msgstr ""
 msgid "Grading Histories"
 msgstr ""
 
-#: apps/assignment/admin.py:147 apps/assignment/models.py:432
+#: apps/assignment/admin.py:147 apps/assignment/models.py:431
 #: apps/course/admin.py:127 apps/discussion/admin.py:92
-#: apps/discussion/models.py:436 apps/exam/admin.py:119 apps/exam/models.py:389
-#: apps/quiz/models.py:270
+#: apps/discussion/models.py:435 apps/exam/admin.py:119 apps/exam/models.py:388
+#: apps/quiz/models.py:273
 msgid "Grade"
 msgstr ""
 
@@ -465,269 +465,269 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: apps/assignment/apps.py:8 apps/assignment/models.py:194
-#: apps/assignment/models.py:276 apps/warehouse/models.py:144
+#: apps/assignment/apps.py:8 apps/assignment/models.py:193
+#: apps/assignment/models.py:275 apps/warehouse/models.py:144
 #: apps/warehouse/views.py:53
 msgid "Assignment"
 msgstr ""
 
-#: apps/assignment/models.py:72 apps/assistant/models.py:67
-#: apps/common/models.py:171 apps/course/models.py:90 apps/course/models.py:295
-#: apps/discussion/models.py:72 apps/discussion/models.py:327
-#: apps/exam/models.py:69 apps/operation/models.py:117
+#: apps/assignment/models.py:71 apps/assistant/models.py:67
+#: apps/common/models.py:171 apps/course/models.py:91 apps/course/models.py:296
+#: apps/discussion/models.py:71 apps/discussion/models.py:326
+#: apps/exam/models.py:68 apps/operation/models.py:117
 #: apps/operation/models.py:182 apps/operation/models.py:363
 #: apps/operation/models.py:503 apps/operation/models.py:529
 #: apps/operation/models.py:651 apps/quiz/models.py:53 apps/survey/models.py:35
 msgid "Title"
 msgstr ""
 
-#: apps/assignment/models.py:73 apps/assignment/models.py:498
-#: apps/assignment/models.py:516 apps/assignment/models.py:535
+#: apps/assignment/models.py:72 apps/assignment/models.py:497
+#: apps/assignment/models.py:515 apps/assignment/models.py:534
 #: apps/assistant/models.py:40 apps/common/models.py:172
-#: apps/competency/models.py:146 apps/competency/models.py:176
-#: apps/competency/models.py:242 apps/course/models.py:91
-#: apps/course/models.py:296 apps/discussion/models.py:73
-#: apps/exam/models.py:70 apps/learning/models.py:306
+#: apps/competency/models.py:143 apps/competency/models.py:173
+#: apps/competency/models.py:239 apps/course/models.py:92
+#: apps/course/models.py:297 apps/discussion/models.py:72
+#: apps/exam/models.py:69 apps/learning/models.py:307
 #: apps/operation/models.py:196 apps/operation/models.py:530
-#: apps/operation/models.py:652 apps/partner/models.py:38
-#: apps/partner/models.py:61 apps/partner/models.py:130 apps/quiz/models.py:54
+#: apps/operation/models.py:652 apps/partner/models.py:37
+#: apps/partner/models.py:60 apps/partner/models.py:129 apps/quiz/models.py:54
 #: apps/store/models.py:56 apps/store/models.py:103 apps/survey/models.py:36
 msgid "Description"
 msgstr ""
 
-#: apps/assignment/models.py:74 apps/assignment/models.py:189
-#: apps/content/models.py:67 apps/course/models.py:115
-#: apps/discussion/models.py:74 apps/discussion/models.py:133
-#: apps/exam/models.py:71 apps/exam/models.py:137 apps/operation/models.py:229
+#: apps/assignment/models.py:73 apps/assignment/models.py:188
+#: apps/content/models.py:67 apps/course/models.py:116
+#: apps/discussion/models.py:73 apps/discussion/models.py:132
+#: apps/exam/models.py:70 apps/exam/models.py:136 apps/operation/models.py:229
 #: apps/quiz/models.py:55 apps/quiz/models.py:103 apps/survey/models.py:37
 #: apps/survey/models.py:72
 msgid "Owner"
 msgstr ""
 
-#: apps/assignment/models.py:77 apps/assignment/models.py:100
-#: apps/assignment/models.py:191 apps/discussion/models.py:77
-#: apps/discussion/models.py:97 apps/discussion/models.py:135
-#: apps/exam/models.py:75 apps/exam/models.py:103 apps/exam/models.py:139
+#: apps/assignment/models.py:76 apps/assignment/models.py:99
+#: apps/assignment/models.py:190 apps/discussion/models.py:76
+#: apps/discussion/models.py:96 apps/discussion/models.py:134
+#: apps/exam/models.py:74 apps/exam/models.py:102 apps/exam/models.py:138
 #: apps/quiz/models.py:59 apps/quiz/models.py:75 apps/quiz/models.py:104
 msgid "Question Pool"
 msgstr ""
 
-#: apps/assignment/models.py:78 apps/discussion/models.py:78
-#: apps/exam/models.py:76 apps/quiz/models.py:60
+#: apps/assignment/models.py:77 apps/discussion/models.py:77
+#: apps/exam/models.py:75 apps/quiz/models.py:60
 msgid "Question Pools"
 msgstr ""
 
-#: apps/assignment/models.py:101 apps/assignment/models.py:109
-#: apps/assignment/models.py:123 apps/assignment/models.py:278
-#: apps/discussion/models.py:103 apps/discussion/models.py:208
-#: apps/exam/admin.py:70 apps/exam/models.py:105 apps/exam/models.py:111
-#: apps/exam/models.py:124 apps/operation/admin.py:117
+#: apps/assignment/models.py:100 apps/assignment/models.py:108
+#: apps/assignment/models.py:122 apps/assignment/models.py:277
+#: apps/discussion/models.py:102 apps/discussion/models.py:207
+#: apps/exam/admin.py:70 apps/exam/models.py:104 apps/exam/models.py:110
+#: apps/exam/models.py:123 apps/operation/admin.py:117
 #: apps/operation/models.py:212 apps/operation/models.py:364
 #: apps/quiz/admin.py:50 apps/quiz/models.py:76 apps/quiz/models.py:82
 #: apps/quiz/models.py:92 apps/survey/models.py:57 apps/survey/models.py:65
 msgid "Question"
 msgstr ""
 
-#: apps/assignment/models.py:102 apps/discussion/models.py:99
-#: apps/exam/models.py:106 apps/quiz/models.py:77 apps/survey/models.py:58
+#: apps/assignment/models.py:101 apps/discussion/models.py:98
+#: apps/exam/models.py:105 apps/quiz/models.py:77 apps/survey/models.py:58
 msgid "Supplement"
 msgstr ""
 
-#: apps/assignment/models.py:103
+#: apps/assignment/models.py:102
 msgid "Attachment File Count"
 msgstr ""
 
-#: apps/assignment/models.py:104
+#: apps/assignment/models.py:103
 msgid "Attachment File Types"
 msgstr ""
 
-#: apps/assignment/models.py:105
+#: apps/assignment/models.py:104
 msgid "Sample Attachment"
 msgstr ""
 
-#: apps/assignment/models.py:106
+#: apps/assignment/models.py:105
 msgid "Plagiarism Threshold Percentage"
 msgstr ""
 
-#: apps/assignment/models.py:110 apps/discussion/models.py:104
-#: apps/exam/admin.py:71 apps/exam/models.py:112 apps/exam/models.py:235
+#: apps/assignment/models.py:109 apps/discussion/models.py:103
+#: apps/exam/admin.py:71 apps/exam/models.py:111 apps/exam/models.py:234
 #: apps/quiz/admin.py:51 apps/quiz/models.py:83 apps/quiz/models.py:157
 #: apps/survey/models.py:66
 msgid "Questions"
 msgstr ""
 
-#: apps/assignment/models.py:124 apps/assignment/models.py:501
-#: apps/assignment/models.py:514
+#: apps/assignment/models.py:123 apps/assignment/models.py:500
+#: apps/assignment/models.py:513
 msgid "Rubric"
 msgstr ""
 
-#: apps/assignment/models.py:125 apps/exam/models.py:127
+#: apps/assignment/models.py:124 apps/exam/models.py:126
 #: apps/operation/admin.py:146 apps/operation/models.py:446
 #: apps/quiz/models.py:94
 msgid "Explanation"
 msgstr ""
 
-#: apps/assignment/models.py:126 apps/exam/models.py:128
+#: apps/assignment/models.py:125 apps/exam/models.py:127
 msgid "Reference"
 msgstr ""
 
-#: apps/assignment/models.py:129 apps/exam/models.py:131 apps/quiz/models.py:97
+#: apps/assignment/models.py:128 apps/exam/models.py:130 apps/quiz/models.py:97
 msgid "Solution"
 msgstr ""
 
-#: apps/assignment/models.py:130 apps/exam/models.py:132 apps/quiz/models.py:98
+#: apps/assignment/models.py:129 apps/exam/models.py:131 apps/quiz/models.py:98
 msgid "Solutions"
 msgstr ""
 
-#: apps/assignment/models.py:190 apps/course/models.py:121
-#: apps/discussion/models.py:134 apps/exam/models.py:138
-#: apps/operation/models.py:186 apps/operation/tests/factories.py:64
+#: apps/assignment/models.py:189 apps/course/models.py:122
+#: apps/discussion/models.py:133 apps/exam/models.py:137
+#: apps/operation/models.py:186 apps/operation/tests/factories.py:61
 msgid "Honor Code"
 msgstr ""
 
-#: apps/assignment/models.py:195
+#: apps/assignment/models.py:194
 msgid "Assignments"
 msgstr ""
 
-#: apps/assignment/models.py:277 apps/course/models.py:502
-#: apps/discussion/models.py:207 apps/exam/models.py:234
+#: apps/assignment/models.py:276 apps/course/models.py:503
+#: apps/discussion/models.py:206 apps/exam/models.py:233
 #: apps/operation/models.py:445 apps/quiz/models.py:155
 msgid "Learner"
 msgstr ""
 
-#: apps/assignment/models.py:279 apps/discussion/models.py:209
-#: apps/exam/models.py:236 apps/quiz/models.py:156
+#: apps/assignment/models.py:278 apps/discussion/models.py:208
+#: apps/exam/models.py:235 apps/quiz/models.py:156
 msgid "Attempt Start"
 msgstr ""
 
-#: apps/assignment/models.py:281 apps/content/models.py:162
-#: apps/content/models.py:273 apps/discussion/models.py:211
-#: apps/exam/models.py:238 apps/quiz/models.py:159 apps/survey/models.py:116
+#: apps/assignment/models.py:280 apps/content/models.py:162
+#: apps/content/models.py:273 apps/discussion/models.py:210
+#: apps/exam/models.py:237 apps/quiz/models.py:159 apps/survey/models.py:116
 msgid "Context Key"
 msgstr ""
 
-#: apps/assignment/models.py:282 apps/discussion/models.py:212
-#: apps/exam/models.py:239 apps/quiz/models.py:160
+#: apps/assignment/models.py:281 apps/discussion/models.py:211
+#: apps/exam/models.py:238 apps/quiz/models.py:160
 msgid "Retry"
 msgstr ""
 
-#: apps/assignment/models.py:285 apps/assignment/models.py:395
-#: apps/assignment/models.py:428 apps/assignment/models.py:460
-#: apps/discussion/models.py:215 apps/discussion/models.py:325
-#: apps/discussion/models.py:432 apps/exam/models.py:242
-#: apps/exam/models.py:359 apps/exam/models.py:369 apps/exam/models.py:385
-#: apps/quiz/models.py:163 apps/quiz/models.py:257 apps/quiz/models.py:267
+#: apps/assignment/models.py:284 apps/assignment/models.py:394
+#: apps/assignment/models.py:427 apps/assignment/models.py:459
+#: apps/discussion/models.py:214 apps/discussion/models.py:324
+#: apps/discussion/models.py:431 apps/exam/models.py:241
+#: apps/exam/models.py:358 apps/exam/models.py:368 apps/exam/models.py:384
+#: apps/quiz/models.py:163 apps/quiz/models.py:260 apps/quiz/models.py:270
 msgid "Attempt"
 msgstr ""
 
-#: apps/assignment/models.py:286 apps/discussion/models.py:216
-#: apps/exam/models.py:243 apps/quiz/models.py:164
+#: apps/assignment/models.py:285 apps/discussion/models.py:215
+#: apps/exam/models.py:242 apps/quiz/models.py:164
 msgid "Attempts"
 msgstr ""
 
-#: apps/assignment/models.py:396 apps/operation/models.py:213
+#: apps/assignment/models.py:395 apps/operation/models.py:213
 #: apps/operation/models.py:429
 msgid "Answer"
 msgstr ""
 
-#: apps/assignment/models.py:397
+#: apps/assignment/models.py:396
 msgid "Extracted Text"
 msgstr ""
 
-#: apps/assignment/models.py:400 apps/exam/models.py:373
-#: apps/quiz/models.py:261 apps/survey/models.py:119
+#: apps/assignment/models.py:399 apps/exam/models.py:372
+#: apps/quiz/models.py:264 apps/survey/models.py:119
 msgid "Submission"
 msgstr ""
 
-#: apps/assignment/models.py:401 apps/exam/models.py:374
-#: apps/quiz/models.py:262 apps/survey/models.py:120
+#: apps/assignment/models.py:400 apps/exam/models.py:373
+#: apps/quiz/models.py:265 apps/survey/models.py:120
 msgid "Submissions"
 msgstr ""
 
-#: apps/assignment/models.py:429 apps/course/models.py:704
-#: apps/discussion/models.py:433 apps/exam/models.py:386
+#: apps/assignment/models.py:428 apps/course/models.py:705
+#: apps/discussion/models.py:432 apps/exam/models.py:385
 msgid "Grader"
 msgstr ""
 
-#: apps/assignment/models.py:433 apps/discussion/models.py:437
-#: apps/exam/models.py:390 apps/quiz/models.py:271
+#: apps/assignment/models.py:432 apps/discussion/models.py:436
+#: apps/exam/models.py:389 apps/quiz/models.py:274
 msgid "Grades"
 msgstr ""
 
-#: apps/assignment/models.py:455
+#: apps/assignment/models.py:454
 msgid "Not Detected"
 msgstr ""
 
-#: apps/assignment/models.py:456
+#: apps/assignment/models.py:455
 msgid "Detected"
 msgstr ""
 
-#: apps/assignment/models.py:457
+#: apps/assignment/models.py:456
 msgid "Excused"
 msgstr ""
 
-#: apps/assignment/models.py:458
+#: apps/assignment/models.py:457
 msgid "Not Resolved"
 msgstr ""
 
-#: apps/assignment/models.py:461 apps/store/models.py:54
+#: apps/assignment/models.py:460 apps/store/models.py:54
 #: apps/store/models.py:185 apps/store/models.py:362 apps/store/models.py:382
 msgid "Status"
 msgstr ""
 
-#: apps/assignment/models.py:462
+#: apps/assignment/models.py:461
 msgid "Similarity Percentage"
 msgstr ""
 
-#: apps/assignment/models.py:463
+#: apps/assignment/models.py:462
 msgid "Flagged Text"
 msgstr ""
 
-#: apps/assignment/models.py:464
+#: apps/assignment/models.py:463
 msgid "Source Text"
 msgstr ""
 
-#: apps/assignment/models.py:465
+#: apps/assignment/models.py:464
 msgid "Source User ID"
 msgstr ""
 
-#: apps/assignment/models.py:466 apps/store/models.py:386
+#: apps/assignment/models.py:465 apps/store/models.py:386
 msgid "Reason"
 msgstr ""
 
-#: apps/assignment/models.py:469
+#: apps/assignment/models.py:468
 msgid "Plagiarism Check"
 msgstr ""
 
-#: apps/assignment/models.py:470
+#: apps/assignment/models.py:469
 msgid "Plagiarism Checks"
 msgstr ""
 
-#: apps/assignment/models.py:502
+#: apps/assignment/models.py:501
 msgid "Rubrics"
 msgstr ""
 
-#: apps/assignment/models.py:519
+#: apps/assignment/models.py:518
 msgid "Rubric Criterion"
 msgstr ""
 
-#: apps/assignment/models.py:520
+#: apps/assignment/models.py:519
 msgid "Rubric Criteria"
 msgstr ""
 
-#: apps/assignment/models.py:533
+#: apps/assignment/models.py:532
 msgid "Criterion"
 msgstr ""
 
-#: apps/assignment/models.py:536 apps/exam/models.py:108 apps/quiz/models.py:79
+#: apps/assignment/models.py:535 apps/exam/models.py:107 apps/quiz/models.py:79
 msgid "Point"
 msgstr ""
 
-#: apps/assignment/models.py:539
+#: apps/assignment/models.py:538
 msgid "Performance Level"
 msgstr ""
 
-#: apps/assignment/models.py:540
+#: apps/assignment/models.py:539
 msgid "Performance Levels"
 msgstr ""
 
@@ -769,8 +769,8 @@ msgid "Assistant Bots"
 msgstr ""
 
 #: apps/assistant/models.py:56 apps/content/models.py:272
-#: apps/content/models.py:277 apps/course/models.py:703
-#: apps/learning/models.py:468 apps/learning/models.py:481
+#: apps/content/models.py:277 apps/course/models.py:704
+#: apps/learning/models.py:470 apps/learning/models.py:483
 msgid "Note"
 msgstr ""
 
@@ -860,20 +860,6 @@ msgstr ""
 msgid "Apps"
 msgstr ""
 
-#: apps/common/management/commands/convert_mjml.py:10
-msgid "Convert MJML templates to HTML for all apps"
-msgstr ""
-
-#: apps/common/management/commands/convert_mjml.py:18
-msgid "Apps directory not found"
-msgstr ""
-
-#: apps/common/management/commands/convert_mjml.py:34
-msgid ""
-"\n"
-"No MJML files found in any app"
-msgstr ""
-
 #: apps/common/models.py:31
 msgid "ID"
 msgstr ""
@@ -903,8 +889,8 @@ msgstr ""
 msgid "Audience"
 msgstr ""
 
-#: apps/common/models.py:174 apps/competency/models.py:244
-#: apps/competency/models.py:301 apps/content/models.py:66
+#: apps/common/models.py:174 apps/competency/models.py:241
+#: apps/competency/models.py:298 apps/content/models.py:66
 #: apps/store/models.py:57 apps/survey/models.py:71
 msgid "Thumbnail"
 msgstr ""
@@ -913,12 +899,12 @@ msgstr ""
 msgid "Featured"
 msgstr ""
 
-#: apps/common/models.py:176 apps/content/models.py:68 apps/exam/models.py:104
+#: apps/common/models.py:176 apps/content/models.py:68 apps/exam/models.py:103
 #: apps/survey/models.py:56
 msgid "Format"
 msgstr ""
 
-#: apps/common/models.py:177 apps/content/models.py:69 apps/exam/models.py:140
+#: apps/common/models.py:177 apps/content/models.py:69 apps/exam/models.py:139
 msgid "Duration"
 msgstr ""
 
@@ -942,16 +928,16 @@ msgstr ""
 msgid "Earned Point"
 msgstr ""
 
-#: apps/common/models.py:197 apps/course/models.py:699
+#: apps/common/models.py:197 apps/course/models.py:700
 msgid "Score"
 msgstr ""
 
 #: apps/common/models.py:198 apps/content/models.py:161
-#: apps/course/models.py:701
+#: apps/course/models.py:702
 msgid "Passed"
 msgstr ""
 
-#: apps/common/models.py:201 apps/course/models.py:702
+#: apps/common/models.py:201 apps/course/models.py:703
 msgid "Confirmed"
 msgstr ""
 
@@ -1391,220 +1377,192 @@ msgstr ""
 msgid "Issue Date"
 msgstr ""
 
-#: apps/competency/management/commands/load_ncs_data.py:15
-msgid ""
-"Import classifications, competency skills, and skill factors from Excel file"
-msgstr ""
-
-#: apps/competency/management/commands/load_ncs_data.py:22
-msgid "Path to the competency data excel file"
-msgstr ""
-
-#: apps/competency/management/commands/load_ncs_data.py:29
-#, python-format
-msgid "File not found: %s"
-msgstr ""
-
-#: apps/competency/management/commands/load_ncs_data.py:32
-#, python-format
-msgid "Processing file: %s"
-msgstr ""
-
-#: apps/competency/management/commands/load_ncs_data.py:34
-msgid "Import completed successfully"
-msgstr ""
-
-#: apps/competency/models.py:62 apps/competency/models.py:108
-#: apps/competency/models.py:128 apps/operation/models.py:596
-msgid "Version"
-msgstr ""
-
-#: apps/competency/models.py:63 apps/operation/models.py:63
+#: apps/competency/models.py:62 apps/operation/models.py:63
 msgid "Ancestors"
 msgstr ""
 
-#: apps/competency/models.py:66 apps/competency/models.py:103
-#: apps/competency/models.py:147
+#: apps/competency/models.py:65 apps/competency/models.py:102
+#: apps/competency/models.py:144
 msgid "Classification"
 msgstr ""
 
-#: apps/competency/models.py:67
+#: apps/competency/models.py:66
 msgid "Classifications"
 msgstr ""
 
-#: apps/competency/models.py:106 apps/course/models.py:119
+#: apps/competency/models.py:105 apps/course/models.py:120
 msgid "Level"
 msgstr ""
 
-#: apps/competency/models.py:107 apps/competency/models.py:127
+#: apps/competency/models.py:106 apps/competency/models.py:125
 msgid "Number"
 msgstr ""
 
-#: apps/competency/models.py:111 apps/competency/models.py:124
-#: apps/competency/models.py:197 apps/competency/models.py:268
+#: apps/competency/models.py:109 apps/competency/models.py:122
+#: apps/competency/models.py:194 apps/competency/models.py:265
 msgid "Skill"
 msgstr ""
 
-#: apps/competency/models.py:112 apps/competency/models.py:181
+#: apps/competency/models.py:110 apps/competency/models.py:178
 msgid "Skills"
 msgstr ""
 
-#: apps/competency/models.py:131
+#: apps/competency/models.py:128
 msgid "Factor"
 msgstr ""
 
-#: apps/competency/models.py:132 apps/competency/models.py:148
-#: apps/competency/models.py:198 apps/competency/models.py:269
+#: apps/competency/models.py:129 apps/competency/models.py:145
+#: apps/competency/models.py:195 apps/competency/models.py:266
 msgid "Factors"
 msgstr ""
 
-#: apps/competency/models.py:151 apps/warehouse/models.py:120
+#: apps/competency/models.py:148 apps/warehouse/models.py:120
 msgid "Competency Goal"
 msgstr ""
 
-#: apps/competency/models.py:152
+#: apps/competency/models.py:149
 msgid "Competency Goals"
 msgstr ""
 
-#: apps/competency/models.py:177
+#: apps/competency/models.py:174
 msgid "Image"
 msgstr ""
 
-#: apps/competency/models.py:179 apps/competency/models.py:247
+#: apps/competency/models.py:176 apps/competency/models.py:244
 msgid "Issuer"
 msgstr ""
 
-#: apps/competency/models.py:180 apps/competency/models.py:248
+#: apps/competency/models.py:177 apps/competency/models.py:245
 #: apps/store/models.py:78
 msgid "Validity Days"
 msgstr ""
 
-#: apps/competency/models.py:184 apps/competency/models.py:196
-#: apps/competency/models.py:212 apps/competency/models.py:225
+#: apps/competency/models.py:181 apps/competency/models.py:193
+#: apps/competency/models.py:209 apps/competency/models.py:222
 msgid "Badge"
 msgstr ""
 
-#: apps/competency/models.py:185
+#: apps/competency/models.py:182
 msgid "Badges"
 msgstr ""
 
-#: apps/competency/models.py:199 apps/competency/models.py:270
+#: apps/competency/models.py:196 apps/competency/models.py:267
 msgid "Coverage"
 msgstr ""
 
-#: apps/competency/models.py:202
+#: apps/competency/models.py:199
 msgid "Badge Skill"
 msgstr ""
 
-#: apps/competency/models.py:203
+#: apps/competency/models.py:200
 msgid "Badge Skills"
 msgstr ""
 
-#: apps/competency/models.py:213 apps/competency/models.py:284
-#: apps/partner/apps.py:8 apps/partner/models.py:46 apps/partner/models.py:59
+#: apps/competency/models.py:210 apps/competency/models.py:281
+#: apps/partner/apps.py:8 apps/partner/models.py:45 apps/partner/models.py:58
 #: apps/warehouse/models.py:115 apps/warehouse/views.py:43
 msgid "Partner"
 msgstr ""
 
-#: apps/competency/models.py:214 apps/competency/models.py:285
+#: apps/competency/models.py:211 apps/competency/models.py:282
 msgid "Claim"
 msgstr ""
 
-#: apps/competency/models.py:215 apps/competency/models.py:286
+#: apps/competency/models.py:212 apps/competency/models.py:283
 msgid "Endorsed"
 msgstr ""
 
-#: apps/competency/models.py:218
+#: apps/competency/models.py:215
 msgid "BadgeEndorsement"
 msgstr ""
 
-#: apps/competency/models.py:219
+#: apps/competency/models.py:216
 msgid "Badge Endorsements"
 msgstr ""
 
-#: apps/competency/models.py:226
+#: apps/competency/models.py:223
 msgid "Earner"
 msgstr ""
 
-#: apps/competency/models.py:228 apps/competency/models.py:304
+#: apps/competency/models.py:225 apps/competency/models.py:301
 msgid "Revoked"
 msgstr ""
 
-#: apps/competency/models.py:229 apps/competency/models.py:305
+#: apps/competency/models.py:226 apps/competency/models.py:302
 msgid "Revoked Reason"
 msgstr ""
 
-#: apps/competency/models.py:235 apps/warehouse/models.py:121
+#: apps/competency/models.py:232 apps/warehouse/models.py:121
 msgid "Badge Award"
 msgstr ""
 
-#: apps/competency/models.py:236
+#: apps/competency/models.py:233
 msgid "Badge Awards"
 msgstr ""
 
-#: apps/competency/models.py:243
+#: apps/competency/models.py:240
 msgid "Background Image"
 msgstr ""
 
-#: apps/competency/models.py:245
+#: apps/competency/models.py:242
 msgid "Template"
 msgstr ""
 
-#: apps/competency/models.py:251 apps/competency/models.py:267
-#: apps/competency/models.py:283 apps/competency/models.py:298
+#: apps/competency/models.py:248 apps/competency/models.py:264
+#: apps/competency/models.py:280 apps/competency/models.py:295
 #: apps/course/admin.py:35
 msgid "Certificate"
 msgstr ""
 
-#: apps/competency/models.py:252 apps/course/admin.py:36
-#: apps/course/models.py:129
+#: apps/competency/models.py:249 apps/course/admin.py:36
+#: apps/course/models.py:130
 msgid "Certificates"
 msgstr ""
 
-#: apps/competency/models.py:273
+#: apps/competency/models.py:270
 msgid "Certificate Skill"
 msgstr ""
 
-#: apps/competency/models.py:274
+#: apps/competency/models.py:271
 msgid "Certificate Skills"
 msgstr ""
 
-#: apps/competency/models.py:289
+#: apps/competency/models.py:286
 msgid "Certificate Endorsement"
 msgstr ""
 
-#: apps/competency/models.py:290
+#: apps/competency/models.py:287
 msgid "Certificate Endorsements"
 msgstr ""
 
-#: apps/competency/models.py:299
+#: apps/competency/models.py:296
 msgid "Recipient"
 msgstr ""
 
-#: apps/competency/models.py:300 apps/content/models.py:64
+#: apps/competency/models.py:297 apps/content/models.py:64
 msgid "PDF"
 msgstr ""
 
-#: apps/competency/models.py:302 apps/operation/models.py:505
-#: apps/tracking/models.py:26
+#: apps/competency/models.py:299 apps/operation/models.py:505
+#: apps/tracking/models.py:28
 msgid "Data"
 msgstr ""
 
-#: apps/competency/models.py:307 apps/learning/models.py:81
-#: apps/learning/models.py:439 apps/operation/models.py:366
+#: apps/competency/models.py:304 apps/learning/models.py:82
+#: apps/learning/models.py:441 apps/operation/models.py:366
 msgid "Content Type"
 msgstr ""
 
-#: apps/competency/models.py:308 apps/learning/models.py:84
-#: apps/learning/models.py:442 apps/operation/models.py:367
+#: apps/competency/models.py:305 apps/learning/models.py:85
+#: apps/learning/models.py:444 apps/operation/models.py:367
 msgid "Content ID"
 msgstr ""
 
-#: apps/competency/models.py:312 apps/warehouse/models.py:122
+#: apps/competency/models.py:309 apps/warehouse/models.py:122
 msgid "Certificate Award"
 msgstr ""
 
-#: apps/competency/models.py:313
+#: apps/competency/models.py:310
 msgid "Certificate Awards"
 msgstr ""
 
@@ -1714,24 +1672,24 @@ msgstr ""
 
 #: apps/content/models.py:76 apps/content/models.py:127
 #: apps/content/models.py:144 apps/content/models.py:157
-#: apps/content/models.py:271 apps/course/models.py:317
+#: apps/content/models.py:271 apps/course/models.py:318
 #: apps/warehouse/models.py:125
 msgid "Media"
 msgstr ""
 
-#: apps/content/models.py:77 apps/course/models.py:297
+#: apps/content/models.py:77 apps/course/models.py:298
 msgid "Medias"
 msgstr ""
 
-#: apps/content/models.py:128 apps/learning/models.py:74
+#: apps/content/models.py:128 apps/learning/models.py:75
 msgid "Start"
 msgstr ""
 
-#: apps/content/models.py:129 apps/learning/models.py:75
+#: apps/content/models.py:129 apps/learning/models.py:76
 msgid "End"
 msgstr ""
 
-#: apps/content/models.py:130 apps/learning/models.py:76
+#: apps/content/models.py:130 apps/learning/models.py:77
 msgid "Archive"
 msgstr ""
 
@@ -1743,7 +1701,7 @@ msgstr ""
 msgid "Public Access Medias"
 msgstr ""
 
-#: apps/content/models.py:146 apps/discussion/models.py:328
+#: apps/content/models.py:146 apps/discussion/models.py:327
 #: apps/operation/models.py:118 apps/operation/models.py:504
 #: apps/operation/models.py:594
 msgid "Body"
@@ -1785,7 +1743,7 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: apps/course/admin.py:31 apps/course/models.py:127
+#: apps/course/admin.py:31 apps/course/models.py:128
 #: apps/operation/models.py:67 apps/store/models.py:58
 msgid "Categories"
 msgstr ""
@@ -1794,14 +1752,14 @@ msgstr ""
 msgid "Related Course"
 msgstr ""
 
-#: apps/course/admin.py:61 apps/course/models.py:128
+#: apps/course/admin.py:61 apps/course/models.py:129
 msgid "Related Courses"
 msgstr ""
 
-#: apps/course/apps.py:8 apps/course/models.py:132 apps/course/models.py:263
-#: apps/course/models.py:277 apps/course/models.py:294
-#: apps/course/models.py:335 apps/course/models.py:371
-#: apps/course/models.py:501 apps/warehouse/models.py:156
+#: apps/course/apps.py:8 apps/course/models.py:133 apps/course/models.py:264
+#: apps/course/models.py:278 apps/course/models.py:295
+#: apps/course/models.py:336 apps/course/models.py:372
+#: apps/course/models.py:502 apps/warehouse/models.py:156
 #: apps/warehouse/views.py:70
 msgid "Course"
 msgstr ""
@@ -2147,197 +2105,197 @@ msgstr ""
 msgid "Continue Learning"
 msgstr ""
 
-#: apps/course/models.py:92
+#: apps/course/models.py:93
 msgid "Templates"
 msgstr ""
 
-#: apps/course/models.py:95 apps/course/models.py:122
+#: apps/course/models.py:96 apps/course/models.py:123
 msgid "Message Preset"
 msgstr ""
 
-#: apps/course/models.py:96
+#: apps/course/models.py:97
 msgid "Message Presets"
 msgstr ""
 
-#: apps/course/models.py:110
+#: apps/course/models.py:111
 msgid "Beginner"
 msgstr ""
 
-#: apps/course/models.py:111
+#: apps/course/models.py:112
 msgid "Intermediate"
 msgstr ""
 
-#: apps/course/models.py:112
+#: apps/course/models.py:113
 msgid "Advanced"
 msgstr ""
 
-#: apps/course/models.py:113
+#: apps/course/models.py:114
 msgid "Common"
 msgstr ""
 
-#: apps/course/models.py:116
+#: apps/course/models.py:117
 msgid "Objective"
 msgstr ""
 
-#: apps/course/models.py:117
+#: apps/course/models.py:118
 msgid "Preview URL"
 msgstr ""
 
-#: apps/course/models.py:118
+#: apps/course/models.py:119
 msgid "Effort Hours"
 msgstr ""
 
-#: apps/course/models.py:120 apps/operation/models.py:199
+#: apps/course/models.py:121 apps/operation/models.py:199
 #: apps/operation/models.py:211 apps/operation/models.py:218
 msgid "FAQ"
 msgstr ""
 
-#: apps/course/models.py:124 apps/operation/models.py:170
+#: apps/course/models.py:125 apps/operation/models.py:170
 msgid "Instructors"
 msgstr ""
 
-#: apps/course/models.py:125 apps/survey/models.py:80
+#: apps/course/models.py:126 apps/survey/models.py:80
 msgid "Surveys"
 msgstr ""
 
-#: apps/course/models.py:133
+#: apps/course/models.py:134
 msgid "Courses"
 msgstr ""
 
-#: apps/course/models.py:264 apps/operation/models.py:169
+#: apps/course/models.py:265 apps/operation/models.py:169
 msgid "Instructor"
 msgstr ""
 
-#: apps/course/models.py:265
+#: apps/course/models.py:266
 msgid "Lead"
 msgstr ""
 
-#: apps/course/models.py:270
+#: apps/course/models.py:271
 msgid "Course Instructor"
 msgstr ""
 
-#: apps/course/models.py:271
+#: apps/course/models.py:272
 msgid "Course Instructors"
 msgstr ""
 
-#: apps/course/models.py:278 apps/survey/apps.py:8 apps/survey/models.py:79
+#: apps/course/models.py:279 apps/survey/apps.py:8 apps/survey/models.py:79
 #: apps/survey/models.py:112 apps/warehouse/models.py:130
 #: apps/warehouse/views.py:46
 msgid "Survey"
 msgstr ""
 
-#: apps/course/models.py:279 apps/course/models.py:298
-#: apps/course/models.py:337
+#: apps/course/models.py:280 apps/course/models.py:299
+#: apps/course/models.py:338
 msgid "Start Offset (Days)"
 msgstr ""
 
-#: apps/course/models.py:280 apps/course/models.py:299
-#: apps/course/models.py:338
+#: apps/course/models.py:281 apps/course/models.py:300
+#: apps/course/models.py:339
 msgid "End Offset (Days) from Start Offset"
 msgstr ""
 
-#: apps/course/models.py:283
+#: apps/course/models.py:284
 msgid "Course Survey"
 msgstr ""
 
-#: apps/course/models.py:284
+#: apps/course/models.py:285
 msgid "Course Surveys"
 msgstr ""
 
-#: apps/course/models.py:302 apps/course/models.py:316
+#: apps/course/models.py:303 apps/course/models.py:317
 msgid "Lesson"
 msgstr ""
 
-#: apps/course/models.py:303
+#: apps/course/models.py:304
 msgid "Lessons"
 msgstr ""
 
-#: apps/course/models.py:322
+#: apps/course/models.py:323
 msgid "Lesson Media"
 msgstr ""
 
-#: apps/course/models.py:323
+#: apps/course/models.py:324
 msgid "Lesson Medias"
 msgstr ""
 
-#: apps/course/models.py:336
+#: apps/course/models.py:337
 msgid "Weight"
 msgstr ""
 
-#: apps/course/models.py:342 apps/store/models.py:79
+#: apps/course/models.py:343 apps/store/models.py:79
 msgid "Item Type"
 msgstr ""
 
-#: apps/course/models.py:345 apps/store/models.py:80
+#: apps/course/models.py:346 apps/store/models.py:80
 msgid "Item ID"
 msgstr ""
 
-#: apps/course/models.py:349
+#: apps/course/models.py:350
 msgid "Assessment"
 msgstr ""
 
-#: apps/course/models.py:350
+#: apps/course/models.py:351
 msgid "Assessments"
 msgstr ""
 
-#: apps/course/models.py:372
+#: apps/course/models.py:373
 msgid "Assessment Weight"
 msgstr ""
 
-#: apps/course/models.py:373
+#: apps/course/models.py:374
 msgid "Completion Weight"
 msgstr ""
 
-#: apps/course/models.py:374
+#: apps/course/models.py:375
 msgid "Completion Passing Point"
 msgstr ""
 
-#: apps/course/models.py:377
+#: apps/course/models.py:378
 msgid "Grading Policy"
 msgstr ""
 
-#: apps/course/models.py:378
+#: apps/course/models.py:379
 msgid "Grading Policies"
 msgstr ""
 
-#: apps/course/models.py:503
+#: apps/course/models.py:504
 msgid "Last Lesson"
 msgstr ""
 
-#: apps/course/models.py:507 apps/course/models.py:697
+#: apps/course/models.py:508 apps/course/models.py:698
 msgid "Engagement"
 msgstr ""
 
-#: apps/course/models.py:508
+#: apps/course/models.py:509
 msgid "Engagements"
 msgstr ""
 
-#: apps/course/models.py:561
+#: apps/course/models.py:562
 msgid "Course Completion Certificate"
 msgstr ""
 
-#: apps/course/models.py:564
+#: apps/course/models.py:565
 #, python-format
 msgid "%(hours)s hours"
 msgstr ""
 
-#: apps/course/models.py:698
+#: apps/course/models.py:699
 msgid "Details"
 msgstr ""
 
-#: apps/course/models.py:700
+#: apps/course/models.py:701
 msgid "Completion Rate"
 msgstr ""
 
-#: apps/course/models.py:707
+#: apps/course/models.py:708
 msgid "Gradebook"
 msgstr ""
 
-#: apps/course/models.py:708
+#: apps/course/models.py:709
 msgid "Gradebooks"
 msgstr ""
 
-#: apps/discussion/admin.py:106 apps/discussion/models.py:331
+#: apps/discussion/admin.py:106 apps/discussion/models.py:330
 msgid "Post"
 msgstr ""
 
@@ -2349,83 +2307,83 @@ msgstr ""
 msgid "Tutor Assessment"
 msgstr ""
 
-#: apps/discussion/apps.py:8 apps/discussion/models.py:138
-#: apps/discussion/models.py:206 apps/warehouse/models.py:150
+#: apps/discussion/apps.py:8 apps/discussion/models.py:137
+#: apps/discussion/models.py:205 apps/warehouse/models.py:150
 #: apps/warehouse/views.py:62
 msgid "Discussion"
 msgstr ""
 
-#: apps/discussion/models.py:98
+#: apps/discussion/models.py:97
 msgid "Directive"
 msgstr ""
 
-#: apps/discussion/models.py:100
+#: apps/discussion/models.py:99
 msgid "Point Requirements"
 msgstr ""
 
-#: apps/discussion/models.py:139
+#: apps/discussion/models.py:138
 msgid "Discussions"
 msgstr ""
 
-#: apps/discussion/models.py:326 apps/operation/models.py:677
+#: apps/discussion/models.py:325 apps/operation/models.py:677
 msgid "Parent"
 msgstr ""
 
-#: apps/discussion/models.py:332
+#: apps/discussion/models.py:331
 msgid "Posts"
 msgstr ""
 
-#: apps/exam/apps.py:8 apps/exam/models.py:143 apps/exam/models.py:233
+#: apps/exam/apps.py:8 apps/exam/models.py:142 apps/exam/models.py:232
 #: apps/warehouse/models.py:138 apps/warehouse/views.py:49
 msgid "Exam"
 msgstr ""
 
-#: apps/exam/models.py:72
+#: apps/exam/models.py:71
 msgid "Question Composition"
 msgstr ""
 
-#: apps/exam/models.py:98 apps/survey/models.py:51
+#: apps/exam/models.py:97 apps/survey/models.py:51
 msgid "Single Choice"
 msgstr ""
 
-#: apps/exam/models.py:99 apps/survey/models.py:52
+#: apps/exam/models.py:98 apps/survey/models.py:52
 msgid "Text Input"
 msgstr ""
 
-#: apps/exam/models.py:100 apps/survey/models.py:53
+#: apps/exam/models.py:99 apps/survey/models.py:53
 msgid "Number Input"
 msgstr ""
 
-#: apps/exam/models.py:101
+#: apps/exam/models.py:100
 msgid "Essay"
 msgstr ""
 
-#: apps/exam/models.py:107 apps/quiz/models.py:78 apps/survey/models.py:59
+#: apps/exam/models.py:106 apps/quiz/models.py:78 apps/survey/models.py:59
 msgid "Options"
 msgstr ""
 
-#: apps/exam/models.py:125 apps/quiz/models.py:93
+#: apps/exam/models.py:124 apps/quiz/models.py:93
 msgid "Correct Answers"
 msgstr ""
 
-#: apps/exam/models.py:126
+#: apps/exam/models.py:125
 msgid "Correct Criteria"
 msgstr ""
 
-#: apps/exam/models.py:144
+#: apps/exam/models.py:143
 msgid "Exams"
 msgstr ""
 
-#: apps/exam/models.py:360 apps/exam/models.py:370 apps/quiz/models.py:258
+#: apps/exam/models.py:359 apps/exam/models.py:369 apps/quiz/models.py:261
 #: apps/survey/models.py:114
 msgid "Answers"
 msgstr ""
 
-#: apps/exam/models.py:363
+#: apps/exam/models.py:362
 msgid "Temporary Answer"
 msgstr ""
 
-#: apps/exam/models.py:364
+#: apps/exam/models.py:363
 msgid "Temporary Answers"
 msgstr ""
 
@@ -2433,79 +2391,87 @@ msgstr ""
 msgid "Learning"
 msgstr ""
 
-#: apps/learning/models.py:77
+#: apps/learning/management/commands/setup_demo_data.py:25
+msgid "Demo Public Catalog"
+msgstr ""
+
+#: apps/learning/management/commands/setup_demo_data.py:26
+msgid "Public catalogs are available to everyone."
+msgstr ""
+
+#: apps/learning/models.py:78
 msgid "Enrolled"
 msgstr ""
 
-#: apps/learning/models.py:86
+#: apps/learning/models.py:87
 msgid "Enrolled By"
 msgstr ""
 
-#: apps/learning/models.py:89 apps/warehouse/models.py:161
+#: apps/learning/models.py:90 apps/warehouse/models.py:161
 msgid "Enrollment"
 msgstr ""
 
-#: apps/learning/models.py:90
+#: apps/learning/models.py:91
 msgid "Enrollments"
 msgstr ""
 
-#: apps/learning/models.py:119
+#: apps/learning/models.py:120
 msgid "Content does not exist"
 msgstr ""
 
-#: apps/learning/models.py:308 apps/operation/models.py:119
+#: apps/learning/models.py:309 apps/operation/models.py:119
 msgid "Public"
 msgstr ""
 
-#: apps/learning/models.py:309
+#: apps/learning/models.py:310
 msgid "Available From"
 msgstr ""
 
-#: apps/learning/models.py:310
+#: apps/learning/models.py:311
 msgid "Available Until"
 msgstr ""
 
-#: apps/learning/models.py:313 apps/learning/models.py:435
-#: apps/learning/models.py:466 apps/learning/models.py:479
+#: apps/learning/models.py:314 apps/learning/models.py:437
+#: apps/learning/models.py:468 apps/learning/models.py:481
 #: apps/warehouse/models.py:162
 msgid "Catalog"
 msgstr ""
 
-#: apps/learning/models.py:314
+#: apps/learning/models.py:315
 msgid "Catalogs"
 msgstr ""
 
-#: apps/learning/models.py:448
+#: apps/learning/models.py:450
 msgid "Catalog Item"
 msgstr ""
 
-#: apps/learning/models.py:449
+#: apps/learning/models.py:451
 msgid "Catalog Items"
 msgstr ""
 
-#: apps/learning/models.py:467 apps/learning/models.py:480
+#: apps/learning/models.py:469 apps/learning/models.py:482
 msgid "Granted By"
 msgstr ""
 
-#: apps/learning/models.py:471 apps/warehouse/models.py:163
+#: apps/learning/models.py:473 apps/warehouse/models.py:163
 msgid "User Catalog"
 msgstr ""
 
-#: apps/learning/models.py:472
+#: apps/learning/models.py:474
 msgid "User Catalogs"
 msgstr ""
 
-#: apps/learning/models.py:478 apps/partner/models.py:135
-#: apps/partner/models.py:144 apps/partner/models.py:160
+#: apps/learning/models.py:480 apps/partner/models.py:134
+#: apps/partner/models.py:143 apps/partner/models.py:159
 #: apps/warehouse/models.py:117
 msgid "Cohort"
 msgstr ""
 
-#: apps/learning/models.py:484 apps/warehouse/models.py:164
+#: apps/learning/models.py:486 apps/warehouse/models.py:164
 msgid "Cohort Catalog"
 msgstr ""
 
-#: apps/learning/models.py:485
+#: apps/learning/models.py:487
 msgid "Cohort Catalogs"
 msgstr ""
 
@@ -2720,6 +2686,10 @@ msgstr ""
 msgid "Data Category"
 msgstr ""
 
+#: apps/operation/models.py:596
+msgid "Version"
+msgstr ""
+
 #: apps/operation/models.py:597
 msgid "Effective Date"
 msgstr ""
@@ -2791,106 +2761,106 @@ msgstr ""
 
 #: apps/partner/management/commands/create_platform_partner.py:25
 #, python-format
-msgid "%s is a platform for education."
+msgid "%s is a LMS for micro learning"
 msgstr ""
 
-#: apps/partner/models.py:41
+#: apps/partner/models.py:40
 msgid "Address"
 msgstr ""
 
-#: apps/partner/models.py:42
+#: apps/partner/models.py:41
 msgid "Logo"
 msgstr ""
 
-#: apps/partner/models.py:43
+#: apps/partner/models.py:42
 msgid "Website"
 msgstr ""
 
-#: apps/partner/models.py:47
+#: apps/partner/models.py:46
 msgid "Partners"
 msgstr ""
 
-#: apps/partner/models.py:62
+#: apps/partner/models.py:61
 msgid "Business Number"
 msgstr ""
 
-#: apps/partner/models.py:65 apps/partner/models.py:78
+#: apps/partner/models.py:64 apps/partner/models.py:77
 msgid "Business Site"
 msgstr ""
 
-#: apps/partner/models.py:66
+#: apps/partner/models.py:65
 msgid "Business Sites"
 msgstr ""
 
-#: apps/partner/models.py:82
+#: apps/partner/models.py:81
 msgid "ID Number"
 msgstr ""
 
-#: apps/partner/models.py:84
+#: apps/partner/models.py:83
 msgid "Team"
 msgstr ""
 
-#: apps/partner/models.py:85
+#: apps/partner/models.py:84
 msgid "Job Position"
 msgstr ""
 
-#: apps/partner/models.py:86
+#: apps/partner/models.py:85
 msgid "Job Title"
 msgstr ""
 
-#: apps/partner/models.py:87
+#: apps/partner/models.py:86
 msgid "Employment Status"
 msgstr ""
 
-#: apps/partner/models.py:88
+#: apps/partner/models.py:87
 msgid "Employment Type"
 msgstr ""
 
-#: apps/partner/models.py:92 apps/partner/models.py:145
+#: apps/partner/models.py:91 apps/partner/models.py:144
 msgid "Employee"
 msgstr ""
 
-#: apps/partner/models.py:93 apps/partner/models.py:131
+#: apps/partner/models.py:92 apps/partner/models.py:130
 msgid "Employees"
 msgstr ""
 
-#: apps/partner/models.py:132
+#: apps/partner/models.py:131
 msgid "Staffs"
 msgstr ""
 
-#: apps/partner/models.py:136
+#: apps/partner/models.py:135
 msgid "Cohorts"
 msgstr ""
 
-#: apps/partner/models.py:148
+#: apps/partner/models.py:147
 msgid "Cohort Employee"
 msgstr ""
 
-#: apps/partner/models.py:149
+#: apps/partner/models.py:148
 msgid "Cohort Employees"
 msgstr ""
 
-#: apps/partner/models.py:156
+#: apps/partner/models.py:155
 msgid "Education Manager"
 msgstr ""
 
-#: apps/partner/models.py:157
+#: apps/partner/models.py:156
 msgid "Marketing Manager"
 msgstr ""
 
-#: apps/partner/models.py:158
+#: apps/partner/models.py:157
 msgid "Financial Manager"
 msgstr ""
 
-#: apps/partner/models.py:162
+#: apps/partner/models.py:161
 msgid "Role"
 msgstr ""
 
-#: apps/partner/models.py:165
+#: apps/partner/models.py:164
 msgid "Cohort Staff"
 msgstr ""
 
-#: apps/partner/models.py:166
+#: apps/partner/models.py:165
 msgid "Cohort Staffs"
 msgstr ""
 
@@ -3203,7 +3173,7 @@ msgstr ""
 msgid "Respondent"
 msgstr ""
 
-#: apps/tracking/admin.py:17 apps/tracking/models.py:27
+#: apps/tracking/admin.py:17 apps/tracking/models.py:29
 msgid "Diff"
 msgstr ""
 
@@ -3219,67 +3189,67 @@ msgstr ""
 msgid "Tracking"
 msgstr ""
 
-#: apps/tracking/models.py:11
+#: apps/tracking/models.py:13
 msgid "Sync Date"
 msgstr ""
 
-#: apps/tracking/models.py:12
+#: apps/tracking/models.py:14
 msgid "Sync Count"
 msgstr ""
 
-#: apps/tracking/models.py:13
+#: apps/tracking/models.py:15
 msgid "Duration (seconds)"
 msgstr ""
 
-#: apps/tracking/models.py:16
+#: apps/tracking/models.py:18
 msgid "Sync Record"
 msgstr ""
 
-#: apps/tracking/models.py:17
+#: apps/tracking/models.py:19
 msgid "Sync Records"
 msgstr ""
 
-#: apps/tracking/models.py:21
+#: apps/tracking/models.py:23
 msgid "Slug"
 msgstr ""
 
-#: apps/tracking/models.py:22
+#: apps/tracking/models.py:24
 msgid "Event Model"
 msgstr ""
 
-#: apps/tracking/models.py:23
+#: apps/tracking/models.py:25
 msgid "Event ID"
 msgstr ""
 
-#: apps/tracking/models.py:24
+#: apps/tracking/models.py:26
 msgid "Created At"
 msgstr ""
 
-#: apps/tracking/models.py:25
+#: apps/tracking/models.py:27
 msgid "Label"
 msgstr ""
 
-#: apps/tracking/models.py:28
+#: apps/tracking/models.py:30
 msgid "Context ID"
 msgstr ""
 
-#: apps/tracking/models.py:29
+#: apps/tracking/models.py:31
 msgid "Context"
 msgstr ""
 
-#: apps/tracking/models.py:30
+#: apps/tracking/models.py:32
 msgid "Data Model"
 msgstr ""
 
-#: apps/tracking/models.py:31
+#: apps/tracking/models.py:33
 msgid "Data ID"
 msgstr ""
 
-#: apps/tracking/models.py:34
+#: apps/tracking/models.py:36
 msgid "Hot Event"
 msgstr ""
 
-#: apps/tracking/models.py:35
+#: apps/tracking/models.py:37
 msgid "Hot Events"
 msgstr ""
 
@@ -3427,6 +3397,6 @@ msgstr ""
 msgid "Courses Passed"
 msgstr ""
 
-#: minima/settings.py:227
+#: minima/settings.py:226
 msgid "Storage"
 msgstr ""

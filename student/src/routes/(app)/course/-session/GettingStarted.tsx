@@ -3,7 +3,11 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { SessionStart } from '../../-shared/grading/SessionStart'
 import { useSession } from './context'
 
-export const GettingStarted = () => {
+interface Props {
+  setActiveTab: (tab: string) => void
+}
+
+export const GettingStarted = (props: Props) => {
   const { t } = useTranslation()
 
   const [session, { setStore, refetch }] = useSession()
@@ -13,6 +17,7 @@ export const GettingStarted = () => {
     const { data } = await courseV1StartEngagement({ path: { id: s().course.id } })
     setStore('data', 'engagement', data)
     setStore('data', 'otpToken', undefined)
+    props.setActiveTab('outline')
   }
 
   const refreshToken = () => {

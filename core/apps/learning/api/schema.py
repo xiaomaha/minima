@@ -36,6 +36,7 @@ class CatalogSchema(TimeStampedMixinSchema):
     id: int
     name: str
     description: str
+    thumbnail: str | None
     active: bool
     public: bool
     available_from: datetime

@@ -16,8 +16,6 @@ dependencies = [
   "django-unfold",
   "django-opensearch-dsl",
   "psycopg[binary]",
-  "openpyxl",
-  "mjml-python",
   "passlib[bcrypt]",
   "tika",
   "pillow",
@@ -38,12 +36,8 @@ dependencies = [
   "pydantic[email]",
   "isodate",
   "django-jsonform",
-  "yt-dlp",
-  "youtube-transcript-api",
   "beautifulsoup4",
   "google-genai",
-  "django-upgrade",
-  "django-stubs-ext",
   "fpdf2",
   "pypdfium2",
   "webvtt-py",
@@ -62,6 +56,11 @@ dev = [
   "pytest-mock",
   "httpx",
   "boto3-stubs[s3]",
+  "yt-dlp",
+  "youtube-transcript-api",
+  "django-upgrade",
+  "mjml-python",
+  "openpyxl",
   "django-stubs",
 ]
 
@@ -102,7 +101,6 @@ project-excludes = [
   "**/__pycache__",
   "**/.venv/**/*",
   "**/migrations/**/*",
-  # "**/factories.py",
 ]
 
 [tool.pyrefly.errors]

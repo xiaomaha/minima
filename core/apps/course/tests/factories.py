@@ -1,16 +1,14 @@
-from typing import TYPE_CHECKING, cast
-
 import mimesis
 from django.conf import settings
-from django.db.models import QuerySet
 from factory.declarations import Iterator, LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import post_generation
 from mimesis.plugins.factory import FactoryField
 
+from apps.account.tests.factories import UserFactory
 from apps.assignment.models import Assignment
-from apps.common.factory import LearningObjectFactory
-from apps.competency.models import Certificate
+from apps.common.tests.factories import LearningObjectFactory
+from apps.competency.tests.factories import CertificateFactory
 from apps.content.tests.factories import MediaFactory
 from apps.course.models import (
     TEMPLATE_SCHEDULES,
@@ -47,7 +45,7 @@ class CourseFactory(LearningObjectFactory[Course]):
     max_attempts = FactoryField("choice", items=[1, 2])
     verification_required = True
 
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
     objective = FactoryField("text")
     preview_url = None
     effort_hours = FactoryField("choice", items=[8, 16, 32])
@@ -61,24 +59,14 @@ class CourseFactory(LearningObjectFactory[Course]):
         django_get_or_create = ("title", "owner")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        categories: QuerySet[Category]
-        related_courses: QuerySet[Course]
-        certificates: QuerySet[Certificate]
-        lesson_set: QuerySet[Lesson]
-        pk: int
-
     @post_generation
-    def post_generation(self, create, extracted, **kwargs):
+    def post_generation(self: Course, create, extracted, **kwargs):
         if not create:
             return
 
-        if TYPE_CHECKING:
-            self = cast(Course, self)
-
         self.categories.set(Category.objects.filter(depth=3).order_by("?")[: generic.random.randint(1, 2)])
         self.related_courses.set(Course.objects.exclude(id=self.pk).order_by("?")[: generic.random.randint(1, 2)])
-        self.certificates.set(Certificate.objects.order_by("?")[: generic.random.randint(1, 2)])
+        self.certificates.set(CertificateFactory.create_batch(2))
 
         instructors = InstructorFactory.create_batch(generic.random.randint(1, 3))
         if instructors:
@@ -120,9 +108,9 @@ class CourseFactory(LearningObjectFactory[Course]):
                 ignore_conflicts=True,
             )
 
-        discussions = Discussion.objects.order_by("?")[: generic.random.randint(1, 2)]
-        exams = Exam.objects.order_by("?")[: generic.random.randint(1, 2)]
-        assignments = Assignment.objects.order_by("?")[: generic.random.randint(1, 2)]
+        discussions = Discussion.objects.order_by("?")[:2]
+        exams = Exam.objects.order_by("?")[:2]
+        assignments = Assignment.objects.order_by("?")[:2]
 
         last_lesson = self.lesson_set.last()
         course_days = last_lesson.start_offset + 7 if last_lesson else 30
@@ -130,8 +118,8 @@ class CourseFactory(LearningObjectFactory[Course]):
         weeks = course_days // 7
         assessments_to_create = []
 
-        discussion_weeks = [1, 5][: len(discussions)] if weeks >= 5 else [1][: len(discussions)]
-        assignment_weeks = [2, 6][: len(assignments)] if weeks >= 6 else [2][: len(assignments)]
+        discussion_weeks = [1, 5][: len(discussions)] if weeks >= 5 else [1, 3][: len(discussions)]
+        assignment_weeks = [2, 6][: len(assignments)] if weeks >= 6 else [2, 4][: len(assignments)]
 
         if weeks >= 8:
             exam_weeks = [weeks // 2, weeks][: len(exams)]

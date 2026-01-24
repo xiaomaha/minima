@@ -69,12 +69,12 @@ jobs:
       - name: Install uv and dev tools
         run: |
           pip install uv
-          uv tool install ty
+          uv tool install pyrefly
           uv tool install ruff
 
       - name: Run linting
         run: |
-          uv run ty check
+          uv run pyrefly check
           uv run ruff check .
           uv run ruff check --select I .
           uv run ruff format --check .

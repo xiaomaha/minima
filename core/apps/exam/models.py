@@ -34,7 +34,6 @@ from django.db.models import (
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from pghistory.models import PghEventModel
 
 from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
@@ -285,8 +284,8 @@ class Attempt(Model):
         await attempt.questions.aset(questions)
 
         attempt._prefetched_objects_cache = {"questions": questions}
-        attempt._state.fields_cache["submission"] = None
-        attempt._state.fields_cache["tempanswer"] = None
+        attempt._state.fields_cache["submission"] = None  # type: ignore
+        attempt._state.fields_cache["tempanswer"] = None  # type: ignore
 
         return attempt
 
@@ -374,7 +373,7 @@ class Submission(TimeStampedMixin):
         verbose_name_plural = _("Submissions")
 
     if TYPE_CHECKING:
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
 
     async def create_preliminary_grade(self):
         await Grade(attempt=self.attempt).grade()
@@ -391,7 +390,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
 
     if TYPE_CHECKING:
         pk: int
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
         attempt_id: int
 
     async def grade(self, earned_existing: dict[str, int | None] | None = None, grader: User | None = None):

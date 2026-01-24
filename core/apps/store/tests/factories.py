@@ -1,5 +1,4 @@
 import itertools
-from typing import TYPE_CHECKING
 
 import mimesis
 from django.conf import settings
@@ -11,15 +10,12 @@ from factory.helpers import post_generation
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.models import User
-from apps.common.factory import lazy_thumbnail
+from apps.common.tests.factories import lazy_thumbnail
 from apps.learning.models import ENROLLABLE_MODELS
 from apps.operation.models import Category
 from apps.store.models import Cart, Coupon, Product, ProductItem
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
-
-if TYPE_CHECKING:
-    from django.db.models.fields.related_descriptors import ManyRelatedManager
 
 
 def get_item_type_cycle():
@@ -42,12 +38,8 @@ class ProductFactory(DjangoModelFactory[Product]):
         django_get_or_create = ("name",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        productitem_set: QuerySet[ProductItem]
-        categories: ManyRelatedManager
-
     @post_generation
-    def post_generation(self, create, extracted, **kwargs):
+    def post_generation(self: Product, create, extracted, **kwargs):
         if not create:
             return
 
@@ -87,9 +79,6 @@ class CouponFactory(DjangoModelFactory[Coupon]):
 class CartFactory(DjangoModelFactory[Cart]):
     user = Iterator(User.objects.all()[:5])
     active = True
-
-    if TYPE_CHECKING:
-        products: ManyRelatedManager
 
     class Meta:
         model = Cart

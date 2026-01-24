@@ -21,7 +21,6 @@ from django.db.models.base import Model
 from django.db.models.enums import TextChoices
 from django.db.models.indexes import Index
 from django.utils.translation import gettext_lazy as _
-from pghistory.models import PghEventModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedMixin
@@ -95,7 +94,7 @@ class Employee(TimeStampedMixin):
         indexes = [Index(fields=["name"]), Index(fields=["email"]), Index(fields=["phone"]), Index(fields=["team"])]
 
     if TYPE_CHECKING:
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
 
     ID_NUMBER_SALT = "id_number"
 

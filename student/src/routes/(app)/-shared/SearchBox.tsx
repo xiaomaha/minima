@@ -32,8 +32,8 @@ export const SearchBox = () => {
     },
   )
 
-  const search = () => {
-    navigate({ to: '/dashboard/search', search: { q: input() } })
+  const search = (q: string) => {
+    navigate({ to: '/dashboard/search', search: { q } })
   }
 
   return (

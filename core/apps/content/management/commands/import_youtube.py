@@ -178,27 +178,19 @@ class Command(BaseCommand):
     def download_thumbnail(self, info):
         thumbnails = info.get("thumbnails", [])
 
-        medium_thumbnail = None
-        for thumb in thumbnails:
-            if thumb.get("id") in ["hq720", "sd", "hqdefault", "mqdefault"]:
-                medium_thumbnail = thumb.get("url")
-                break
+        valid_thumbs = [t for t in thumbnails if t.get("width", 0) >= 640 and t.get("height", 0) >= 480]
 
-        if not medium_thumbnail and thumbnails:
-            sorted_thumbs = sorted(thumbnails, key=lambda x: x.get("width", 0) * x.get("height", 0))
-            mid_index = len(sorted_thumbs) // 2
-            medium_thumbnail = sorted_thumbs[mid_index].get("url")
+        if valid_thumbs:
+            sorted_thumbs = sorted(valid_thumbs, key=lambda x: x.get("width", 0) * x.get("height", 0))
+            thumbnail_url = sorted_thumbs[0].get("url")
 
-        if medium_thumbnail:
-            with urllib.request.urlopen(medium_thumbnail) as response:
+            with urllib.request.urlopen(thumbnail_url) as response:
                 image_data = response.read()
 
             video_id = info.get("id")
-
-            parsed_url = urlparse(medium_thumbnail)
+            parsed_url = urlparse(thumbnail_url)
             path = parsed_url.path
             ext = os.path.splitext(path)[1] or ".jpg"
-
             filename = f"{video_id}{ext}"
 
             return ContentFile(image_data, name=filename)

@@ -24,7 +24,7 @@
     "@tabler/icons-solidjs": "^3.36.1",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/router-plugin": "^1.154.6",
-    "@tanstack/solid-router": "^1.154.6",
+    "@tanstack/solid-router": "^1.153.1",
     "@tiptap/core": "^3.16.0",
     "@tiptap/extension-dropcursor": "^3.16.0",
     "@tiptap/extension-highlight": "^3.16.0",

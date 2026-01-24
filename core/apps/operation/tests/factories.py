@@ -1,9 +1,6 @@
-from typing import TYPE_CHECKING
-
 import mimesis
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.db.models.query import QuerySet
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, Sequence, SubFactory
@@ -12,7 +9,7 @@ from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
-from apps.common.factory import lazy_avatar
+from apps.common.tests.factories import lazy_avatar
 from apps.operation.models import (
     FAQ,
     Announcement,
@@ -127,11 +124,8 @@ class InquiryFactory(DjangoModelFactory[Inquiry]):
         django_get_or_create = ("content_id", "title")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        inquiryresponse_set: "QuerySet[InquiryResponse]"
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: Inquiry, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
@@ -156,7 +150,7 @@ class MessageFactory(DjangoModelFactory[Message]):
     title = LazyFunction(lambda: generic.text.title())
     body = LazyFunction(lambda: generic.text.text())
     recipients = LazyFunction(lambda: [generic.person.email()])
-    user = SubFactory("account.tests.factories.UserFactory")
+    user = SubFactory(UserFactory)
 
     class Meta:
         model = Message
@@ -230,7 +224,7 @@ class CommentFactory(DjangoModelFactory[Comment]):
     pinned = LazyFunction(lambda: generic.random.weighted_choice({True: 1, False: 9}))
     deleted = LazyFunction(lambda: generic.random.weighted_choice({True: 1, False: 9}))
     rating = LazyFunction(lambda: generic.random.randint(1, 5))
-    writer = SubFactory("account.tests.factories.UserFactory")
+    writer = SubFactory(UserFactory)
 
     class Meta:
         model = Comment

@@ -1,12 +1,17 @@
 import { createContext, useContext } from 'solid-js'
 import type { EnrollmentSchema } from '@/api'
 
-const NewEnrollmentContext = createContext<EnrollmentSchema[]>()
+type DashboardContextType = {
+  newEnrollments: EnrollmentSchema[]
+  setRefreshHandler: (handler?: () => void) => void
+}
 
-export const NewEnrollmentProvider = NewEnrollmentContext.Provider
+const DashboardContext = createContext<DashboardContextType>()
 
-export const useNewEnrollment = () => {
-  const ctx = useContext(NewEnrollmentContext)
-  if (!ctx) throw new Error('useNewEnrollment must be used within Provider')
+export const DashboardProvider = DashboardContext.Provider
+
+export const useDashboard = () => {
+  const ctx = useContext(DashboardContext)
+  if (!ctx) throw new Error('useDashboard must be used within Provider')
   return ctx
 }

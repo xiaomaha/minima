@@ -1,11 +1,8 @@
-from typing import TYPE_CHECKING
-
 import mimesis
 from asgiref.sync import async_to_sync
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.db.models import QuerySet
 from django.utils import timezone
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
@@ -26,7 +23,7 @@ from apps.assignment.models import (
     Solution,
     Submission,
 )
-from apps.common.factory import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
+from apps.common.tests.factories import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
 from apps.operation.tests.factories import HonorCodeFactory
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
@@ -41,11 +38,8 @@ class RubricFactory(DjangoModelFactory[Rubric]):
         django_get_or_create = ("name",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        rubriccriterion_set: QuerySet[RubricCriterion]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: Rubric, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
@@ -65,11 +59,8 @@ class RubricCriterionFactory(DjangoModelFactory[RubricCriterion]):
         django_get_or_create = ("rubric", "name")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        performancelevel_set: QuerySet[PerformanceLevel]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: RubricCriterion, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
@@ -102,11 +93,8 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         django_get_or_create = ("title",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        question_set: QuerySet[Question]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: QuestionPool, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 

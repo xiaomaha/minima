@@ -47,7 +47,6 @@ from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from ipware.ip import get_client_ip
 from jwt.exceptions import InvalidTokenError
-from pghistory.models import PghEventModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.error import ErrorCode
@@ -135,7 +134,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         indexes = [Index(fields=["name"]), Index(fields=["nickname"])]
 
     if TYPE_CHECKING:
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
         totpdevice_set: QuerySet[TOTPDevice]
         otp_enabled: "datetime | None"  # annotated
         token_expires: "datetime | None"  # annotated

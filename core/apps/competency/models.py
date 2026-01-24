@@ -1,6 +1,6 @@
 import logging
 from datetime import timedelta
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, TypedDict, cast
 
 import pghistory
 from django.contrib.auth import get_user_model
@@ -59,7 +59,6 @@ class TreeNodeDict(TypedDict):
 class Classification(MP_Node):
     code = CharField(_("Code"), max_length=12, unique=True)
     name = CharField(_("Name"), max_length=200)
-    version = CharField(_("Version"), max_length=30)
     ancestors = ArrayField(CharField(max_length=200), editable=False, verbose_name=_("Ancestors"))
 
     class Meta(MP_Node.Meta):
@@ -105,7 +104,6 @@ class Skill(Model):
     name = CharField(_("Name"), max_length=200)
     level = PositiveSmallIntegerField(_("Level"))
     number = CharField(_("Number"), max_length=30, unique=True)
-    version = CharField(_("Version"), max_length=30)
 
     class Meta:
         verbose_name = _("Skill")
@@ -125,7 +123,6 @@ class Factor(Model):
     code = CharField(_("Code"), max_length=12)
     name = CharField(_("Name"), max_length=200)
     number = CharField(_("Number"), max_length=30, unique=True)
-    version = CharField(_("Version"), max_length=30)
 
     class Meta:
         verbose_name = _("Factor")
@@ -165,7 +162,7 @@ class CompetencyGoal(TimeStampedMixin):
 
         if created:
             # when created, select_related will not attach classification
-            goal._state.fields_cache["classification"] = await Classification.objects.aget(id=goal.classification_id)
+            goal._state.fields_cache["classification"] = await Classification.objects.aget(id=goal.classification_id)  # type: ignore
 
         return goal
 
@@ -368,7 +365,7 @@ class CertificateAward(TimeStampedMixin):
         )
 
         # reverse url for verification
-        verification_url = add_query_params(verification_url, doc=full_data["document_number"])
+        verification_url = cast(str, add_query_params(verification_url, doc=full_data["document_number"]))
 
         pdf_content, thumbnail_content = await generate_certificate(
             background_image=certificate.background_image.file,

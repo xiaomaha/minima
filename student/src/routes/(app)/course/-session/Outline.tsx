@@ -175,6 +175,7 @@ export const Outline = () => {
                         }
                         max={100}
                       />
+
                     </td>
                     <Show when={s().engagement}>
                       <td class="py-0.5">

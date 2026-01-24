@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import { type CourseDetailSchema, courseV1GetDetail } from '@/api'
 import { COURSE_PREVIEW_FALLBACK_URL } from '@/config'
@@ -51,6 +52,11 @@ export const CourseDetail = () => {
               <div>
                 <h3 class="text-2xl font-bold mb-4">{t('Certificates')}</h3>
                 <Certificate course={detail} />
+              </div>
+
+              <div>
+                <h3 class="text-2xl font-bold mb-4">{t('Related Courses')}</h3>
+                <RelatedCourses course={detail} />
               </div>
             </div>
           </div>
@@ -198,6 +204,34 @@ const Instructors = (props: { course: CourseDetailSchema }) => {
                 <ul class="list-disc list-inside">
                   <For each={instructor.bio}>{(bio) => <li>{bio}</li>}</For>
                 </ul>
+              </div>
+            </div>
+          )}
+        </For>
+      </div>
+    </Show>
+  )
+}
+
+const RelatedCourses = (props: { course: CourseDetailSchema }) => {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  return (
+    <Show when={props.course.relatedCourses.length > 0} fallback={<p>{t('No related courses.')}</p>}>
+      <div class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10">
+        <For each={props.course.relatedCourses}>
+          {(c) => (
+            <div
+              class="card w-full space-y-2 cursor-pointer"
+              onclick={() => navigate({ to: `/course/${c.id}/session` })}
+            >
+              <figure>
+                <img src={c.thumbnail!} alt={c.title} class="w-full ratio-video object-cover" />
+              </figure>
+              <div class="py-2 space-y-3">
+                <div class="font-semibold line-clamp-2 text-base/tight">{c.title}</div>
+                <p class="line-clamp-3">{c.description}</p>
               </div>
             </div>
           )}

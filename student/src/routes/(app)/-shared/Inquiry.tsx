@@ -9,7 +9,18 @@ import {
   IconQuestionMark,
 } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
-import { createContext, createRoot, createSignal, For, Match, Show, Switch, useContext } from 'solid-js'
+import {
+  createContext,
+  createRoot,
+  createSignal,
+  For,
+  Match,
+  onCleanup,
+  onMount,
+  Show,
+  Switch,
+  useContext,
+} from 'solid-js'
 import { createStore, type SetStoreFunction } from 'solid-js/store'
 import type * as v from 'valibot'
 import { type InquirySchema, operationV1CreateInquiry, operationV1GetInquiries, operationV1UpdateInquiry } from '@/api'
@@ -32,6 +43,7 @@ interface Props {
   model?: string
   contentId?: string | number
   disabled?: boolean
+  setRefreshHandler: (handler?: () => void) => void
 }
 
 interface EditorOptions {
@@ -56,14 +68,17 @@ export const Inquiry = (props: Props) => {
   const { t } = useTranslation()
   const [editorOpen, setEditorOpen] = createSignal<EditorOptions | null>(null)
 
-  const [inquiries, setObserverEl, { setStore }] = createCachedInfiniteStore(
+  const [inquiries, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'operationV1GetInquiries',
-    () => ({ query: props }),
+    () => ({ query: { appLabel: props.appLabel, model: props.model, contentId: props.contentId } }),
     async (options, page) => {
       const { data } = await operationV1GetInquiries({ ...options, query: { ...options.query, page } })
       return data
     },
   )
+
+  onMount(() => props.setRefreshHandler(() => refetch))
+  onCleanup(() => props.setRefreshHandler(undefined))
 
   // This means if not content provided, use the account user as content
   const appLabel = props.appLabel || 'account'

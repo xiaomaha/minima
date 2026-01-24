@@ -126,7 +126,7 @@ class EngagementAdmin(ModelAdmin[Engagement]):
 
     @action(description=_("Grade"), permissions=["grade"])  # type: ignore # gettext not working
     def grade(self, request: AuthenticatedRequest, obj: Engagement):
-        async_to_sync(Engagement.grade)(course_id=obj.course.id, learner_id=obj.learner.pk, grader=request.user)
+        async_to_sync(Engagement.grade)(course_id=obj.course.pk, learner_id=obj.learner.pk, grader=request.user)
 
     def has_grade_permission(self, request: AuthenticatedRequest, object_id: str | int):
         return request.user.is_superuser

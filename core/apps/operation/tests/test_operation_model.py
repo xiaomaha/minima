@@ -57,6 +57,8 @@ def test_inquiry():
 def test_category_resource_import_data():
     Category.objects.all().delete()
 
+    # test xlsx import
+
     test_data = [["name", "ancestors"], ["root1", ""], ["root2", ""], ["sub1", "root1"], ["leaf1", "root1,sub1"]]
 
     wb = Workbook()

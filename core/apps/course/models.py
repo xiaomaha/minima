@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain
@@ -149,7 +150,7 @@ class Course(LearningObjectMixin):
         course = (
             await cls.objects
             .select_related("owner", "gradingpolicy", "honor_code")
-            .prefetch_related(
+            .prefetch_related(  # type: ignore
                 Prefetch(
                     "lesson_set",
                     queryset=Lesson.objects.order_by("start_offset").prefetch_related(
@@ -213,7 +214,7 @@ class Course(LearningObjectMixin):
         return (
             await cls.objects
             .select_related("owner")
-            .prefetch_related(
+            .prefetch_related(  # type: ignore
                 Prefetch("faq__faqitem_set", FAQItem.objects.filter(active=True).order_by("ordering")),
                 Prefetch("categories", Category.objects.order_by("id")),
                 Prefetch(
@@ -533,7 +534,7 @@ class Engagement(TimeStampedMixin):
         except IntegrityError:
             raise ValueError(ErrorCode.ALREADY_EXISTS)
 
-        engagement._state.fields_cache["gradebook"] = None
+        engagement._state.fields_cache["gradebook"] = None  # type: ignore
 
         return engagement
 
@@ -616,10 +617,10 @@ class Engagement(TimeStampedMixin):
 
         assessment_results = {}
         if assessment_criteria:
-            type_to_ids = {}
+            type_to_ids = defaultdict(list)
             for crit in assessment_criteria:
                 key = (crit["app_label"], crit["model"])
-                type_to_ids.setdefault(key, []).append(crit["item_id"])
+                type_to_ids[key].append(crit["item_id"])
 
             qs_list = []
             for (app_label, model_name), ids in type_to_ids.items():

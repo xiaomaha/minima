@@ -1,5 +1,3 @@
-from typing import TYPE_CHECKING, cast
-
 import mimesis
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -10,7 +8,7 @@ from factory.helpers import post_generation
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
-from apps.common.factory import lazy_thumbnail
+from apps.common.tests.factories import lazy_thumbnail
 from apps.competency.certificate import default_certificate_template
 from apps.competency.models import (
     Badge,
@@ -25,9 +23,7 @@ from apps.competency.models import (
     Factor,
     Skill,
 )
-
-if TYPE_CHECKING:
-    from django.contrib.auth.models import AbstractUser as User
+from apps.partner.tests.factories import PartnerFactory
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -37,7 +33,7 @@ class BadgeFactory(DjangoModelFactory[Badge]):
     description = FactoryField("sentence")
     image = LazyFunction(lazy_thumbnail)
     active = True
-    issuer = SubFactory("partner.tests.factories.PartnerFactory")
+    issuer = SubFactory(PartnerFactory)
 
     class Meta:
         model = Badge
@@ -65,12 +61,9 @@ class BadgeSkillFactory(DjangoModelFactory[BadgeSkill]):
         skip_postgeneration_save = True
 
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: BadgeSkill, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(BadgeSkill, self)
 
         factors = Factor.objects.filter(skill=self.skill)
         badge_factors = factors[: generic.random.randint(1, len(factors))]
@@ -82,7 +75,7 @@ class BadgeSkillFactory(DjangoModelFactory[BadgeSkill]):
 
 class BadgeEndorsementFactory(DjangoModelFactory[BadgeEndorsement]):
     badge = SubFactory(BadgeFactory)
-    partner = SubFactory("partner.tests.factories.PartnerFactory")
+    partner = SubFactory(PartnerFactory)
     claim = FactoryField("sentence")
     endorsed = LazyFunction(lambda: timezone.now())
 
@@ -111,28 +104,20 @@ class CertificateFactory(DjangoModelFactory[Certificate]):
     )
     template = LazyFunction(lambda: default_certificate_template())
     active = True
-    issuer = SubFactory("partner.tests.factories.PartnerFactory")
+    issuer = SubFactory(PartnerFactory)
 
     class Meta:
         model = Certificate
         django_get_or_create = ("name",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        pk: int
-
     @post_generation
-    def post_generation(self, create: bool, extracted: dict[str, User], **kwargs: object):
+    def post_generation(self, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
         CertificateSkillFactory.create_batch(generic.random.randint(1, 3), certificate=self)
         CertificateEndorsementFactory.create_batch(generic.random.randint(1, 2), certificate=self)
-
-        user = extracted["user"] if extracted and extracted["user"] else UserFactory()
-
-        if TYPE_CHECKING:
-            user = cast(User, user)
 
 
 class CertificateSkillFactory(DjangoModelFactory[CertificateSkill]):
@@ -146,12 +131,9 @@ class CertificateSkillFactory(DjangoModelFactory[CertificateSkill]):
         skip_postgeneration_save = True
 
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: CertificateSkill, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(CertificateSkill, self)
 
         factors = Factor.objects.filter(skill=self.skill)
         certificate_factors = factors[: generic.random.randint(1, len(factors))]
@@ -163,7 +145,7 @@ class CertificateSkillFactory(DjangoModelFactory[CertificateSkill]):
 
 class CertificateEndorsementFactory(DjangoModelFactory[CertificateEndorsement]):
     certificate = SubFactory(CertificateFactory)
-    partner = SubFactory("partner.tests.factories.PartnerFactory")
+    partner = SubFactory(PartnerFactory)
     claim = FactoryField("sentence")
     endorsed = LazyFunction(lambda: timezone.now())
 
@@ -184,11 +166,8 @@ class CompetencyGoalFactory(DjangoModelFactory[CompetencyGoal]):
         skip_postgeneration_save = True
 
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: CompetencyGoal, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(CompetencyGoal, self)
 
         self.factors.set(Factor.objects.filter(skill__classification=self.classification))

@@ -22,7 +22,7 @@ class Command(BaseCommand):
         partner, created = Partner.objects.get_or_create(
             name=settings.PLATFORM_NAME,
             defaults={
-                "description": _("%s is a platform for education.") % settings.PLATFORM_NAME,
+                "description": _("%s is a LMS for micro learning") % settings.PLATFORM_NAME,
                 "phone": settings.PLATFORM_PHONE_NUMBER,
                 "email": settings.DEFAULT_FROM_EMAIL,
                 "address": settings.PLATFORM_ADDRESS,

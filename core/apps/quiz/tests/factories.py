@@ -1,28 +1,23 @@
-from typing import TYPE_CHECKING, cast
-
 import mimesis
 from asgiref.sync import async_to_sync
 from django.conf import settings
-from django.db.models import QuerySet
 from django.utils import timezone
 from factory.declarations import LazyAttribute, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
 
-from apps.common.factory import GradeFieldFactory, LearningObjectFactory, dummy_html
+from apps.account.tests.factories import UserFactory
+from apps.common.tests.factories import GradeFieldFactory, LearningObjectFactory, dummy_html
 from apps.quiz.models import Attempt, Grade, Question, QuestionPool, Quiz, Solution, Submission
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
-
-if TYPE_CHECKING:
-    from django.db.models.fields.related_descriptors import ManyRelatedManager
 
 
 class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
     title = FactoryField("text.title")
     description = FactoryField("text")
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
     select_count = FactoryField("choice", items=[3, 5])
 
     class Meta:
@@ -30,16 +25,10 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         django_get_or_create = ("title",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        question_set: QuerySet[Question]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: QuestionPool, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(QuestionPool, self)
 
         if self.question_set.exists():
             return
@@ -83,7 +72,7 @@ class QuizFactory(LearningObjectFactory[Quiz]):
     max_attempts = FactoryField("choice", items=[1, 5, 0])  # 0 means unlimited
     verification_required = False
 
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
     question_pool = SubFactory(QuestionPoolFactory)
 
     class Meta:
@@ -101,7 +90,7 @@ class QuizFactory(LearningObjectFactory[Quiz]):
 
 class AttemptFactory(DjangoModelFactory[Attempt]):
     quiz = SubFactory(QuizFactory)
-    learner = SubFactory("account.tests.factories.UserFactory")
+    learner = SubFactory(UserFactory)
     started = LazyFunction(lambda: timezone.now())
     active = True
 
@@ -110,16 +99,10 @@ class AttemptFactory(DjangoModelFactory[Attempt]):
         django_get_or_create = ("quiz", "learner")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        questions: ManyRelatedManager
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: Attempt, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(Attempt, self)
 
         self.questions.set(async_to_sync(self.quiz.question_pool.select_questions)())
 
@@ -135,11 +118,8 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
         skip_postgeneration_save = True
 
     @lazy_attribute
-    def answers(self):
+    def answers(self: Submission):
         # cunning paper
-
-        if TYPE_CHECKING:
-            self = cast(Submission, self)
 
         cunning_paper = Question.objects.select_related("solution").filter(
             id__in=self.attempt.questions.values_list("id", flat=True)

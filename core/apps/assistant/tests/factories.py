@@ -6,6 +6,7 @@ from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
 
+from apps.account.tests.factories import UserFactory
 from apps.assistant.models import AssistantBot, AssistantNote, Chat, ChatMessage
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
@@ -23,7 +24,7 @@ class AssistantBotFactory(DjangoModelFactory[AssistantBot]):
 
 
 class AssistantNoteFactory(DjangoModelFactory[AssistantNote]):
-    user = SubFactory("apps.account.tests.factories.UserFactory")
+    user = SubFactory(UserFactory)
 
     class Meta:
         model = AssistantNote
@@ -45,7 +46,7 @@ notes: {generic.text.text(quantity=generic.random.randint(1, 2))}
 
 
 class ChatFactory(DjangoModelFactory[Chat]):
-    user = SubFactory("apps.account.tests.factories.UserFactory")
+    user = SubFactory(UserFactory)
     title = LazyFunction(lambda: generic.text.text()[:50])
     active = True
 
@@ -96,14 +97,14 @@ class ChatMessageFactory(DjangoModelFactory[ChatMessage]):
         return None
 
     @lazy_attribute
-    def input_tokens(self):
+    def input_tokens(self: ChatMessage):
         if self.completed:
             message_length = len(self.message)
             return int(message_length / 4)
         return None
 
     @lazy_attribute
-    def output_tokens(self):
+    def output_tokens(self: ChatMessage):
         if self.completed:
             response_length = len(self.response)
             return int(response_length / 4)

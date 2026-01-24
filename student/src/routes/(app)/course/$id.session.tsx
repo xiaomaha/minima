@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/solid-router'
-import { createEffect, createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
+import { createEffect, createRoot, createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
 import { courseV1GetSession } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -18,6 +18,11 @@ export const Route = createFileRoute('/(app)/course/$id/session')({
   wrapInSuspense: true,
 })
 
+const { activeTab, setActiveTab } = createRoot(() => {
+  const [activeTab, setActiveTab] = createSignal()
+  return { activeTab, setActiveTab }
+})
+
 export default function RouteComponent() {
   const { t } = useTranslation()
   const params = Route.useParams()
@@ -33,10 +38,8 @@ export default function RouteComponent() {
 
   const s = () => store[0].data
 
-  const [activeTab, setActiveTab] = createSignal<string>()
-
   createEffect(() => {
-    if (s()) {
+    if (s() && !activeTab()) {
       setActiveTab(s()!.engagement ? 'outline' : 'starting')
     }
   })
@@ -76,7 +79,7 @@ export default function RouteComponent() {
               <SessionProvider value={store}>
                 <Switch>
                   <Match when={activeTab() === 'starting'}>
-                    <GettingStarted />
+                    <GettingStarted setActiveTab={setActiveTab} />
                   </Match>
                   <Match when={activeTab() === 'outline'}>
                     <Outline />
@@ -91,7 +94,13 @@ export default function RouteComponent() {
                     <Comment />
                   </Match>
                   <Match when={activeTab() === 'inquiry'}>
-                    <Inquiry appLabel="course" model="course" contentId={s().course.id} disabled={!s().engagement} />
+                    <Inquiry
+                      appLabel="course"
+                      model="course"
+                      contentId={s().course.id}
+                      disabled={!s().engagement}
+                      setRefreshHandler={() => {}}
+                    />
                   </Match>
                   <Match when={activeTab() === 'detail'}>
                     <CourseDetail />

@@ -1,10 +1,11 @@
 import itertools
 from datetime import timedelta
-from typing import Type
 
 import mimesis
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ImproperlyConfigured
+from django.db.models import Model
 from django.utils import timezone
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
@@ -13,36 +14,41 @@ from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
 from apps.assignment.models import Assignment
+from apps.assignment.tests.factories import AssignmentFactory
+from apps.common.tests.factories import lazy_thumbnail
 from apps.content.models import Media
+from apps.content.tests.factories import MediaFactory
 from apps.course.models import Course
+from apps.course.tests.factories import CourseFactory
 from apps.discussion.models import Discussion
+from apps.discussion.tests.factories import DiscussionFactory
 from apps.exam.models import Exam
-from apps.learning.models import ENROLLABLE_MODELS, Catalog, CatalogItem, Enrollment, UserCatalog
+from apps.exam.tests.factories import ExamFactory
+from apps.learning.models import ENROLLABLE_MODELS, Catalog, CatalogItem, CohortCatalog, Enrollment, UserCatalog
+from apps.partner.tests.factories import CohortFactory
 from apps.quiz.models import Quiz
+from apps.quiz.tests.factories import QuizFactory
 from apps.survey.models import Survey
+from apps.survey.tests.factories import SurveyFactory
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
-ENROLLABLE_FACTORY_MAP: dict[Type, str] = {
-    Course: "apps.course.tests.factories.CourseFactory",
-    Media: "apps.content.tests.factories.MediaFactory",
-    Exam: "apps.exam.tests.factories.ExamFactory",
-    Assignment: "apps.assignment.tests.factories.AssignmentFactory",
-    Discussion: "apps.discussion.tests.factories.DiscussionFactory",
-    Survey: "apps.survey.tests.factories.SurveyFactory",
-    Quiz: "apps.quiz.tests.factories.QuizFactory",
+ENROLLABLE_FACTORY_MAP: dict[type[Model], type[DjangoModelFactory]] = {
+    Course: CourseFactory,
+    Media: MediaFactory,
+    Exam: ExamFactory,
+    Assignment: AssignmentFactory,
+    Discussion: DiscussionFactory,
+    Survey: SurveyFactory,
+    Quiz: QuizFactory,
 }
 
 
-def get_content_type_cycle():
-    return itertools.cycle(ENROLLABLE_MODELS)
-
-
-CONTENT_TYPE_MODEL_CYCLE = get_content_type_cycle()
+CONTENT_TYPE_MODEL_CYCLE = itertools.cycle(ENROLLABLE_MODELS)
 
 
 class EnrollmentFactory(DjangoModelFactory[Enrollment]):
-    user = SubFactory("account.tests.factories.UserFactory")
+    user = SubFactory(UserFactory)
     active = True
     start = LazyFunction(timezone.now)
     end = LazyAttribute(lambda o: o.start + timedelta(days=30))
@@ -59,16 +65,13 @@ class EnrollmentFactory(DjangoModelFactory[Enrollment]):
         return ContentType.objects.get_for_model(M)
 
     @lazy_attribute
-    def content_id(self):
+    def content_id(self: Enrollment):
         ContentClass = self.content_type.model_class()
-        instance = ContentClass.objects.first()
+        if not ContentClass:
+            raise ImproperlyConfigured("No content class found for content type")
 
-        if not instance:
-            factory_path = ENROLLABLE_FACTORY_MAP[ContentClass]
-            module_path, class_name = factory_path.rsplit(".", 1)
-            module = __import__(module_path, fromlist=[class_name])
-            FactoryClass = getattr(module, class_name)
-            instance = FactoryClass.create()
+        FactoryClass = ENROLLABLE_FACTORY_MAP[ContentClass]
+        instance = FactoryClass.create()
 
         return instance.pk
 
@@ -76,6 +79,7 @@ class EnrollmentFactory(DjangoModelFactory[Enrollment]):
 class CatalogFactory(DjangoModelFactory[Catalog]):
     name = FactoryField("text.title")
     description = FactoryField("text")
+    thumbnail = LazyFunction(lazy_thumbnail)
     active = True
     public = Iterator([True, False])
     available_from = LazyFunction(lambda: timezone.now())
@@ -88,10 +92,10 @@ class CatalogFactory(DjangoModelFactory[Catalog]):
 
     @post_generation
     def post_generation(self, create: bool, extracted: object, **kwargs: object):
-        if not create:
+        if not create or extracted is False:
             return
 
-        CatalogItemFactory.create_batch(size=10, catalog=self)
+        CatalogItemFactory.create_batch(size=7, catalog=self)
 
 
 class CatalogItemFactory(DjangoModelFactory[CatalogItem]):
@@ -108,16 +112,13 @@ class CatalogItemFactory(DjangoModelFactory[CatalogItem]):
         return ContentType.objects.get_for_model(M)
 
     @lazy_attribute
-    def content_id(self):
+    def content_id(self: CatalogItem):
         ContentClass = self.content_type.model_class()
-        instance = ContentClass.objects.order_by("?").first()
+        if not ContentClass:
+            raise ImproperlyConfigured("No content class found for content type")
 
-        if not instance:
-            factory_path = ENROLLABLE_FACTORY_MAP[ContentClass]
-            module_path, class_name = factory_path.rsplit(".", 1)
-            module = __import__(module_path, fromlist=[class_name])
-            FactoryClass = getattr(module, class_name)
-            instance = FactoryClass.create()
+        FactoryClass = ENROLLABLE_FACTORY_MAP[ContentClass]
+        instance = FactoryClass.create()
 
         return instance.pk
 
@@ -131,3 +132,14 @@ class UserCatalogFactory(DjangoModelFactory[UserCatalog]):
     class Meta:
         model = UserCatalog
         django_get_or_create = ("user", "catalog")
+
+
+class CohortCatalogFactory(DjangoModelFactory[CohortCatalog]):
+    cohort = SubFactory(CohortFactory)
+    catalog = SubFactory(CatalogFactory)
+    granted_by = SubFactory(UserFactory)
+    note = FactoryField("text", quantity=generic.random.randint(1, 3))
+
+    class Meta:
+        model = CohortCatalog
+        django_get_or_create = ("cohort", "catalog")

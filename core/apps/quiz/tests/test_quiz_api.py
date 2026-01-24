@@ -1,5 +1,4 @@
 import json
-from typing import cast
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
@@ -17,7 +16,7 @@ from conftest import AdminUser
 def test_quiz_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     admin_user.login()
 
-    quiz = cast(Quiz, QuizFactory(max_attempts=2))
+    quiz: Quiz = QuizFactory(max_attempts=2)
     EnrollmentFactory(
         content_type=ContentType.objects.get_for_model(quiz), content_id=quiz.id, active=True, user_id=admin_user.id
     )
