@@ -6,6 +6,7 @@ import pghistory
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from django.core.files import File
 from django.db import IntegrityError
 from django.db.models import (
     CASCADE,
@@ -26,14 +27,29 @@ from django.db.models import (
     UniqueConstraint,
 )
 from django.utils import timezone
+from django.utils.translation import get_language_info
 from django.utils.translation import gettext_lazy as _
 
+from apps.assistant.plugin.quiz import QuizMaker
 from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, LearningSessionStep, ScoreStatsDict, get_score_stats
 from apps.quiz.trigger import attempt_retry_count
 
 User = get_user_model()
+
+
+class QuestionData(TypedDict):
+    question: str
+    options: list[str]
+    correct_answer: int
+    explanation: str
+    supplement: NotRequired[str]
+    point: NotRequired[int]
+
+
+class QuizData(TypedDict):
+    questions: list[QuestionData]
 
 
 class SessionDict(TypedDict):
@@ -46,6 +62,9 @@ class SessionDict(TypedDict):
     solutions: NotRequired[dict[str, Solution]]
     analysis: NotRequired[dict[str, dict[str, int]]]
     stats: NotRequired[ScoreStatsDict]
+
+
+QUIZ_SELECT_COUNT = 10
 
 
 @pghistory.track()
@@ -147,6 +166,66 @@ class Quiz(LearningObjectMixin):
         from apps.quiz.documents import SubmissionDocument
 
         return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
+
+    @classmethod
+    async def create_quiz_set(
+        cls,
+        *,
+        title: str,
+        description: str,
+        audience: str,
+        thumbnail: File,
+        owner_id: str,
+        text: str,
+        question_count: int,
+        lang_code: str,
+    ):
+        quiz_data = await QuizMaker().create_quiz_from_text(
+            text=text,
+            title=title,
+            description=description,
+            question_count=question_count,
+            language=get_language_info(lang_code)["name"],
+        )
+
+        # question pool
+        pool = await QuestionPool.objects.acreate(
+            title=title, owner_id=owner_id, select_count=min(len(quiz_data["questions"]), QUIZ_SELECT_COUNT)
+        )
+
+        # questions
+        questions = [
+            Question(
+                pool=pool,
+                question=question_data["question"],
+                supplement=question_data.get("supplement") or "",
+                options=question_data["options"],
+                point=question_data.get("point") or 1,
+            )
+            for question_data in quiz_data["questions"]
+        ]
+        questions = await Question.objects.abulk_create(questions)
+
+        # solutions
+        solutions = [
+            Solution(
+                question=question,
+                correct_answers=[str(question_data["correct_answer"] + 1)],
+                explanation=question_data["explanation"],
+            )
+            for question, question_data in zip(questions, quiz_data["questions"])
+        ]
+        await Solution.objects.abulk_create(solutions)
+
+        # quiz
+        return await Quiz.objects.acreate(
+            owner_id=owner_id,
+            question_pool=pool,
+            title=title,
+            description=description,
+            audience=audience,
+            thumbnail=thumbnail,
+        )
 
 
 @pghistory.track()

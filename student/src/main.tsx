@@ -1,5 +1,4 @@
 import { createRouter, RouterProvider } from '@tanstack/solid-router'
-import ky from 'ky'
 import { render } from 'solid-js/web'
 import { routeTree } from './routeTree.gen'
 import './styles.css'
@@ -7,9 +6,6 @@ import { client } from './api/client.gen'
 import { accessContextParam } from './context'
 import { getUserLanguage } from './routes/(app)/account/-store'
 import { handleApiError } from './shared/error'
-
-// error
-client.interceptors.error.use(handleApiError)
 
 const router = createRouter({
   routeTree,
@@ -23,19 +19,14 @@ const router = createRouter({
   },
 })
 
-router.subscribe('onResolved', () => {
-  const userLang = getUserLanguage() || navigator.language
+// error
+client.instance.interceptors.response.use((res) => res, handleApiError)
 
-  client.setConfig({
-    ky: ky.create({
-      // permission context
-      searchParams: accessContextParam(),
-      // set language
-      headers: {
-        'Accept-Language': userLang,
-      },
-    }),
-  })
+client.instance.interceptors.request.use((config) => {
+  // attach permission context
+  config.params = { ...config.params, ...accessContextParam() }
+  config.headers.set('Accept-Language', getUserLanguage() || navigator.language)
+  return config
 })
 
 declare module '@tanstack/solid-router' {

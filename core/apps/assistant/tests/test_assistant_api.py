@@ -5,7 +5,7 @@ from django.test.client import Client
 from django.utils import timezone
 from mimesis.providers.generic import Generic
 
-from apps.assistant.models import AssistantBot, ChatMessage
+from apps.assistant.models import ChatMessage
 from conftest import AdminUser, parse_sse
 
 
@@ -13,8 +13,6 @@ from conftest import AdminUser, parse_sse
 @pytest.mark.django_db
 def test_assistant_flow(client: Client, admin_user: AdminUser, mimesis: Generic, monkeypatch):
     admin_user.login()
-
-    AssistantBot.objects.get_or_create(name="Assisttant")
 
     async def fake_execute_stream(self, message: ChatMessage, user_id: str):
         yield json.dumps({"id": message.pk, "message": message.message})
@@ -27,7 +25,7 @@ def test_assistant_flow(client: Client, admin_user: AdminUser, mimesis: Generic,
 
         yield json.dumps({"done": True})
 
-    monkeypatch.setattr("apps.assistant.plugin.assistant.AssistantPlugin.execute_stream", fake_execute_stream)
+    monkeypatch.setattr("apps.assistant.plugin.chat.AIChat.stream_message", fake_execute_stream)
 
     res = client.post("/api/v1/assistant/note", data=json.dumps({"note": ""}), content_type="application/json")
     assert res.status_code == 200, "save note"

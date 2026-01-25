@@ -1,10 +1,15 @@
 import logging
+import re
 from datetime import date, datetime, time, timedelta
+from io import StringIO
 from typing import TYPE_CHECKING, Literal, Sequence, TypedDict
 
 import pghistory
+import webvtt
 from asgiref.sync import sync_to_async
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.db import connection
 from django.db.backends.base.base import BaseDatabaseWrapper
@@ -16,6 +21,7 @@ from django.db.models import (
     Count,
     DateTimeField,
     DurationField,
+    Exists,
     F,
     Field,
     FloatField,
@@ -23,8 +29,12 @@ from django.db.models import (
     Func,
     ImageField,
     Index,
+    IntegerField,
+    ManyToManyField,
     Model,
     OneToOneField,
+    OuterRef,
+    Prefetch,
     TextChoices,
     TextField,
     UniqueConstraint,
@@ -35,10 +45,13 @@ from django.db.models import (
 from django.db.models.functions import Replace
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from webvtt.errors import MalformedFileError
 
+from apps.common.error import ErrorCode
 from apps.common.models import LearningObjectMixin, TimeStampedMixin
 from apps.common.util import offset_paginate
 from apps.operation.models import AttachmentMixin
+from apps.quiz.models import Quiz
 
 User = get_user_model()
 
@@ -75,6 +88,7 @@ class Media(LearningObjectMixin):
     channel = CharField(_("Channel"), max_length=255, blank=True, default="")
     uploaded = BooleanField(_("Uploaded"), default=False)
     url = URLField(_("URL"), max_length=500, unique=True)
+    quizzes = ManyToManyField(Quiz, blank=True, verbose_name=_("Quizzes"))
 
     class Meta(LearningObjectMixin.Meta):
         verbose_name = _("Media")
@@ -84,6 +98,7 @@ class Media(LearningObjectMixin):
         pk: str
         subtitle_set: "list[Subtitle]"
         matched_lines: list[MatchedLineDict] | None
+        owner_id: str
 
     @property
     def duration_seconds(self):
@@ -101,11 +116,27 @@ class Media(LearningObjectMixin):
         )
 
     @classmethod
+    async def get_media(cls, id: str):
+        return (
+            await cls.objects
+            .prefetch_related(
+                Prefetch(
+                    "quizzes",
+                    queryset=Quiz.objects.annotate(question_count=F("question_pool__select_count")).only(
+                        "id", "title", "description", "passing_point"
+                    ),
+                )
+            )
+            .annotate(subtitle_count=Count("subtitle"))
+            .select_related("owner")
+            .aget(id=id)
+        )
+
+    @classmethod
     async def search(cls, *, q: str, page: int, size: int, filter: Literal["public", "all"]):
         from apps.content.documents import document_search
 
-        qs = cls.annotate_accessible().annotate(subtitle_count=Count("subtitle")).select_related("owner")
-
+        qs = cls.annotate_accessible().select_related("owner")
         if filter == "public":
             qs = qs.filter(publicaccessmedia__start__lte=timezone.now(), publicaccessmedia__archive__gte=timezone.now())
 
@@ -127,6 +158,57 @@ class Media(LearningObjectMixin):
             media.matched_lines = searched["lines"][media.pk] if searched else None
 
         return paginated
+
+    MIN_QUESTIONS = 5
+    MAX_QUESTIONS = 30
+    MINUTES_PER_QUESTION = 3
+
+    async def create_quiz(self, *, lang_code: str = settings.DEFAULT_LANGUAGE):
+        subtitle = (
+            await Subtitle.objects
+            .annotate(quiz_exist=Exists(Media.quizzes.through.objects.filter(media_id=OuterRef("media_id"))))
+            .select_related("media")
+            .filter(media_id=self.pk)
+            .order_by(Case(When(lang=lang_code, then=Value(0)), default=Value(1), output_field=IntegerField()))
+            .afirst()
+        )
+
+        if not subtitle:
+            raise ValidationError(_("No subtitle found"))
+
+        if subtitle.quiz_exist:
+            raise ValidationError(_("Quiz already exists"))
+
+        text = subtitle.get_plain_text()
+        if not text or len(text) < 300:
+            raise ValidationError(_("Insufficient subtitle content for quiz"))
+
+        media = subtitle.media
+
+        def _calculate_question_count(duration: timedelta) -> int:
+            total_minutes = int(duration.total_seconds() / 60)
+            count = total_minutes // self.MINUTES_PER_QUESTION
+            return max(self.MIN_QUESTIONS, min(count, self.MAX_QUESTIONS))
+
+        quiz = await Quiz.create_quiz_set(
+            title=media.title,
+            description=media.description,
+            audience=media.audience,
+            thumbnail=media.thumbnail,
+            owner_id=media.owner_id,
+            text=subtitle.get_plain_text(),
+            question_count=_calculate_question_count(media.duration),
+            lang_code=lang_code,
+        )
+
+        await self.quizzes.aadd(quiz)
+
+    @classmethod
+    async def content_inline_access(cls, *, media_id: str, content_id: str, app_label: str, model: str):
+        if app_label == Quiz._meta.app_label and model == Quiz._meta.model.__name__.lower():
+            if await cls.objects.filter(id=media_id, quizzes__id=content_id).aexists():
+                return
+        raise ValueError(ErrorCode.CONTENT_NOT_AVAILABLE)
 
 
 @pghistory.track()
@@ -156,6 +238,47 @@ class Subtitle(Model):
         constraints = [UniqueConstraint(fields=["media", "lang"], name="content_subtitle_me_la_uniq")]
         verbose_name = _("Subtitle")
         verbose_name_plural = _("Subtitles")
+
+    if TYPE_CHECKING:
+        quiz_exist: bool  # annotated
+
+    def clean_body(self):
+        if not (body := self.body.strip()):
+            return body
+
+        f = StringIO(body)
+        for fmt in ["vtt", "srt", "sbv"]:
+            try:
+                captions = webvtt.from_buffer(f, format=fmt)
+                return captions.content
+            except MalformedFileError:
+                f.seek(0)
+
+        raise ValidationError(_("Invalid subtitle format"))
+
+    def get_plain_text(self):
+        lines = self.body.split("\n")
+        text_lines = []
+
+        for line in lines:
+            line = line.strip()
+
+            if not line:
+                continue
+            if line.startswith("WEBVTT"):
+                continue
+            if "-->" in line:
+                continue
+            if re.match(r"^\d+$", line):
+                continue
+
+            line = re.sub(r"<[^>]+>", "", line)
+            line = re.sub(r"\s+", " ", line)
+
+            if line and line not in text_lines[-3:]:
+                text_lines.append(line)
+
+        return "\n".join(text_lines)
 
 
 @pghistory.track(exclude=["last_position"])

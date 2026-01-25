@@ -1,4 +1,4 @@
-import { IconChevronLeft, IconHelpCircle } from '@tabler/icons-solidjs'
+import { IconHelpCircle } from '@tabler/icons-solidjs'
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/solid-router'
 import { Show, Suspense } from 'solid-js'
 import { type SurveySchema, surveyV1GetAnonymousSurvey, surveyV1GetSurvey } from '@/api'
@@ -7,6 +7,7 @@ import { Avatar } from '@/shared/Avatar'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
+import { WindowButton } from '@/shared/WindowButtion'
 import { SurveyForm } from './-SurveyForm'
 
 export const Route = createFileRoute('/(public)/survey/$id')({
@@ -14,6 +15,7 @@ export const Route = createFileRoute('/(public)/survey/$id')({
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const params = Route.useParams()
   const canGoBack = useCanGoBack()
   const router = useRouter()
@@ -30,11 +32,7 @@ function RouteComponent() {
   )
 
   const handleBack = () => {
-    if (canGoBack()) {
-      router.history.back()
-    } else {
-      router.navigate({ to: '/dashboard' })
-    }
+    router.history.back()
   }
 
   return (
@@ -50,9 +48,14 @@ function RouteComponent() {
             </div>
             <div class="relative h-full w-full p-2 sm:p-8">
               <div class="card p-4 mx-auto max-w-200 shadow-xs bg-base-100 rounded-3xl">
-                <button type="button" class="btn btn-ghost btn-circle absolute right-4 top-4" onClick={handleBack}>
-                  <IconChevronLeft />
-                </button>
+                <Show when={canGoBack()}>
+                  <WindowButton
+                    title={t('Close')}
+                    colorClass="text-rose-500"
+                    onClick={handleBack}
+                    class="absolute top-4 right-4 cursor-pointer"
+                  />
+                </Show>
                 <div class="card-body">
                   <div class="card-title text-2xl mb-2">{s().title}</div>
                   <p class="label">{s().description}</p>

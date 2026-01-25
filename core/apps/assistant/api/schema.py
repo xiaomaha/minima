@@ -11,19 +11,12 @@ class AssistantNoteSaveSchema(Schema):
     note: str
 
 
-class AssistantBotSchema(Schema):
-    name: str
-    description: str
-    avatar: str | None
-
-
 class ChatSchema(Schema):
     id: int
     title: str
     active: bool
     message_count: int
     last_message: datetime | None
-    bot: AssistantBotSchema
 
 
 class ChatListSchema(Schema):
@@ -35,7 +28,6 @@ class ChatMessageCreateSchema(Schema):
     message: str
     url: str
     chat_id: int | None = None
-    bot_id: int | None = None
 
 
 class ChatMessageSchema(Schema):

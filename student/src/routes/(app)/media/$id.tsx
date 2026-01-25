@@ -1,7 +1,8 @@
 import { createMediaQuery } from '@solid-primitives/media'
 import { createElementSize } from '@solid-primitives/resize-observer'
+import { IconChevronRight } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
-import { createSignal, Match, Show, Suspense, Switch } from 'solid-js'
+import { createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
 import * as v from 'valibot'
 import { contentV1GetMedia, type MediaSchema } from '@/api'
 import { accessContextParam } from '@/context'
@@ -13,6 +14,8 @@ import { createResizable } from '@/shared/resizable'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { VideoPlayer } from '@/shared/VideoPlayer'
+import { ProgressBar } from '../-shared/ProgressBar'
+import { QuizDialog } from '../-shared/quiz/QuizDialog'
 import { Thread } from '../-shared/thread/Thread'
 import { Note } from './-media/Note'
 import { Subtitle } from './-media/Subtitle'
@@ -31,6 +34,9 @@ interface MediaPlayerAPI {
   jumpToTime: (time: number) => void
   onTimeUpdate: (callback: (time: number) => void) => void
   duration: () => number
+  play: () => void
+  pause: () => void
+  isPlaying: () => boolean
 }
 
 function RouteComponent() {
@@ -142,8 +148,72 @@ function RouteComponent() {
           <Note mediaId={params().id} height={((size.width ?? 0) * 9) / 16 + noteResizable.heightOffset()} />
           <noteResizable.Handle maxHeight={size.height ?? 0} />
         </div>
+
+        <Show when={media.data?.quizzes.length}>
+          <Quizzes quizzes={media.data!.quizzes!} player={mediaAPI()} mediaId={params().id} />
+        </Show>
       </div>
     </div>
+  )
+}
+
+interface QuizzesProps {
+  quizzes: MediaSchema['quizzes']
+  player: MediaPlayerAPI | undefined
+  mediaId: string
+}
+
+const Quizzes = (props: QuizzesProps) => {
+  const { t } = useTranslation()
+  const [activeQuiz, setActiveQuiz] = createSignal<string>()
+
+  let wasPlaying = false
+
+  const handleOpen = (quizId: string) => {
+    wasPlaying = props.player?.isPlaying() ?? false
+    setActiveQuiz(quizId)
+    props.player?.pause()
+  }
+
+  const handleClose = () => {
+    setActiveQuiz(undefined)
+    if (wasPlaying) props.player?.play()
+  }
+
+  return (
+    <For each={props.quizzes}>
+      {(quiz, i) => (
+        <>
+          <div class="card shadow-md relative overflow-hidden cursor-pointer" onclick={() => handleOpen(quiz.id)}>
+            <div class="flex justify-between items-center gap-4">
+              <div class="card-body">
+                <div class="space-x-4 flex items-center">
+                  <div class="badge badge-neutral">{t('Quiz {{num}}', { num: i() + 1 })}</div>
+                  <div class="label flex-1 flex justify-between">
+                    {t('{{count}} Question', { count: quiz.questionCount })}
+                  </div>
+                </div>
+                <div class="card-title text-lg/snug">{quiz.title}</div>
+              </div>
+              <IconChevronRight class="m-4" />
+            </div>
+            <ProgressBar
+              contentId={quiz.id}
+              passingPoint={quiz.passingPoint}
+              class="absolute bottom-0 left-0 w-full h-1.25 rounded-none"
+            />
+          </div>
+          <Show when={activeQuiz() === quiz.id}>
+            <QuizDialog
+              id={quiz.id}
+              open={!!activeQuiz()}
+              onClose={() => handleClose()}
+              inlineContext={{ media: props.mediaId }}
+            />
+          </Show>
+        </>
+      )}
+    </For>
   )
 }
 

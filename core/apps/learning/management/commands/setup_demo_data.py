@@ -72,7 +72,7 @@ class Command(BaseCommand):
         remains = len(_REAL_DATA) - Media.objects.filter(format=Media.FormatChoices.VIDEO).count()
         if remains > 0:
             new_medias = MediaFactory.create_batch(
-                size=remains, format=Media.FormatChoices.VIDEO, post_generation=False
+                size=remains, format=Media.FormatChoices.VIDEO, owner=test_user, post_generation=False
             )
 
             start = timezone.now()

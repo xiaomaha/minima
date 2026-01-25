@@ -25,7 +25,7 @@ export const MessageList = () => {
     }
   }
 
-  const { activeChat, chatMessageStore } = useChatContext()
+  const { chatMessageStore } = useChatContext()
   const [chatMessages, setObserverRef] = chatMessageStore
   const messageLength = () => chatMessages.items.length
 
@@ -45,9 +45,7 @@ export const MessageList = () => {
       >
         <div ref={bottomSentinel} class="w-full shrink-0" />
         <div class="max-w-5xl w-full mx-auto flex flex-col-reverse">
-          <For each={chatMessages.items}>
-            {(item, i) => <Message message={item} i={messageLength() - i()} bot={activeChat()?.bot} />}
-          </For>
+          <For each={chatMessages.items}>{(item, i) => <Message message={item} i={messageLength() - i()} />}</For>
 
           <Show when={!chatMessages.end}>
             <div ref={setObserverRef} class="flex justify-center py-8">

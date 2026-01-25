@@ -12,6 +12,13 @@ MediaFormat = Literal["video", "short", "ebook", "html", "pdf"]
 
 
 class MediaSchema(LearningObjectMixinSchema):
+    class QuizSchema(Schema):
+        id: str
+        title: str
+        description: str
+        question_count: int
+        passing_point: int
+
     id: str
     thumbnail: str
     duration_seconds: float
@@ -22,6 +29,7 @@ class MediaSchema(LearningObjectMixinSchema):
     format: MediaFormat
     uploaded: bool
     url: str
+    quizzes: list[QuizSchema]
 
 
 class SubtitleSchema(Schema):
@@ -81,10 +89,18 @@ class NoteSaveSchema(Schema):
     note: Annotated[str, Field(..., max_length=10000)]
 
 
-class SearchedMediaSchema(MediaSchema):
+class SearchedMediaSchema(LearningObjectMixinSchema):
     class MatchedLineSchema(Schema):
         start: str
         line: str
+
+    id: str
+    thumbnail: str
+    duration_seconds: float
+    owner: OwnerSchema
+    format: MediaFormat
+    uploaded: bool
+    url: str
 
     accessible: bool
     matched_lines: list[MatchedLineSchema] | None

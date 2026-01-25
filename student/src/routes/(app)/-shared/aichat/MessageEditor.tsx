@@ -1,9 +1,8 @@
 import { createForm, reset, valiForm } from '@modular-forms/solid'
 import { IconPlus, IconSettings, IconX } from '@tabler/icons-solidjs'
 import { createSignal, onMount, Show } from 'solid-js'
-import { Transition } from 'solid-transition-group'
 import type * as v from 'valibot'
-import { assistantV1CreateChatMessage, type ChatMessageSchema, type ChatSchema } from '@/api'
+import { assistantV1ChatMessage, type ChatMessageSchema, type ChatSchema } from '@/api'
 import { vChatMessageCreateSchema } from '@/api/valibot.gen'
 import { AI_CHAT_MAX_CHARACTERS, AI_CHAT_MIN_CHARACTERS, ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from '@/config'
 import { SubmitButton } from '@/shared/SubmitButton'
@@ -13,14 +12,12 @@ import { showToast } from '@/shared/toast/store'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../editor/TextEditor'
 import { useChatContext } from './context'
-import { Message } from './Message'
 import { Settings } from './Settings'
 
 export const MessageEditor = () => {
   const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
   const [isStreaming, setIsStreaming] = createSignal(false)
-  const [streamMessage, setStreamMessage] = createSignal<ChatMessageSchema | null>(null)
   const [abortController, setAbortController] = createSignal<AbortController | null>(null)
 
   const [chatForm, { Form, Field }] = createForm<v.InferInput<typeof vChatMessageCreateSchema>>({
@@ -32,22 +29,6 @@ export const MessageEditor = () => {
   const [, , { setStore: setChatMessages }] = chatMessageStore
   const [, { setStore: setChatList }] = chatListStore
 
-  const flushMessage = (chatId: number, completed?: string) => {
-    if (!streamMessage()) return
-
-    // new chat message
-    setChatMessages('items', (prev) => [{ ...streamMessage()!, completed: completed ?? null }, ...prev])
-    setStreamMessage(null)
-
-    // update chat list
-    setChatList(
-      'data',
-      'chats',
-      (prev) => prev.id === chatId,
-      (prev) => prev && { ...prev, messageCount: prev.messageCount + 1 },
-    )
-  }
-
   const onSubmit = async ({ message }: v.InferInput<typeof vChatMessageCreateSchema>) => {
     if (isStreaming()) return
     setIsStreaming(true)
@@ -56,7 +37,7 @@ export const MessageEditor = () => {
     setAbortController(controller)
 
     // sse stream
-    const { stream } = await assistantV1CreateChatMessage({
+    const { stream } = await assistantV1ChatMessage({
       body: { message, url: location.pathname + location.search, files: files(), chatId: activeChat()?.id },
       signal: controller.signal,
 
@@ -91,14 +72,24 @@ export const MessageEditor = () => {
         if (!chatId) return
 
         if (event === 'message') {
-          setStreamMessage(data as ChatMessageSchema)
+          setChatMessages('items', (prev) => [data as ChatMessageSchema, ...prev])
           resetEditor()
         } else if (event === 'chunk') {
-          setStreamMessage(
-            (prev) => prev && { ...prev, response: prev.response + (data as { response: string }).response },
-          )
+          setChatMessages('items', 0, 'response', (prev) => prev + (data as { response: string }).response)
         } else if (event === 'done') {
-          flushMessage(chatId, (data as { completed: string }).completed)
+          setChatMessages(
+            'items',
+            (item) => item.id === (data as { id: number }).id,
+            'completed',
+            (data as { completed: string }).completed,
+          )
+          // update chat list
+          setChatList(
+            'data',
+            'chats',
+            (prev) => prev.id === chatId,
+            (prev) => prev && { ...prev, messageCount: prev.messageCount + 1 },
+          )
         }
       },
     })
@@ -113,9 +104,6 @@ export const MessageEditor = () => {
 
   const stopStreaming = () => {
     abortController()?.abort()
-
-    const chatId = activeChat()?.id
-    if (chatId) flushMessage(chatId)
   }
 
   const resetEditor = () => {
@@ -142,37 +130,18 @@ export const MessageEditor = () => {
 
   let formRef: HTMLFormElement | undefined
 
-  // cf. MessageList py-4
-  const streadmFixingPosition = 'mb-4 -mt-4'
-
   return (
     <>
-      <Transition
-        onEnter={(el, done) => {
-          const a = el.animate(
-            [
-              { opacity: 0, transform: 'translateY(20px)' },
-              { opacity: 1, transform: 'translateY(0)' },
-            ],
-            { duration: 300, easing: 'ease-out' },
-          )
-          a.finished.then(done)
-        }}
-        onExit={(_, done) => done()}
-      >
-        <Show when={streamMessage()}>
-          <div class={`relative max-w-5xl mx-auto ${streadmFixingPosition}`}>
-            <Message message={streamMessage()!} bot={activeChat()?.bot} />
-
-            <div class="inset-x-0 -bottom-2 absolute gap-2 flex items-center justify-center">
-              <div class="skeleton w-24 h-2" />
-              <button type="button" onclick={stopStreaming} class="btn btn-xs btn-circle btn-ghost">
-                <IconX size={12} class="text-base-content/40" />
-              </button>
-            </div>
+      <Show when={isStreaming()}>
+        <div class="relative mx-auto">
+          <div class="inset-x-0 bottom-4 absolute gap-2 flex items-center justify-center">
+            <div class="skeleton w-24 h-2" />
+            <button type="button" onclick={stopStreaming} class="btn btn-xs btn-circle btn-ghost">
+              <IconX size={12} class="text-base-content/40" />
+            </button>
           </div>
-        </Show>
-      </Transition>
+        </div>
+      </Show>
       <Form onSubmit={onSubmit} ref={formRef}>
         <fieldset class="fieldset w-full max-w-5xl mx-auto">
           <Field

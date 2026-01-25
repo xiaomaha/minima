@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AccountV1ActivateData, AccountV1ActivateResponses, AccountV1ApplyEmailChangeData, AccountV1ApplyEmailChangeResponses, AccountV1ApplyPasswordChangeData, AccountV1ApplyPasswordChangeResponses, AccountV1CompleteOtpSetupData, AccountV1CompleteOtpSetupResponses, AccountV1GetMeData, AccountV1GetMeResponses, AccountV1JoinData, AccountV1JoinResponses, AccountV1LoginData, AccountV1LoginResponses, AccountV1LogoutData, AccountV1LogoutResponses, AccountV1RequestActivationData, AccountV1RequestActivationResponses, AccountV1RequestEmailChangeData, AccountV1RequestEmailChangeResponses, AccountV1RequestPasswordChangeData, AccountV1RequestPasswordChangeResponses, AccountV1ResetOtpData, AccountV1ResetOtpResponses, AccountV1SetupOtpData, AccountV1SetupOtpResponses, AccountV1UpdateMeData, AccountV1UpdateMeResponses, AccountV1UploadAvatarData, AccountV1UploadAvatarResponses, AccountV1VerifyOtpData, AccountV1VerifyOtpResponses, AssignmentV1DeactivateAttemptData, AssignmentV1DeactivateAttemptResponses, AssignmentV1GetSessionData, AssignmentV1GetSessionResponses, AssignmentV1StartAttemptData, AssignmentV1StartAttemptResponses, AssignmentV1SubmitAttemptData, AssignmentV1SubmitAttemptResponses, AssistantV1CreateChatMessageData, AssistantV1CreateChatMessageResponses, AssistantV1DeleteChatData, AssistantV1DeleteChatResponses, AssistantV1GetChatMessagesData, AssistantV1GetChatMessagesResponses, AssistantV1GetChatsData, AssistantV1GetChatsResponses, AssistantV1SaveAssistantNoteData, AssistantV1SaveAssistantNoteResponses, AssistantV1UpdateChatMessageData, AssistantV1UpdateChatMessageResponses, CompetencyV1DeleteCompetencyGoalData, CompetencyV1DeleteCompetencyGoalResponses, CompetencyV1GetCertificateAwardsData, CompetencyV1GetCertificateAwardsResponses, CompetencyV1GetCertificatesData, CompetencyV1GetCertificatesResponses, CompetencyV1GetClassificationSkillsDataData, CompetencyV1GetClassificationSkillsDataResponses, CompetencyV1GetClassificationTreeData, CompetencyV1GetClassificationTreeResponses, CompetencyV1GetCompetencyGoalsData, CompetencyV1GetCompetencyGoalsResponses, CompetencyV1SaveCompetencyGoalData, CompetencyV1SaveCompetencyGoalResponses, ContentV1DeleteMediaWatchData, ContentV1DeleteMediaWatchResponses, ContentV1GetMediaData, ContentV1GetMediaNoteData, ContentV1GetMediaNoteResponses, ContentV1GetMediaResponses, ContentV1GetMediaWatchData, ContentV1GetMediaWatchResponses, ContentV1GetSubtitlesData, ContentV1GetSubtitlesResponses, ContentV1GetWatchMediasData, ContentV1GetWatchMediasResponses, ContentV1SaveMediaNoteData, ContentV1SaveMediaNoteResponses, ContentV1SearchData, ContentV1SearchResponses, ContentV1SearchSuggestionData, ContentV1SearchSuggestionResponses, ContentV1UpdateMediaWatchData, ContentV1UpdateMediaWatchResponses, CourseV1GetDetailData, CourseV1GetDetailResponses, CourseV1GetSessionData, CourseV1GetSessionResponses, CourseV1RequestCertificateData, CourseV1RequestCertificateResponses, CourseV1StartEngagementData, CourseV1StartEngagementResponses, DiscussionV1CreatePostData, DiscussionV1CreatePostResponses, DiscussionV1DeactivateAttemptData, DiscussionV1DeactivateAttemptResponses, DiscussionV1DeletePostData, DiscussionV1DeletePostResponses, DiscussionV1GetOwnPostsData, DiscussionV1GetOwnPostsResponses, DiscussionV1GetPostsData, DiscussionV1GetPostsResponses, DiscussionV1GetSessionData, DiscussionV1GetSessionResponses, DiscussionV1StartAttemptData, DiscussionV1StartAttemptResponses, DiscussionV1UpdatePostData, DiscussionV1UpdatePostResponses, ExamV1DeactivateAttemptData, ExamV1DeactivateAttemptResponses, ExamV1GetSessionData, ExamV1GetSessionResponses, ExamV1GetTimestampData, ExamV1GetTimestampResponses, ExamV1SaveAnswersData, ExamV1SaveAnswersResponses, ExamV1StartAttemptData, ExamV1StartAttemptResponses, ExamV1SubmitAttemptData, ExamV1SubmitAttemptResponses, LearningV1EnrollCatalogItemData, LearningV1EnrollCatalogItemResponses, LearningV1GetCatalogItemsData, LearningV1GetCatalogItemsResponses, LearningV1GetCatalogsData, LearningV1GetCatalogsResponses, LearningV1GetEnrolledData, LearningV1GetEnrolledResponses, LearningV1GetRecordsData, LearningV1GetRecordsResponses, LearningV1GetReportData, LearningV1GetReportResponses, LearningV1UnenrollData, LearningV1UnenrollResponses, MinimaApiHealthData, MinimaApiHealthResponses, OperationV1AgreePoliciesData, OperationV1AgreePoliciesResponses, OperationV1CreateAppealData, OperationV1CreateAppealResponses, OperationV1CreateInquiryData, OperationV1CreateInquiryResponses, OperationV1CreateThreadData, OperationV1CreateThreadResponses, OperationV1DeleteCommentData, OperationV1DeleteCommentResponses, OperationV1GetAnnouncementsData, OperationV1GetAnnouncementsResponses, OperationV1GetCommentsData, OperationV1GetCommentsResponses, OperationV1GetInquiriesData, OperationV1GetInquiriesResponses, OperationV1GetMessageData, OperationV1GetMessageResponses, OperationV1GetMessagesData, OperationV1GetMessagesResponses, OperationV1GetPoliciesToJoinData, OperationV1GetPoliciesToJoinResponses, OperationV1GetThreadCommentsData, OperationV1GetThreadCommentsResponses, OperationV1GetThreadData, OperationV1GetThreadResponses, OperationV1ReadAnnouncementData, OperationV1ReadAnnouncementResponses, OperationV1SaveCommentData, OperationV1SaveCommentResponses, OperationV1UpdateInquiryData, OperationV1UpdateInquiryResponses, QuizV1DeactivateAttemptData, QuizV1DeactivateAttemptResponses, QuizV1GetSessionData, QuizV1GetSessionResponses, QuizV1StartAttemptData, QuizV1StartAttemptResponses, QuizV1SubmitAttemptData, QuizV1SubmitAttemptResponses, SurveyV1GetAnonymousSurveyData, SurveyV1GetAnonymousSurveyResponses, SurveyV1GetSurveyData, SurveyV1GetSurveyResponses, SurveyV1ResultsAnonymousData, SurveyV1ResultsAnonymousResponses, SurveyV1ResultsData, SurveyV1ResultsResponses, SurveyV1SubmitAnonymousData, SurveyV1SubmitAnonymousResponses, SurveyV1SubmitData, SurveyV1SubmitResponses } from './types.gen';
+import type { AccountV1ActivateData, AccountV1ActivateResponses, AccountV1ApplyEmailChangeData, AccountV1ApplyEmailChangeResponses, AccountV1ApplyPasswordChangeData, AccountV1ApplyPasswordChangeResponses, AccountV1CompleteOtpSetupData, AccountV1CompleteOtpSetupResponses, AccountV1GetMeData, AccountV1GetMeResponses, AccountV1JoinData, AccountV1JoinResponses, AccountV1LoginData, AccountV1LoginResponses, AccountV1LogoutData, AccountV1LogoutResponses, AccountV1RequestActivationData, AccountV1RequestActivationResponses, AccountV1RequestEmailChangeData, AccountV1RequestEmailChangeResponses, AccountV1RequestPasswordChangeData, AccountV1RequestPasswordChangeResponses, AccountV1ResetOtpData, AccountV1ResetOtpResponses, AccountV1SetupOtpData, AccountV1SetupOtpResponses, AccountV1UpdateMeData, AccountV1UpdateMeResponses, AccountV1UploadAvatarData, AccountV1UploadAvatarResponses, AccountV1VerifyOtpData, AccountV1VerifyOtpResponses, AssignmentV1DeactivateAttemptData, AssignmentV1DeactivateAttemptResponses, AssignmentV1GetSessionData, AssignmentV1GetSessionResponses, AssignmentV1StartAttemptData, AssignmentV1StartAttemptResponses, AssignmentV1SubmitAttemptData, AssignmentV1SubmitAttemptResponses, AssistantV1ChatMessageData, AssistantV1ChatMessageResponses, AssistantV1DeleteChatData, AssistantV1DeleteChatResponses, AssistantV1GetChatMessagesData, AssistantV1GetChatMessagesResponses, AssistantV1GetChatsData, AssistantV1GetChatsResponses, AssistantV1SaveAssistantNoteData, AssistantV1SaveAssistantNoteResponses, AssistantV1UpdateChatMessageData, AssistantV1UpdateChatMessageResponses, CompetencyV1DeleteCompetencyGoalData, CompetencyV1DeleteCompetencyGoalResponses, CompetencyV1GetCertificateAwardsData, CompetencyV1GetCertificateAwardsResponses, CompetencyV1GetCertificatesData, CompetencyV1GetCertificatesResponses, CompetencyV1GetClassificationSkillsDataData, CompetencyV1GetClassificationSkillsDataResponses, CompetencyV1GetClassificationTreeData, CompetencyV1GetClassificationTreeResponses, CompetencyV1GetCompetencyGoalsData, CompetencyV1GetCompetencyGoalsResponses, CompetencyV1SaveCompetencyGoalData, CompetencyV1SaveCompetencyGoalResponses, ContentV1DeleteMediaWatchData, ContentV1DeleteMediaWatchResponses, ContentV1GetMediaData, ContentV1GetMediaNoteData, ContentV1GetMediaNoteResponses, ContentV1GetMediaResponses, ContentV1GetMediaWatchData, ContentV1GetMediaWatchResponses, ContentV1GetSubtitlesData, ContentV1GetSubtitlesResponses, ContentV1GetWatchMediasData, ContentV1GetWatchMediasResponses, ContentV1SaveMediaNoteData, ContentV1SaveMediaNoteResponses, ContentV1SearchData, ContentV1SearchResponses, ContentV1SearchSuggestionData, ContentV1SearchSuggestionResponses, ContentV1UpdateMediaWatchData, ContentV1UpdateMediaWatchResponses, CourseV1GetDetailData, CourseV1GetDetailResponses, CourseV1GetSessionData, CourseV1GetSessionResponses, CourseV1RequestCertificateData, CourseV1RequestCertificateResponses, CourseV1StartEngagementData, CourseV1StartEngagementResponses, DiscussionV1CreatePostData, DiscussionV1CreatePostResponses, DiscussionV1DeactivateAttemptData, DiscussionV1DeactivateAttemptResponses, DiscussionV1DeletePostData, DiscussionV1DeletePostResponses, DiscussionV1GetOwnPostsData, DiscussionV1GetOwnPostsResponses, DiscussionV1GetPostsData, DiscussionV1GetPostsResponses, DiscussionV1GetSessionData, DiscussionV1GetSessionResponses, DiscussionV1StartAttemptData, DiscussionV1StartAttemptResponses, DiscussionV1UpdatePostData, DiscussionV1UpdatePostResponses, ExamV1DeactivateAttemptData, ExamV1DeactivateAttemptResponses, ExamV1GetSessionData, ExamV1GetSessionResponses, ExamV1GetTimestampData, ExamV1GetTimestampResponses, ExamV1SaveAnswersData, ExamV1SaveAnswersResponses, ExamV1StartAttemptData, ExamV1StartAttemptResponses, ExamV1SubmitAttemptData, ExamV1SubmitAttemptResponses, LearningV1EnrollCatalogItemData, LearningV1EnrollCatalogItemResponses, LearningV1GetCatalogItemsData, LearningV1GetCatalogItemsResponses, LearningV1GetCatalogsData, LearningV1GetCatalogsResponses, LearningV1GetEnrolledData, LearningV1GetEnrolledResponses, LearningV1GetRecordsData, LearningV1GetRecordsResponses, LearningV1GetReportData, LearningV1GetReportResponses, LearningV1UnenrollData, LearningV1UnenrollResponses, MinimaApiHealthData, MinimaApiHealthResponses, OperationV1AgreePoliciesData, OperationV1AgreePoliciesResponses, OperationV1CreateAppealData, OperationV1CreateAppealResponses, OperationV1CreateInquiryData, OperationV1CreateInquiryResponses, OperationV1CreateThreadData, OperationV1CreateThreadResponses, OperationV1DeleteCommentData, OperationV1DeleteCommentResponses, OperationV1GetAnnouncementsData, OperationV1GetAnnouncementsResponses, OperationV1GetCommentsData, OperationV1GetCommentsResponses, OperationV1GetInquiriesData, OperationV1GetInquiriesResponses, OperationV1GetMessageData, OperationV1GetMessageResponses, OperationV1GetMessagesData, OperationV1GetMessagesResponses, OperationV1GetPoliciesToJoinData, OperationV1GetPoliciesToJoinResponses, OperationV1GetThreadCommentsData, OperationV1GetThreadCommentsResponses, OperationV1GetThreadData, OperationV1GetThreadResponses, OperationV1ReadAnnouncementData, OperationV1ReadAnnouncementResponses, OperationV1SaveCommentData, OperationV1SaveCommentResponses, OperationV1UpdateInquiryData, OperationV1UpdateInquiryResponses, QuizV1DeactivateAttemptData, QuizV1DeactivateAttemptResponses, QuizV1GetSessionData, QuizV1GetSessionResponses, QuizV1StartAttemptData, QuizV1StartAttemptResponses, QuizV1SubmitAttemptData, QuizV1SubmitAttemptResponses, SurveyV1GetAnonymousSurveyData, SurveyV1GetAnonymousSurveyResponses, SurveyV1GetSurveyData, SurveyV1GetSurveyResponses, SurveyV1ResultsAnonymousData, SurveyV1ResultsAnonymousResponses, SurveyV1ResultsData, SurveyV1ResultsResponses, SurveyV1SubmitAnonymousData, SurveyV1SubmitAnonymousResponses, SurveyV1SubmitData, SurveyV1SubmitResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -27,6 +27,7 @@ export const minimaApiHealth = <ThrowOnError extends boolean = true>(options?: O
  * Login
  */
 export const accountV1Login = <ThrowOnError extends boolean = true>(options: Options<AccountV1LoginData, ThrowOnError>) => (options.client ?? client).post<AccountV1LoginResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/account/login',
     ...options,
     headers: {
@@ -63,6 +64,7 @@ export const accountV1RequestActivation = <ThrowOnError extends boolean = true>(
  * Activate
  */
 export const accountV1Activate = <ThrowOnError extends boolean = true>(options: Options<AccountV1ActivateData, ThrowOnError>) => (options.client ?? client).post<AccountV1ActivateResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/account/activate',
     ...options,
     headers: {
@@ -74,12 +76,17 @@ export const accountV1Activate = <ThrowOnError extends boolean = true>(options: 
 /**
  * Get Me
  */
-export const accountV1GetMe = <ThrowOnError extends boolean = true>(options?: Options<AccountV1GetMeData, ThrowOnError>) => (options?.client ?? client).get<AccountV1GetMeResponses, unknown, ThrowOnError>({ url: '/api/v1/account/me', ...options });
+export const accountV1GetMe = <ThrowOnError extends boolean = true>(options?: Options<AccountV1GetMeData, ThrowOnError>) => (options?.client ?? client).get<AccountV1GetMeResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/account/me',
+    ...options
+});
 
 /**
  * Update Me
  */
 export const accountV1UpdateMe = <ThrowOnError extends boolean = true>(options: Options<AccountV1UpdateMeData, ThrowOnError>) => (options.client ?? client).post<AccountV1UpdateMeResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/account/me',
     ...options,
     headers: {
@@ -93,6 +100,7 @@ export const accountV1UpdateMe = <ThrowOnError extends boolean = true>(options: 
  */
 export const accountV1UploadAvatar = <ThrowOnError extends boolean = true>(options: Options<AccountV1UploadAvatarData, ThrowOnError>) => (options.client ?? client).post<AccountV1UploadAvatarResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/account/me/avatar',
     ...options,
     headers: {
@@ -157,12 +165,17 @@ export const accountV1Logout = <ThrowOnError extends boolean = true>(options?: O
 /**
  * Setup Otp
  */
-export const accountV1SetupOtp = <ThrowOnError extends boolean = true>(options?: Options<AccountV1SetupOtpData, ThrowOnError>) => (options?.client ?? client).post<AccountV1SetupOtpResponses, unknown, ThrowOnError>({ url: '/api/v1/account/otp/setup', ...options });
+export const accountV1SetupOtp = <ThrowOnError extends boolean = true>(options?: Options<AccountV1SetupOtpData, ThrowOnError>) => (options?.client ?? client).post<AccountV1SetupOtpResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/account/otp/setup',
+    ...options
+});
 
 /**
  * Complete Otp Setup
  */
 export const accountV1CompleteOtpSetup = <ThrowOnError extends boolean = true>(options: Options<AccountV1CompleteOtpSetupData, ThrowOnError>) => (options.client ?? client).post<AccountV1CompleteOtpSetupResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/account/otp/setup/complete',
     ...options,
     headers: {
@@ -191,18 +204,27 @@ export const accountV1ResetOtp = <ThrowOnError extends boolean = true>(options?:
 /**
  * Get Session
  */
-export const assignmentV1GetSession = <ThrowOnError extends boolean = true>(options: Options<AssignmentV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<AssignmentV1GetSessionResponses, unknown, ThrowOnError>({ url: '/api/v1/assignment/{id}/session', ...options });
+export const assignmentV1GetSession = <ThrowOnError extends boolean = true>(options: Options<AssignmentV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<AssignmentV1GetSessionResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/assignment/{id}/session',
+    ...options
+});
 
 /**
  * Start Attempt
  */
-export const assignmentV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<AssignmentV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<AssignmentV1StartAttemptResponses, unknown, ThrowOnError>({ url: '/api/v1/assignment/{id}/attempt', ...options });
+export const assignmentV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<AssignmentV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<AssignmentV1StartAttemptResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/assignment/{id}/attempt',
+    ...options
+});
 
 /**
  * Submit Attempt
  */
 export const assignmentV1SubmitAttempt = <ThrowOnError extends boolean = true>(options: Options<AssignmentV1SubmitAttemptData, ThrowOnError>) => (options.client ?? client).post<AssignmentV1SubmitAttemptResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/assignment/{id}/attempt/submit',
     ...options,
     headers: {
@@ -229,10 +251,11 @@ export const assistantV1SaveAssistantNote = <ThrowOnError extends boolean = true
 });
 
 /**
- * Create Chat Message
+ * Chat Message
  */
-export const assistantV1CreateChatMessage = <ThrowOnError extends boolean = true>(options: Options<AssistantV1CreateChatMessageData, ThrowOnError>) => (options.client ?? client).sse.post<AssistantV1CreateChatMessageResponses, unknown, ThrowOnError>({
+export const assistantV1ChatMessage = <ThrowOnError extends boolean = true>(options: Options<AssistantV1ChatMessageData, ThrowOnError>) => (options.client ?? client).sse.post<AssistantV1ChatMessageResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'text',
     url: '/api/v1/assistant/chat/message',
     ...options,
     headers: {
@@ -256,7 +279,11 @@ export const assistantV1UpdateChatMessage = <ThrowOnError extends boolean = true
 /**
  * Get Chats
  */
-export const assistantV1GetChats = <ThrowOnError extends boolean = true>(options?: Options<AssistantV1GetChatsData, ThrowOnError>) => (options?.client ?? client).get<AssistantV1GetChatsResponses, unknown, ThrowOnError>({ url: '/api/v1/assistant/chat', ...options });
+export const assistantV1GetChats = <ThrowOnError extends boolean = true>(options?: Options<AssistantV1GetChatsData, ThrowOnError>) => (options?.client ?? client).get<AssistantV1GetChatsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/assistant/chat',
+    ...options
+});
 
 /**
  * Delete Chat
@@ -266,27 +293,44 @@ export const assistantV1DeleteChat = <ThrowOnError extends boolean = true>(optio
 /**
  * Get Chat Messages
  */
-export const assistantV1GetChatMessages = <ThrowOnError extends boolean = true>(options: Options<AssistantV1GetChatMessagesData, ThrowOnError>) => (options.client ?? client).get<AssistantV1GetChatMessagesResponses, unknown, ThrowOnError>({ url: '/api/v1/assistant/chat/{id}/message', ...options });
+export const assistantV1GetChatMessages = <ThrowOnError extends boolean = true>(options: Options<AssistantV1GetChatMessagesData, ThrowOnError>) => (options.client ?? client).get<AssistantV1GetChatMessagesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/assistant/chat/{id}/message',
+    ...options
+});
 
 /**
  * Get Certificates
  */
-export const competencyV1GetCertificates = <ThrowOnError extends boolean = true>(options: Options<CompetencyV1GetCertificatesData, ThrowOnError>) => (options.client ?? client).get<CompetencyV1GetCertificatesResponses, unknown, ThrowOnError>({ url: '/api/v1/competency/certificate', ...options });
+export const competencyV1GetCertificates = <ThrowOnError extends boolean = true>(options: Options<CompetencyV1GetCertificatesData, ThrowOnError>) => (options.client ?? client).get<CompetencyV1GetCertificatesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/competency/certificate',
+    ...options
+});
 
 /**
  * Get Certificate Awards
  */
-export const competencyV1GetCertificateAwards = <ThrowOnError extends boolean = true>(options?: Options<CompetencyV1GetCertificateAwardsData, ThrowOnError>) => (options?.client ?? client).get<CompetencyV1GetCertificateAwardsResponses, unknown, ThrowOnError>({ url: '/api/v1/competency/certificate/award', ...options });
+export const competencyV1GetCertificateAwards = <ThrowOnError extends boolean = true>(options?: Options<CompetencyV1GetCertificateAwardsData, ThrowOnError>) => (options?.client ?? client).get<CompetencyV1GetCertificateAwardsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/competency/certificate/award',
+    ...options
+});
 
 /**
  * Get Competency Goals
  */
-export const competencyV1GetCompetencyGoals = <ThrowOnError extends boolean = true>(options?: Options<CompetencyV1GetCompetencyGoalsData, ThrowOnError>) => (options?.client ?? client).get<CompetencyV1GetCompetencyGoalsResponses, unknown, ThrowOnError>({ url: '/api/v1/competency/goal', ...options });
+export const competencyV1GetCompetencyGoals = <ThrowOnError extends boolean = true>(options?: Options<CompetencyV1GetCompetencyGoalsData, ThrowOnError>) => (options?.client ?? client).get<CompetencyV1GetCompetencyGoalsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/competency/goal',
+    ...options
+});
 
 /**
  * Save Competency Goal
  */
 export const competencyV1SaveCompetencyGoal = <ThrowOnError extends boolean = true>(options: Options<CompetencyV1SaveCompetencyGoalData, ThrowOnError>) => (options.client ?? client).post<CompetencyV1SaveCompetencyGoalResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/competency/goal',
     ...options,
     headers: {
@@ -303,22 +347,38 @@ export const competencyV1DeleteCompetencyGoal = <ThrowOnError extends boolean = 
 /**
  * Get Classification Tree
  */
-export const competencyV1GetClassificationTree = <ThrowOnError extends boolean = true>(options?: Options<CompetencyV1GetClassificationTreeData, ThrowOnError>) => (options?.client ?? client).get<CompetencyV1GetClassificationTreeResponses, unknown, ThrowOnError>({ url: '/api/v1/competency/classification/tree', ...options });
+export const competencyV1GetClassificationTree = <ThrowOnError extends boolean = true>(options?: Options<CompetencyV1GetClassificationTreeData, ThrowOnError>) => (options?.client ?? client).get<CompetencyV1GetClassificationTreeResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/competency/classification/tree',
+    ...options
+});
 
 /**
  * Get Classification Skills Data
  */
-export const competencyV1GetClassificationSkillsData = <ThrowOnError extends boolean = true>(options: Options<CompetencyV1GetClassificationSkillsDataData, ThrowOnError>) => (options.client ?? client).get<CompetencyV1GetClassificationSkillsDataResponses, unknown, ThrowOnError>({ url: '/api/v1/competency/classification/{id}/skill/data', ...options });
+export const competencyV1GetClassificationSkillsData = <ThrowOnError extends boolean = true>(options: Options<CompetencyV1GetClassificationSkillsDataData, ThrowOnError>) => (options.client ?? client).get<CompetencyV1GetClassificationSkillsDataResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/competency/classification/{id}/skill/data',
+    ...options
+});
 
 /**
  * Get Media
  */
-export const contentV1GetMedia = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetMediaData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetMediaResponses, unknown, ThrowOnError>({ url: '/api/v1/content/media/{id}', ...options });
+export const contentV1GetMedia = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetMediaData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetMediaResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/media/{id}',
+    ...options
+});
 
 /**
  * Get Subtitles
  */
-export const contentV1GetSubtitles = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetSubtitlesData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetSubtitlesResponses, unknown, ThrowOnError>({ url: '/api/v1/content/media/{id}/subtitle', ...options });
+export const contentV1GetSubtitles = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetSubtitlesData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetSubtitlesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/media/{id}/subtitle',
+    ...options
+});
 
 /**
  * Delete Media Watch
@@ -328,7 +388,11 @@ export const contentV1DeleteMediaWatch = <ThrowOnError extends boolean = true>(o
 /**
  * Get Media Watch
  */
-export const contentV1GetMediaWatch = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetMediaWatchData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetMediaWatchResponses, unknown, ThrowOnError>({ url: '/api/v1/content/media/{id}/watch', ...options });
+export const contentV1GetMediaWatch = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetMediaWatchData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetMediaWatchResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/media/{id}/watch',
+    ...options
+});
 
 /**
  * Update Media Watch
@@ -345,13 +409,18 @@ export const contentV1UpdateMediaWatch = <ThrowOnError extends boolean = true>(o
 /**
  * Get Media Note
  */
-export const contentV1GetMediaNote = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetMediaNoteData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetMediaNoteResponses, unknown, ThrowOnError>({ url: '/api/v1/content/media/{id}/note', ...options });
+export const contentV1GetMediaNote = <ThrowOnError extends boolean = true>(options: Options<ContentV1GetMediaNoteData, ThrowOnError>) => (options.client ?? client).get<ContentV1GetMediaNoteResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/media/{id}/note',
+    ...options
+});
 
 /**
  * Save Media Note
  */
 export const contentV1SaveMediaNote = <ThrowOnError extends boolean = true>(options: Options<ContentV1SaveMediaNoteData, ThrowOnError>) => (options.client ?? client).post<ContentV1SaveMediaNoteResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/content/media/{id}/note',
     ...options,
     headers: {
@@ -363,37 +432,62 @@ export const contentV1SaveMediaNote = <ThrowOnError extends boolean = true>(opti
 /**
  * Get Watch Medias
  */
-export const contentV1GetWatchMedias = <ThrowOnError extends boolean = true>(options?: Options<ContentV1GetWatchMediasData, ThrowOnError>) => (options?.client ?? client).get<ContentV1GetWatchMediasResponses, unknown, ThrowOnError>({ url: '/api/v1/content/watch', ...options });
+export const contentV1GetWatchMedias = <ThrowOnError extends boolean = true>(options?: Options<ContentV1GetWatchMediasData, ThrowOnError>) => (options?.client ?? client).get<ContentV1GetWatchMediasResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/watch',
+    ...options
+});
 
 /**
  * Search Suggestion
  */
-export const contentV1SearchSuggestion = <ThrowOnError extends boolean = true>(options: Options<ContentV1SearchSuggestionData, ThrowOnError>) => (options.client ?? client).get<ContentV1SearchSuggestionResponses, unknown, ThrowOnError>({ url: '/api/v1/content/searchsuggestion', ...options });
+export const contentV1SearchSuggestion = <ThrowOnError extends boolean = true>(options: Options<ContentV1SearchSuggestionData, ThrowOnError>) => (options.client ?? client).get<ContentV1SearchSuggestionResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/searchsuggestion',
+    ...options
+});
 
 /**
  * Search
  */
-export const contentV1Search = <ThrowOnError extends boolean = true>(options?: Options<ContentV1SearchData, ThrowOnError>) => (options?.client ?? client).get<ContentV1SearchResponses, unknown, ThrowOnError>({ url: '/api/v1/content/search', ...options });
+export const contentV1Search = <ThrowOnError extends boolean = true>(options?: Options<ContentV1SearchData, ThrowOnError>) => (options?.client ?? client).get<ContentV1SearchResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/content/search',
+    ...options
+});
 
 /**
  * Get Session
  */
-export const courseV1GetSession = <ThrowOnError extends boolean = true>(options: Options<CourseV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<CourseV1GetSessionResponses, unknown, ThrowOnError>({ url: '/api/v1/course/{id}/session', ...options });
+export const courseV1GetSession = <ThrowOnError extends boolean = true>(options: Options<CourseV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<CourseV1GetSessionResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/course/{id}/session',
+    ...options
+});
 
 /**
  * Start Engagement
  */
-export const courseV1StartEngagement = <ThrowOnError extends boolean = true>(options: Options<CourseV1StartEngagementData, ThrowOnError>) => (options.client ?? client).post<CourseV1StartEngagementResponses, unknown, ThrowOnError>({ url: '/api/v1/course/{id}/engage', ...options });
+export const courseV1StartEngagement = <ThrowOnError extends boolean = true>(options: Options<CourseV1StartEngagementData, ThrowOnError>) => (options.client ?? client).post<CourseV1StartEngagementResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/course/{id}/engage',
+    ...options
+});
 
 /**
  * Get Detail
  */
-export const courseV1GetDetail = <ThrowOnError extends boolean = true>(options: Options<CourseV1GetDetailData, ThrowOnError>) => (options.client ?? client).get<CourseV1GetDetailResponses, unknown, ThrowOnError>({ url: '/api/v1/course/{id}/detail', ...options });
+export const courseV1GetDetail = <ThrowOnError extends boolean = true>(options: Options<CourseV1GetDetailData, ThrowOnError>) => (options.client ?? client).get<CourseV1GetDetailResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/course/{id}/detail',
+    ...options
+});
 
 /**
  * Request Certificate
  */
 export const courseV1RequestCertificate = <ThrowOnError extends boolean = true>(options: Options<CourseV1RequestCertificateData, ThrowOnError>) => (options.client ?? client).post<CourseV1RequestCertificateResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/course/{id}/certificate/request',
     ...options,
     headers: {
@@ -405,12 +499,20 @@ export const courseV1RequestCertificate = <ThrowOnError extends boolean = true>(
 /**
  * Get Session
  */
-export const discussionV1GetSession = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<DiscussionV1GetSessionResponses, unknown, ThrowOnError>({ url: '/api/v1/discussion/{id}/session', ...options });
+export const discussionV1GetSession = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<DiscussionV1GetSessionResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/discussion/{id}/session',
+    ...options
+});
 
 /**
  * Start Attempt
  */
-export const discussionV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<DiscussionV1StartAttemptResponses, unknown, ThrowOnError>({ url: '/api/v1/discussion/{id}/attempt', ...options });
+export const discussionV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<DiscussionV1StartAttemptResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/discussion/{id}/attempt',
+    ...options
+});
 
 /**
  * Deactivate Attempt
@@ -420,13 +522,18 @@ export const discussionV1DeactivateAttempt = <ThrowOnError extends boolean = tru
 /**
  * Get Posts
  */
-export const discussionV1GetPosts = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1GetPostsData, ThrowOnError>) => (options.client ?? client).get<DiscussionV1GetPostsResponses, unknown, ThrowOnError>({ url: '/api/v1/discussion/{id}/post', ...options });
+export const discussionV1GetPosts = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1GetPostsData, ThrowOnError>) => (options.client ?? client).get<DiscussionV1GetPostsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/discussion/{id}/post',
+    ...options
+});
 
 /**
  * Create Post
  */
 export const discussionV1CreatePost = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1CreatePostData, ThrowOnError>) => (options.client ?? client).post<DiscussionV1CreatePostResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/discussion/{id}/post',
     ...options,
     headers: {
@@ -438,7 +545,11 @@ export const discussionV1CreatePost = <ThrowOnError extends boolean = true>(opti
 /**
  * Get Own Posts
  */
-export const discussionV1GetOwnPosts = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1GetOwnPostsData, ThrowOnError>) => (options.client ?? client).get<DiscussionV1GetOwnPostsResponses, unknown, ThrowOnError>({ url: '/api/v1/discussion/{id}/post/own', ...options });
+export const discussionV1GetOwnPosts = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1GetOwnPostsData, ThrowOnError>) => (options.client ?? client).get<DiscussionV1GetOwnPostsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/discussion/{id}/post/own',
+    ...options
+});
 
 /**
  * Delete Post
@@ -450,6 +561,7 @@ export const discussionV1DeletePost = <ThrowOnError extends boolean = true>(opti
  */
 export const discussionV1UpdatePost = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1UpdatePostData, ThrowOnError>) => (options.client ?? client).post<DiscussionV1UpdatePostResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/discussion/{id}/post/{postId}',
     ...options,
     headers: {
@@ -461,12 +573,20 @@ export const discussionV1UpdatePost = <ThrowOnError extends boolean = true>(opti
 /**
  * Get Session
  */
-export const examV1GetSession = <ThrowOnError extends boolean = true>(options: Options<ExamV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<ExamV1GetSessionResponses, unknown, ThrowOnError>({ url: '/api/v1/exam/{id}/session', ...options });
+export const examV1GetSession = <ThrowOnError extends boolean = true>(options: Options<ExamV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<ExamV1GetSessionResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/exam/{id}/session',
+    ...options
+});
 
 /**
  * Start Attempt
  */
-export const examV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<ExamV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<ExamV1StartAttemptResponses, unknown, ThrowOnError>({ url: '/api/v1/exam/{id}/attempt', ...options });
+export const examV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<ExamV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<ExamV1StartAttemptResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/exam/{id}/attempt',
+    ...options
+});
 
 /**
  * Save Answers
@@ -484,6 +604,7 @@ export const examV1SaveAnswers = <ThrowOnError extends boolean = true>(options: 
  * Submit Attempt
  */
 export const examV1SubmitAttempt = <ThrowOnError extends boolean = true>(options: Options<ExamV1SubmitAttemptData, ThrowOnError>) => (options.client ?? client).post<ExamV1SubmitAttemptResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/exam/{id}/attempt/submit',
     ...options,
     headers: {
@@ -500,12 +621,20 @@ export const examV1DeactivateAttempt = <ThrowOnError extends boolean = true>(opt
 /**
  * Get Timestamp
  */
-export const examV1GetTimestamp = <ThrowOnError extends boolean = true>(options?: Options<ExamV1GetTimestampData, ThrowOnError>) => (options?.client ?? client).get<ExamV1GetTimestampResponses, unknown, ThrowOnError>({ url: '/api/v1/exam/timestamp', ...options });
+export const examV1GetTimestamp = <ThrowOnError extends boolean = true>(options?: Options<ExamV1GetTimestampData, ThrowOnError>) => (options?.client ?? client).get<ExamV1GetTimestampResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/exam/timestamp',
+    ...options
+});
 
 /**
  * Get Enrolled
  */
-export const learningV1GetEnrolled = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetEnrolledData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetEnrolledResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/enrollment', ...options });
+export const learningV1GetEnrolled = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetEnrolledData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetEnrolledResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/learning/enrollment',
+    ...options
+});
 
 /**
  * Unenroll
@@ -515,22 +644,35 @@ export const learningV1Unenroll = <ThrowOnError extends boolean = true>(options:
 /**
  * Get Records
  */
-export const learningV1GetRecords = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetRecordsData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetRecordsResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/record', ...options });
+export const learningV1GetRecords = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetRecordsData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetRecordsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/learning/record',
+    ...options
+});
 
 /**
  * Get Catalogs
  */
-export const learningV1GetCatalogs = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetCatalogsData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetCatalogsResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/catalog', ...options });
+export const learningV1GetCatalogs = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetCatalogsData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetCatalogsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/learning/catalog',
+    ...options
+});
 
 /**
  * Get Catalog Items
  */
-export const learningV1GetCatalogItems = <ThrowOnError extends boolean = true>(options: Options<LearningV1GetCatalogItemsData, ThrowOnError>) => (options.client ?? client).get<LearningV1GetCatalogItemsResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/catalog/{id}/item', ...options });
+export const learningV1GetCatalogItems = <ThrowOnError extends boolean = true>(options: Options<LearningV1GetCatalogItemsData, ThrowOnError>) => (options.client ?? client).get<LearningV1GetCatalogItemsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/learning/catalog/{id}/item',
+    ...options
+});
 
 /**
  * Enroll Catalog Item
  */
 export const learningV1EnrollCatalogItem = <ThrowOnError extends boolean = true>(options: Options<LearningV1EnrollCatalogItemData, ThrowOnError>) => (options.client ?? client).post<LearningV1EnrollCatalogItemResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/learning/catalog/{id}/item/enroll',
     ...options,
     headers: {
@@ -542,12 +684,20 @@ export const learningV1EnrollCatalogItem = <ThrowOnError extends boolean = true>
 /**
  * Get Report
  */
-export const learningV1GetReport = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetReportData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetReportResponses, unknown, ThrowOnError>({ url: '/api/v1/learning/report', ...options });
+export const learningV1GetReport = <ThrowOnError extends boolean = true>(options?: Options<LearningV1GetReportData, ThrowOnError>) => (options?.client ?? client).get<LearningV1GetReportResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/learning/report',
+    ...options
+});
 
 /**
  * Get Announcements
  */
-export const operationV1GetAnnouncements = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetAnnouncementsData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetAnnouncementsResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/announcement', ...options });
+export const operationV1GetAnnouncements = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetAnnouncementsData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetAnnouncementsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/announcement',
+    ...options
+});
 
 /**
  * Read Announcement
@@ -557,13 +707,18 @@ export const operationV1ReadAnnouncement = <ThrowOnError extends boolean = true>
 /**
  * Get Inquiries
  */
-export const operationV1GetInquiries = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetInquiriesData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetInquiriesResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/inquiry', ...options });
+export const operationV1GetInquiries = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetInquiriesData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetInquiriesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/inquiry',
+    ...options
+});
 
 /**
  * Create Inquiry
  */
 export const operationV1CreateInquiry = <ThrowOnError extends boolean = true>(options: Options<OperationV1CreateInquiryData, ThrowOnError>) => (options.client ?? client).post<OperationV1CreateInquiryResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/operation/inquiry',
     ...options,
     headers: {
@@ -577,6 +732,7 @@ export const operationV1CreateInquiry = <ThrowOnError extends boolean = true>(op
  */
 export const operationV1UpdateInquiry = <ThrowOnError extends boolean = true>(options: Options<OperationV1UpdateInquiryData, ThrowOnError>) => (options.client ?? client).post<OperationV1UpdateInquiryResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/operation/inquiry/{id}',
     ...options,
     headers: {
@@ -588,18 +744,27 @@ export const operationV1UpdateInquiry = <ThrowOnError extends boolean = true>(op
 /**
  * Get Messages
  */
-export const operationV1GetMessages = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetMessagesData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetMessagesResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/message', ...options });
+export const operationV1GetMessages = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetMessagesData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetMessagesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/message',
+    ...options
+});
 
 /**
  * Get Message
  */
-export const operationV1GetMessage = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetMessageData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetMessageResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/message/{id}', ...options });
+export const operationV1GetMessage = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetMessageData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetMessageResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/message/{id}',
+    ...options
+});
 
 /**
  * Create Appeal
  */
 export const operationV1CreateAppeal = <ThrowOnError extends boolean = true>(options: Options<OperationV1CreateAppealData, ThrowOnError>) => (options.client ?? client).post<OperationV1CreateAppealResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/operation/appeal',
     ...options,
     headers: {
@@ -611,7 +776,11 @@ export const operationV1CreateAppeal = <ThrowOnError extends boolean = true>(opt
 /**
  * Get Policies To Join
  */
-export const operationV1GetPoliciesToJoin = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetPoliciesToJoinData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetPoliciesToJoinResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/policyversion/join', ...options });
+export const operationV1GetPoliciesToJoin = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetPoliciesToJoinData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetPoliciesToJoinResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/policyversion/join',
+    ...options
+});
 
 /**
  * Agree Policies
@@ -628,12 +797,17 @@ export const operationV1AgreePolicies = <ThrowOnError extends boolean = true>(op
 /**
  * Get Thread
  */
-export const operationV1GetThread = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetThreadData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetThreadResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/thread/{appLabel}/{model}/subject/{subjectId}', ...options });
+export const operationV1GetThread = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetThreadData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetThreadResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/thread/{appLabel}/{model}/subject/{subjectId}',
+    ...options
+});
 
 /**
  * Create Thread
  */
 export const operationV1CreateThread = <ThrowOnError extends boolean = true>(options: Options<OperationV1CreateThreadData, ThrowOnError>) => (options.client ?? client).post<OperationV1CreateThreadResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/operation/thread',
     ...options,
     headers: {
@@ -645,13 +819,18 @@ export const operationV1CreateThread = <ThrowOnError extends boolean = true>(opt
 /**
  * Get Thread Comments
  */
-export const operationV1GetThreadComments = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetThreadCommentsData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetThreadCommentsResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/thread/{id}/comment', ...options });
+export const operationV1GetThreadComments = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetThreadCommentsData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetThreadCommentsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/thread/{id}/comment',
+    ...options
+});
 
 /**
  * Save Comment
  */
 export const operationV1SaveComment = <ThrowOnError extends boolean = true>(options: Options<OperationV1SaveCommentData, ThrowOnError>) => (options.client ?? client).post<OperationV1SaveCommentResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
+    responseType: 'json',
     url: '/api/v1/operation/thread/{id}/comment',
     ...options,
     headers: {
@@ -668,22 +847,35 @@ export const operationV1DeleteComment = <ThrowOnError extends boolean = true>(op
 /**
  * Get Comments
  */
-export const operationV1GetComments = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetCommentsData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetCommentsResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/comment', ...options });
+export const operationV1GetComments = <ThrowOnError extends boolean = true>(options?: Options<OperationV1GetCommentsData, ThrowOnError>) => (options?.client ?? client).get<OperationV1GetCommentsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/operation/comment',
+    ...options
+});
 
 /**
  * Get Session
  */
-export const quizV1GetSession = <ThrowOnError extends boolean = true>(options: Options<QuizV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<QuizV1GetSessionResponses, unknown, ThrowOnError>({ url: '/api/v1/quiz/{id}/session', ...options });
+export const quizV1GetSession = <ThrowOnError extends boolean = true>(options: Options<QuizV1GetSessionData, ThrowOnError>) => (options.client ?? client).get<QuizV1GetSessionResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/quiz/{id}/session',
+    ...options
+});
 
 /**
  * Start Attempt
  */
-export const quizV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<QuizV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<QuizV1StartAttemptResponses, unknown, ThrowOnError>({ url: '/api/v1/quiz/{id}/attempt', ...options });
+export const quizV1StartAttempt = <ThrowOnError extends boolean = true>(options: Options<QuizV1StartAttemptData, ThrowOnError>) => (options.client ?? client).post<QuizV1StartAttemptResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/quiz/{id}/attempt',
+    ...options
+});
 
 /**
  * Submit Attempt
  */
 export const quizV1SubmitAttempt = <ThrowOnError extends boolean = true>(options: Options<QuizV1SubmitAttemptData, ThrowOnError>) => (options.client ?? client).post<QuizV1SubmitAttemptResponses, unknown, ThrowOnError>({
+    responseType: 'json',
     url: '/api/v1/quiz/{id}/attempt/submit',
     ...options,
     headers: {
@@ -700,7 +892,11 @@ export const quizV1DeactivateAttempt = <ThrowOnError extends boolean = true>(opt
 /**
  * Get Survey
  */
-export const surveyV1GetSurvey = <ThrowOnError extends boolean = true>(options: Options<SurveyV1GetSurveyData, ThrowOnError>) => (options.client ?? client).get<SurveyV1GetSurveyResponses, unknown, ThrowOnError>({ url: '/api/v1/survey/{id}', ...options });
+export const surveyV1GetSurvey = <ThrowOnError extends boolean = true>(options: Options<SurveyV1GetSurveyData, ThrowOnError>) => (options.client ?? client).get<SurveyV1GetSurveyResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/survey/{id}',
+    ...options
+});
 
 /**
  * Submit
@@ -717,12 +913,20 @@ export const surveyV1Submit = <ThrowOnError extends boolean = true>(options: Opt
 /**
  * Results
  */
-export const surveyV1Results = <ThrowOnError extends boolean = true>(options: Options<SurveyV1ResultsData, ThrowOnError>) => (options.client ?? client).get<SurveyV1ResultsResponses, unknown, ThrowOnError>({ url: '/api/v1/survey/{id}/results', ...options });
+export const surveyV1Results = <ThrowOnError extends boolean = true>(options: Options<SurveyV1ResultsData, ThrowOnError>) => (options.client ?? client).get<SurveyV1ResultsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/survey/{id}/results',
+    ...options
+});
 
 /**
  * Get Anonymous Survey
  */
-export const surveyV1GetAnonymousSurvey = <ThrowOnError extends boolean = true>(options: Options<SurveyV1GetAnonymousSurveyData, ThrowOnError>) => (options.client ?? client).get<SurveyV1GetAnonymousSurveyResponses, unknown, ThrowOnError>({ url: '/api/v1/survey/{id}/anonymous', ...options });
+export const surveyV1GetAnonymousSurvey = <ThrowOnError extends boolean = true>(options: Options<SurveyV1GetAnonymousSurveyData, ThrowOnError>) => (options.client ?? client).get<SurveyV1GetAnonymousSurveyResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/survey/{id}/anonymous',
+    ...options
+});
 
 /**
  * Submit Anonymous
@@ -739,4 +943,8 @@ export const surveyV1SubmitAnonymous = <ThrowOnError extends boolean = true>(opt
 /**
  * Results Anonymous
  */
-export const surveyV1ResultsAnonymous = <ThrowOnError extends boolean = true>(options: Options<SurveyV1ResultsAnonymousData, ThrowOnError>) => (options.client ?? client).get<SurveyV1ResultsAnonymousResponses, unknown, ThrowOnError>({ url: '/api/v1/survey/{id}/anonymous/results', ...options });
+export const surveyV1ResultsAnonymous = <ThrowOnError extends boolean = true>(options: Options<SurveyV1ResultsAnonymousData, ThrowOnError>) => (options.client ?? client).get<SurveyV1ResultsAnonymousResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/survey/{id}/anonymous/results',
+    ...options
+});

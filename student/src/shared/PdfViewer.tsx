@@ -16,6 +16,9 @@ interface MediaPlayerAPI {
   duration: () => number
   jumpToTime: (time: number) => void
   onTimeUpdate: (callback: (time: number) => void) => void
+  play: () => void
+  pause: () => void
+  isPlaying: () => boolean
 }
 
 interface PdfViewerProps {
@@ -148,6 +151,9 @@ export function PdfViewer(props: PdfViewerProps) {
           timeUpdateCallback = callback
           queueMicrotask(() => callback(position()))
         },
+        play: () => setAutoPlay(true),
+        pause: () => setAutoPlay(false),
+        isPlaying: () => autoPlay(),
       }
       props.onReady?.(api)
     }
