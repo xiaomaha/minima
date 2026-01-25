@@ -2,7 +2,6 @@ from datetime import date
 from typing import Annotated, Literal
 
 from django.conf import settings
-from django.db.models import Count
 from django.shortcuts import aget_object_or_404
 from ninja.files import UploadedFile
 from ninja.pagination import paginate
@@ -30,9 +29,7 @@ router = Router(by_alias=True)
 @router.get("/media/{id}", response=MediaSchema)
 @access_date("content", "media")
 async def get_media(request: HttpRequest, id: str):
-    return await aget_object_or_404(
-        Media.objects.annotate(subtitle_count=Count("subtitle")).select_related("owner").filter(id=id)
-    )
+    return await Media.get_media(id)
 
 
 @router.get("/media/{id}/subtitle", response=list[SubtitleSchema])

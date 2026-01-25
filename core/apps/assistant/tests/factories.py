@@ -7,20 +7,9 @@ from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
-from apps.assistant.models import AssistantBot, AssistantNote, Chat, ChatMessage
+from apps.assistant.models import AssistantNote, Chat, ChatMessage
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
-
-
-class AssistantBotFactory(DjangoModelFactory[AssistantBot]):
-    class Meta:
-        model = AssistantBot
-        django_get_or_create = ("name",)
-        skip_postgeneration_save = True
-
-    name = "Assistant"
-    description = FactoryField("text", quantity=generic.random.randint(1, 3))
-    kind = AssistantBot.BotKind.ASSISTANT
 
 
 class AssistantNoteFactory(DjangoModelFactory[AssistantNote]):

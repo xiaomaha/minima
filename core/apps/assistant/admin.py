@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from apps.assistant.models import AssistantBot, AssistantNote, Chat, ChatMessage
+from apps.assistant.models import AssistantNote, Chat, ChatMessage
 from apps.common.admin import ModelAdmin, ReadOnlyHiddenModelAdmin, TabularInline
 
 
@@ -22,9 +22,4 @@ class ChatMessageAdmin(ReadOnlyHiddenModelAdmin[ChatMessage]):
 
 @admin.register(AssistantNote)
 class AssistantNoteAdmin(ModelAdmin[AssistantNote]):
-    pass
-
-
-@admin.register(AssistantBot)
-class AssistantBotAdmin(ModelAdmin[AssistantBot]):
     pass

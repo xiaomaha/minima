@@ -6,16 +6,22 @@ from django.utils import timezone
 
 from apps.common.error import ErrorCode
 from apps.common.util import AccessDate, HttpRequest, openapi_query_param
-from apps.content.models import PublicAccessMedia
+from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
 from apps.learning.models import Enrollment
+from apps.quiz.models import Quiz
 
 log = logging.getLogger(__name__)
 
 
 def access_date(app_label, model, *, id_field: str = "id"):
     def decorator(func):
-        openapi_query_param(func=func, name="course", schema_type="string", required=False, nullable=False)
+        # openapi query param
+        openapi_query_param(func=func, name="media", schema_type="string", required=False, nullable=False)
+
+        # currently only quiz is allowed to be inlined
+        if app_label == Quiz._meta.app_label and model == Quiz._meta.model.__name__.lower():
+            openapi_query_param(func=func, name="course", schema_type="string", required=False, nullable=False)
 
         @wraps(func)
         async def wrapper(request: HttpRequest, *args, **kwargs):
@@ -26,11 +32,14 @@ def access_date(app_label, model, *, id_field: str = "id"):
                 raise ImproperlyConfigured("id_field is required")
 
             course_id = request.GET.get("course")
+            media_id = request.GET.get("media")
 
             # step 1: check enrollment
 
             if course_id:
                 candidate = (course_id, Course._meta.app_label, Course._meta.model.__name__.lower())
+            elif media_id:
+                candidate = (media_id, Media._meta.app_label, Media._meta.model.__name__.lower())
             else:
                 candidate = (content_id, app_label, model)
 
@@ -43,7 +52,7 @@ def access_date(app_label, model, *, id_field: str = "id"):
             ).afirst()  # unique
 
             public_access = None
-            if app_label == "content" and model == "media":
+            if app_label == Media._meta.app_label and model == Media._meta.model.__name__.lower():
                 public_access = await PublicAccessMedia.get_access_date(media_id=content_id)
 
             # more favorable access date between enrollment and public access
@@ -52,13 +61,33 @@ def access_date(app_label, model, *, id_field: str = "id"):
             # step 2: override accessible date by context
 
             if course_id:
+                # When content is accessed within a course context, we need to determine
+                # which content to use for permission checking with the course.
+                # If media_id is present (e.g., quiz accessed via media), we check course
+                # permissions against the media (parent) rather than the quiz (child),
+                # since courses contain media, not individual quizzes directly.
+
+                effective_content = (content_id, app_label, model)
+                if media_id:
+                    effective_content = (media_id, Media._meta.app_label, Media._meta.model.__name__.lower())
+
                 try:
                     accessible = await Course.content_effective_date(
                         course_id=course_id,
-                        content_id=content_id,
-                        app_label=app_label,
-                        model=model,
+                        content_id=effective_content[0],
+                        app_label=effective_content[1],
+                        model=effective_content[2],
                         access_date=accessible,
+                    )
+                except ValueError as e:
+                    log.error(e, exc_info=True)
+                    raise ValueError(ErrorCode.ACCESS_DENIED)
+
+            elif media_id:
+                # access date is equal to media
+                try:
+                    await Media.content_inline_access(
+                        media_id=media_id, content_id=content_id, app_label=app_label, model=model
                     )
                 except ValueError as e:
                     log.error(e, exc_info=True)
@@ -87,15 +116,6 @@ def access_date(app_label, model, *, id_field: str = "id"):
     return decorator
 
 
-def _get_favorable_date(a: Enrollment | None, b: PublicAccessMedia | None) -> AccessDate:
-    if a and b:
-        return AccessDate(start=min(a.start, b.start), end=max(a.end, b.end), archive=max(a.archive, b.archive))
-    c = a or b
-    if c:
-        return AccessDate(start=c.start, end=c.end, archive=c.archive)
-    raise ValueError(ErrorCode.ACCESS_DENIED)
-
-
 def active_context():
     def decorator(func):
         openapi_query_param(func=func, name="course", schema_type="string", required=False, nullable=False)
@@ -120,3 +140,12 @@ def active_context():
         return wrapper
 
     return decorator
+
+
+def _get_favorable_date(a: Enrollment | None, b: PublicAccessMedia | None) -> AccessDate:
+    if a and b:
+        return AccessDate(start=min(a.start, b.start), end=max(a.end, b.end), archive=max(a.archive, b.archive))
+    c = a or b
+    if c:
+        return AccessDate(start=c.start, end=c.end, archive=c.archive)
+    raise ValueError(ErrorCode.ACCESS_DENIED)

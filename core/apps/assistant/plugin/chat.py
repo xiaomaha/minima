@@ -1,5 +1,3 @@
-# https://aistudio.google.com/
-
 import io
 from typing import Any, AsyncIterator
 
@@ -7,14 +5,12 @@ from bs4 import BeautifulSoup
 
 from apps.assistant.models import AssistantNote, ChatMessage
 from apps.assistant.plugin.base import BasePlugin
-from apps.assistant.plugin.registry import PluginRegistry
 
 
-@PluginRegistry.register("assistant")
-class AssistantPlugin(BasePlugin):
+class AIChat(BasePlugin):
     MAX_HISTORY_MESSAGES = 20
 
-    async def execute_stream(self, *args: Any, **kwargs: Any) -> AsyncIterator[str]:
+    async def stream_message(self, *args: Any, **kwargs: Any) -> AsyncIterator[str]:
         message: ChatMessage = kwargs["message"]
         user_id: str = kwargs["user_id"]
         system_instruction = await self._get_system_instruction(user_id)

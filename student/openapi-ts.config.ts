@@ -8,7 +8,7 @@ export default defineConfig({
   postProcess: ['biome:format', 'biome:lint'],
   plugins: [
     {
-      name: '@hey-api/client-ky',
+      name: '@hey-api/client-axios',
       throwOnError: true,
     },
     { name: '@hey-api/sdk' },

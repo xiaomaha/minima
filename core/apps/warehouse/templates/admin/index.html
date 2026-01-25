@@ -13,74 +13,62 @@
 
 {% block content %}
     {% component "unfold/components/container.html" %}
-        {% if daily_usage %}
-            <div class="mb-8 flex items-center gap-3 text-base text-gray-600">
-                {% include 'admin/icons/calendar.html' %}
-                <span>{{ daily_usage.date }} {% trans "Daily Statistics" %}</span>
-            </div>
-            {% if unsolved_inquiry_count or unclosed_appeal_count %}
-                <div class="mb-8 flex items-center gap-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <div class="shrink-0 w-2 h-2 bg-red-500 rounded-full"></div>
-                    <div class="flex-1 flex items-center gap-6 text-sm">
-                        <span class="font-semibold text-red-900">{% trans "Pending" %}:</span>
-                        {% if unsolved_inquiry_count %}
-                            <span class="text-red-800">
-                                <span class="font-medium">{{ unsolved_inquiry_count }}</span> {% trans "unsolved inquiries" %}
-                            </span>
-                        {% endif %}
-                        {% if unclosed_appeal_count %}
-                            <span class="text-red-800">
-                                <span class="font-medium">{{ unclosed_appeal_count }}</span> {% trans "unclosed appeals" %}
-                            </span>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
-            {% if snapshot_cards %}
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    {% for card in snapshot_cards %}
-                        <div class="rounded-lg shadow border border-gray-200 p-6 bg-linear-to-br from-white to-gray-50">
-                            <div class="text-sm font-medium text-gray-500 mb-2">{{ card.label }}</div>
-                            <div class="text-3xl font-bold text-gray-900">{{ card.value|default:"0" }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-                {% for group in stat_groups %}
-                    <div class="rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow h-full flex flex-col bg-white">
-                        <h3 class="text-base font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">{{ group.name }}</h3>
-                        <div class="flex-1 flex flex-col gap-2">
-                            {% for item in group.items %}
-                                <div class="flex items-center justify-between">
-                                    <span class="text-sm text-gray-600">{{ item.label }}</span>
-                                    <div class="flex items-center gap-2">
-                                        {% if item.diff %}{{ item.diff|safe }}{% endif %}
-                                        <span class="text-base font-semibold{% if not item.value %} text-gray-400{% endif %} min-w-12 text-right">
-                                            {% if item.value is None %}
-                                                -
-                                            {% else %}
-                                                {{ item.value }}
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <div class="flex items-start gap-4">
-                    {% include 'admin/icons/chart_bar.html' %}
-                    <div>
-                        <div class="text-base font-medium text-gray-700">{% trans "No aggregated data available yet" %}</div>
-                        <div class="text-sm text-gray-500 mt-1">{% trans "Data is automatically aggregated daily." %}</div>
-                    </div>
+        <div class="mb-8 flex items-center gap-3 text-base text-gray-600">
+            {% include 'admin/icons/calendar.html' %}
+            <span>{{ daily_usage.date }} {% trans "Daily Statistics" %}</span>
+        </div>
+        {% if unsolved_inquiry_count or unclosed_appeal_count %}
+            <div class="mb-8 flex items-center gap-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="shrink-0 w-2 h-2 bg-red-500 rounded-full"></div>
+                <div class="flex-1 flex items-center gap-6 text-sm">
+                    <span class="font-semibold text-red-900">{% trans "Pending" %}:</span>
+                    {% if unsolved_inquiry_count %}
+                        <span class="text-red-800">
+                            <span class="font-medium">{{ unsolved_inquiry_count }}</span> {% trans "unsolved inquiries" %}
+                        </span>
+                    {% endif %}
+                    {% if unclosed_appeal_count %}
+                        <span class="text-red-800">
+                            <span class="font-medium">{{ unclosed_appeal_count }}</span> {% trans "unclosed appeals" %}
+                        </span>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
+        {% if snapshot_cards %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                {% for card in snapshot_cards %}
+                    <div class="rounded-lg shadow border border-gray-200 p-6 bg-linear-to-br from-white to-gray-50">
+                        <div class="text-sm font-medium text-gray-500 mb-2">{{ card.label }}</div>
+                        <div class="text-3xl font-bold text-gray-900">{{ card.value|default:"0" }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+            {% for group in stat_groups %}
+                <div class="rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow h-full flex flex-col bg-white">
+                    <h3 class="text-base font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">{{ group.name }}</h3>
+                    <div class="flex-1 flex flex-col gap-2">
+                        {% for item in group.items %}
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">{{ item.label }}</span>
+                                <div class="flex items-center gap-2">
+                                    {% if item.diff %}{{ item.diff|safe }}{% endif %}
+                                    <span class="text-base font-semibold{% if not item.value %} text-gray-400{% endif %} min-w-12 text-right">
+                                        {% if item.value is None %}
+                                            -
+                                        {% else %}
+                                            {{ item.value }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
         {% include 'admin/app_list.html' %}
     {% endcomponent %}
 {% endblock %}

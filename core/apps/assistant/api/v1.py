@@ -21,6 +21,7 @@ from apps.assistant.api.schema import (
     ChatSchema,
 )
 from apps.assistant.models import AssistantNote, Chat, ChatMessage
+from apps.assistant.plugin.chat import AIChat
 from apps.common.util import HttpRequest, Pagination
 
 router = Router(by_alias=True)
@@ -45,7 +46,7 @@ async def save_assistant_note(request: HttpRequest, data: AssistantNoteSaveSchem
         }
     },
 )
-async def create_chat_message(
+async def chat_message(
     request: HttpRequest,
     data: Form[ChatMessageCreateSchema],
     files: Annotated[
@@ -71,15 +72,15 @@ async def create_chat_message(
 
             # stream
             try:
-                plugin = message.chat.bot.get_plugin()
-                async for chunk in plugin.execute_stream(message=message, user_id=request.auth):
+                bot = AIChat()
+                async for chunk in bot.stream_message(message=message, user_id=request.auth):
                     message.response += chunk
                     chunk_data = json.dumps({"response": chunk}, ensure_ascii=False)
                     yield f"event: chunk\ndata: {chunk_data}\n\n".encode("utf-8")
 
-                if plugin.agent.last_usage:
-                    message.input_tokens = plugin.agent.last_usage["input_tokens"]
-                    message.output_tokens = plugin.agent.last_usage["output_tokens"]
+                if bot.agent.last_usage:
+                    message.input_tokens = bot.agent.last_usage["input_tokens"]
+                    message.output_tokens = bot.agent.last_usage["output_tokens"]
             except ImproperlyConfigured:
                 kind_message = (
                     "Maybe your ASSISTANT_AGENT or ASSISTANT_AGENT_API_KEY is not set. "
@@ -88,7 +89,7 @@ async def create_chat_message(
 
                 chunk_size = 10
                 for i in range(0, len(kind_message), chunk_size):
-                    await asyncio.sleep(0.2)
+                    await asyncio.sleep(0.1)
                     chunk = kind_message[i : i + chunk_size]
                     message.response += chunk
                     chunk_data = json.dumps({"response": chunk}, ensure_ascii=False)

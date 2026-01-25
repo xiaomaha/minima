@@ -1,5 +1,4 @@
-from abc import ABC, abstractmethod
-from typing import Any, AsyncIterator, TypedDict
+from typing import TypedDict
 
 from apps.assistant.agent.factory import create_agent
 
@@ -9,10 +8,6 @@ class UsageInfo(TypedDict):
     output_tokens: int
 
 
-class BasePlugin(ABC):
+class BasePlugin:
     def __init__(self):
         self.agent = create_agent()
-
-    @abstractmethod
-    def execute_stream(self, *args: Any, **kwargs: Any) -> AsyncIterator[str]:
-        pass

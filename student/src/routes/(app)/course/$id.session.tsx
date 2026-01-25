@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/solid-router'
-import { createEffect, createRoot, createSignal, For, Match, Show, Suspense, Switch } from 'solid-js'
+import { createEffect, createRoot, For, Match, Show, Suspense, Switch } from 'solid-js'
+import { createStore } from 'solid-js/store'
 import { courseV1GetSession } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -18,18 +19,23 @@ export const Route = createFileRoute('/(app)/course/$id/session')({
   wrapInSuspense: true,
 })
 
-const { activeTab, setActiveTab } = createRoot(() => {
-  const [activeTab, setActiveTab] = createSignal()
-  return { activeTab, setActiveTab }
+const { getActiveTab, setActiveTab_ } = createRoot(() => {
+  const [activeTabData, setStore] = createStore<Record<string, string>>({}) // <courseId, tab>
+
+  const getActiveTab = (id: string) => activeTabData[id]
+  const setActiveTab = (id: string, tab: string) => setStore(id, tab)
+
+  return { getActiveTab, setActiveTab_: setActiveTab }
 })
 
 export default function RouteComponent() {
   const { t } = useTranslation()
   const params = Route.useParams()
+  const courseId = params().id
 
   const store = createCachedStore(
     'courseV1GetSession',
-    () => ({ path: { id: params().id } }),
+    () => ({ path: { id: courseId } }),
     async (options) => {
       const { data } = await courseV1GetSession(options)
       return data
@@ -37,6 +43,8 @@ export default function RouteComponent() {
   )
 
   const s = () => store[0].data
+  const activeTab = () => getActiveTab(s()!.course.id)
+  const setActiveTab = (tab: string) => setActiveTab_(s()!.course.id, tab)
 
   createEffect(() => {
     if (s() && !activeTab()) {

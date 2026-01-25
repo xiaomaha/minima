@@ -10,7 +10,6 @@ from django_opensearch_dsl import fields
 from django_opensearch_dsl.documents import Document
 from django_opensearch_dsl.registries import registry
 from opensearchpy import Q
-from webvtt.errors import MalformedFileError
 
 from apps.content.models import MatchedLineDict, Media, Subtitle
 
@@ -107,13 +106,8 @@ class SubtitleDocument(Document):
             return []
 
         f = StringIO(body)
-        for fmt in ["vtt", "srt", "sbv"]:
-            try:
-                captions = webvtt.from_buffer(f, format=fmt)
-                return [{"start": c.start, "end": c.end, "line": c.text.replace("\n", " ")} for c in captions]
-            except MalformedFileError:
-                f.seek(0)
-        return []
+        captions = webvtt.from_buffer(f)
+        return [{"start": c.start, "end": c.end, "line": c.text.replace("\n", " ")} for c in captions]
 
 
 def get_search_suggestion(*, q: str, limit: int = 10):

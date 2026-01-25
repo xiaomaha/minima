@@ -1,10 +1,11 @@
 import type { FieldPath } from '@modular-forms/solid'
 import { type FieldValues, type FormStore, setError } from '@modular-forms/solid'
+import type { AxiosError } from 'axios'
 import type { TOptions } from 'i18next'
 import i18n from '@/i18n.ts'
 import { showToast } from '@/shared/toast/store.ts'
 
-export const handleApiError = async (error: unknown, _: Response) => {
+export const handleApiError = async (error: AxiosError) => {
   let message: string = ''
   let duration: number = 1000 * 5
 
@@ -13,7 +14,7 @@ export const handleApiError = async (error: unknown, _: Response) => {
     return error
   }
 
-  const err = error as Record<string, unknown>
+  const err = error.response?.data as { detail?: string; similarity?: number }
 
   if ('detail' in err && typeof err.detail === 'string') {
     switch (err.detail) {
@@ -51,7 +52,7 @@ export const handleApiError = async (error: unknown, _: Response) => {
     type: 'error',
   })
 
-  return error
+  throw error
 }
 
 interface ValidationError {

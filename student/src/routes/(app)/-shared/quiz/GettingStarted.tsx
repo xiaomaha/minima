@@ -1,6 +1,7 @@
-import { createSignal } from 'solid-js'
+import { createSignal, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import { type LearningSessionStep, type QuizSessionSchema, quizV1StartAttempt } from '@/api'
+import { ContentViewer } from '@/shared/ContentViewer'
 import { useTranslation } from '@/shared/solid/i18n'
 
 const SITTING = 1 as LearningSessionStep
@@ -8,6 +9,7 @@ const SITTING = 1 as LearningSessionStep
 interface Props {
   session: QuizSessionSchema
   setStore: SetStoreFunction<{ data: QuizSessionSchema | undefined }>
+  inlineContext?: { media: string } //  inline quiz inside media
 }
 
 export const GettingStarted = (props: Props) => {
@@ -17,7 +19,7 @@ export const GettingStarted = (props: Props) => {
   const [loading, setLoading] = createSignal(false)
   const start = async () => {
     setLoading(true)
-    const { data } = await quizV1StartAttempt({ path: { id: session.quiz.id } })
+    const { data } = await quizV1StartAttempt({ path: { id: session.quiz.id }, query: props.inlineContext })
     props.setStore('data', (prev) => prev && { ...prev, step: SITTING, attempt: data })
     setLoading(false)
   }
@@ -25,9 +27,11 @@ export const GettingStarted = (props: Props) => {
   return (
     <div class="flex flex-col gap-4 p-8 h-full m-auto items-center">
       <div class="text-xl font-semibold">{session.quiz.title}</div>
-      <div class="text-sm text-base-content/60">{session.quiz.description}</div>
+      <Show when={session.quiz.description}>
+        <ContentViewer content={session.quiz.description!} class="text-sm my-2" />
+      </Show>
 
-      <button type="button" class="my-8 btn btn-primary min-w-40" onClick={start} disabled={loading()}>
+      <button type="button" class="my-4 btn btn-primary min-w-40" onClick={start} disabled={loading()}>
         {t('Start Quiz')}
       </button>
 

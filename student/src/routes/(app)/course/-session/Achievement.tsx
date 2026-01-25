@@ -64,13 +64,13 @@ export const Achievement = () => {
                       </div>
 
                       <Show when={cert.certificateskillSet.length > 0}>
-                        <div class="space-y-3">
+                        <div class="space-y-4">
                           <div class="text-sm font-semibold divider divider-start after:h-px">{t('Skills')}</div>
                           <For each={cert.certificateskillSet}>
                             {(certSkill) => (
                               <div>
                                 <div class="breadcrumbs py-0">
-                                  <ul class="text-xs label">
+                                  <ul class="text-xs label m-0">
                                     <For each={certSkill.skill.classification.ancestors}>
                                       {(ancestor) => <li>{ancestor}</li>}
                                     </For>

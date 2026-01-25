@@ -1,11 +1,10 @@
 import pytest
 
-from apps.assistant.tests.factories import AssistantBotFactory, AssistantNoteFactory, ChatFactory
+from apps.assistant.tests.factories import AssistantNoteFactory, ChatFactory
 
 
 @pytest.mark.order(-3)
 @pytest.mark.django_db
 def test_assistant():
-    bot = AssistantBotFactory.create()
-    ChatFactory.create(bot=bot)
+    ChatFactory.create()
     AssistantNoteFactory.create()

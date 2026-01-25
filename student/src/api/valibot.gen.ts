@@ -369,8 +369,7 @@ export const vAssistantNoteSaveSchema = v.object({
 export const vChatMessageCreateSchema = v.object({
     message: v.string(),
     url: v.string(),
-    chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
-    botId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()]))
+    chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()]))
 });
 
 /**
@@ -382,15 +381,6 @@ export const vChatMessageUpdateSchema = v.object({
 });
 
 /**
- * AssistantBotSchema
- */
-export const vAssistantBotSchema = v.object({
-    name: v.string(),
-    description: v.string(),
-    avatar: v.union([v.string(), v.null()])
-});
-
-/**
  * ChatSchema
  */
 export const vChatSchema = v.object({
@@ -398,8 +388,7 @@ export const vChatSchema = v.object({
     title: v.string(),
     active: v.boolean(),
     messageCount: v.pipe(v.number(), v.integer()),
-    lastMessage: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    bot: vAssistantBotSchema
+    lastMessage: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
 });
 
 /**
@@ -590,6 +579,27 @@ export const vSkillDataSchema = v.object({
 });
 
 /**
+ * QuizSchema
+ */
+export const vQuizSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    title: v.string(),
+    description: v.string(),
+    audience: v.string(),
+    thumbnail: v.union([v.string(), v.null()]),
+    featured: v.boolean(),
+    format: v.string(),
+    durationSeconds: v.union([v.number(), v.null()]),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    maxAttempts: v.pipe(v.number(), v.integer()),
+    verificationRequired: v.boolean(),
+    id: v.string(),
+    owner: vOwnerSchema,
+    questionCount: v.pipe(v.number(), v.integer())
+});
+
+/**
  * MediaSchema
  */
 export const vMediaSchema = v.object({
@@ -617,7 +627,8 @@ export const vMediaSchema = v.object({
     owner: vOwnerSchema,
     subtitleCount: v.pipe(v.number(), v.integer()),
     uploaded: v.boolean(),
-    url: v.string()
+    url: v.string(),
+    quizzes: v.array(vQuizSchema)
 });
 
 /**
@@ -725,10 +736,7 @@ export const vSearchedMediaSchema = v.object({
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
     id: v.string(),
-    license: v.string(),
-    channel: v.string(),
     owner: vOwnerSchema,
-    subtitleCount: v.pipe(v.number(), v.integer()),
     uploaded: v.boolean(),
     url: v.string(),
     accessible: v.boolean(),
@@ -1806,27 +1814,6 @@ export const vQuizAttemptSchema = v.object({
 });
 
 /**
- * QuizSchema
- */
-export const vQuizSchema = v.object({
-    created: v.pipe(v.string(), v.isoTimestamp()),
-    modified: v.pipe(v.string(), v.isoTimestamp()),
-    title: v.string(),
-    description: v.string(),
-    audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
-    featured: v.boolean(),
-    format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
-    passingPoint: v.pipe(v.number(), v.integer()),
-    maxAttempts: v.pipe(v.number(), v.integer()),
-    verificationRequired: v.boolean(),
-    id: v.string(),
-    owner: vOwnerSchema,
-    questionCount: v.pipe(v.number(), v.integer())
-});
-
-/**
  * QuizSolutionSchema
  */
 export const vQuizSolutionSchema = v.object({
@@ -2057,6 +2044,7 @@ export const vAssignmentV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2072,6 +2060,7 @@ export const vAssignmentV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2090,6 +2079,7 @@ export const vAssignmentV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2105,6 +2095,7 @@ export const vAssignmentV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2115,12 +2106,11 @@ export const vAssistantV1SaveAssistantNoteData = v.object({
     query: v.optional(v.never())
 });
 
-export const vAssistantV1CreateChatMessageData = v.object({
+export const vAssistantV1ChatMessageData = v.object({
     body: v.object({
         message: v.string(),
         url: v.string(),
         chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
-        botId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
         files: v.optional(v.array(v.string()))
     }),
     path: v.optional(v.never()),
@@ -2265,7 +2255,7 @@ export const vContentV1GetMediaData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        course: v.optional(v.string())
+        media: v.optional(v.string())
     }))
 });
 
@@ -2280,7 +2270,7 @@ export const vContentV1GetSubtitlesData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        course: v.optional(v.string())
+        media: v.optional(v.string())
     }))
 });
 
@@ -2297,6 +2287,7 @@ export const vContentV1DeleteMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2307,6 +2298,7 @@ export const vContentV1GetMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2322,6 +2314,7 @@ export const vContentV1UpdateMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2332,6 +2325,7 @@ export const vContentV1GetMediaNoteData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2350,6 +2344,7 @@ export const vContentV1SaveMediaNoteData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2413,7 +2408,7 @@ export const vCourseV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        course: v.optional(v.string())
+        media: v.optional(v.string())
     }))
 });
 
@@ -2428,7 +2423,7 @@ export const vCourseV1StartEngagementData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        course: v.optional(v.string())
+        media: v.optional(v.string())
     }))
 });
 
@@ -2469,6 +2464,7 @@ export const vDiscussionV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2484,6 +2480,7 @@ export const vDiscussionV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2499,6 +2496,7 @@ export const vDiscussionV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2511,6 +2509,7 @@ export const vDiscussionV1GetPostsData = v.object({
     query: v.optional(v.object({
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24),
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2531,6 +2530,7 @@ export const vDiscussionV1CreatePostData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2546,6 +2546,7 @@ export const vDiscussionV1GetOwnPostsData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2564,6 +2565,7 @@ export const vDiscussionV1DeletePostData = v.object({
         postId: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2580,6 +2582,7 @@ export const vDiscussionV1UpdatePostData = v.object({
         postId: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2595,6 +2598,7 @@ export const vExamV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2610,6 +2614,7 @@ export const vExamV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2625,6 +2630,7 @@ export const vExamV1SaveAnswersData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2635,6 +2641,7 @@ export const vExamV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2650,6 +2657,7 @@ export const vExamV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2987,6 +2995,7 @@ export const vQuizV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3002,6 +3011,7 @@ export const vQuizV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3017,6 +3027,7 @@ export const vQuizV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3032,6 +3043,7 @@ export const vQuizV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3042,7 +3054,7 @@ export const vSurveyV1GetSurveyData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        course: v.optional(v.string())
+        media: v.optional(v.string())
     }))
 });
 
@@ -3057,6 +3069,7 @@ export const vSurveyV1SubmitData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3067,7 +3080,7 @@ export const vSurveyV1ResultsData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        course: v.optional(v.string())
+        media: v.optional(v.string())
     }))
 });
 

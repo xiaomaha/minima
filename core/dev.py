@@ -25,7 +25,6 @@ def bootstrap():
         "python manage.py migrate",
         "python manage.py collectstatic --noinput",
         "python manage.py createsuperuser --noinput || true",
-        "python manage.py create_assistant_bot",
         "python manage.py opensearch index create --force --ignore-error",
         "python manage.py create_platform_partner",
         "python manage.py create_base_policies",

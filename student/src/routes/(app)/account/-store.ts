@@ -8,6 +8,7 @@ interface Store {
 }
 
 const STORAGE_KEY = 'account-store'
+const EXPIRY_THRESHOLD = 60 * 1000
 
 function loadInitialUser(): UserSchema | null | undefined {
   const stored = localStorage.getItem(STORAGE_KEY)
@@ -39,7 +40,7 @@ export const { store, setStore, setUser, getPreferences, setPreferences, getUser
     }
     if (!user.tokenExpires) return
     const expiryTime = new Date(user.tokenExpires).getTime()
-    const timeUntilExpiry = expiryTime - Date.now()
+    const timeUntilExpiry = expiryTime - Date.now() - EXPIRY_THRESHOLD
     if (timeUntilExpiry <= 0) {
       setStore('user', null)
       return

@@ -6,6 +6,9 @@ interface MediaPlayerAPI {
   duration: () => number
   jumpToTime: (time: number) => void
   onTimeUpdate: (callback: (time: number) => void) => void
+  play: () => void
+  pause: () => void
+  isPlaying: () => boolean
 }
 
 interface Props {
@@ -49,6 +52,15 @@ export const VideoPlayer = (props: Props) => {
         },
         duration: () => {
           return player?.duration ?? 0
+        },
+        play: () => {
+          if (player) player.play()
+        },
+        pause: () => {
+          if (player) player.pause()
+        },
+        isPlaying: () => {
+          return player?.playing ?? false
         },
       }
 
