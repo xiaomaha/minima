@@ -6,7 +6,7 @@ from factory.helpers import post_generation
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
-from apps.assignment.models import Assignment
+from apps.assignment.tests.factories import AssignmentFactory
 from apps.common.tests.factories import LearningObjectFactory
 from apps.competency.tests.factories import CertificateFactory
 from apps.content.tests.factories import MediaFactory
@@ -20,8 +20,8 @@ from apps.course.models import (
     LessonMedia,
     MessagePreset,
 )
-from apps.discussion.models import Discussion
-from apps.exam.models import Exam
+from apps.discussion.tests.factories import DiscussionFactory
+from apps.exam.tests.factories import ExamFactory
 from apps.operation.models import Category
 from apps.operation.tests.factories import FAQFactory, HonorCodeFactory, InstructorFactory
 from apps.survey.tests.factories import SurveyFactory
@@ -108,9 +108,9 @@ class CourseFactory(LearningObjectFactory[Course]):
                 ignore_conflicts=True,
             )
 
-        discussions = Discussion.objects.order_by("?")[:2]
-        exams = Exam.objects.order_by("?")[:2]
-        assignments = Assignment.objects.order_by("?")[:2]
+        discussions = DiscussionFactory.create_batch(2)
+        exams = ExamFactory.create_batch(2)
+        assignments = AssignmentFactory.create_batch(2)
 
         last_lesson = self.lesson_set.last()
         course_days = last_lesson.start_offset + 7 if last_lesson else 30

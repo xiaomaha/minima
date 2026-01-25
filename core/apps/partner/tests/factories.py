@@ -10,7 +10,7 @@ from mimesis.plugins.factory import FactoryField
 from apps.account.models import User
 from apps.common.tests.factories import lazy_avatar
 from apps.common.util import tuid
-from apps.partner.models import BusinessSite, Cohort, CohortEmployee, CohortStaff, Employee, Partner
+from apps.partner.models import Cohort, CohortMember, CohortStaff, Group, Member, Partner
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -34,42 +34,42 @@ class PartnerFactory(DjangoModelFactory[Partner]):
         if not create:
             return
 
-        if self.businesssite_set.exists():
+        if self.group_set.exists():
             return
 
-        BusinessSiteFactory.reset_sequence()
-        BusinessSiteFactory.create_batch(generic.random.randint(1, 10), partner=self)
+        GroupFactory.reset_sequence()
+        GroupFactory.create_batch(generic.random.randint(1, 10), partner=self)
 
 
-class BusinessSiteFactory(DjangoModelFactory[BusinessSite]):
+class GroupFactory(DjangoModelFactory[Group]):
     partner = SubFactory(PartnerFactory)
     name = FactoryField("word")
     description = FactoryField("text")
     business_number = LazyFunction(lambda: tuid())
 
     class Meta:
-        model = BusinessSite
+        model = Group
         django_get_or_create = ("partner", "name")
         skip_postgeneration_save = True
 
     @post_generation
-    def post_generation(self: BusinessSite, create: bool, extracted, **kwargs):
+    def post_generation(self: Group, create: bool, extracted, **kwargs):
         if not create:
             return
 
-        if self.employee_set.exists():
+        if self.member_set.exists():
             return
 
-        EmployeeFactory.create_batch(generic.random.randint(5, 10), site=self)
+        MemberFactory.create_batch(generic.random.randint(5, 10), group=self)
 
 
-class EmployeeFactory(DjangoModelFactory[Employee]):
-    site = SubFactory(BusinessSiteFactory)
+class MemberFactory(DjangoModelFactory[Member]):
+    group = SubFactory(GroupFactory)
     name = FactoryField("full_name")
     email = FactoryField("email")
     birth_date = FactoryField("date", start=1950, end=2000)
     encrypted_id_number = LazyFunction(
-        lambda: Employee.encrypt_id_number(f"{generic.person.identifier()}-{generic.cryptographic.uuid()[:8]}")
+        lambda: Member.encrypt_id_number(f"{generic.person.identifier()}-{generic.cryptographic.uuid()[:8]}")
     )
     phone = FactoryField("phone_number")
     team = FactoryField("fruit")
@@ -79,8 +79,8 @@ class EmployeeFactory(DjangoModelFactory[Employee]):
     employment_type = ""
 
     class Meta:
-        model = Employee
-        django_get_or_create = ("site", "email")
+        model = Member
+        django_get_or_create = ("group", "email")
 
 
 class CohortFactory(DjangoModelFactory[Cohort]):
@@ -97,9 +97,9 @@ class CohortFactory(DjangoModelFactory[Cohort]):
         if not create:
             return
 
-        employees = Employee.objects.order_by("?")[: generic.random.randint(20, 30)]
-        CohortEmployee.objects.bulk_create(
-            [CohortEmployee(cohort=self, employee=employee) for employee in employees], ignore_conflicts=True
+        members = Member.objects.order_by("?")[: generic.random.randint(20, 30)]
+        CohortMember.objects.bulk_create(
+            [CohortMember(cohort=self, member=member) for member in members], ignore_conflicts=True
         )
 
         users = User.objects.order_by("?")[: generic.random.randint(1, 3)]

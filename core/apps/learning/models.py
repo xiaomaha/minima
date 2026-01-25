@@ -335,7 +335,7 @@ class Catalog(TimeStampedMixin):
         now = timezone.now()
 
         user_cohort_name = CohortCatalog.objects.filter(
-            catalog=OuterRef("pk"), cohort__employees__user_id=user_id
+            catalog=OuterRef("pk"), cohort__members__user_id=user_id
         ).values("cohort__name")[:1]
 
         return (
@@ -345,7 +345,7 @@ class Catalog(TimeStampedMixin):
                 & (
                     Q(public=True)
                     | Q(usercatalog__user_id=user_id)
-                    | Q(cohortcatalog__cohort__employees__user_id=user_id)
+                    | Q(cohortcatalog__cohort__members__user_id=user_id)
                 )
             )
             .annotate(item_count=Count("catalogitem", distinct=True), cohort_name=Subquery(user_cohort_name))
@@ -402,7 +402,7 @@ class Catalog(TimeStampedMixin):
             await Catalog.objects
             .filter(id=catalog_id, available_from__lte=now, available_until__gte=now, active=True)
             .filter(
-                Q(public=True) | Q(usercatalog__user_id=user_id) | Q(cohortcatalog__cohort__employees__user_id=user_id)
+                Q(public=True) | Q(usercatalog__user_id=user_id) | Q(cohortcatalog__cohort__members__user_id=user_id)
             )
             .filter(
                 catalogitem__content_id=content_id,

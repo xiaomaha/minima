@@ -27,7 +27,7 @@ from apps.exam.models import Submission as ExamSubmission
 from apps.learning.models import Catalog, CohortCatalog, Enrollment, UserCatalog
 from apps.operation.models import Appeal, Attachment, Comment, Inquiry, Message
 from apps.partner.models import Cohort, Partner
-from apps.partner.models import Employee as PartnerEmployee
+from apps.partner.models import Member as PartnerMember
 from apps.quiz.models import Quiz
 from apps.quiz.models import Submission as QuizSubmission
 from apps.store.models import Coupon, Order, Payment, Product, Refund
@@ -113,7 +113,7 @@ class DailyUsageFact(ExecutionMetricsMixin):
 
     # partner
     partner_count = IntegerField(_("Partner"), default=0)
-    partner_employee_count = IntegerField(_("Partner Employee"), default=0)
+    partner_member_count = IntegerField(_("Partner Member"), default=0)
     cohort_count = IntegerField(_("Cohort"), default=0)
 
     # competency
@@ -190,7 +190,7 @@ class DailyUsageFact(ExecutionMetricsMixin):
         ("comment_count", Comment, "created"),
         # partner
         ("partner_count", Partner, "created"),
-        ("partner_employee_count", PartnerEmployee, "created"),
+        ("partner_member_count", PartnerMember, "created"),
         ("cohort_count", Cohort, "created"),
         # competency
         ("competency_goal_count", CompetencyGoal, "created"),

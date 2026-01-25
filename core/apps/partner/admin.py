@@ -12,53 +12,53 @@ from apps.common.admin import (
     ReadOnlyTabularInline,
     TabularInline,
 )
-from apps.partner.import_export import EmployeeResource
-from apps.partner.models import BusinessSite, Cohort, CohortEmployee, CohortStaff, Employee, Partner
+from apps.partner.import_export import MemberResource
+from apps.partner.models import Cohort, CohortMember, CohortStaff, Group, Member, Partner
 
 
 @admin.register(Partner)
 class PartnerAdmin(ModelAdmin[Partner]):
-    class BusinessSiteInline(TabularInline[BusinessSite]):
-        model = BusinessSite
+    class GroupInline(TabularInline[Group]):
+        model = Group
 
         @admin.display(description="ID")
         def id_(self, obj: Partner):
             return obj.pk
 
-        def get_readonly_fields(self, request: HttpRequest, obj: BusinessSite | None = None):
+        def get_readonly_fields(self, request: HttpRequest, obj: Group | None = None):
             readonly_fields = list(super().get_readonly_fields(request, obj))
             return ["id_"] + readonly_fields
 
-    inlines = (BusinessSiteInline,)
+    inlines = (GroupInline,)
 
 
-@admin.register(BusinessSite)
-class BusinessSiteAdmin(HiddenModelAdmin[BusinessSite]):
+@admin.register(Group)
+class GroupAdmin(HiddenModelAdmin[Group]):
     pass
 
 
-@admin.register(Employee)
-class EmployeeAdmin(ImportExportModelAdmin[Employee]):
-    class CohortEmployeeInline(TabularInline[CohortEmployee]):
-        model = CohortEmployee
+@admin.register(Member)
+class MemberAdmin(ImportExportModelAdmin[Member]):
+    class CohortMemberInline(TabularInline[CohortMember]):
+        model = CohortMember
 
-    class EmployeeEventInline(ReadOnlyTabularInline[Employee.pgh_event_model]):
-        model = Employee.pgh_event_model
+    class MemberEventInline(ReadOnlyTabularInline[Member.pgh_event_model]):
+        model = Member.pgh_event_model
 
-    inlines = (CohortEmployeeInline, EmployeeEventInline)
+    inlines = (CohortMemberInline, MemberEventInline)
 
-    resource_class = EmployeeResource
+    resource_class = MemberResource
 
     list_filter_submit = True
     list_filter = [
-        ("site__partner", RelatedDropdownFilter),
-        ("site", RelatedDropdownFilter),
+        ("group__partner", RelatedDropdownFilter),
+        ("group", RelatedDropdownFilter),
         ("team", FieldTextFilter),
-        ("cohortemployee__cohort", RelatedDropdownFilter),
+        ("cohortmember__cohort", RelatedDropdownFilter),
     ]
 
     @admin.display(description=_("User"), boolean=True)
-    def linked_user(self, obj: Employee):
+    def linked_user(self, obj: Member):
         return bool(obj.user)
 
     def get_export_queryset(self, request):
@@ -77,12 +77,12 @@ class CohortAdmin(ModelAdmin[Cohort]):
     class StaffInline(TabularInline[CohortStaff]):
         model = CohortStaff
 
-    class EmployeeInline(TabularInline[CohortEmployee]):
-        model = CohortEmployee
+    class MemberInline(TabularInline[CohortMember]):
+        model = CohortMember
         exclude = ("encrypted_id_number", "employment_status", "employment_type")
 
-    exclude = ("employees",)
-    inlines = (StaffInline, EmployeeInline)
+    exclude = ("members",)
+    inlines = (StaffInline, MemberInline)
 
 
 @admin.register(CohortStaff)
@@ -90,11 +90,11 @@ class CohortStaffAdmin(HiddenModelAdmin[CohortStaff]):
     pass
 
 
-@admin.register(CohortEmployee)
-class CohortEmployeeAdmin(HiddenModelAdmin[CohortEmployee]):
+@admin.register(CohortMember)
+class CohortMemberAdmin(HiddenModelAdmin[CohortMember]):
     pass
 
 
-@admin.register(Employee.pgh_event_model)
-class CohortEmployeeEventAdmin(ReadOnlyHiddenModelAdmin[Employee.pgh_event_model]):
+@admin.register(Member.pgh_event_model)
+class CohortMemberEventAdmin(ReadOnlyHiddenModelAdmin[Member.pgh_event_model]):
     pass

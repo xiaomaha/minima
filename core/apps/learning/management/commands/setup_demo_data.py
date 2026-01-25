@@ -13,8 +13,8 @@ from apps.content.tests.factories import MediaFactory
 from apps.learning.models import CatalogItem
 from apps.learning.tests.factories import CatalogFactory, CohortCatalogFactory, UserCatalogFactory
 from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory
-from apps.partner.models import BusinessSite
-from apps.partner.tests.factories import CohortFactory, EmployeeFactory, PartnerFactory
+from apps.partner.models import Group
+from apps.partner.tests.factories import CohortFactory, MemberFactory, PartnerFactory
 
 
 class Command(BaseCommand):
@@ -50,15 +50,15 @@ class Command(BaseCommand):
             public=False,
         )
 
-        # partner, site, employee, cohort
+        # partner, group, member, cohort
         partner = PartnerFactory.create()
-        site = BusinessSite.objects.filter(partner=partner).first()
-        if not site:
-            raise ImproperlyConfigured("No business site found for partner")
+        group = Group.objects.filter(partner=partner).first()
+        if not group:
+            raise ImproperlyConfigured("No group found for partner")
 
-        employee = EmployeeFactory.create(site=site, email=test_user.email, user=test_user)
+        member = MemberFactory.create(group=group, email=test_user.email, user=test_user)
         cohort = CohortFactory.create()
-        cohort.employees.add(employee)
+        cohort.members.add(member)
 
         CohortCatalogFactory.create(cohort=cohort, catalog=cohort_catalog)
 

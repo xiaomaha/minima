@@ -40,7 +40,7 @@ def dashboard_callback(request, context):
     field_groups = [
         (_("Account"), ["registration_count", "login_count"]),
         (_("Operation"), ["attachment_count", "inquiry_count", "appeal_count", "message_sent_count", "comment_count"]),
-        (_("Partner"), ["partner_count", "partner_employee_count", "cohort_count"]),
+        (_("Partner"), ["partner_count", "partner_member_count", "cohort_count"]),
         (_("Competency"), ["competency_goal_count", "badge_award_count", "certificate_award_count"]),
         (_("Content"), ["media_count", "public_access_media_count", "watch_count"]),
         (_("Survey"), ["survey_count", "survey_submission_count"]),
