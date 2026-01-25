@@ -1,4 +1,4 @@
-import { IconExclamationCircle, IconPencil, IconPlus } from '@tabler/icons-solidjs'
+import { IconPencil, IconPlus } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
 import { Portal } from 'solid-js/web'
 import { type CommentNestedSchema, type CommentSchema, operationV1GetThread, operationV1GetThreadComments } from '@/api'
@@ -41,12 +41,6 @@ export const Thread = (props: ThreadContextValue['context']) => {
   return (
     <fieldset disabled={disabled()}>
       <div class="flex flex-col gap-4">
-        <Show when={disabled()}>
-          <div class="alert alert-neutral mx-auto mb-4 font-semibold">
-            <IconExclamationCircle class="text-info" />
-            {t('This thread is read-only.')}
-          </div>
-        </Show>
         <div class="text-lg text-center space-x-4">
           <span>{t('{{count}} comment', { count: thread()?.commentCount ?? 0 })}</span>
           <Show when={options?.rating}>

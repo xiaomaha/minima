@@ -153,7 +153,7 @@ class ModelAdmin[T: Model](GenericEditLinkMixin, BaseModelAdmin):
                 if field.name not in self.autocomplete_fields:
                     self._computed_autocomplete_fields.append(field.name)
 
-                for related_field in cast(T, field.related_model)._meta.fields:
+                for related_field in cast(type[Model], field.related_model)._meta.fields:
                     if related_field.name in COMMON_SEARCH_FIELDS and not isinstance(related_field, ForeignKey):
                         self._computed_search_fields.append(f"{field.name}__{related_field.name}")
 
@@ -188,7 +188,7 @@ class ModelAdmin[T: Model](GenericEditLinkMixin, BaseModelAdmin):
 
     def get_list_display(self, request: HttpRequest):
         base = [f for f in self.list_display if f not in ["__str__"]]
-        return tuple(cast(str, f) for f in base + self._computed_list_display)
+        return tuple(f for f in base + self._computed_list_display)
 
     def get_readonly_fields(self, request, obj=None):
         return tuple(list(super().get_readonly_fields(request, obj)) + self._computed_readonly_fields)

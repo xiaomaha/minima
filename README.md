@@ -35,7 +35,7 @@ Access with username `admin@example.com` and password `1111`
 
 ### Backend
 
-- Django 6.x + Django Ninja
+- Django 6.x, Django Ninja, Django-unfold
 - PostgreSQL, OpenSearch, Redis, MinIO
 - AI Plugin Architecture, Gemini/OpenAI/Anthropic
 

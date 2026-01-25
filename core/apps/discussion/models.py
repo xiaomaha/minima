@@ -32,7 +32,6 @@ from django.db.models.query import Prefetch
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from pghistory.models import PghEventModel
 
 from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
@@ -357,7 +356,7 @@ class Post(TimeStampedMixin, AttachmentMixin):
         )
         post = await Post.objects.acreate(attempt=attempt, title=title, parent_id=parent_id, body=body)
         await post.update_attachments(files=files, owner_id=learner_id, content=post.body)
-        post._state.fields_cache["attempt"] = attempt
+        post._state.fields_cache["attempt"] = attempt  # type: ignore
         post.post_count = await post.attempt.post_count()
         return post
 
@@ -438,7 +437,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
 
     if TYPE_CHECKING:
         pk: int
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
 
     async def grade(self, grader: "User | None" = None):
         question = self.attempt.question

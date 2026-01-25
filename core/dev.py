@@ -1,3 +1,4 @@
+import os
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
@@ -27,8 +28,7 @@ def bootstrap():
         "python manage.py create_assistant_bot",
         "python manage.py opensearch index create --force --ignore-error",
         "python manage.py create_platform_partner",
-        "python manage.py create_empty_policies",
-        "python manage.py convert_mjml",
+        "python manage.py create_base_policies",
         "python manage.py load_ncs_data",
     ]
 
@@ -38,33 +38,80 @@ def bootstrap():
 
 @app.command()
 def lint():
-    subprocess.run(["ty", "check"])
+    subprocess.run(["pyrefly", "check"])
     subprocess.run(["ruff", "check", "."])
     subprocess.run(["ruff", "check", "--select", "I", "."])
     subprocess.run(["ruff", "format", "."])
 
 
 @app.command()
+def build_ua_parser():
+    BASE_DIR = Path(__file__).resolve().parent
+    WHEELS_DIR = BASE_DIR / "wheels"
+    WHEELS_DIR.mkdir(parents=True, exist_ok=True)
+
+    packages = ["ua-parser[regex]"]
+    platforms = ["linux/amd64", "linux/arm64"]
+
+    for platform in platforms:
+        print(f"Building wheels for {platform}...")
+        subprocess.run([
+            "docker",
+            "run",
+            "--rm",
+            "--platform",
+            platform,
+            "-v",
+            f"{WHEELS_DIR}:/wheels",
+            "-w",
+            "/tmp",
+            "python:3.14-alpine",
+            "sh",
+            "-c",
+            f"apk add --no-cache gcc musl-dev binutils git && pip wheel --wheel-dir /wheels {' '.join(packages)}",
+        ])
+
+    print(f"\nWheels built in {WHEELS_DIR}")
+
+
+UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
+
+
+@app.command()
 def download_images():
     BASE_DIR = Path(__file__).resolve().parent
-    CACHE_DIR = BASE_DIR / ".cache" / "test_images"
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    DEMO_DIR = BASE_DIR / "demo"
+    DEMO_DIR.mkdir(parents=True, exist_ok=True)
 
-    print("Fetching image list from Picsum API...")
-    response = requests.get("https://picsum.photos/v2/list?page=1&limit=100")
-    images = response.json()
+    for subdir in ["thumbnail", "avatar"]:
+        (DEMO_DIR / subdir).mkdir(exist_ok=True)
+
+    print("Fetching images from Unsplash API...")
+
+    thumbnail_images = requests.get(
+        "https://api.unsplash.com/search/photos",
+        params={"query": "education school computer", "per_page": 50},
+        headers={"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"},
+    ).json()["results"]
+
+    avatar_images = requests.get(
+        "https://api.unsplash.com/search/photos",
+        params={"query": "face person", "per_page": 50},
+        headers={"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"},
+    ).json()["results"]
 
     def download_one(args):
         image_data, prefix, size = args
         img_id = image_data["id"]
-        img_path = CACHE_DIR / f"{prefix}_{img_id}.jpg"
+        img_path = DEMO_DIR / prefix / f"{prefix}_{img_id}.jpg"
 
         if img_path.exists():
             return True
 
         try:
-            download_url = image_data["download_url"]
+            download_url = image_data["urls"]["raw"]
             img_response = requests.get(download_url, timeout=30)
+
             if img_response.status_code == 200:
                 img = Image.open(BytesIO(img_response.content))
                 width, height = map(int, size.split("x"))
@@ -75,11 +122,14 @@ def download_images():
                 return True
         except Exception as e:
             print(f"✗ {prefix}_{img_id}: {e}")
+
         return False
 
-    tasks = [(img, "thumb", "800x600") for img in images[:100]] + [(img, "avatar", "200x200") for img in images[:100]]
+    tasks = [(img, "thumbnail", "800x600") for img in thumbnail_images] + [
+        (img, "avatar", "200x200") for img in avatar_images
+    ]
 
-    print(f"Downloading images to {CACHE_DIR}...")
+    print(f"Downloading images to {DEMO_DIR}...")
 
     with ThreadPoolExecutor(max_workers=10) as executor:
         results = list(executor.map(download_one, tasks))

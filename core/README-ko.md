@@ -142,11 +142,11 @@ uv run dev.py download-images   # 샘플 이미지 다운로드
 
 ```bash
 # 개발 도구 설치
-uv tool install ty      # 타입 체커
+uv tool install pyrefly      # 타입 체커
 uv tool install ruff    # 린터 및 포매터
 
 # 도구 업데이트
-uv tool upgrade ty ruff
+uv tool upgrade pyrefly ruff
 ```
 
 ### 코드 품질
@@ -156,7 +156,7 @@ uv tool upgrade ty ruff
 uv run dev.py lint
 
 # 또는 개별 실행
-uv run ty check                    # 타입 체킹
+uv run pyrefly check               # 타입 체킹
 uv run ruff check .                # 린팅
 uv run ruff check --select I .     # Import 정렬
 uv run ruff format .               # 코드 포매팅

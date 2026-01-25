@@ -1,5 +1,4 @@
 import json
-from typing import cast
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
@@ -21,7 +20,7 @@ WATCH = "1"
 def test_media_flow(client: Client, admin_user: AdminUser, mimesis: Generic):
     admin_user.login()
 
-    media = cast(Media, MediaFactory())
+    media: Media = MediaFactory()
     EnrollmentFactory(
         content_type=ContentType.objects.get_for_model(media), content_id=media.id, active=True, user_id=admin_user.id
     )

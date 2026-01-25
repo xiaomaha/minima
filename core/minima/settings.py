@@ -3,7 +3,6 @@ import logging
 import os
 from pathlib import Path
 
-import django_stubs_ext
 import pghistory
 from celery.schedules import crontab
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -173,7 +172,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {"django.db.backends": {"handlers": ["console"], "level": "DEBUG", "propagate": False}},
+    # "loggers": {"django.db.backends": {"handlers": ["console"], "level": "DEBUG", "propagate": False}},
     "root": {"handlers": ["console"], "level": "INFO"},
 }
 
@@ -313,9 +312,6 @@ logging.getLogger("fontTools.subset").setLevel(logging.WARNING)
 logging.getLogger("fontTools.ttLib.ttFont").setLevel(logging.WARNING)
 logging.getLogger("fpdf.svg").propagate = False
 
-
-# monkeypatch
-django_stubs_ext.monkeypatch()
 
 if DEBUG:
     import minima.settings_dev  # noqa

@@ -1,13 +1,16 @@
 import math
 import re
 from collections import OrderedDict
+from io import StringIO
 from typing import TypedDict
 
+import webvtt
 from django.conf import settings
 from django_opensearch_dsl import fields
 from django_opensearch_dsl.documents import Document
 from django_opensearch_dsl.registries import registry
 from opensearchpy import Q
+from webvtt.errors import MalformedFileError
 
 from apps.content.models import MatchedLineDict, Media, Subtitle
 
@@ -51,7 +54,7 @@ class MediaDocument(Document):
 
 
 BLOCK_SEPARATOR = re.compile(r"\n\s*\n")
-TIMESTAMP_PATTERN = re.compile(r"(\d{2}:\d{2}:\d{2})\.\d{3} --> (\d{2}:\d{2}:\d{2})\.\d{3}")
+TIMESTAMP_PATTERN = re.compile(r"(\d{2}:\d{2}:\d{2}(?:\.\d{3})?)\s*-->\s*(\d{2}:\d{2}:\d{2}(?:\.\d{3})?)")
 LINE_BREAK_PATTERN = re.compile(r"\r\n|\r")
 
 
@@ -100,21 +103,17 @@ class SubtitleDocument(Document):
 
     @staticmethod
     def split_webvtt(body: str):
-        blocks = re.split(BLOCK_SEPARATOR, LINE_BREAK_PATTERN.sub("\n", body))
-        captions: list[dict[str, str]] = []
-        for block in blocks:
-            if not block:
-                continue
-            splitted = block.split("\n")
-            if len(splitted) >= 2:
-                timestamp = splitted[0]
-                line = " ".join(splitted[1:])
-                match = re.match(TIMESTAMP_PATTERN, timestamp)
-                if match:
-                    start_time = match.group(1)
-                    end_time = match.group(2)
-                    captions.append({"start": start_time, "end": end_time, "line": line})
-        return captions
+        if not (body := body.strip()):
+            return []
+
+        f = StringIO(body)
+        for fmt in ["vtt", "srt", "sbv"]:
+            try:
+                captions = webvtt.from_buffer(f, format=fmt)
+                return [{"start": c.start, "end": c.end, "line": c.text.replace("\n", " ")} for c in captions]
+            except MalformedFileError:
+                f.seek(0)
+        return []
 
 
 def get_search_suggestion(*, q: str, limit: int = 10):

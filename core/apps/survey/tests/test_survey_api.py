@@ -1,5 +1,4 @@
 import json
-from typing import cast
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
@@ -16,7 +15,7 @@ from conftest import AdminUser
 @pytest.mark.django_db
 def test_survey_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
 
-    survey = cast(Survey, SurveyFactory(anonymous=True))
+    survey: Survey = SurveyFactory(anonymous=True)
 
     # get survey
     res = client.get(f"/api/v1/survey/{survey.id}")
@@ -38,7 +37,7 @@ def test_survey_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     )
     assert res.status_code == 200, "submit survey anonymous"
 
-    survey = cast(Survey, SurveyFactory(anonymous=False, show_results=False))
+    survey: Survey = SurveyFactory(anonymous=False, show_results=False)
 
     # get anonymous survey
     res = client.get(f"/api/v1/survey/{survey.id}/anonymous")

@@ -1,7 +1,7 @@
 import { createVisibilityObserver } from '@solid-primitives/intersection-observer'
 import { IconSpeakerphone } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
-import { createEffect, For, onCleanup, Show } from 'solid-js'
+import { createEffect, For, onCleanup, onMount, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import { type AnnounceSchema, operationV1GetAnnouncements, operationV1ReadAnnouncement } from '@/api'
 import { ContentViewer } from '@/shared/ContentViewer'
@@ -9,6 +9,7 @@ import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { toYYYYMMDD } from '@/shared/utils'
+import { useDashboard } from './-context'
 
 export const Route = createFileRoute('/(app)/dashboard/announcement')({
   component: RouteComponent,
@@ -17,7 +18,7 @@ export const Route = createFileRoute('/(app)/dashboard/announcement')({
 function RouteComponent() {
   const { t } = useTranslation()
 
-  const [announcements, setObserverEl, { setStore }] = createCachedInfiniteStore(
+  const [announcements, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'operationV1GetAnnouncements',
     () => ({}),
     async (options, page) => {
@@ -25,6 +26,10 @@ function RouteComponent() {
       return data
     },
   )
+
+  const { setRefreshHandler } = useDashboard()
+  onMount(() => setRefreshHandler(() => refetch))
+  onCleanup(() => setRefreshHandler(undefined))
 
   return (
     <div class="max-w-5xl mx-auto space-y-6">

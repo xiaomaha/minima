@@ -17,7 +17,6 @@ x-minima: &config
     - ./conftest.py:/app/conftest.py
     - ./manage.py:/app/manage.py
     - ./pyproject.toml:/app/pyproject.toml
-    - ./.cache:/app/.cache # for test images
   user: "app:app"
   networks:
     - minima

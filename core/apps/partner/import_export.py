@@ -4,14 +4,14 @@ from import_export.fields import Field
 from import_export.resources import ModelResource
 from import_export.widgets import CharWidget
 
-from apps.partner.models import Employee
+from apps.partner.models import Member
 
 
-class EmployeeResource(ModelResource):
+class MemberResource(ModelResource):
     id_number = Field(attribute="encrypted_id_number", column_name="id_number", widget=CharWidget(allow_blank=True))
 
     class Meta:
-        model = Employee
+        model = Member
         skip_unchanged = True
         export_order = ("id", "cohort", "name", "email", "birth_date", "id_number")
         import_order = export_order
@@ -25,7 +25,7 @@ class EmployeeResource(ModelResource):
                 row[k] = v.strip()
 
         if "id_number" in row and row["id_number"]:
-            row["id_number"] = Employee.encrypt_id_number(row["id_number"])
+            row["id_number"] = Member.encrypt_id_number(row["id_number"])
         elif "id_number" in row:
             del row["id_number"]
 

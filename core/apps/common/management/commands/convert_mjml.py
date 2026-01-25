@@ -2,12 +2,11 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.utils.translation import gettext as _
 from mjml import mjml2html
 
 
 class Command(BaseCommand):
-    help = _("Convert MJML templates to HTML for all apps")
+    help = "Convert MJML templates to HTML for all apps"
 
     def handle(self, *args: object, **options: dict[str, object]):
         base_dir = Path(settings.BASE_DIR)
@@ -15,7 +14,7 @@ class Command(BaseCommand):
         common_partial_dir = apps_dir / "common" / "mjml" / "partial"
 
         if not apps_dir.exists():
-            self.stdout.write(self.style.ERROR(_("Apps directory not found")))
+            self.stdout.write(self.style.ERROR("Apps directory not found"))
             return
 
         converted_count = 0
@@ -31,9 +30,9 @@ class Command(BaseCommand):
                 converted_count += 1
 
         if converted_count == 0:
-            self.stdout.write(self.style.WARNING(_("\nNo MJML files found in any app")))
+            self.stdout.write(self.style.WARNING("\nNo MJML files found in any app"))
         else:
-            self.stdout.write(self.style.SUCCESS(_(f"\n✓ Converted MJML files in {converted_count} app(s)")))
+            self.stdout.write(self.style.SUCCESS(f"\n✓ Converted MJML files in {converted_count} app(s)"))
 
     def convert_app_mjml(self, mjml_dir: Path, app_name: str, common_partial_dir: Path) -> bool:
         mjml_files = list(mjml_dir.glob("*.mjml"))
@@ -53,7 +52,7 @@ class Command(BaseCommand):
             root_end = mjml_str.find("</mjml>") + len("</mjml>")
 
             if root_start == -1 or root_end == -1:
-                self.stdout.write(self.style.ERROR(_(f"  ✗ Invalid MJML file: {mjml_file.name}")))
+                self.stdout.write(self.style.ERROR(f"  ✗ Invalid MJML file: {mjml_file.name}"))
                 continue
 
             before_root = mjml_str[:root_start]
@@ -78,6 +77,6 @@ class Command(BaseCommand):
             with open(html_file, "w", encoding="utf-8") as file:
                 file.write(html_content)
 
-            self.stdout.write(self.style.SUCCESS(_(f"  ✓ {mjml_file.stem}.html")))
+            self.stdout.write(self.style.SUCCESS(f"  ✓ {mjml_file.stem}.html"))
 
         return True

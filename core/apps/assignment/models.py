@@ -31,7 +31,6 @@ from django.db.models.fields import BooleanField, DateTimeField
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from pghistory.models import PghEventModel
 from tika import parser
 
 from apps.account.models import OtpLog
@@ -324,7 +323,7 @@ class Attempt(Model):
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)
 
-        attempt._state.fields_cache["submission"] = None
+        attempt._state.fields_cache["submission"] = None  # type: ignore
 
         return attempt
 
@@ -347,7 +346,7 @@ class Attempt(Model):
         content = BeautifulSoup(answer, "html.parser").get_text(separator=" ", strip=True)
         for f in files or []:
             tika_response = parser.from_buffer(f, settings.TIKA_HOST)
-            content += "\n" + (tika_response.get("content") or "").strip()
+            content += "\n" + (tika_response.get("content") or "").strip()  # type: ignore
 
         if not content:
             raise ValueError(ErrorCode.EMPTY_ANSWER)
@@ -401,7 +400,7 @@ class Submission(TimeStampedMixin, AttachmentMixin):
         verbose_name_plural = _("Submissions")
 
     if TYPE_CHECKING:
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
 
     @property
     def cleaned_answer(self):
@@ -435,7 +434,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
     if TYPE_CHECKING:
         pk: int
         attempt_id: int
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
 
     async def grade(self, grader: "User | None" = None):
         rubric_data = await self.attempt.question.solution.get_rubric_data()

@@ -32,7 +32,7 @@ async def get_certificates(request: HttpRequest, filter: Query[CertificateFilter
     qs = (
         Certificate.objects
         .select_related("issuer")
-        .prefetch_related(
+        .prefetch_related(  # type: ignore
             Prefetch(
                 "certificateskill_set",
                 CertificateSkill.objects.select_related("skill__classification").prefetch_related("factors"),

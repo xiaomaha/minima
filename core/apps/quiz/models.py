@@ -171,6 +171,9 @@ class Attempt(TimeStampedMixin):
     if TYPE_CHECKING:
         learner_id: str
         submission: "Submission"
+        max_attempts: int  # annotated
+        grade: Grade
+        _prefetched_objects_cache: dict[str, QuerySet[Question]]
 
     @classmethod
     async def start(cls, *, quiz_id: str, learner_id: str, context: str):
@@ -191,7 +194,7 @@ class Attempt(TimeStampedMixin):
         await attempt.questions.aset(questions)
 
         attempt._prefetched_objects_cache = {"questions": questions}
-        attempt._state.fields_cache["submission"] = None
+        attempt._state.fields_cache["submission"] = None  # type: ignore
 
         return attempt
 

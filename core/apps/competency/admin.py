@@ -33,13 +33,13 @@ class ClassificationAdmin(ReadOnlyModelAdmin[Classification]):
     inlines = (CompetencySkillInline,)
 
     def get_list_display(self, request: HttpRequest):
-        return ("__str__", "code", "version")
+        return ("__str__", "code")
 
 
 @admin.register(Factor)
 class FactorAdmin(ReadOnlyHiddenModelAdmin[Factor]):
     def get_list_display(self, request: HttpRequest):
-        return ("name", "code", "number", "version")
+        return ("name", "code", "number")
 
 
 @admin.register(CompetencyGoal)
@@ -66,7 +66,7 @@ class CompetencySkillAdmin(ReadOnlyHiddenModelAdmin[Skill]):
     inlines = (SkillFactorInline,)
 
     def get_list_display(self, request: HttpRequest):
-        return ("name", "code", "number", "version")
+        return ("name", "code", "number")
 
 
 @admin.register(BadgeAward)

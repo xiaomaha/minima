@@ -1,18 +1,17 @@
 import math
 from datetime import timedelta
-from typing import TYPE_CHECKING, cast
 
 import mimesis
 from asgiref.sync import async_to_sync
 from django.conf import settings
-from django.db.models import QuerySet
 from django.utils import timezone
 from factory.declarations import Iterator, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
 
-from apps.common.factory import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
+from apps.account.tests.factories import UserFactory
+from apps.common.tests.factories import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
 from apps.exam.models import Attempt, Exam, Grade, Question, QuestionPool, Solution, Submission, TempAnswer
 from apps.operation.tests.factories import HonorCodeFactory
 
@@ -22,7 +21,7 @@ generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
     title = FactoryField("text.title")
     description = FactoryField("text")
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
 
     class Meta:
         model = QuestionPool
@@ -35,11 +34,8 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         composed = {"single_choice": option[0], "text_input": option[1], "number_input": option[2], "essay": option[3]}
         return {k: v for k, v in composed.items() if v != 0}
 
-    if TYPE_CHECKING:
-        question_set: QuerySet[Question]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: QuestionPool, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
@@ -98,11 +94,7 @@ class SolutionFactory(DjangoModelFactory[Solution]):
         django_get_or_create = ("question",)
 
     @lazy_attribute
-    def correct_answers(self) -> list[str]:
-
-        if TYPE_CHECKING:
-            self = cast(Solution, self)
-
+    def correct_answers(self: Solution):
         if self.question.format == Question.FormatChoices.SINGLE_CHOICE.value:
             return [str(generic.random.randint(1, len(self.question.options)))]
         elif self.question.format == Question.FormatChoices.NUMBER_INPUT.value:
@@ -115,7 +107,7 @@ class ExamFactory(LearningObjectFactory[Exam], GradeWorkflowFactory[Exam]):
     max_attempts = FactoryField("choice", items=[1, 2])
     verification_required = True
 
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
     honor_code = SubFactory(HonorCodeFactory)
     question_pool = SubFactory(QuestionPoolFactory)
     duration = FactoryField("choice", items=[timedelta(minutes=m) for m in [30, 60]])
@@ -135,7 +127,7 @@ class ExamFactory(LearningObjectFactory[Exam], GradeWorkflowFactory[Exam]):
 
 class AttemptFactory(DjangoModelFactory[Attempt]):
     exam = SubFactory(ExamFactory)
-    learner = SubFactory("account.tests.factories.UserFactory")
+    learner = SubFactory(UserFactory)
     started = LazyFunction(lambda: timezone.now())
     active = True
 
@@ -144,16 +136,10 @@ class AttemptFactory(DjangoModelFactory[Attempt]):
         django_get_or_create = ("exam", "learner")
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        questions: QuerySet[Question]
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: Attempt, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
-
-        if TYPE_CHECKING:
-            self = cast(Attempt, self)
 
         self.questions.set(async_to_sync(self.exam.question_pool.compose_questions)())
 
@@ -170,11 +156,7 @@ class TempAnswerFactory(DjangoModelFactory[TempAnswer]):
         skip_postgeneration_save = True
 
     @lazy_attribute
-    def answers(self):
-
-        if TYPE_CHECKING:
-            self = cast(TempAnswer, self)
-
+    def answers(self: TempAnswer):
         # cunning paper
         cunning_paper = Question.objects.select_related("solution").filter(
             id__in=self.attempt.questions.values_list("id", flat=True)

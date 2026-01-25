@@ -142,11 +142,11 @@ uv run dev.py download-images   # Download sample images
 
 ```bash
 # Install development tools
-uv tool install ty      # Type checker
+uv tool install pyrefly      # Type checker
 uv tool install ruff    # Linter and formatter
 
 # Update tools
-uv tool upgrade ty ruff
+uv tool upgrade pyrefly ruff
 ```
 
 ### Code Quality
@@ -156,7 +156,7 @@ uv tool upgrade ty ruff
 uv run dev.py lint
 
 # Or run individually
-uv run ty check                    # Type checking
+uv run pyrefly check               # Type checking
 uv run ruff check .                # Linting
 uv run ruff check --select I .     # Import sorting
 uv run ruff format .               # Code formatting

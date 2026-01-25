@@ -5,7 +5,6 @@ from pydantic.fields import Field
 
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import LearningObjectMixinSchema, Schema, TimeStampedMixinSchema
-from apps.common.util import normalize_context
 from apps.content.api.encoder import GzipInEncodedType, GzipOutEncodedType
 from apps.content.models import Media, Note, Watch
 
@@ -16,6 +15,8 @@ class MediaSchema(LearningObjectMixinSchema):
     id: str
     thumbnail: str
     duration_seconds: float
+    license: str
+    channel: str
     owner: OwnerSchema
     subtitle_count: int
     format: MediaFormat
@@ -46,7 +47,7 @@ class WatchedMediaSchema(Schema):
 
     @staticmethod
     def resolve_context(obj: Watch):
-        return normalize_context(obj.context)
+        return obj.normalized_context
 
     @staticmethod
     def resolve_watched(obj: Watch):

@@ -21,7 +21,6 @@ from django.db.models.base import Model
 from django.db.models.enums import TextChoices
 from django.db.models.indexes import Index
 from django.utils.translation import gettext_lazy as _
-from pghistory.models import PghEventModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedMixin
@@ -48,34 +47,34 @@ class Partner(TimeStampedMixin):
         indexes = [Index(fields=["email"])]
 
     if TYPE_CHECKING:
-        businesssite_set: "QuerySet[BusinessSite]"
+        group_set: "QuerySet[Group]"
 
     def __str__(self):
         return self.name
 
 
 @pghistory.track()
-class BusinessSite(TimeStampedMixin):
+class Group(TimeStampedMixin):
     partner = ForeignKey(Partner, CASCADE, verbose_name=_("Partner"))
     name = CharField(_("Name"), max_length=50)
     description = TextField(_("Description"), blank=True, default="")
     business_number = CharField(_("Business Number"), max_length=50, unique=True)
 
     class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Business Site")
-        verbose_name_plural = _("Business Sites")
-        constraints = [UniqueConstraint(fields=["partner", "name"], name="partner_business_pa_na_uniq")]
+        verbose_name = _("Group")
+        verbose_name_plural = _("Groups")
+        constraints = [UniqueConstraint(fields=["partner", "name"], name="partner_group_pa_na_uniq")]
 
     if TYPE_CHECKING:
-        employee_set: "QuerySet[Employee]"
+        member_set: "QuerySet[Member]"
 
     def __str__(self):
         return self.name
 
 
 @pghistory.track()
-class Employee(TimeStampedMixin):
-    site = ForeignKey(BusinessSite, CASCADE, verbose_name=_("Business Site"))
+class Member(TimeStampedMixin):
+    group = ForeignKey(Group, CASCADE, verbose_name=_("Group"))
     name = CharField(_("Name"), max_length=50)
     email = EmailField(_("Email"))
     birth_date = DateField(_("Birth Date"), null=True, blank=True)
@@ -89,13 +88,13 @@ class Employee(TimeStampedMixin):
     user = ForeignKey(User, SET_NULL, null=True, blank=True, verbose_name=_("User"))
 
     class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Employee")
-        verbose_name_plural = _("Employees")
-        constraints = [UniqueConstraint(fields=["site", "email"], name="partner_employee_si_em_uniq")]
+        verbose_name = _("Member")
+        verbose_name_plural = _("Members")
+        constraints = [UniqueConstraint(fields=["group", "email"], name="partner_member_si_em_uniq")]
         indexes = [Index(fields=["name"]), Index(fields=["email"]), Index(fields=["phone"]), Index(fields=["team"])]
 
     if TYPE_CHECKING:
-        pgh_event_model: PghEventModel
+        pgh_event_model: type[Model]
 
     ID_NUMBER_SALT = "id_number"
 
@@ -128,7 +127,7 @@ class Employee(TimeStampedMixin):
 class Cohort(TimeStampedMixin):
     name = CharField(_("Name"), max_length=50, unique=True)
     description = TextField(_("Description"), blank=True, default="")
-    employees = ManyToManyField(Employee, through="CohortEmployee", verbose_name=_("Employees"))
+    members = ManyToManyField(Member, through="CohortMember", verbose_name=_("Members"))
     staffs = ManyToManyField(User, through="CohortStaff", blank=True, verbose_name=_("Staffs"))
 
     class Meta(TimeStampedMixin.Meta):
@@ -140,14 +139,14 @@ class Cohort(TimeStampedMixin):
 
 
 @pghistory.track()
-class CohortEmployee(TimeStampedMixin):
+class CohortMember(TimeStampedMixin):
     cohort = ForeignKey(Cohort, CASCADE, verbose_name=_("Cohort"))
-    employee = ForeignKey(Employee, CASCADE, verbose_name=_("Employee"))
+    member = ForeignKey(Member, CASCADE, verbose_name=_("Member"))
 
     class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Cohort Employee")
-        verbose_name_plural = _("Cohort Employees")
-        constraints = [UniqueConstraint(fields=["cohort", "employee"], name="partner_cohortemployee_co_em_uniq")]
+        verbose_name = _("Cohort Member")
+        verbose_name_plural = _("Cohort Members")
+        constraints = [UniqueConstraint(fields=["cohort", "member"], name="partner_cohortmember_co_em_uniq")]
 
 
 @pghistory.track()

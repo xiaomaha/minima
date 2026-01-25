@@ -3,7 +3,7 @@ pre-commit:
     student:
       glob: "student/**/*.{ts,tsx}"
       root: "student/"
-      run: "./node_modules/.bin/biome check --write --staged --no-errors-on-unmatched {staged_files}"
+      run: "npm run lint"
 
     core:
       glob: "core/**/*.py"

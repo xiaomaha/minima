@@ -100,8 +100,8 @@ async def generate_certificate(
     pdf = FPDF(orientation="P", unit="mm", format=(page_width, page_height))
     pdf.add_page()
 
-    pdf.add_font("Noto", "", fname="/usr/share/fonts/noto/NotoSansCJK-Regular.ttc")
-    pdf.add_font("Noto", "B", fname="/usr/share/fonts/noto/NotoSansCJK-Bold.ttc")
+    pdf.add_font("Noto", "", fname="/usr/share/fonts/noto/NotoSansCJKkr-Regular.otf")
+    pdf.add_font("Noto", "B", fname="/usr/share/fonts/noto/NotoSansCJKkr-Bold.otf")
 
     with BytesIO() as bg_buffer:
         for chunk in background_image.chunks():

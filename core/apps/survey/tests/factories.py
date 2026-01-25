@@ -1,14 +1,12 @@
-from typing import TYPE_CHECKING, cast
-
 import mimesis
 from django.conf import settings
-from django.db.models import QuerySet
 from factory.declarations import Iterator, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
 from mimesis.plugins.factory import FactoryField
 
-from apps.common.factory import LearningObjectFactory, dummy_html
+from apps.account.tests.factories import UserFactory
+from apps.common.tests.factories import LearningObjectFactory, dummy_html
 from apps.survey.models import Question, QuestionPaper, Submission, Survey
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
@@ -17,18 +15,15 @@ generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 class QuestionPaperFactory(DjangoModelFactory[QuestionPaper]):
     title = FactoryField("text.title")
     description = FactoryField("text")
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
 
     class Meta:
         model = QuestionPaper
         django_get_or_create = ("title",)
         skip_postgeneration_save = True
 
-    if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
-
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: QuestionPaper, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
@@ -64,7 +59,7 @@ class SurveyFactory(LearningObjectFactory[Survey]):
     max_attempts = 0
     verification_required = False
 
-    owner = SubFactory("account.tests.factories.UserFactory")
+    owner = SubFactory(UserFactory)
     paper = SubFactory(QuestionPaperFactory)
     complete_message = FactoryField("text")
     anonymous = Iterator([True, False])
@@ -87,7 +82,7 @@ class SurveyFactory(LearningObjectFactory[Survey]):
 
 class SubmissionFactory(DjangoModelFactory[Submission]):
     survey = SubFactory(SurveyFactory)
-    respondent = SubFactory("account.tests.factories.UserFactory")
+    respondent = SubFactory(UserFactory)
     active = True
     context = ""
 
@@ -96,11 +91,7 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
         django_get_or_create = ("survey", "respondent", "context", "active")
 
     @lazy_attribute
-    def answers(self):
-
-        if TYPE_CHECKING:
-            self = cast(Submission, self)
-
+    def answers(self: Submission):
         answer_dict = {}
         for q in self.survey.paper.question_set.all():
             if q.format == Question.FormatChoices.SINGLE_CHOICE.value:

@@ -1,10 +1,12 @@
 import time
+from typing import cast
 
 from django.apps import apps
 from django.conf import settings
 from django.db import connection, models
 from django.utils.translation import gettext_lazy as _
 from pghistory import utils
+from pghistory.models import Event
 
 
 class SyncRecord(models.Model):
@@ -44,7 +46,7 @@ class HotEvent(models.Model):
             if model._meta.app_label == "pghistory":
                 continue
             if hasattr(model, "pgh_id") and hasattr(model, "pgh_created_at") and hasattr(model, "pgh_label"):
-                event_models.append(model)
+                event_models.append(cast(type[Event], model))
         return event_models
 
     @classmethod
@@ -65,7 +67,8 @@ class HotEvent(models.Model):
             for model_class in cls.get_event_models():
                 model_label = f"{model_class._meta.app_label}.{model_class.__name__}"
                 table_name = model_class._meta.db_table
-                tracked_model = model_class.pgh_tracked_model._meta.label
+                tracked_model = model_class.pgh_tracked_model
+                assert tracked_model
 
                 conditions = [f"pgh_created_at >= NOW() - INTERVAL '{settings.HOT_EVENTS_RETENTION_DAYS} days'"]
                 if last_sync:
@@ -85,7 +88,7 @@ class HotEvent(models.Model):
                         NULL::jsonb as pgh_diff,
                         pgh_context_id,
                         NULL::jsonb as pgh_context,
-                        '{tracked_model}' as pgh_obj_model,
+                        '{tracked_model._meta.label}' as pgh_obj_model,
                         pgh_obj_id::text as pgh_obj_id
                     FROM {table_name}
                     WHERE {where_clause}

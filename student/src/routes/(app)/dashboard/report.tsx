@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/solid-router'
-import { createMemo, createSignal, For, Show } from 'solid-js'
+import { createMemo, createSignal, For, onCleanup, onMount, Show } from 'solid-js'
 import { contentV1GetWatchMedias, learningV1GetReport, type WatchedMediaSchema } from '@/api'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -11,9 +11,9 @@ export const Route = createFileRoute('/(app)/dashboard/report')({
   component: RouteComponent,
 })
 
-import { IconRefresh } from '@tabler/icons-solidjs'
 import { endOfDay, endOfMonth, endOfWeek, format, startOfDay, startOfMonth, startOfWeek } from 'date-fns'
 import { NoContent } from '@/shared/NoContent'
+import { useDashboard } from './-context'
 
 function RouteComponent() {
   const { t } = useTranslation()
@@ -58,10 +58,13 @@ function RouteComponent() {
   }
 
   const handleRefresh = () => {
-    setPeriod('month')
     refetchReport()
     refetchWatched()
   }
+
+  const { setRefreshHandler } = useDashboard()
+  onMount(() => setRefreshHandler(() => handleRefresh))
+  onCleanup(() => setRefreshHandler(undefined))
 
   const d = () => report.data
 
@@ -161,12 +164,7 @@ function RouteComponent() {
 
       <div class=" mx-auto space-y-2 flex flex-col w-full">
         <Show when={!watched.loading} fallback={<div class="skeleton h-5 w-48"></div>}>
-          <div class="label text-sm w-full relative">
-            {t('{{count}} watched history found', { count: watched.count })}
-            <button type="button" class="btn btn-sm btn-ghost btn-circle absolute right-0" onClick={handleRefresh}>
-              <IconRefresh size={20} />
-            </button>
-          </div>
+          <div class="label text-sm w-full">{t('{{count}} watched history found', { count: watched.count })}</div>
         </Show>
 
         <For each={watched.items}>{(item) => <Card media={item} onclick={() => goToMedia(item)} />}</For>
@@ -195,7 +193,7 @@ const Card = (props: CardProps) => {
 
   return (
     <div class="flex gap-4 w-full cursor-pointer py-2 hover:bg-base-200" onclick={props.onclick}>
-      <div class="relative self-start flex-1 max-w-40 overflow-hidden rounded-lg aspect-video border border-base-content/10">
+      <div class="relative self-start flex-1 max-w-40 overflow-hidden rounded-lg aspect-video border border-base-content/10 group">
         <img class="w-full aspect-video object-cover" src={props.media.thumbnail} alt={props.media.title} />
         <div class="badge badge-neutral absolute bottom-2 right-2 z-1 badge-sm">
           <span>{toHHMMSS(props.media.durationSeconds)}</span>
@@ -204,6 +202,12 @@ const Card = (props: CardProps) => {
           contentId={props.media.mediaId}
           passingPoint={props.media.passingPoint}
           class="absolute bottom-0 left-0 w-full h-1.25 rounded-none"
+        />
+        <ProgressBar
+          contentId={props.media.mediaId}
+          passingPoint={props.media.passingPoint}
+          class="absolute bottom-0 left-0 w-full h-1.25 group-hover:h-2 transition-[height] rounded-none"
+          accessContext={props.media.context}
         />
       </div>
       <div class="space-y-3 text-left flex-1">

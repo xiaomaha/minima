@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/solid-router'
-import { createEffect, createSignal, For, Show } from 'solid-js'
+import { createEffect, createRoot, createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import { contentV1Search, type SearchedMediaSchema } from '@/api'
 import { Avatar } from '@/shared/Avatar'
@@ -7,7 +7,7 @@ import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
-import { extractText, timeToSeconds, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
+import { capitalize, extractText, timeToSeconds, toHHMMSS, toYYYYMMDD } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
 
 const searchSchema = v.object({
@@ -21,22 +21,32 @@ export const Route = createFileRoute('/(app)/dashboard/search')({
   component: RouteComponent,
 })
 
+const [filter, setFilter] = createRoot(() => {
+  const [filter, setFilter] = createSignal<'public' | 'all'>('public')
+  return [filter, setFilter]
+})
+
 function RouteComponent() {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
-  const q_ = () => search().q
+  const current_q = () => search().q
 
   createEffect(() => {
-    if (q_() === q()) return
-    setQ((prev) => (q_() ? q_()! : prev))
+    if (current_q() === q()) return
+    if (!current_q()) {
+      // reset
+      setQ('')
+      return
+    }
+    setQ((prev) => (current_q() ? current_q()! : prev))
   })
 
   const [medias, setObserverEl] = createCachedInfiniteStore(
     'contentV1Search',
-    () => ({ query: { q: q() ?? '' } }),
+    () => ({ query: { q: q() ?? '', filter: filter() } }),
     async (options, page) => {
-      const { data } = await contentV1Search({ ...options, query: { q: q(), page } })
+      const { data } = await contentV1Search({ ...options, query: { ...options.query, page } })
       return data
     },
   )
@@ -55,9 +65,20 @@ function RouteComponent() {
 
   return (
     <div class="max-w-5xl mx-auto space-y-8 flex flex-col">
-      <Show when={!medias.loading} fallback={<div class="skeleton h-5 w-30"></div>}>
-        <div class="label text-sm">{t('{{count}} result found', { count: medias.count })}</div>
-      </Show>
+      <div class="flex gap-2 items-center label text-sm relative">
+        <Show when={!medias.loading}>
+          <div>{t('{{count}} result found', { count: medias.count })}</div>
+        </Show>
+        <select
+          onChange={(e) => setFilter(e.target.value as 'public' | 'all')}
+          value={filter()}
+          name="filter"
+          class="select select-ghost w-auto absolute right-0 select-xs select-primary text-sm min-w-24 bg-base-100"
+        >
+          <option value="public">{t('Public')}</option>
+          <option value="all">{t('All')}</option>
+        </select>
+      </div>
 
       <For each={medias.items}>{(item) => <Card media={item} q={q()} onclick={() => goToMedia(item)} />}</For>
 
@@ -91,13 +112,16 @@ const Card = (props: CardProps) => {
     >
       <div class="relative self-start flex-1 max-w-92 overflow-hidden rounded-lg aspect-video border border-base-content/10">
         <img class="w-full aspect-video object-cover" src={props.media.thumbnail} alt={props.media.title} />
-        <div class="badge badge-neutral absolute bottom-2 right-2 z-1 badge-sm">
-          <span>{toHHMMSS(props.media.durationSeconds)}</span>
+        <div class="badge badge-neutral absolute bottom-2.5 left-2 badge-sm">
+          <span>{t(capitalize(props.media.format))}</span>
+          <Show when={props.media.durationSeconds}>
+            <span>{toHHMMSS(props.media.durationSeconds!)}</span>
+          </Show>
         </div>
         <ProgressBar
           contentId={props.media.id}
           passingPoint={props.media.passingPoint}
-          class="absolute bottom-0 left-0 w-full h-1.25 rounded-none "
+          class="absolute bottom-0 left-0 w-full h-1.25 group-hover:h-2 transition-[height] rounded-none"
         />
       </div>
       <div class="space-y-3 text-left flex-1">
@@ -124,13 +148,13 @@ const Card = (props: CardProps) => {
               {(line) => (
                 <div
                   class="cursor-pointer badge badge-sm badge-primary not-[&:hover]:badge-soft max-w-60 block truncate"
-                  innerHTML={`${line.start} - ${line.line.replaceAll(props.q!, '<mark>$&</mark>')}`}
+                  innerHTML={`${line.start.replace(/\..*/, '')} - ${line.line.replaceAll(props.q!, '<mark>$&</mark>')}`}
                   onclick={(e) => {
                     if (props.media.accessible) {
                       e.stopPropagation()
                       navigate({
                         to: `/media/${props.media.id}`,
-                        search: { start: timeToSeconds(line.start) },
+                        search: { start: timeToSeconds(line.start) - 1 },
                       })
                     }
                   }}

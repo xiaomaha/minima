@@ -1,6 +1,6 @@
 import logging
-from datetime import timedelta
-from typing import TYPE_CHECKING, Sequence, TypedDict
+from datetime import date, datetime, time, timedelta
+from typing import TYPE_CHECKING, Literal, Sequence, TypedDict
 
 import pghistory
 from asgiref.sync import sync_to_async
@@ -16,9 +16,11 @@ from django.db.models import (
     Count,
     DateTimeField,
     DurationField,
+    F,
     Field,
     FloatField,
     ForeignKey,
+    Func,
     ImageField,
     Index,
     Model,
@@ -27,8 +29,10 @@ from django.db.models import (
     TextField,
     UniqueConstraint,
     URLField,
+    Value,
     When,
 )
+from django.db.models.functions import Replace
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -67,6 +71,8 @@ class Media(LearningObjectMixin):
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     format = CharField(_("Format"), max_length=30, choices=FormatChoices.choices)
     duration = DurationField(_("Duration"))
+    license = CharField(_("License"), max_length=255, blank=True, default="")
+    channel = CharField(_("Channel"), max_length=255, blank=True, default="")
     uploaded = BooleanField(_("Uploaded"), default=False)
     url = URLField(_("URL"), max_length=500, unique=True)
 
@@ -95,10 +101,13 @@ class Media(LearningObjectMixin):
         )
 
     @classmethod
-    async def search(cls, *, q: str, page: int, size: int):
+    async def search(cls, *, q: str, page: int, size: int, filter: Literal["public", "all"]):
         from apps.content.documents import document_search
 
         qs = cls.annotate_accessible().annotate(subtitle_count=Count("subtitle")).select_related("owner")
+
+        if filter == "public":
+            qs = qs.filter(publicaccessmedia__start__lte=timezone.now(), publicaccessmedia__archive__gte=timezone.now())
 
         if not q:
             searched = None
@@ -170,6 +179,7 @@ class Watch(TimeStampedMixin):
         media_id: str
         duration: timedelta  # annotated
         thumbnail: str  # annotated
+        normalized_context: str  # annotated
 
     @classmethod
     async def update_media_watch(
@@ -261,6 +271,49 @@ class Watch(TimeStampedMixin):
                 cursor.execute(sql, params)
 
         await sync_to_async(_execute_update, thread_sensitive=True)()
+
+    @classmethod
+    async def get_watched_medias(cls, *, user_id: str, start: date | None = None, end: date | None = None):
+        qs = Watch.objects.filter(user_id=user_id)
+        if start and end:
+            start_dt = timezone.make_aware(datetime.combine(start, time.min))
+            end_dt = timezone.make_aware(datetime.combine(end, time.max))
+            qs = qs.filter(created__range=(start_dt, end_dt))
+        elif start:
+            start_dt = timezone.make_aware(datetime.combine(start, time.min))
+            qs = qs.filter(created__gte=start_dt)
+        elif end:
+            end_dt = timezone.make_aware(datetime.combine(end, time.max))
+            qs = qs.filter(created__lte=end_dt)
+
+        return (
+            qs
+            .annotate(
+                # cf.common.util.normalize_context
+                normalized_context=Case(
+                    When(context="", then=Value("")),
+                    default=Replace(
+                        Func(
+                            F("context"),
+                            Value("^([^:]+::[^:]+)::.*"),
+                            Value("\\1"),
+                            function="regexp_replace",
+                            output_field=CharField(),
+                        ),
+                        Value("::"),
+                        Value("="),
+                    ),
+                ),
+                title=F("media__title"),
+                thumbnail=F("media__thumbnail"),
+                format=F("media__format"),
+                duration=F("media__duration"),
+                passing_point=F("media__passing_point"),
+                url=F("media__url"),
+            )
+            .order_by("media_id", "normalized_context", "-created")
+            .distinct("media_id", "normalized_context")
+        )
 
 
 @pghistory.track()

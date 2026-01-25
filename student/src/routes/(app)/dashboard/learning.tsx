@@ -10,7 +10,7 @@ import { Trans, useTranslation } from '@/shared/solid/i18n'
 import { capitalize, toHHMMSS } from '@/shared/utils'
 import { ProgressBar } from '../-shared/ProgressBar'
 import { QuizDialog } from '../-shared/quiz/QuizDialog'
-import { useNewEnrollment } from './-context'
+import { useDashboard } from './-context'
 
 export const Route = createFileRoute('/(app)/dashboard/learning')({
   component: RouteComponent,
@@ -29,13 +29,14 @@ function RouteComponent() {
     },
   )
 
-  const newEnrollments = useNewEnrollment()
+  const { newEnrollments } = useDashboard()
 
   // merge new enrollments
   createEffect(() => {
     if (enrollments.loading || newEnrollments.length === 0) return
     const toAdd = newEnrollments
       .splice(0)
+      .reverse()
       .filter((item) => !enrollments.items.some((existing) => existing.id === item.id))
     if (toAdd.length > 0) {
       setStore({
@@ -53,28 +54,24 @@ function RouteComponent() {
 
       <Show when={enrollments.end && enrollments.count === 0}>
         <NoContent message={t('No content enrolled yet.')}>
-          <div class="mt-8 text-base-content/70">
+          <div class="mt-8 text-base-content/70 space-y-4">
             <div class="flex items-center justify-center">
               <Trans>
-                Search for public media in{' '}
+                You can enroll content from the catalogs in{' '}
                 <button
                   type="button"
-                  class="ml-1 btn btn-link p-0 text-base no-underline"
-                  onclick={() => navigate({ to: '/dashboard/search' })}
+                  class="ml-1 link link-info"
+                  onclick={() => navigate({ to: '/dashboard/catalog' })}
                 >
-                  the Search tab
+                  the Catalog tab
                 </button>
               </Trans>
             </div>
             <div class="flex items-center justify-center">
               <Trans>
-                Enroll content from the catalogs in{' '}
-                <button
-                  type="button"
-                  class="ml-1 btn btn-link p-0 text-base no-underline"
-                  onclick={() => navigate({ to: '/dashboard/catalog' })}
-                >
-                  the Catalog tab
+                Public content can be searched in{' '}
+                <button type="button" class="ml-1 link link-info" onclick={() => navigate({ to: '/dashboard/search' })}>
+                  the Search tab
                 </button>
               </Trans>
             </div>
@@ -163,7 +160,9 @@ const ContentCard = (props: ContentCardProps) => {
 
             <div class="flex-1 min-w-0">
               <div class="text-base/tight font-semibold line-clamp-2 mb-0.5">{props.item.content.title}</div>
-              <div class="text-sm opacity-70 mt-1">{props.item.content.owner.nickname || props.item.content.owner.name}</div>
+              <div class="text-sm opacity-70 mt-1">
+                {props.item.content.owner.nickname || props.item.content.owner.name}
+              </div>
             </div>
           </div>
           <div class="text-sm label my-2 w-full relative">
@@ -173,15 +172,12 @@ const ContentCard = (props: ContentCardProps) => {
 
             {/* TODO: Currenly only unenroll action is needed. */}
             <Show when={props.item.canDeactivate}>
-              <details
-                class="dropdown dropdown-end absolute right-0 bottom-0"
-                onclick={(e) => e.stopPropagation()}
-              >
+              <details class="dropdown dropdown-end absolute right-0 bottom-0" onclick={(e) => e.stopPropagation()}>
                 <summary class="btn btn-sm btn-circle btn-ghost">
                   <IconDotsVertical />
                 </summary>
                 <ul class="menu dropdown-content opacity-100! bg-base-100 rounded-box z-100 w-52 p-2 shadow-2xl">
-                  <li class="bg-transparent-0">
+                  <li class="bg-transparent-0 mb-0">
                     <button type="button" title={t('Remove this content from my learning list.')} onClick={deactivate}>
                       {t('Unenroll')}
                     </button>

@@ -1,11 +1,12 @@
-import { IconCertificate, IconRefresh } from '@tabler/icons-solidjs'
+import { IconCertificate } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
-import { Show } from 'solid-js'
+import { onCleanup, onMount, Show } from 'solid-js'
 import { competencyV1GetCertificateAwards } from '@/api'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { CertificateAwardList } from '../-shared/CertificateAwardList'
+import { useDashboard } from './-context'
 
 export const Route = createFileRoute('/(app)/dashboard/achievement')({
   component: RouteComponent,
@@ -13,6 +14,7 @@ export const Route = createFileRoute('/(app)/dashboard/achievement')({
 
 function RouteComponent() {
   const { t } = useTranslation()
+  const { setRefreshHandler } = useDashboard()
 
   const [certificates, setObserverEl, { refetch }] = createCachedInfiniteStore(
     'competencyV1GetCertificateAwards',
@@ -23,14 +25,12 @@ function RouteComponent() {
     },
   )
 
+  onMount(() => setRefreshHandler(() => refetch))
+  onCleanup(() => setRefreshHandler(undefined))
+
   return (
     <div class="max-w-5xl mx-auto space-y-8 flex flex-col">
-      <div class="label text-sm flex items-start justify-between">
-        {t('Certificates')}
-        <button type="button" class="btn btn-sm btn-ghost btn-circle" onClick={refetch}>
-          <IconRefresh size={20} />
-        </button>
-      </div>
+      <div class="label text-sm">{t('Certificates')}</div>
 
       <CertificateAwardList awards={certificates.items} />
 

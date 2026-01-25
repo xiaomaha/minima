@@ -612,6 +612,8 @@ export const vMediaSchema = v.object({
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
     id: v.string(),
+    license: v.string(),
+    channel: v.string(),
     owner: vOwnerSchema,
     subtitleCount: v.pipe(v.number(), v.integer()),
     uploaded: v.boolean(),
@@ -723,6 +725,8 @@ export const vSearchedMediaSchema = v.object({
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
     id: v.string(),
+    license: v.string(),
+    channel: v.string(),
     owner: vOwnerSchema,
     subtitleCount: v.pipe(v.number(), v.integer()),
     uploaded: v.boolean(),
@@ -1326,6 +1330,7 @@ export const vCatalogSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     name: v.string(),
     description: v.string(),
+    thumbnail: v.union([v.string(), v.null()]),
     active: v.boolean(),
     public: v.boolean(),
     availableFrom: v.pipe(v.string(), v.isoTimestamp()),
@@ -2392,7 +2397,8 @@ export const vContentV1SearchData = v.object({
     query: v.optional(v.object({
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24),
-        q: v.optional(v.string(), '')
+        q: v.optional(v.string(), ''),
+        filter: v.optional(v.picklist(['public', 'all']))
     }))
 });
 

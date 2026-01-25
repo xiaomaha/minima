@@ -148,13 +148,23 @@ function RouteComponent() {
 }
 
 const InfoPanel = (props: { media: MediaSchema }) => {
+  const { t } = useTranslation()
   const [open, setOpen] = createSignal(false)
+
   return (
     <div class="collapse collapse-arrow bg-base-content/5">
       <input type="checkbox" checked={open()} onChange={(e) => setOpen(e.currentTarget.checked)} />
       <div class="flex gap-4 items-center collapse-title" classList={{ truncate: !open() }}>
         <Avatar user={props.media.owner} rounded />
         <div>
+          <div class="label text-xs flex gap-2">
+            <Show when={props.media.license}>
+              <span>{props.media.license}</span>
+            </Show>
+            <Show when={props.media.channel}>
+              <span>{t('by {{channel}}', { channel: props.media.channel })}</span>
+            </Show>
+          </div>
           <div class="font-bold line-clamp-1">{props.media.title}</div>
           <div class="text-sm">{props.media.owner.nickname || props.media.owner.name}</div>
         </div>

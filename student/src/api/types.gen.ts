@@ -1308,6 +1308,14 @@ export type MediaSchema = {
      * Id
      */
     id: string;
+    /**
+     * License
+     */
+    license: string;
+    /**
+     * Channel
+     */
+    channel: string;
     owner: OwnerSchema;
     /**
      * Subtitlecount
@@ -1569,6 +1577,14 @@ export type SearchedMediaSchema = {
      * Id
      */
     id: string;
+    /**
+     * License
+     */
+    license: string;
+    /**
+     * Channel
+     */
+    channel: string;
     owner: OwnerSchema;
     /**
      * Subtitlecount
@@ -2976,6 +2992,10 @@ export type CatalogSchema = {
      * Description
      */
     description: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string | null;
     /**
      * Active
      */
@@ -5281,6 +5301,10 @@ export type ContentV1SearchData = {
          * Q
          */
         q?: string;
+        /**
+         * Filter
+         */
+        filter?: 'public' | 'all';
     };
     url: '/api/v1/content/search';
 };

@@ -16,8 +16,6 @@ dependencies = [
   "django-unfold",
   "django-opensearch-dsl",
   "psycopg[binary]",
-  "openpyxl",
-  "mjml-python",
   "passlib[bcrypt]",
   "tika",
   "pillow",
@@ -38,14 +36,11 @@ dependencies = [
   "pydantic[email]",
   "isodate",
   "django-jsonform",
-  "yt-dlp",
-  "youtube-transcript-api",
   "beautifulsoup4",
   "google-genai",
-  "django-upgrade",
-  "django-stubs-ext",
   "fpdf2",
   "pypdfium2",
+  "webvtt-py",
 ]
 
 [dependency-groups]
@@ -61,6 +56,11 @@ dev = [
   "pytest-mock",
   "httpx",
   "boto3-stubs[s3]",
+  "yt-dlp",
+  "youtube-transcript-api",
+  "django-upgrade",
+  "mjml-python",
+  "openpyxl",
   "django-stubs",
 ]
 
@@ -85,11 +85,8 @@ exclude = ["**/migrations/**"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "minima.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
-markers = [
-  "load_data: Load bulk data for human testing",
-  "e2e: End-to-end tests",
-]
-addopts = "--tb=short --strict-markers -m 'not load_data and not e2e'"
+markers = ["e2e: End-to-end tests"]
+addopts = "--tb=short --strict-markers -m 'not not e2e'"
 
 [tool.coverage.run]
 data_file = "/tmp/.coverage"
@@ -104,7 +101,6 @@ project-excludes = [
   "**/__pycache__",
   "**/.venv/**/*",
   "**/migrations/**/*",
-  # "**/factories.py",
 ]
 
 [tool.pyrefly.errors]
