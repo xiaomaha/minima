@@ -48,3 +48,7 @@ sh dev.sh up
 ## 라이선스
 
 MIT License - [LICENSE](core/LICENSE) 참고
+
+### 저작자 표시
+
+데모 콘텐츠는 [Blender Foundation](https://www.blender.org/)의 동영상 및 3D 모델을 포함하며, [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) 라이선스를 따릅니다.
