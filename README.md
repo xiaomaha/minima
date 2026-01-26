@@ -48,3 +48,7 @@ Issues and pull requests welcome. Check [Development](#development) section for 
 ## License
 
 MIT License - see [LICENSE](core/LICENSE)
+
+### Attribution
+
+Demo content includes videos and 3D models from [Blender Foundation](https://www.blender.org/), licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
