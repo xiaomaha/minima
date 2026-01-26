@@ -22,7 +22,7 @@ export const handleApiError = async (error: AxiosError) => {
       case 'NOTE_NOT_FOUND':
       case 'WATCH_NOT_FOUND':
       case 'THREAD_NOT_FOUND':
-        return
+        throw error
       case 'OTP_VERIFICATION_REQUIRED':
         message = i18n.t('OTP Verification Required')
         break
@@ -39,7 +39,7 @@ export const handleApiError = async (error: AxiosError) => {
   } else if ('detail' in err && Array.isArray(err.detail)) {
     // 422 form field validation error
     // this type will be handled by handleFormErrors
-    return
+    throw error
   } else {
     message = String(JSON.stringify(error))
     console.error(error)
