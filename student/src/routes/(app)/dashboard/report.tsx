@@ -115,7 +115,7 @@ function RouteComponent() {
                 ? t("This month's Activities")
                 : t('All time')}
 
-          <Show when={range()}>
+          <Show when={period() !== 'all'}>
             <span class="text-sm">
               {range()!.start} - {range()!.end}
             </span>

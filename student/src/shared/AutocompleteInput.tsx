@@ -79,8 +79,6 @@ export const AutocompleteInput = (props: Props) => {
       query = input()
     }
 
-    console.log(333, input(), query)
-
     const cleaned = query.replace(/<[^>]*>/g, '').trim()
     inputRef!.value = cleaned
     props.onCommit(cleaned)

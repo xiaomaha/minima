@@ -33,18 +33,20 @@ export const QuizDialog = (props: Props) => {
 
   return (
     <Dialog title={t('Quiz')} boxClass="max-w-3xl h-130 max-h-screen" open={props.open} onClose={props.onClose}>
-      <Show when={s()} fallback={<LoadingOverlay class="static" />}>
-        {(ss) => (
-          <Switch>
-            <Match when={ss().step < SITTING}>
-              <GettingStarted session={ss()} setStore={setStore} inlineContext={props.inlineContext} />
-            </Match>
+      <Show when={!session.loading} fallback={<LoadingOverlay class="static" />}>
+        <Show when={s()}>
+          {(ss) => (
+            <Switch>
+              <Match when={ss().step < SITTING}>
+                <GettingStarted session={ss()} setStore={setStore} inlineContext={props.inlineContext} />
+              </Match>
 
-            <Match when={ss().step >= SITTING}>
-              <QuizForm session={ss()} setStore={setStore} inlineContext={props.inlineContext} />
-            </Match>
-          </Switch>
-        )}
+              <Match when={ss().step >= SITTING}>
+                <QuizForm session={ss()} setStore={setStore} inlineContext={props.inlineContext} />
+              </Match>
+            </Switch>
+          )}
+        </Show>
       </Show>
     </Dialog>
   )

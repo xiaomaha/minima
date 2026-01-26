@@ -4080,6 +4080,107 @@ export type PagedCommentBriefSchema = {
 };
 
 /**
+ * CohortSchema
+ */
+export type CohortSchema = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Staffs
+     */
+    staffs: Array<CohortStaffSchema>;
+    /**
+     * Membercount
+     */
+    memberCount: number;
+};
+
+/**
+ * CohortStaffSchema
+ */
+export type CohortStaffSchema = {
+    role: RoleChoices;
+    staff: OwnerSchema;
+};
+
+/**
+ * PartnerGroupMemberSchema
+ */
+export type PartnerGroupMemberSchema = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Birthdate
+     */
+    birthDate: string;
+    /**
+     * Phone
+     */
+    phone: string;
+    /**
+     * Team
+     */
+    team: string;
+    /**
+     * Jobposition
+     */
+    jobPosition: string;
+    /**
+     * Jobtitle
+     */
+    jobTitle: string;
+    /**
+     * Employmentstatus
+     */
+    employmentStatus: string;
+    /**
+     * Employmenttype
+     */
+    employmentType: string;
+    group: PartnerGroupSchema;
+    /**
+     * Cohorts
+     */
+    cohorts: Array<CohortSchema>;
+    /**
+     * Membercount
+     */
+    memberCount: number;
+};
+
+/**
+ * PartnerGroupSchema
+ */
+export type PartnerGroupSchema = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description: string;
+    partner: PartnerSchema;
+};
+
+/**
+ * RoleChoices
+ */
+export type RoleChoices = 'education_manager' | 'marketing_manager' | 'financial_manager';
+
+/**
  * QuizAttemptSchema
  */
 export type QuizAttemptSchema = {
@@ -6373,6 +6474,24 @@ export type OperationV1GetCommentsResponses = {
 };
 
 export type OperationV1GetCommentsResponse = OperationV1GetCommentsResponses[keyof OperationV1GetCommentsResponses];
+
+export type PartnerV1MemberInfosData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/partner/member/information';
+};
+
+export type PartnerV1MemberInfosResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<PartnerGroupMemberSchema>;
+};
+
+export type PartnerV1MemberInfosResponse = PartnerV1MemberInfosResponses[keyof PartnerV1MemberInfosResponses];
 
 export type QuizV1GetSessionData = {
     body?: never;

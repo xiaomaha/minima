@@ -1,6 +1,7 @@
 import importlib
 import logging
 import re
+from enum import Enum
 from ipaddress import IPv4Address, IPv6Address
 from pathlib import Path
 
@@ -25,6 +26,8 @@ class MsgSpecRenderer(BaseRenderer):
     def encoder(obj):
         if isinstance(obj, (IPv4Address, IPv6Address)):
             return str(obj)
+        if isinstance(obj, Enum):
+            return obj.value
         raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
     def render(self, request, data, *, response_status):
