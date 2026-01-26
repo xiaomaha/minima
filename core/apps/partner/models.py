@@ -184,8 +184,6 @@ class CohortMember(TimeStampedMixin):
 class CohortStaff(Model):
     class RoleChoices(TextChoices):
         EDUCATION_MANAGER = "education_manager", _("Education Manager")
-        MARKETING_MANAGER = "marketing_manager", _("Marketing Manager")
-        FINANCIAL_MANAGER = "financial_manager", _("Financial Manager")
 
     cohort = ForeignKey(Cohort, CASCADE, verbose_name=_("Cohort"))
     staff = ForeignKey(User, CASCADE, verbose_name=_("User"))

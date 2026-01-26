@@ -3,11 +3,11 @@
 [![English](https://img.shields.io/badge/Language-English-blue)](README.md)
 [![한국어](https://img.shields.io/badge/Language-한국어-red)](README-ko.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Status](https://img.shields.io/badge/Status-Alpha-orange)
 
-Modern micro-learning LMS.
-Lightweight alternative to Moodle, Canvas, and Open edX.
+**Micro-learning LMS. Alternative to Moodle, Canvas, and Open edX.**
 
-> **🚧 Pre-Release**: Not ready for production use yet
+**🚀 Alpha Release** - Core features ready. Testing and feedback appreciated!
 
 ## Documentation
 
@@ -17,8 +17,7 @@ Lightweight alternative to Moodle, Canvas, and Open edX.
 
 ```bash
 git clone https://github.com/cobel1024/minima && cd minima
-chmod +x dev.sh
-./dev.sh up
+sh dev.sh up
 ```
 
 Access with username `admin@example.com` and password `1111`
@@ -28,22 +27,18 @@ Access with username `admin@example.com` and password `1111`
 
 ## Screenshots
 
-![Dashboard](./screenshot/student.en.webp)
-![Admin Panel](screenshot/admin.en.webp)
+![Dashboard](./screenshot/student.webp)
+![Admin Panel](screenshot/admin.webp)
 
 ## Tech Stack
 
-### Backend
+- Python 3.14, Django 6, Django-ninja, Django-unfold
+- SolidJS, TypeScript, Vite, daisyUI, Tailwind CSS, Tiptap
+- PostgreSQL, Redis, Celery, OpenSearch, Apache Tika
 
-- Django 6.x, Django Ninja, Django-unfold
-- PostgreSQL, OpenSearch, Redis, MinIO
-- AI Plugin Architecture, Gemini/OpenAI/Anthropic
+## Contributing
 
-### Frontend
-
-- SolidJS + TypeScript
-- TanStack Router, TailwindCSS 4
-- Plyr, PDFSlick, TipTap
+Issues and pull requests welcome. Check [Development](#development) section for setup.
 
 ## Development
 

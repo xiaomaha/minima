@@ -1,6 +1,9 @@
+import itertools
+import json
 import os
 from datetime import timedelta
 
+from asgiref.sync import async_to_sync
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
@@ -15,6 +18,7 @@ from apps.learning.tests.factories import CatalogFactory, CohortCatalogFactory, 
 from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory
 from apps.partner.models import Group
 from apps.partner.tests.factories import CohortFactory, MemberFactory, PartnerFactory
+from apps.quiz.models import Quiz
 
 
 class Command(BaseCommand):
@@ -69,10 +73,10 @@ class Command(BaseCommand):
 
         from apps.content.tests.factories import _REAL_DATA
 
-        remains = len(_REAL_DATA) - Media.objects.filter(format=Media.FormatChoices.VIDEO).count()
+        remains = len(_REAL_DATA) - Media.objects.filter(format=Media.MediaFormatChoices.VIDEO).count()
         if remains > 0:
             new_medias = MediaFactory.create_batch(
-                size=remains, format=Media.FormatChoices.VIDEO, owner=test_user, post_generation=False
+                size=remains, format=Media.MediaFormatChoices.VIDEO, owner=test_user, post_generation=False
             )
 
             start = timezone.now()
@@ -85,6 +89,26 @@ class Command(BaseCommand):
                 ],
                 ignore_conflicts=True,
             )
+
+        # create inline quizzes
+
+        with open("apps/quiz/tests/quiz_data.json") as f:
+            quiz_data_cycle = itertools.cycle(json.load(f))
+
+            for media in Media.objects.filter(quizzes__isnull=True):
+                quiz_data = next(quiz_data_cycle)
+                quiz = async_to_sync(Quiz.create_quiz_set)(
+                    title=f"{media.title} - {media.id}",
+                    description=media.description,
+                    audience=media.audience,
+                    thumbnail=media.thumbnail,
+                    owner_id=media.owner_id,
+                    text="",
+                    question_count=len(quiz_data["questions"]),
+                    lang_code="en",
+                    quiz_data=quiz_data,
+                )
+                media.quizzes.add(quiz)
 
         # announcement
         AnnouncementFactory.create_batch(size=50)
@@ -106,7 +130,7 @@ class Command(BaseCommand):
         )
 
         catalog_items = []
-        for i, media in enumerate(MediaFactory.create_batch(size=media_size, format=Media.FormatChoices.VIDEO)):
+        for i, media in enumerate(MediaFactory.create_batch(size=media_size, format=Media.MediaFormatChoices.VIDEO)):
             if i == 0:
                 public_catalog.thumbnail = media.thumbnail
                 public_catalog.save()

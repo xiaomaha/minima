@@ -200,8 +200,8 @@ class Command(BaseCommand):
     def detect_format(self, info):
         duration = info.get("duration", 0)
         if duration <= 60:
-            return Media.FormatChoices.SHORT
-        return Media.FormatChoices.VIDEO
+            return Media.MediaFormatChoices.SHORT
+        return Media.MediaFormatChoices.VIDEO
 
     def create_subtitles(self, media, info, force_update):
         ytt_api = YouTubeTranscriptApi()

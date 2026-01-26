@@ -145,7 +145,7 @@ function RouteComponent() {
                                   <div class="flex flex-col gap-0">
                                     <div class="text-sm flex items-center gap-2">
                                       {staff.staff.name}
-                                      <div class="badge badge-xs badge-soft">{staff.role}</div>
+                                      <div class="badge badge-xs badge-soft">{t(staff.role)}</div>
                                     </div>
                                     <div class="label text-xs">{staff.staff.email}</div>
                                   </div>

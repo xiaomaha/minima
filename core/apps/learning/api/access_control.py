@@ -54,6 +54,8 @@ def access_date(app_label, model, *, id_field: str = "id"):
             public_access = None
             if app_label == Media._meta.app_label and model == Media._meta.model.__name__.lower():
                 public_access = await PublicAccessMedia.get_access_date(media_id=content_id)
+            elif media_id:
+                public_access = await PublicAccessMedia.get_access_date(media_id=media_id)
 
             # more favorable access date between enrollment and public access
             accessible = _get_favorable_date(enrollment, public_access)

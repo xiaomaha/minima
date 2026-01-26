@@ -108,10 +108,13 @@ class MediaFactory(LearningObjectFactory[Media]):
         global _CURRENT_DATA
 
         format = params.get("format")
-        if format not in [Media.FormatChoices.VIDEO, Media.FormatChoices.PDF]:
-            format = generic.random.weighted_choice({Media.FormatChoices.VIDEO: 9, Media.FormatChoices.PDF: 1})
+        if format not in [Media.MediaFormatChoices.VIDEO, Media.MediaFormatChoices.PDF]:
+            format = generic.random.weighted_choice({
+                Media.MediaFormatChoices.VIDEO: 9,
+                Media.MediaFormatChoices.PDF: 1,
+            })
 
-        if format == Media.FormatChoices.VIDEO:
+        if format == Media.MediaFormatChoices.VIDEO:
             _CURRENT_DATA = _get_next_real_data()
 
         params["format"] = format

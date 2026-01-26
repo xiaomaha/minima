@@ -93,14 +93,14 @@ class QuestionPool(Model):
 
 @pghistory.track()
 class Question(Model):
-    class FormatChoices(TextChoices):
+    class ExamFormatChoices(TextChoices):
         SINGLE_CHOICE = "single_choice", _("Single Choice")
         TEXT_INPUT = "text_input", _("Text Input")
         NUMBER_INPUT = "number_input", _("Number Input")
         ESSAY = "essay", _("Essay")
 
     pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
-    format = CharField(_("Format"), max_length=20, choices=FormatChoices.choices)
+    format = CharField(_("Format"), max_length=20, choices=ExamFormatChoices.choices)
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     options = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Options"))
