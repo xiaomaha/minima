@@ -17,6 +17,7 @@ import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authJoinRouteImport } from './routes/(auth)/join'
 import { Route as authActivateRouteImport } from './routes/(auth)/activate'
 import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
+import { Route as appAccountRouteRouteImport } from './routes/(app)/account/route'
 import { Route as appDashboardIndexRouteImport } from './routes/(app)/dashboard/index'
 import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
 import { Route as appMediaIdRouteImport } from './routes/(app)/media/$id'
@@ -29,6 +30,7 @@ import { Route as appDashboardCatalogRouteImport } from './routes/(app)/dashboar
 import { Route as appDashboardAnnouncementRouteImport } from './routes/(app)/dashboard/announcement'
 import { Route as appDashboardAchievementRouteImport } from './routes/(app)/dashboard/achievement'
 import { Route as appAccountProfileRouteImport } from './routes/(app)/account/profile'
+import { Route as appAccountGroupRouteImport } from './routes/(app)/account/group'
 import { Route as appAccountEmailChangeRouteImport } from './routes/(app)/account/email-change'
 import { Route as appExamIdSessionRouteImport } from './routes/(app)/exam/$id.session'
 import { Route as appDiscussionIdSessionRouteImport } from './routes/(app)/discussion/$id.session'
@@ -71,6 +73,11 @@ const authActivateRoute = authActivateRouteImport.update({
 const appDashboardRouteRoute = appDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appAccountRouteRoute = appAccountRouteRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => appRouteRoute,
 } as any)
 const appDashboardIndexRoute = appDashboardIndexRouteImport.update({
@@ -130,14 +137,19 @@ const appDashboardAchievementRoute = appDashboardAchievementRouteImport.update({
   getParentRoute: () => appDashboardRouteRoute,
 } as any)
 const appAccountProfileRoute = appAccountProfileRouteImport.update({
-  id: '/account/profile',
-  path: '/account/profile',
-  getParentRoute: () => appRouteRoute,
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => appAccountRouteRoute,
+} as any)
+const appAccountGroupRoute = appAccountGroupRouteImport.update({
+  id: '/group',
+  path: '/group',
+  getParentRoute: () => appAccountRouteRoute,
 } as any)
 const appAccountEmailChangeRoute = appAccountEmailChangeRouteImport.update({
-  id: '/account/email-change',
-  path: '/account/email-change',
-  getParentRoute: () => appRouteRoute,
+  id: '/email-change',
+  path: '/email-change',
+  getParentRoute: () => appAccountRouteRoute,
 } as any)
 const appExamIdSessionRoute = appExamIdSessionRouteImport.update({
   id: '/exam/$id/session',
@@ -162,12 +174,14 @@ const appAssignmentIdSessionRoute = appAssignmentIdSessionRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof appAccountRouteRouteWithChildren
   '/dashboard': typeof appDashboardRouteRouteWithChildren
   '/activate': typeof authActivateRoute
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
+  '/account/group': typeof appAccountGroupRoute
   '/account/profile': typeof appAccountProfileRoute
   '/dashboard/achievement': typeof appDashboardAchievementRoute
   '/dashboard/announcement': typeof appDashboardAnnouncementRoute
@@ -187,11 +201,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof appAccountRouteRouteWithChildren
   '/activate': typeof authActivateRoute
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
+  '/account/group': typeof appAccountGroupRoute
   '/account/profile': typeof appAccountProfileRoute
   '/dashboard/achievement': typeof appDashboardAchievementRoute
   '/dashboard/announcement': typeof appDashboardAnnouncementRoute
@@ -214,12 +230,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(app)/account': typeof appAccountRouteRouteWithChildren
   '/(app)/dashboard': typeof appDashboardRouteRouteWithChildren
   '/(auth)/activate': typeof authActivateRoute
   '/(auth)/join': typeof authJoinRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/password-change': typeof authPasswordChangeRoute
   '/(app)/account/email-change': typeof appAccountEmailChangeRoute
+  '/(app)/account/group': typeof appAccountGroupRoute
   '/(app)/account/profile': typeof appAccountProfileRoute
   '/(app)/dashboard/achievement': typeof appDashboardAchievementRoute
   '/(app)/dashboard/announcement': typeof appDashboardAnnouncementRoute
@@ -241,12 +259,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/dashboard'
     | '/activate'
     | '/join'
     | '/login'
     | '/password-change'
     | '/account/email-change'
+    | '/account/group'
     | '/account/profile'
     | '/dashboard/achievement'
     | '/dashboard/announcement'
@@ -266,11 +286,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
     | '/activate'
     | '/join'
     | '/login'
     | '/password-change'
     | '/account/email-change'
+    | '/account/group'
     | '/account/profile'
     | '/dashboard/achievement'
     | '/dashboard/announcement'
@@ -292,12 +314,14 @@ export interface FileRouteTypes {
     | '/'
     | '/(app)'
     | '/(auth)'
+    | '/(app)/account'
     | '/(app)/dashboard'
     | '/(auth)/activate'
     | '/(auth)/join'
     | '/(auth)/login'
     | '/(auth)/password-change'
     | '/(app)/account/email-change'
+    | '/(app)/account/group'
     | '/(app)/account/profile'
     | '/(app)/dashboard/achievement'
     | '/(app)/dashboard/announcement'
@@ -381,6 +405,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof appDashboardRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/account': {
+      id: '/(app)/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof appAccountRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/dashboard/': {
       id: '/(app)/dashboard/'
       path: '/'
@@ -460,17 +491,24 @@ declare module '@tanstack/solid-router' {
     }
     '/(app)/account/profile': {
       id: '/(app)/account/profile'
-      path: '/account/profile'
+      path: '/profile'
       fullPath: '/account/profile'
       preLoaderRoute: typeof appAccountProfileRouteImport
-      parentRoute: typeof appRouteRoute
+      parentRoute: typeof appAccountRouteRoute
+    }
+    '/(app)/account/group': {
+      id: '/(app)/account/group'
+      path: '/group'
+      fullPath: '/account/group'
+      preLoaderRoute: typeof appAccountGroupRouteImport
+      parentRoute: typeof appAccountRouteRoute
     }
     '/(app)/account/email-change': {
       id: '/(app)/account/email-change'
-      path: '/account/email-change'
+      path: '/email-change'
       fullPath: '/account/email-change'
       preLoaderRoute: typeof appAccountEmailChangeRouteImport
-      parentRoute: typeof appRouteRoute
+      parentRoute: typeof appAccountRouteRoute
     }
     '/(app)/exam/$id/session': {
       id: '/(app)/exam/$id/session'
@@ -503,6 +541,22 @@ declare module '@tanstack/solid-router' {
   }
 }
 
+interface appAccountRouteRouteChildren {
+  appAccountEmailChangeRoute: typeof appAccountEmailChangeRoute
+  appAccountGroupRoute: typeof appAccountGroupRoute
+  appAccountProfileRoute: typeof appAccountProfileRoute
+}
+
+const appAccountRouteRouteChildren: appAccountRouteRouteChildren = {
+  appAccountEmailChangeRoute: appAccountEmailChangeRoute,
+  appAccountGroupRoute: appAccountGroupRoute,
+  appAccountProfileRoute: appAccountProfileRoute,
+}
+
+const appAccountRouteRouteWithChildren = appAccountRouteRoute._addFileChildren(
+  appAccountRouteRouteChildren,
+)
+
 interface appDashboardRouteRouteChildren {
   appDashboardAchievementRoute: typeof appDashboardAchievementRoute
   appDashboardAnnouncementRoute: typeof appDashboardAnnouncementRoute
@@ -531,9 +585,8 @@ const appDashboardRouteRouteWithChildren =
   appDashboardRouteRoute._addFileChildren(appDashboardRouteRouteChildren)
 
 interface appRouteRouteChildren {
+  appAccountRouteRoute: typeof appAccountRouteRouteWithChildren
   appDashboardRouteRoute: typeof appDashboardRouteRouteWithChildren
-  appAccountEmailChangeRoute: typeof appAccountEmailChangeRoute
-  appAccountProfileRoute: typeof appAccountProfileRoute
   appMediaIdRoute: typeof appMediaIdRoute
   appAssignmentIdSessionRoute: typeof appAssignmentIdSessionRoute
   appCourseIdSessionRoute: typeof appCourseIdSessionRoute
@@ -542,9 +595,8 @@ interface appRouteRouteChildren {
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  appAccountRouteRoute: appAccountRouteRouteWithChildren,
   appDashboardRouteRoute: appDashboardRouteRouteWithChildren,
-  appAccountEmailChangeRoute: appAccountEmailChangeRoute,
-  appAccountProfileRoute: appAccountProfileRoute,
   appMediaIdRoute: appMediaIdRoute,
   appAssignmentIdSessionRoute: appAssignmentIdSessionRoute,
   appCourseIdSessionRoute: appCourseIdSessionRoute,

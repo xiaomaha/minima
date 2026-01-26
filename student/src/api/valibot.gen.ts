@@ -1775,6 +1775,60 @@ export const vPagedCommentBriefSchema = v.object({
 });
 
 /**
+ * PartnerGroupSchema
+ */
+export const vPartnerGroupSchema = v.object({
+    name: v.string(),
+    description: v.string(),
+    partner: vPartnerSchema
+});
+
+/**
+ * RoleChoices
+ */
+export const vRoleChoices = v.picklist([
+    'education_manager',
+    'marketing_manager',
+    'financial_manager'
+]);
+
+/**
+ * CohortStaffSchema
+ */
+export const vCohortStaffSchema = v.object({
+    role: vRoleChoices,
+    staff: vOwnerSchema
+});
+
+/**
+ * CohortSchema
+ */
+export const vCohortSchema = v.object({
+    name: v.string(),
+    description: v.string(),
+    staffs: v.array(vCohortStaffSchema),
+    memberCount: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * PartnerGroupMemberSchema
+ */
+export const vPartnerGroupMemberSchema = v.object({
+    name: v.string(),
+    email: v.string(),
+    birthDate: v.pipe(v.string(), v.isoDate()),
+    phone: v.string(),
+    team: v.string(),
+    jobPosition: v.string(),
+    jobTitle: v.string(),
+    employmentStatus: v.string(),
+    employmentType: v.string(),
+    group: vPartnerGroupSchema,
+    cohorts: v.array(vCohortSchema),
+    memberCount: v.pipe(v.number(), v.integer())
+});
+
+/**
  * QuizGradeSchema
  */
 export const vQuizGradeSchema = v.object({
@@ -2988,6 +3042,19 @@ export const vOperationV1GetCommentsData = v.object({
  * OK
  */
 export const vOperationV1GetCommentsResponse = vPagedCommentBriefSchema;
+
+export const vPartnerV1MemberInfosData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vPartnerV1MemberInfosResponse = v.array(vPartnerGroupMemberSchema);
 
 export const vQuizV1GetSessionData = v.object({
     body: v.optional(v.never()),

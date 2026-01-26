@@ -2,7 +2,7 @@ import { IconRefresh } from '@tabler/icons-solidjs'
 import { createFileRoute, Outlet, useLocation } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import { useTranslation } from '@/shared/solid/i18n'
-import { DashboardProvider } from './-context'
+import { DashboardProvider, newEnrollments } from './-context'
 
 export const Route = createFileRoute('/(app)/dashboard')({
   component: RouteComponent,
@@ -32,7 +32,7 @@ function RouteComponent() {
   const [refreshHandler, setRefreshHandler] = createSignal<(() => void) | undefined>()
 
   return (
-    <DashboardProvider value={{ newEnrollments: [], setRefreshHandler }}>
+    <DashboardProvider value={{ newEnrollments, setRefreshHandler }}>
       <div class="mx-auto max-w-7xl p-4">
         <div class="flex items-center mb-6 gap-4">
           <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box mb-0 space-x-2 gap-y-2">

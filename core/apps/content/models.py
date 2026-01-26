@@ -73,7 +73,7 @@ class MatchedLineDict(TypedDict):
 
 @pghistory.track()
 class Media(LearningObjectMixin):
-    class FormatChoices(TextChoices):
+    class MediaFormatChoices(TextChoices):
         VIDEO = "video", _("Video")
         SHORT = "short", _("Short")
         EBOOK = "ebook", _("Ebook")
@@ -82,7 +82,7 @@ class Media(LearningObjectMixin):
 
     thumbnail = ImageField(_("Thumbnail"))
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
-    format = CharField(_("Format"), max_length=30, choices=FormatChoices.choices)
+    format = CharField(_("Format"), max_length=30, choices=MediaFormatChoices.choices)
     duration = DurationField(_("Duration"))
     license = CharField(_("License"), max_length=255, blank=True, default="")
     channel = CharField(_("Channel"), max_length=255, blank=True, default="")

@@ -88,12 +88,11 @@ def dashboard_callback(request, context):
             })
         context["stat_groups"].append({"name": group_name, "items": items})
 
-    if latest_snapshot:
-        context["snapshot_cards"] = [
-            {"label": _("Total Accounts"), "value": latest_snapshot.active_account_count},
-            {"label": _("Active Enrollments"), "value": latest_snapshot.active_enrollment_count},
-            {"label": _("Courses Passed"), "value": latest_snapshot.course_passed_count},
-        ]
+    context["snapshot_cards"] = [
+        {"label": _("Total Accounts"), "value": latest_snapshot.active_account_count if latest_snapshot else 0},
+        {"label": _("Active Enrollments"), "value": latest_snapshot.active_enrollment_count if latest_snapshot else 0},
+        {"label": _("Courses Passed"), "value": latest_snapshot.course_passed_count if latest_snapshot else 0},
+    ]
 
     return context
 

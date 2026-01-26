@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'solid-js'
+import { createContext, createRoot, useContext } from 'solid-js'
 import type { EnrollmentSchema } from '@/api'
 
 type DashboardContextType = {
@@ -15,3 +15,8 @@ export const useDashboard = () => {
   if (!ctx) throw new Error('useDashboard must be used within Provider')
   return ctx
 }
+
+export const [newEnrollments] = createRoot(() => {
+  const store: EnrollmentSchema[] = []
+  return [store]
+})

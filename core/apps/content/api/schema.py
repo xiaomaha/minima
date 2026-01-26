@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated
 
 from pydantic.fields import Field
 
@@ -7,8 +7,6 @@ from apps.account.api.schema import OwnerSchema
 from apps.common.schema import LearningObjectMixinSchema, Schema, TimeStampedMixinSchema
 from apps.content.api.encoder import GzipInEncodedType, GzipOutEncodedType
 from apps.content.models import Media, Note, Watch
-
-MediaFormat = Literal["video", "short", "ebook", "html", "pdf"]
 
 
 class MediaSchema(LearningObjectMixinSchema):
@@ -26,7 +24,7 @@ class MediaSchema(LearningObjectMixinSchema):
     channel: str
     owner: OwnerSchema
     subtitle_count: int
-    format: MediaFormat
+    format: Media.MediaFormatChoices
     uploaded: bool
     url: str
     quizzes: list[QuizSchema]
@@ -42,7 +40,7 @@ class WatchedMediaSchema(Schema):
     media_id: str
     title: str
     thumbnail: str
-    format: MediaFormat
+    format: Media.MediaFormatChoices
     duration_seconds: float
     passing_point: int
     url: str
@@ -98,7 +96,7 @@ class SearchedMediaSchema(LearningObjectMixinSchema):
     thumbnail: str
     duration_seconds: float
     owner: OwnerSchema
-    format: MediaFormat
+    format: Media.MediaFormatChoices
     uploaded: bool
     url: str
 

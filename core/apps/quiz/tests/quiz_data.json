@@ -1,0 +1,3733 @@
+[
+  {
+    "questions": [
+      {
+        "question": "What is the main purpose of the Blender Development Fund, as highlighted in the keynote?",
+        "supplement": "The keynote encourages donations to support Blender's development.",
+        "options": [
+          "To fund marketing campaigns for Blender.",
+          "To support developers and projects that make Blender.",
+          "To organize large-scale Blender conferences.",
+          "To invest in new hardware for Blender users.",
+          "To develop competing 3D software."
+        ],
+        "correct_answer": 1,
+        "explanation": "The keynote explicitly mentions donating to support Blender at fund.blender.org and emphasizes that donations go towards developers and projects.",
+        "point": 1
+      },
+      {
+        "question": "Which graphical standard is Blender adopting, leading to better industry support from companies like Intel, AMD, and Nvidia?",
+        "supplement": "",
+        "options": [
+          "OpenGL",
+          "DirectX",
+          "Vulkan",
+          "Metal",
+          "CUDA"
+        ],
+        "correct_answer": 2,
+        "explanation": "The keynote states, 'fulcon is the next graphic standard of the industry and they dropping open C slowly and everything will become Vulcan... Blender is one of the first 3D applications that fully supports it.'",
+        "point": 1
+      },
+      {
+        "question": "What feature allows users to create custom tools and functionality within Blender without programming, by connecting nodes together?",
+        "supplement": "",
+        "options": [
+          "Geometry Nodes",
+          "Grease Pencil",
+          "Node Trees",
+          "Add-on System",
+          "Python Scripting"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions, 'without any programming you make a not three you nle everything together and then you can make that a tool inside of the the UI... program your own functionality using note threes.'",
+        "point": 1
+      },
+      {
+        "question": "Which film award was a European film, made entirely in Blender, in the running for?",
+        "supplement": "",
+        "options": [
+          "The Golden Globe",
+          "The BAFTA Award",
+          "The C\u00e9sar Award",
+          "The Academy Award (Oscar)",
+          "The Palme d'Or"
+        ],
+        "correct_answer": 3,
+        "explanation": "The keynote mentions, 'another one the the winner of the fury Award of the an festival and uh in the running for an Oscar - it's a European film Lan French also made entirely in blender.'",
+        "point": 1
+      },
+      {
+        "question": "The keynote mentions a new organizational model for Blender, moving away from a traditional pyramid. What is this new model called?",
+        "supplement": "",
+        "options": [
+          "The Starfish Model",
+          "The Volcano Model",
+          "The Mesh Model",
+          "The Network Model",
+          "The Solar System Model"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker says, 'this is not the pyramid model - so named it the volcano model.'",
+        "point": 1
+      },
+      {
+        "question": "What is the approximate percentage of the Blender Foundation's annual budget that is spent on Blender contributors and developers?",
+        "supplement": "",
+        "options": [
+          "Around 25%",
+          "Around 50%",
+          "Around 75%",
+          "Around 90%",
+          "Almost 100%"
+        ],
+        "correct_answer": 2,
+        "explanation": "The keynote states, 'almost three quarters of your money to donat your money it being spent on people who make blender.'",
+        "point": 1
+      },
+      {
+        "question": "Ton Roosendaal mentions that he, as the most expensive person in the Blender organization, takes home a net amount of approximately how much per month after taxes and expenses?",
+        "supplement": "",
+        "options": [
+          "\u20ac1,500",
+          "\u20ac3,000",
+          "\u20ac5,600",
+          "\u20ac7,500",
+          "\u20ac10,000"
+        ],
+        "correct_answer": 2,
+        "explanation": "He states, 'net you get 5,600 left in 2023 which is my contribution to that Society... Then I have an expensive house... And I have 1,500 a month left to do all the stuff that I want.'",
+        "point": 1
+      },
+      {
+        "question": "In 2023, what was the total volume processed by the Blender Market?",
+        "supplement": "",
+        "options": [
+          "\u20ac1.6 million",
+          "\u20ac11 million",
+          "\u20ac16 million",
+          "\u20ac110 million",
+          "\u20ac160,000"
+        ],
+        "correct_answer": 1,
+        "explanation": "The keynote mentions, 'The blender Market the total volume in 2023 that they process was over 11 million.'",
+        "point": 1
+      },
+      {
+        "question": "What is the target percentage of Blender users that the next donation campaign aims to have donate to the project?",
+        "supplement": "",
+        "options": [
+          "0.2%",
+          "1%",
+          "2%",
+          "5%",
+          "10%"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker says, 'we want 2% of our uses to donate to BL just 2% right but 98% can use it for free.'",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary benefit of using Blender for design and marketing, as highlighted by Jess Wiseman?",
+        "supplement": "",
+        "options": [
+          "It allows for unlimited creation without financial constraints.",
+          "It requires advanced knowledge of traditional art techniques.",
+          "It is primarily used for creating abstract art.",
+          "It is a very expensive software that requires significant investment."
+        ],
+        "correct_answer": 0,
+        "explanation": "Jess Wiseman emphasizes that Blender allows creatives to operate in a space where nothing is limited by cost or availability, enabling the creation of ideas without financial barriers.",
+        "point": 1
+      },
+      {
+        "question": "How did Jess Wiseman's early creative journey influence her transition to 3D?",
+        "supplement": "",
+        "options": [
+          "She found traditional painting too time-consuming for her project ideas.",
+          "She preferred the limitations of digital art over physical media.",
+          "She discovered that 3D art was easier to learn than realism.",
+          "She was initially discouraged by the lack of realism in 3D software."
+        ],
+        "correct_answer": 0,
+        "explanation": "Wiseman mentions that her paintings took too long for the projects she envisioned, leading her to adopt 3D, which allows for a faster outflow of ideas.",
+        "point": 1
+      },
+      {
+        "question": "What is 'texture stacking' as described in the presentation?",
+        "supplement": "",
+        "options": [
+          "A method of layering image textures directly onto a 3D model.",
+          "A technique involving adding multiple layers of detail, including imperfections, to a material's node tree.",
+          "The process of combining different 3D models to create a single complex texture.",
+          "A way to stack physical objects to create realistic textures."
+        ],
+        "correct_answer": 1,
+        "explanation": "Texture stacking is described as adding new elements to a node tree, with each element contributing subtle, often overlooked details, to make materials look more realistic.",
+        "point": 1
+      },
+      {
+        "question": "Which of the following are identified as key 'cheat codes' to achieving realistic results in Blender?",
+        "supplement": "",
+        "options": [
+          "Using only procedural textures and avoiding image textures.",
+          "Optimizing scenes for high-end gaming PCs.",
+          "Focusing on lighting and textures.",
+          "Employing complex geometry and high polygon counts."
+        ],
+        "correct_answer": 2,
+        "explanation": "Wiseman explicitly states that textures and lighting are the biggest 'cheat codes' for achieving realistic results in Blender.",
+        "point": 1
+      },
+      {
+        "question": "What does Jess Wiseman suggest is crucial for creating realistic materials, beyond just applying an image texture?",
+        "supplement": "",
+        "options": [
+          "Using extremely high-resolution image textures only.",
+          "Adding subtle details like pores, subsurface scattering, and imperfections through texture stacking.",
+          "Relying solely on Blender's default material settings.",
+          "Ensuring the 3D model has a very high polygon count."
+        ],
+        "correct_answer": 1,
+        "explanation": "She explains that simply adding an image to a 3D object isn't always enough, and techniques like adding masks for pores and subsurface details are crucial for realism, especially for materials like skin.",
+        "point": 1
+      },
+      {
+        "question": "How does Jess Wiseman use 'geometry pointiness' and 'ambient occlusion' in her texturing process?",
+        "supplement": "",
+        "options": [
+          "To add color to the base texture.",
+          "To highlight the sharpest areas of a model and create effects like edge wear or accumulated grime.",
+          "To generate entirely new base textures procedurally.",
+          "To simulate the effects of lighting on reflective surfaces."
+        ],
+        "correct_answer": 1,
+        "explanation": "Geometry pointiness is used to highlight sharp edges for erosion effects, and ambient occlusion adds grittiness to commonly used areas, contributing to realism by simulating wear and tear.",
+        "point": 1
+      },
+      {
+        "question": "According to the presentation, what is a key advantage of using Blender for product prototyping and marketing?",
+        "supplement": "",
+        "options": [
+          "It eliminates the need for any marketing efforts.",
+          "It allows for the creation of realistic mockups without physical sampling costs.",
+          "It requires hiring professional photographers for all product shots.",
+          "It only works for abstract product designs."
+        ],
+        "correct_answer": 1,
+        "explanation": "Wiseman highlights that Blender enables the creation of concept-ready, photorealistic products and mockups, eliminating the need for costly physical sampling and allowing ideas to be presented tangibly.",
+        "point": 1
+      },
+      {
+        "question": "What concept does Jess Wiseman use to describe the process of bringing ideas to life visually, starting from a simple concept and ending with a tangible reality?",
+        "supplement": "",
+        "options": [
+          "Digital delusion",
+          "Virtual manifestation",
+          "Creative iteration",
+          "Conceptual visualization"
+        ],
+        "correct_answer": 1,
+        "explanation": "She draws a parallel between visualizing ideas in Blender and a 'practical form of manifestation,' where a convincing enough virtual reality can become the actual reality, especially when supported by a community.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary purpose of the talk \"Building a Career around Blender\" at the Blender Conference 2024?",
+        "supplement": "The talk is presented by Jason van Gumster at the Blender Conference 2024 in Amsterdam.",
+        "options": [
+          "To teach advanced Blender modeling techniques.",
+          "To provide guidance on building a sustainable career using Blender.",
+          "To demonstrate new features in the latest Blender version.",
+          "To discuss the history of Blender development.",
+          "To offer tips on accounting and freelance business management."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explicitly states the talk is for those who want to make a living with Blender and aims to be more fundamental about building a career rather than focusing on nuts and bolts like accounting or specific freelance tactics.",
+        "point": 1
+      },
+      {
+        "question": "According to Jason van Gumster, what is a common trap when learning Blender?",
+        "supplement": "Jason van Gumster advises against a specific approach to learning Blender's tools.",
+        "options": [
+          "Starting with advanced animation before mastering modeling.",
+          "Trying to learn all of Blender's features sequentially from the beginning.",
+          "Focusing too much on rigging without understanding basic modeling.",
+          "Only practicing with pre-made assets instead of creating from scratch.",
+          "Spending too much time on UV unwrapping and texturing."
+        ],
+        "correct_answer": 1,
+        "explanation": "Jason van Gumster highlights the trap of starting at the beginning and trying to learn everything in order (modeling, UV texturing, animating, etc.), suggesting instead to start with what you're interested in.",
+        "point": 1
+      },
+      {
+        "question": "What does Jason van Gumster suggest as the essence of Step 2, \"Get Good\"?",
+        "supplement": "The second step in building a career with Blender is crucial for establishing credibility.",
+        "options": [
+          "You must be the absolute best in the world at your chosen skill.",
+          "You need to master every single aspect of Blender.",
+          "You should aim to be good enough, meaning better than the person who hired you or willing to do tasks they avoid.",
+          "Focus solely on complex projects to impress potential employers.",
+          "Only pursue freelance work once you are a world-class expert."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker clarifies that 'good enough' doesn't mean being the best, but rather being proficient enough to meet the needs of clients or employers, and that your skills are valuable as soon as you start using and sharing them.",
+        "point": 1
+      },
+      {
+        "question": "In Step 3, \"Know Your Audience,\" what does the speaker emphasize about 3D art and communication?",
+        "supplement": "Understanding your audience is key to effective communication through 3D art.",
+        "options": [
+          "The main goal is to create art that is visually stunning, regardless of the viewer.",
+          "3D art is a form of communication, and the trick is knowing what the audience wants and delivering it.",
+          "It's important to know the audience's technical expertise to tailor the complexity of the artwork.",
+          "The audience for 3D art is primarily within the media and entertainment industry.",
+          "You should focus on audience engagement metrics to gauge the success of your work."
+        ],
+        "correct_answer": 1,
+        "explanation": "Jason van Gumster explains that art, including 3D art, is a means of communication. The key to this communication is understanding and fulfilling what the audience desires or needs.",
+        "point": 1
+      },
+      {
+        "question": "When discussing \"Know Your Value\" (Step 4), what non-monetary factors does Jason van Gumster suggest contribute to a person's value?",
+        "supplement": "The concept of value in a career extends beyond financial compensation.",
+        "options": [
+          "The number of followers on social media platforms.",
+          "The speed at which you complete projects.",
+          "How well you are treated, whether the work is interesting, and if you are needed more than the employer needs you.",
+          "The prestige of the companies you have previously worked for.",
+          "The size and complexity of the projects you have completed."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explicitly mentions that value isn't solely measured in dollars. He points out that factors like good treatment, interesting work, and a favorable power dynamic in the employer-employee relationship are also significant components of value.",
+        "point": 1
+      },
+      {
+        "question": "What is the core message of Step 5, \"Be a Person\"?",
+        "supplement": "The final step in building a career emphasizes personal attributes beyond technical skills.",
+        "options": [
+          "Focus exclusively on your specialization within Blender to become the best in that niche.",
+          "Your portfolio and technical skills are all that matter in the job market.",
+          "It's important to be a trustworthy, relatable individual, and to have personal projects that foster growth and maintain sanity, as you can't do everything alone.",
+          "Always prioritize client demands, even if it compromises your artistic vision.",
+          "Work exclusively on projects that are directly related to media and entertainment."
+        ],
+        "correct_answer": 2,
+        "explanation": "Jason van Gumster emphasizes that being a good, trustworthy person is crucial. He also highlights the importance of having personal projects for growth and well-being, and that collaboration is often necessary, meaning you can't do it all alone. He states, 'your work is not enough' and 'you are more than your portfolio'.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary focus of the presentation \"Ghosts of Ruin - Pipeline & Shading for TV productions\"?",
+        "supplement": "",
+        "options": [
+          "Showcasing advanced modeling techniques in Blender.",
+          "Detailing the pipeline and shading process for a young adult anime TV series.",
+          "Demonstrating real-time rendering capabilities for VR experiences.",
+          "Explaining the history of animation studios.",
+          "Reviewing the latest features in Blender 4.0."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation title and description clearly state that it is about the pipeline and shading for the 'Ghosts of Ruin' TV series.",
+        "point": 1
+      },
+      {
+        "question": "Which software does BWAT Animation Studios primarily use for their productions, having switched from Maya?",
+        "supplement": "",
+        "options": [
+          "3ds Max",
+          "Cinema 4D",
+          "Houdini",
+          "Blender",
+          "Unity"
+        ],
+        "correct_answer": 3,
+        "explanation": "The speaker explicitly mentions that BWAT Studios uses Blender for at least 90% of their production steps and has switched from Maya.",
+        "point": 1
+      },
+      {
+        "question": "What is the main characteristic of Non-Photorealistic Rendering (NPR) or stylized shading?",
+        "supplement": "",
+        "options": [
+          "Creating hyper-realistic 3D models.",
+          "Producing 3D characters with a 2D or hand-drawn look.",
+          "Focusing on realistic lighting and shadows only.",
+          "Generating complex particle effects.",
+          "Simulating fluid dynamics."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation defines NPR/stylized shading as 'producing 3D characters with 2D look'.",
+        "point": 1
+      },
+      {
+        "question": "BWAT Studios has multiple locations. Which of these cities is NOT mentioned as a location for their studios?",
+        "supplement": "",
+        "options": [
+          "Barcelona",
+          "Tenerife",
+          "Montreal",
+          "Berlin",
+          "Cologne"
+        ],
+        "correct_answer": 3,
+        "explanation": "The speaker mentions studios in Germany (Cologne), Canada (Montreal), and Spain (Barcelona and Santa Cruz de Tenerife). Berlin is not mentioned.",
+        "point": 1
+      },
+      {
+        "question": "For the production of the TV series 'Peton and Petrus', what was a key challenge with using Blender's Freestyle outlines?",
+        "supplement": "",
+        "options": [
+          "It was too slow for rendering.",
+          "It could not produce intersection lines.",
+          "It did not support NPR shading.",
+          "It had compatibility issues with other software.",
+          "It required a very high-end GPU."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker points out that one of the worst things about Freestyle is that it 'can't produce or draw the intersection line', which was a big issue for that kind of rendering.",
+        "point": 1
+      },
+      {
+        "question": "Who was the freelance artist credited with developing advanced shading features for BWAT Studios, including painting light/shadow independently?",
+        "supplement": "",
+        "options": [
+          "Dylan Cissonn",
+          "Antonio Toala",
+          "Pablo Basalo",
+          "Daniel Perez",
+          "Juan Carlos Garcia del Blanco"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker mentions that Antonio Toala was recommended for creating the shading and developed features like independent shadow control.",
+        "point": 1
+      },
+      {
+        "question": "The shading system developed allowed artists to 'paint' light and shadow directly onto the character models. What technique was this workflow based on?",
+        "supplement": "",
+        "options": [
+          "UV mapping",
+          "Vertex color and masking",
+          "Procedural textures",
+          "Image planes",
+          "Shader nodes only"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains that the workflow is based on 'masking masks' and utilizes 'vertex color', with red for addition and blue for deletion.",
+        "point": 1
+      },
+      {
+        "question": "What was the main target audience for the TV series 'Ghosts of Ruin'?",
+        "supplement": "",
+        "options": [
+          "Young children",
+          "Young adults",
+          "General audience",
+          "Teens",
+          "Elderly"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation description and the speaker mention that 'Ghosts of Ruin' is a TV series for the 'young adult' target.",
+        "point": 1
+      },
+      {
+        "question": "BWAT Studios uses a visualization tool called 'Files Flow' to help different profiles understand the production pipeline. What does this tool represent?",
+        "supplement": "",
+        "options": [
+          "A 3D model of the studio.",
+          "A real-time rendering engine.",
+          "A map of file inputs and outputs between departments.",
+          "A script for automating tasks.",
+          "A character rigging system."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker describes Files Flow as 'a map that we develop... to understand where the files are coming from and where the files are going', acting as inputs and outputs of different departments.",
+        "point": 1
+      },
+      {
+        "question": "Although BWAT Studios aims to use Blender for most steps, for the 'Ghosts of Ruin' production, they used another software for compositing. Which one?",
+        "supplement": "",
+        "options": [
+          "After Effects",
+          "Fusion",
+          "Nuke",
+          "Photoshop",
+          "DaVinci Resolve"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker mentions that for the last steps of the production, they used 'another software like Fusion for compositing' due to existing setups and the need for speed.",
+        "point": 1
+      },
+      {
+        "question": "During the 'Ghosts of Ruin' production, a stress test with guns using 4K textures revealed issues when rendering with which Blender engine?",
+        "supplement": "",
+        "options": [
+          "Cycles",
+          "Eevee",
+          "Workbench",
+          "Both Cycles and Eevee",
+          "RenderMan"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states that 'suddenly artifacts came to the real test' when using Eevee with complex setups, leading to a recommendation to use Cycles instead.",
+        "point": 1
+      },
+      {
+        "question": "For the 'Ghosts of Ruin' TV series, two different styles of eyes were created for characters representing two worlds. How was this variation achieved?",
+        "supplement": "",
+        "options": [
+          "By using different textures only.",
+          "By employing distinct modeling techniques for each eye style.",
+          "Through procedural shaders and node groups.",
+          "By applying different lighting setups.",
+          "Using separate 2D drawings for each eye."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains that they achieved the variation '100% procedural' and developed a specific shader with node groups for the regular and cybernetic eyes.",
+        "point": 1
+      },
+      {
+        "question": "In the advanced shader developed by Daniel Perez for 'Ghosts of Ruin', what is the function of the 'stylized' node that can be adjusted from zero to one?",
+        "supplement": "",
+        "options": [
+          "Controls the emission strength.",
+          "Determines the amount of specularity.",
+          "Adjusts the level of stylization, from fully 3D to flat 2D.",
+          "Manages the rim light intensity.",
+          "Applies color correction."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker describes the 'stylized node' as passing from zero to one to be '100% stylized', moving towards a flat 2D direction when at one and a standard Cycles shader when at zero.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the name of the speaker and their role at E1 Series?",
+        "supplement": "",
+        "options": [
+          "Asher Erskine, Head of Design",
+          "Jane Doe, Marketing Manager",
+          "John Smith, Chief Engineer",
+          "Alice Brown, Event Coordinator"
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker introduces himself as Asher and states, 'my name is Asher and I'm head of design at E1 Series.'",
+        "point": 1
+      },
+      {
+        "question": "What is E1 Series?",
+        "supplement": "",
+        "options": [
+          "A Formula 1 racing team",
+          "A new global sport featuring electric hydrofoil boats",
+          "An extreme sports competition with electric cars",
+          "A company that manufactures electric boats"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation describes E1 as 'a new Global sport' and explains that it's part of the same family as Formula E and Extreme, focusing on electric boat racing.",
+        "point": 1
+      },
+      {
+        "question": "What is the name of the E1 Series race boat?",
+        "supplement": "",
+        "options": [
+          "Sea Serpent",
+          "Aqua Flyer",
+          "Race Bird",
+          "Hydrofoil X"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker refers to the boat and says, 'that's our boat that we race with \u2013 we call it the Race Bird.'",
+        "point": 1
+      },
+      {
+        "question": "What technology allows the E1 race boats to lift out of the water?",
+        "supplement": "",
+        "options": [
+          "Jet propulsion",
+          "Hydrofoils",
+          "Rockets",
+          "Hovercraft technology"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains, 'the green Parts there are what what make the boat fly \u2013 they're known as Hydrofoils... foils are what make boats lift out of the water when they're at a top speed.'",
+        "point": 1
+      },
+      {
+        "question": "What key design principle did Asher mention is often subconsciously familiar and makes things feel 'right'?",
+        "supplement": "",
+        "options": [
+          "The rule of odds",
+          "The golden section",
+          "Symmetry",
+          "Leading lines"
+        ],
+        "correct_answer": 1,
+        "explanation": "Asher discusses the 'golden section' and states, 'The subconscious familiarity of the shape that's found throughout nature helps things feel right.'",
+        "point": 1
+      },
+      {
+        "question": "Which of these is NOT mentioned as a team owner or associated personality for E1 Series?",
+        "supplement": "",
+        "options": [
+          "Will Smith",
+          "Tom Brady",
+          "Lewis Hamilton",
+          "Steve Aoki"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presentation lists Will Smith, Tom Brady, and Steve Aoki (Aoki) as team owners or associated personalities, but Lewis Hamilton is not mentioned.",
+        "point": 1
+      },
+      {
+        "question": "What is a key pillar of E1's sustainability efforts?",
+        "supplement": "",
+        "options": [
+          "Using fossil fuels for backup power",
+          "Leaving a positive impact in race locations",
+          "Encouraging single-use plastics at events",
+          "Focusing solely on the racing aspect"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states, 'a key pillar is that everywhere that we race we try and leave some form of positive impact whether it's working with a local charity or having panel discussions... to raise awareness for issues around Coastal Health.'",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary project Alberto Petronio works on?",
+        "supplement": "",
+        "options": [
+          "Squadron 42",
+          "Star Citizen",
+          "Wing Commander",
+          "Elite Dangerous",
+          "Freelancer"
+        ],
+        "correct_answer": 1,
+        "explanation": "Alberto Petronio states, 'my main project is St citizen'.",
+        "point": 1
+      },
+      {
+        "question": "Which manufacturer is known for its extreme pride in gravity control and gravitation technologies?",
+        "supplement": "",
+        "options": [
+          "Aegis Dynamics",
+          "Anvil Aerospace",
+          "Musashi Industrial & Salvage Corporation (MISC)",
+          "Gatac",
+          "Roberts Space Industries (RSI)"
+        ],
+        "correct_answer": 3,
+        "explanation": "Petronio mentions, 'Gatac... Gatak takes extreme pride in the way they control gravity and their gravitation Technologies'.",
+        "point": 1
+      },
+      {
+        "question": "What is a key challenge when designing the Gatak Culin spaceship's interior?",
+        "supplement": "",
+        "options": [
+          "Making it look too similar to human ships",
+          "Ensuring the gravity manipulation technology is not visible",
+          "Creating a layout that is not a straight line, but tilted and oblique",
+          "Integrating standard airplane-like designs",
+          "Minimizing the number of visible components"
+        ],
+        "correct_answer": 2,
+        "explanation": "Petronio describes the Gatak Culin's interior design as 'not one light straight everything was tilted oblique very weird'.",
+        "point": 1
+      },
+      {
+        "question": "For the Tumbril Storm light tank, which design inspiration was NOT mentioned for the initial concepts?",
+        "supplement": "",
+        "options": [
+          "Cyberpunk",
+          "Retrofuturistic (inspired by WWI British tanks)",
+          "Safe and contemporary",
+          "Steampunk",
+          "Aesthetic inspired by modern military vehicles"
+        ],
+        "correct_answer": 3,
+        "explanation": "Petronio lists 'something a little cyber Punk for option a', 'something retrofuturistic inspired to the World War I British tank for option b', and 'something way more safe and contemporary for option C'. Steampunk was not mentioned.",
+        "point": 1
+      },
+      {
+        "question": "What is a significant advantage of concept artists using 3D tools like Blender in the early stages of development?",
+        "supplement": "",
+        "options": [
+          "It allows for immediate final asset creation",
+          "It ensures the design meets game metrics and can fit into existing structures without requiring 3D artists to fix fundamental issues later",
+          "It replaces the need for 3D modelers entirely",
+          "It focuses solely on aesthetic appeal, disregarding functionality",
+          "It speeds up the animation process for every asset"
+        ],
+        "correct_answer": 1,
+        "explanation": "Petronio states, 'each of us have different style but each of us starts in 3D because we have to make sure absolutely that we nail the metrics of the game... and we just don't want this stuff to fall on the 3dr team'.",
+        "point": 1
+      },
+      {
+        "question": "When developing the Starliner's combat variant, which color palette was chosen for the medical bay?",
+        "supplement": "",
+        "options": [
+          "Gray and red",
+          "Darker tones, red, and black",
+          "A mix of all previous palettes",
+          "A more inviting color to contrast with the oppressive theme",
+          "The same palette as the turret room"
+        ],
+        "correct_answer": 3,
+        "explanation": "Petronio mentions, 'we changed um this color palette just for the medical Bay because it has to look a little more inviting'.",
+        "point": 1
+      },
+      {
+        "question": "What is a core principle Petronio emphasizes regarding concept art in the video game industry?",
+        "supplement": "",
+        "options": [
+          "Concept artists should only focus on 2D illustrations.",
+          "3D artists should handle all structural changes to concepts.",
+          "Concept artists should be more accountable for how their work functions in the game, including understanding and studying aspects like component fitting and animations.",
+          "The final in-game look should be significantly different from the concept art for creative freedom.",
+          "Reusing animations is not a priority in the concept phase."
+        ],
+        "correct_answer": 2,
+        "explanation": "Petronio states, 'we have to be a little more accountable for the way the 3D the concept art works in the video game industry considering how complex a prop like this can be we have to make sure that the components fit inside it'.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the main topic of the presentation \"Forget about Nodes\" at the Blender Conference 2024?",
+        "supplement": "The presentation was given by Simon Thommes at the Blender Conference 2024.",
+        "options": [
+          "Introducing new rendering features in Blender 4.3",
+          "Improving the usability of nodes, particularly with gizmos in the 3D viewport",
+          "Discussing advancements in animation rigging systems",
+          "Showcasing new sculpting tools and brushes",
+          "Exploring the future of add-on development in Blender"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter explicitly states that the talk is about new nodes in Blender 4.3, especially gizmos, which aim to make node systems more user-friendly and usable directly in the 3D viewport, making it feel like you can 'forget about nodes'.",
+        "point": 1
+      },
+      {
+        "question": "What is the primary purpose of Gizmos in the context of Blender's Geometry Nodes, as explained in the presentation?",
+        "supplement": "",
+        "options": [
+          "To control the rendering quality of node-based scenes",
+          "To provide interactive widgets in the 3D viewport for manipulating node tree parameters visually",
+          "To automatically generate node networks based on user input",
+          "To facilitate the export of node setups to external software",
+          "To debug errors within complex node trees"
+        ],
+        "correct_answer": 1,
+        "explanation": "Simon Thommes explains that gizmos are 'nice little widgets in your 3D viewport that you can use to interact with the 3D scene to change parameters of the 3D scene directly without putting in values but just visually by interacting with a 3D viewport'.",
+        "point": 1
+      },
+      {
+        "question": "How does the data flow for Gizmo nodes differ from traditional node tree data flow?",
+        "supplement": "",
+        "options": [
+          "Data flows strictly from left to right, similar to standard nodes.",
+          "Data flows from the Gizmo back into the node tree, influencing input values.",
+          "Data is only communicated through separate matrix sockets.",
+          "Gizmo data flow is unidirectional and cannot be influenced by other nodes."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter highlights that the data flow is 'the other way around' compared to standard left-to-right flow. The Gizmo manipulates an input value, and this change is 'driven kind of backwards' into the node tree.",
+        "point": 1
+      },
+      {
+        "question": "Which type of Gizmo is demonstrated early in the presentation for controlling the height of a tree asset?",
+        "supplement": "",
+        "options": [
+          "Spherical Gizmo",
+          "Rotational Gizmo",
+          "Linear Gizmo",
+          "Scale Gizmo",
+          "Transform Gizmo"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presenter uses a 'linear Gizmo node' to control the height of the tree, explaining that it allows for linear interaction along a specific axis.",
+        "point": 1
+      },
+      {
+        "question": "What visual cues are used in the node editor to indicate that a value is being driven by a Gizmo?",
+        "supplement": "",
+        "options": [
+          "A red border around the affected node",
+          "A small gizmo icon next to the value socket and a double line indicating backward propagation",
+          "The node turns a specific color, like blue or green",
+          "A tooltip that appears on hover",
+          "No visual cue is provided; it relies on user memory."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter points out a 'little icon' and a 'double line' to signify that a value is driven by a gizmo and to indicate the backward propagation of data.",
+        "point": 1
+      },
+      {
+        "question": "In the example of controlling the grid size, why is it necessary to multiply the Gizmo's input value by 0.5 when setting the position?",
+        "supplement": "",
+        "options": [
+          "To account for the grid's origin being at (0,0,0)",
+          "To center the Gizmo correctly on the edge of the grid, considering the grid is centered on its own center.",
+          "To double the control range of the Gizmo.",
+          "To invert the scaling behavior of the Gizmo.",
+          "This is an error in the node setup and not necessary."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter explains that since the grid is centered, the position of the Gizmo should be 'half of the total size' to be correctly attached to the side, hence the multiplication by 0.5.",
+        "point": 1
+      },
+      {
+        "question": "What is the benefit of connecting the Gizmo input to a multiplied value (e.g., size * 0.5) for both position and size control in the grid example?",
+        "supplement": "",
+        "options": [
+          "It allows the Gizmo to control only the position, not the size.",
+          "It ensures that the Gizmo correctly adjusts the size in proportion to its position while dragging.",
+          "It simplifies the node setup by combining two controls into one.",
+          "It prevents the Gizmo from affecting the X and Y axes simultaneously.",
+          "It makes the Gizmo unresponsive to user input."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter demonstrates that connecting the multiplied value to both position and size ensures the 'attachment' is maintained while dragging and that the size changes at the 'correct rate,' preventing a disconnect.",
+        "point": 1
+      },
+      {
+        "question": "How can a Gizmo be made to always be visible in the 3D viewport, regardless of the selected node?",
+        "supplement": "",
+        "options": [
+          "By increasing the Gizmo's size parameter",
+          "By pinning the Gizmo",
+          "By disabling context dependency in the preferences",
+          "By connecting it to the group output",
+          "By using a specific shader for the Gizmo"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter mentions that if you 'always want to see this Gizmo,' you can 'just pin this Gizmo so it's always shown regardless of what I have selected'.",
+        "point": 1
+      },
+      {
+        "question": "What new node type is introduced in Blender 4.3 for iterating over geometry elements, functioning like a parallel for-loop?",
+        "supplement": "",
+        "options": [
+          "Repeat Zone",
+          "For Each Loop",
+          "Element Iterator",
+          "Geometry Iterator Node",
+          "For Each Element Zone"
+        ],
+        "correct_answer": 4,
+        "explanation": "The presenter introduces the 'For Each Element Zone' as a new feature in Blender 4.3, contrasting it with the 'Repeat Zone' by explaining its parallel execution nature.",
+        "point": 1
+      },
+      {
+        "question": "How does the 'For Each Element Zone' differ in execution from the 'Repeat Zone'?",
+        "supplement": "",
+        "options": [
+          "Repeat Zone executes operations serially, while For Each Element Zone executes them in parallel.",
+          "Repeat Zone is for object-level operations, while For Each Element Zone is for component-level.",
+          "Repeat Zone uses a fixed number of iterations, while For Each Element Zone is dynamic.",
+          "Repeat Zone processes attributes, while For Each Element Zone processes entire geometries."
+        ],
+        "correct_answer": 0,
+        "explanation": "The presenter explains that the 'Repeat Zone' 'chains together a bunch of operations in a Serial manner,' while the 'For Each Element Zone' is 'more rather than serial... more something parallel'.",
+        "point": 1
+      },
+      {
+        "question": "In the 'For Each Element Zone', how can you access the specific position of the element being iterated over?",
+        "supplement": "",
+        "options": [
+          "By using a separate Position node within the zone.",
+          "By accessing the 'Element' input, which provides the singular position.",
+          "By passing the 'Position' attribute from the outside as an input to the zone.",
+          "By using a specific 'Get Position' node within the zone.",
+          "The position is automatically available without any special input."
+        ],
+        "correct_answer": 2,
+        "explanation": "The presenter states, 'the best way is to pass in the attribute from the outside which I can just get with the position field and pass it in as an input.' Inside the zone, this becomes a single value usable by nodes like the Transform node.",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of the 'Generated Outputs' panel in the 'For Each Element Zone'?",
+        "supplement": "",
+        "options": [
+          "To view the original input geometry.",
+          "To output the processed attributes from each iteration.",
+          "To collect and combine generated geometry from each iteration into a single output.",
+          "To provide debugging information for the loop.",
+          "To control the looping parameters."
+        ],
+        "correct_answer": 2,
+        "explanation": "The presenter explains that the 'Generated Outputs' panel is where 'we can take generated geometry from each iteration and then join it all together in one output geometry'.",
+        "point": 1
+      },
+      {
+        "question": "When using the 'For Each Element Zone' to create multiple cubes at the positions of points, what node is essential to place the cubes at the correct point locations?",
+        "supplement": "",
+        "options": [
+          "Translate Node",
+          "Set Position Node",
+          "Transform Node, using the iterated point's position as translation",
+          "Align Node",
+          "Scatter Node"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presenter uses a 'transform node' and takes 'the position of each point as a singular Vector for the translation of the transform node,' which correctly places the generated cubes.",
+        "point": 1
+      },
+      {
+        "question": "What is a key advantage of using the 'For Each Element Zone' for operations like creating multiple instances of a node group (e.g., a birch tree)?",
+        "supplement": "",
+        "options": [
+          "It allows direct modification of the node group's internal logic.",
+          "It enables applying the node group's functionality to each element individually without needing to modify the node group itself.",
+          "It automatically optimizes the node group for better performance.",
+          "It provides a visual interface for controlling the node group's parameters.",
+          "It merges all instances into a single geometry object."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter highlights that the 'For Each Element Zone' is useful when you 'only have this node that does something once but we want to do it for each point transform,' effectively applying a 'black box' node group multiple times.",
+        "point": 1
+      },
+      {
+        "question": "How can you introduce random variation to the generated birch trees within the 'For Each Element Zone'?",
+        "supplement": "",
+        "options": [
+          "By directly connecting a random value node to each input parameter.",
+          "By using the index of the iteration to drive a random value node, ensuring variation per iteration.",
+          "By using a math node to add randomness to a fixed value.",
+          "By controlling the seed of the node group itself.",
+          "By using a separate scattering node before the For Each loop."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter shows connecting the 'index' to the 'ID' of a random value node to ensure each iteration gets a different random value, which is then used to drive parameters like 'branch start'.",
+        "point": 1
+      },
+      {
+        "question": "What new feature in Blender 4.3 allows individual geometry elements generated within a loop to be named?",
+        "supplement": "",
+        "options": [
+          "Set Name Node",
+          "Geometry Naming Node",
+          "Set Geometry Name Node",
+          "Attribute Name Node",
+          "Instance Name Node"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presenter introduces the 'set geometry name node' which allows for naming individual geometry pieces, and explains how to combine it with string nodes and the index to give unique names.",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of the 'Realize Instances' node with 'Depth' set to 1 when working with collections of assets?",
+        "supplement": "",
+        "options": [
+          "To render all instances directly in the viewport.",
+          "To collapse the top level of instanced geometry from a collection into a single, unified list of instances.",
+          "To convert instances into mesh data.",
+          "To assign materials to all instances.",
+          "To remove duplicate instances."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter explains that 'realize instances' with 'depth to one' allows you to 'collapse the top level of geometry all into one' to get a list of all individual trees (Birches and Pines) together, suitable for scattering.",
+        "point": 1
+      },
+      {
+        "question": "In the context of scattering instances to create a forest, why is it necessary to 'set the position of the instances all to zero' before scattering?",
+        "supplement": "",
+        "options": [
+          "To ensure all instances originate from the same point.",
+          "To reset the instances to their original location within their parent object before scattering them to new locations.",
+          "To remove any existing transformations applied to the instances.",
+          "To prepare the instances for instancing on points.",
+          "To consolidate all instances into a single object."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter mentions needing to 'set the position of the instances all to zero to get them back into their original place' before scattering them around, implying a reset of their local origin before applying new transformations for distribution.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary topic of Lino Thomas's talk at the Blender Conference 2024?",
+        "supplement": "From the video description: \"One hour of colours\" by Lino Thomas. Blender Conference 2024.",
+        "options": [
+          "3D modeling techniques for spaceships",
+          "Advanced animation workflows",
+          "Understanding and utilizing colors in 3D art",
+          "Game development using Blender",
+          "Compositing and post-processing workflows"
+        ],
+        "correct_answer": 2,
+        "explanation": "The talk's title is 'One hour of colours,' and the presenter explicitly states the talk will be about 'figuring out how to debug the colors how they work why they work.'",
+        "point": 1
+      },
+      {
+        "question": "According to Lino Thomas, what are the three fundamental values that define any color?",
+        "supplement": "",
+        "options": [
+          "Red, Green, Blue",
+          "Hue, Saturation, Value",
+          "Lightness, Chroma, Hue",
+          "Redness, Greenness, Blueness",
+          "Brightness, Contrast, Saturation"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter states, 'what are colors as usual H saturation value you know about it but the three values you can then Define any color.'",
+        "point": 1
+      },
+      {
+        "question": "What visual element does the presenter emphasize for adding depth and making surfaces 'pop' on a 2D screen?",
+        "supplement": "",
+        "options": [
+          "High contrast",
+          "Flat shading",
+          "Gradients",
+          "Emissive materials",
+          "Wireframe rendering"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presenter advises, 'think in gradients so whenever you have a surface or an object just slap gradients on there to make them really pop... gradients really make give a depth.'",
+        "point": 1
+      },
+      {
+        "question": "Lino Thomas mentions a discrepancy he noticed between the traditional color circle taught in school and Blender's color representation. What is the primary difference?",
+        "supplement": "",
+        "options": [
+          "Blender uses additive color (RGB) while school used subtractive (RYB).",
+          "Blender's color wheel is circular, while the school's was square.",
+          "The complementary color of red in Blender is not green as taught in school.",
+          "Blender's color wheel is inverted compared to the traditional one.",
+          "Blender uses a 12-step color wheel, while school used a 24-step wheel."
+        ],
+        "correct_answer": 2,
+        "explanation": "He explains, 'at some point I noticed wait a minute and blender it looks different the complimentary color of blender to from Red is not green and this shat up my worldview.'",
+        "point": 1
+      },
+      {
+        "question": "When discussing color combinations, which one involves using different shades and tints of a single hue?",
+        "supplement": "",
+        "options": [
+          "Complementary",
+          "Triadic",
+          "Analogous",
+          "Monochromatic",
+          "Split-complementary"
+        ],
+        "correct_answer": 3,
+        "explanation": "The presenter introduces 'monochromatic' by stating, 'we take our color wheel we take I want to make a picture... with one red color you cannot do a picture they just have a full red surface so of course we can go darker right so we have Shades Shadows Amazing so nice gradients.'",
+        "point": 1
+      },
+      {
+        "question": "What tool within Blender's viewer can be used to debug color combinations and understand the distribution of hues and saturation in an image?",
+        "supplement": "",
+        "options": [
+          "Histogram",
+          "Waveform scope",
+          "Color Picker",
+          "Vector scope",
+          "Render Layers"
+        ],
+        "correct_answer": 3,
+        "explanation": "The presenter mentions, 'there's the thing in blender in the viewer like when you open the picture or window then you open the scopes on the side... the lovely feature I want to talk about is the vector scope This guy this tells you how which kind of values are on the pixels on the picture.'",
+        "point": 1
+      },
+      {
+        "question": "In the context of the vector scope, where do non-saturated or neutral colors (whites and blacks) typically appear?",
+        "supplement": "",
+        "options": [
+          "On the outermost edges of the circle",
+          "In the center of the scope",
+          "Along the primary color lines",
+          "Scattered randomly across the scope",
+          "Outside the scope's boundaries"
+        ],
+        "correct_answer": 1,
+        "explanation": "He describes the vector scope: 'the more saturated colors are the more extreme on the circle they are placed so on the middle of the scene you have the whites and the blacks.'",
+        "point": 1
+      },
+      {
+        "question": "What color combination is described as having high contrast, being dynamic, and often seen in cinema with skin tones in orange and sky in blue?",
+        "supplement": "",
+        "options": [
+          "Monochromatic",
+          "Analogous",
+          "Triadic",
+          "Complementary",
+          "Tetradic"
+        ],
+        "correct_answer": 3,
+        "explanation": "The presenter introduces 'complimentary' and notes, 'works most of the time high contrast very Dynamic and very simple to do so you see it quite often especially this one if you go to cinema in last few decades it's always the same color contrast skin tones in Orange and sky and blue.'",
+        "point": 1
+      },
+      {
+        "question": "When using just two strong complementary colors, what issue can arise, and how is it typically managed?",
+        "supplement": "",
+        "options": [
+          "The colors can look too vibrant; managed by increasing saturation.",
+          "The colors can look like a child's drawing; managed by balancing saturation and apparent size.",
+          "The colors can appear muddy; managed by adding a third hue.",
+          "The colors can be too similar; managed by decreasing contrast.",
+          "The colors can lack depth; managed by adding gradients."
+        ],
+        "correct_answer": 1,
+        "explanation": "He states, 'if you have like just two strong colors like full red and full blue opposite to each other it kind of looks like a child drawing so there always the the play with balance so you can either make the... primary color... with my focus color and then I need to balance it with the blues and then for example you could do a very desaturated blue which is like but larger on screen or you can play with the... full saturated blue but very small dots scattered around the picture.'",
+        "point": 1
+      },
+      {
+        "question": "Which color combination involves three hues that are close to each other on the color wheel, creating a soft and homogeneous feel?",
+        "supplement": "",
+        "options": [
+          "Split-complementary",
+          "Analogous",
+          "Triadic",
+          "Complementary",
+          "Double Split-Complementary"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presenter explains, 'If you push the colors the Hues even closer together we still have three Hues but we get the color combination of analogous and this is this one very soft like it's very homogeneous and very easy and smoothing.'",
+        "point": 1
+      },
+      {
+        "question": "The presenter uses a demo scene with spaceships to illustrate lighting principles. What is the first step he takes after having no light in the scene?",
+        "supplement": "",
+        "options": [
+          "Add a volumetric cube for atmosphere.",
+          "Introduce a primary light source, like a sunlight.",
+          "Apply emissive materials to the spaceship.",
+          "Set up a detailed background environment.",
+          "Implement shadow catchers."
+        ],
+        "correct_answer": 1,
+        "explanation": "He begins by saying, 'so what the first thing we do of course we need light so usually my scenes are a bit uh Spacey so just adding a sunlight.'",
+        "point": 1
+      },
+      {
+        "question": "What technique does Lino Thomas suggest for adding depth and separating foreground from background when lighting a scene?",
+        "supplement": "",
+        "options": [
+          "Using only very bright lights.",
+          "Increasing the scene's overall saturation.",
+          "Employing volumes for atmospheric effects.",
+          "Reducing the number of light sources.",
+          "Using only flat shading."
+        ],
+        "correct_answer": 2,
+        "explanation": "When discussing the initial setup with sunlight, he notes that 'everything is the right the same brightness.' He then introduces volumes: 'MH MH MH Cube so we just create ourself a nice little Cube and then make it big... with volumes you can get depth in your pictures so please always put a volume in there.'",
+        "point": 1
+      },
+      {
+        "question": "What are 'shadow catchers' in the context of Lino Thomas's presentation?",
+        "supplement": "",
+        "options": [
+          "Objects that emit light to cast shadows.",
+          "Geometry placed to block light and create dark areas, often at the edges.",
+          "Special materials that absorb all light.",
+          "Lights that specifically mimic shadows.",
+          "Camera effects that darken the scene."
+        ],
+        "correct_answer": 1,
+        "explanation": "He explains, 'The good trick or something I I learned to love is that you start to use something called or I call them Shadow catchers so you just Place geometry around areas to just block light to get somewhere... I use these um dark shapes at the corners of the picture to really avoid that eyes is leaving the scene.'",
+        "point": 1
+      },
+      {
+        "question": "To achieve more control over foreground and background lighting, especially when one light source might interfere with another, what technique does the presenter suggest?",
+        "supplement": "",
+        "options": [
+          "Use multiple sun lights with different intensities.",
+          "Duplicate a light and use a spotlight with a very small angle, blocking the original sun.",
+          "Layer multiple area lights with different colors.",
+          "Rely solely on ambient occlusion for separation.",
+          "Utilize global illumination to balance all lights."
+        ],
+        "correct_answer": 1,
+        "explanation": "He describes a method: 'I thought okay I cannot have two suns but I could do a light which looks like a sun and then block the real Sun from this area which look like a sun and then I can separate the foreground lighting from the background sun lighting so I will just try to do that here in life... I just move my sun a bit away actually it can does... I will change it to be not a sun but a spotlight and I make the spotlight like ridiculously small spot size like one degree.'",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of using 'rim lights' as described by Lino Thomas?",
+        "supplement": "",
+        "options": [
+          "To create the primary illumination on the subject.",
+          "To add atmospheric effects within volumes.",
+          "To make an object appear more integrated into the scene by reflecting background colors onto it.",
+          "To simulate the main sunlight.",
+          "To cast hard, defined shadows."
+        ],
+        "correct_answer": 2,
+        "explanation": "He states, 'we need the the ship to be more integrated and we can do this with rim lights like I have my in the background we have like this um dark orange uh color and they probably some some objects off screen which are reflecting onto the ship um to make then the object look more integrated.'",
+        "point": 1
+      },
+      {
+        "question": "When trying to achieve a monochromatic look with a red-lit object, but wanting to create more contrast with dirt on the surface, what 'trick' does the presenter suggest?",
+        "supplement": "",
+        "options": [
+          "Make the dirt brighter.",
+          "Use a blue color for the dirt, even though the overall scene is red-lit.",
+          "Increase the saturation of the main object.",
+          "Add a secondary green light source.",
+          "Use a subtractive color method for the dirt."
+        ],
+        "correct_answer": 1,
+        "explanation": "He explains, 'I can do a bit of fakeer here and actually make the dirt color to be kind of a blue view... if you light on it you kind of move the the apparent color on screen to be more gray than actually is and it appears then to be kind of blue but if you pick the color really it's still monochromatic... I can use blue to get there where I want to that it appears to be blue.'",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the purpose of the 'Fuzzy Simulator' add-on?",
+        "supplement": "",
+        "options": [
+          "To manage character property simulations",
+          "To automate the creation of character rigs",
+          "To manage and control hair simulation for characters",
+          "To optimize render times for simulated elements",
+          "To generate procedural animations"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker describes it as 'the managing of the character hair simulation.'",
+        "point": 1
+      },
+      {
+        "question": "What is the primary focus of Sacha Goedegebure's talk at the Blender Conference 2024?",
+        "supplement": "",
+        "options": [
+          "Advanced character rigging techniques",
+          "Fast content creation using code and creativity",
+          "Optimizing render settings for photorealism",
+          "The history of Blender development",
+          "Creating complex visual effects for feature films"
+        ],
+        "correct_answer": 1,
+        "explanation": "The title of the talk is 'Fast Content Creation with Code and Creativity,' and the speaker repeatedly emphasizes efficiency and using code to speed up the content creation process.",
+        "point": 1
+      },
+      {
+        "question": "What are the two main interpretations of 'Fast Content Creation with Code and Creativity' presented in the talk?",
+        "supplement": "",
+        "options": [
+          "Using Python for mundane tasks and out-of-the-box thinking for personalized pipelines",
+          "Automating rendering and simplifying animation workflows",
+          "Creating custom add-ons and optimizing render speeds",
+          "Learning new coding languages and designing custom shaders",
+          "Developing procedural generation tools and scripting complex simulations"
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker explicitly states, 'The most obvious one is to use code or python for very mundane tasks so you have more time for your arts or for your content creation' and 'Use creative out-of-the-box thinking to design and write a personalized pipeline with tools.'",
+        "point": 1
+      },
+      {
+        "question": "Sacha Goedegebure is currently based in which city?",
+        "supplement": "",
+        "options": [
+          "Amsterdam",
+          "The Netherlands",
+          "Singapore",
+          "Los Angeles",
+          "Berlin"
+        ],
+        "correct_answer": 2,
+        "explanation": "Sacha Goedegebure mentions, 'I am currently based in Singapore.'",
+        "point": 1
+      },
+      {
+        "question": "Sacha Goedegebure started their 3D career with which project?",
+        "supplement": "",
+        "options": [
+          "Project Fuzzy",
+          "Big Buck Bunny",
+          "Omen Studios shorts",
+          "A personal animation project",
+          "The Blender Conference intro animation"
+        ],
+        "correct_answer": 1,
+        "explanation": "Sacha Goedegebure states, 'I started my 3D career with Big Buck Bunny this was in 2007 in Amsterdam.'",
+        "point": 1
+      },
+      {
+        "question": "What is the name of Sacha Goedegebure's personal project discussed in the talk?",
+        "supplement": "",
+        "options": [
+          "Project Speedy",
+          "CodeCraft",
+          "Project Fuzzy",
+          "Omen Pipeline",
+          "Blender Automation"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker refers to their personal project as 'project fuzzy not the official title.'",
+        "point": 1
+      },
+      {
+        "question": "For 'Project Fuzzy,' Sacha Goedegebure decided on simple stylized characters primarily to:",
+        "supplement": "",
+        "options": [
+          "Reduce render times significantly",
+          "Make animation easier and save time",
+          "Attract a younger audience with simpler visuals",
+          "Allow for more complex hair simulations",
+          "All of the above"
+        ],
+        "correct_answer": 4,
+        "explanation": "The speaker mentions 'simple stylized characters simple means less controllers which means easier animation just to save time' and also notes 'young audience... it's a bit easier also young audience have lower expectations maybe want it comes to certain animation quality.' The aim for hair simulation also adds a technical challenge.",
+        "point": 1
+      },
+      {
+        "question": "What technical challenge did Sacha Goedegebure aim to incorporate into 'Project Fuzzy'?",
+        "supplement": "",
+        "options": [
+          "Photorealistic rendering",
+          "Complex character rigging",
+          "Real-time ray tracing",
+          "Hair simulation",
+          "Advanced motion capture integration"
+        ],
+        "correct_answer": 3,
+        "explanation": "Sacha Goedegebure states, 'Then to add a bit of a technical challenge to it I uh I aim to do hair simulation.'",
+        "point": 1
+      },
+      {
+        "question": "What is a key lesson learned from experimenting with a multi-camera workflow?",
+        "supplement": "",
+        "options": [
+          "Always use a single file for all cameras.",
+          "Multi-camera setups are only suitable for live-action.",
+          "Do not force the multi-camera workflow if separate files are easier.",
+          "It's essential to animate every camera individually.",
+          "Multi-camera workflows significantly reduce render times."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker advises, 'do not force it right if you feel if you think that it is easier to just do it separately just create a new file and then do your separate other shots in separately.'",
+        "point": 1
+      },
+      {
+        "question": "Sacha Goedegebure's primary challenge in their previous work has been:",
+        "supplement": "",
+        "options": [
+          "Lighting and rendering",
+          "Modeling and texturing",
+          "Layout and animation",
+          "Sound design and editing",
+          "Concept art and storyboarding"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker states, 'my challenge has always been layout and animation.'",
+        "point": 1
+      },
+      {
+        "question": "What type of short-form content is becoming increasingly popular and is featured in the talk?",
+        "supplement": "",
+        "options": [
+          "Featurettes (1-3 minutes)",
+          "Web series episodes (5-10 minutes)",
+          "Shorts (10-30 seconds)",
+          "Animated music videos",
+          "Tutorials (under 5 minutes)"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker discusses 'shorts now are getting more and more popular quick content now the aspect ratio is is kind of getting used to because as a Storyteller you're always used to you know that you know white box or that white screen so that is a little bit of an adaption however with you know content that's 10 to 30 seconds you can actually finish something.'",
+        "point": 1
+      },
+      {
+        "question": "The spotlight effect in one of the short examples was created using:",
+        "supplement": "",
+        "options": [
+          "Volumetric lighting",
+          "A volumetric cube",
+          "A plane with gradients, transparency, and emission",
+          "An actual spotlight object",
+          "Particle systems"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains, 'there's a spotlight in the background this is not volumetrics it's just a plane plane with gradients which is mixing like transparency with emission.'",
+        "point": 1
+      },
+      {
+        "question": "Which of Sacha Goedegebure's created add-ons was the primary reason for initially looking into creating operators?",
+        "supplement": "",
+        "options": [
+          "Fuzzy Simulator",
+          "Fuzzy Tools",
+          "Fuzzy Files",
+          "Fuzzy Populator",
+          "Fuzzy Scene Builder"
+        ],
+        "correct_answer": 3,
+        "explanation": "'Fuzzy Populator... this was the reason why I actually started looking into creating uh operators.'",
+        "point": 1
+      },
+      {
+        "question": "Before the Asset Browser, what was the tedious process for linking characters and their scripts?",
+        "supplement": "",
+        "options": [
+          "Using Append Linked and then manually linking scripts",
+          "Importing the character collection and then overwriting libraries",
+          "Linking the character, then overwriting library or creating proxy, then linking and running scripts",
+          "Exporting characters as .abc files and re-importing",
+          "Manually copying and pasting character data"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker details the steps: 'you go to your menu you go to link then you go to the folder of your character then you find the collection and you link it in and then you have to overwrite library or create proxy but then you have to link in your scripts and you have to run the script.'",
+        "point": 1
+      },
+      {
+        "question": "The 'Fuzzy Tools' add-on includes a panel called 'Scene Builder' which can set up various scene elements. Which of these is NOT explicitly mentioned as being set up by Scene Builder?",
+        "supplement": "",
+        "options": [
+          "Camera",
+          "Floor (shadow only)",
+          "World nodes (sky)",
+          "Sun and rim light",
+          "HDRI lighting"
+        ],
+        "correct_answer": 4,
+        "explanation": "The speaker mentions camera, floor, sky (world nodes), sun, and rim light. While HDRI control appears later in the 'Fuzzy Tools' discussion, it's not listed as a direct setup component of the Scene Builder panel itself.",
+        "point": 1
+      },
+      {
+        "question": "Sacha Goedegebure refers to themselves as a 'codor.' What does this term imply in the context of the talk?",
+        "supplement": "",
+        "options": [
+          "A professional coder with extensive experience",
+          "Someone who codes but not necessarily professionally, embracing it as a skill",
+          "A beginner who is still learning Python",
+          "A developer who creates complex software applications",
+          "An artist who primarily focuses on visual output"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker embraces the term 'codor' after asking GPT for a new name, stating, 'I am Sasha I am a codor since 2020 I feel this treats it as this this this mix of uh skills with some respect and I really enjoy that one.' This suggests it's a self-assigned title reflecting a blend of coding and artistic skills.",
+        "point": 1
+      },
+      {
+        "question": "What are the two essential settings to enable when starting with Python scripting in Blender?",
+        "supplement": "",
+        "options": [
+          "Developer Extras and Python Tooltips",
+          "Scripting tab and Text Editor",
+          "Viewport Visibility and Render Visibility",
+          "Asset Browser and Node Editor",
+          "Scene Statistics and Performance Monitor"
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker advises, 'you open blender the first thing you must do is enable these two settings there's developer extras and python tool tips.'",
+        "point": 1
+      },
+      {
+        "question": "Which of the following is NOT recommended by Sacha Goedegebure as a way to learn Python for Blender?",
+        "supplement": "",
+        "options": [
+          "Enabling Developer Extras and Python Tooltips",
+          "Using Python templates in the Text Editor",
+          "Looking at code from existing add-ons",
+          "Reading official Blender API documentation exclusively",
+          "Using AI tools like ChatGPT for explanations"
+        ],
+        "correct_answer": 3,
+        "explanation": "While the speaker recommends several methods, reading *only* the official API documentation isn't highlighted as a primary learning method for beginners. They emphasize practical application, looking at existing code, and using AI. The API is a resource, but not presented as the sole or easiest starting point.",
+        "point": 1
+      },
+      {
+        "question": "The 'Fuzzy Files' add-on is designed to help with:",
+        "supplement": "",
+        "options": [
+          "Character animation timing",
+          "3D model optimization",
+          "File folder and output management",
+          "Shader creation and application",
+          "Scene composition and layout"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker introduces 'fuzzy files and it simply helps me with the uh file folder and output management for allar animation and editing.'",
+        "point": 1
+      },
+      {
+        "question": "In the 'Fuzzy Files' add-on, what are the three key identifiers that the add-on needs to work with?",
+        "supplement": "",
+        "options": [
+          "File Type, Category, and Project Name",
+          "Sequence Number, Render Settings, and Output Folder",
+          "File Name, Creation Date, and File Size",
+          "Project Title, User Name, and Project Version",
+          "Animation Frame Rate, Resolution, and Aspect Ratio"
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker states, 'there are three key identifiers that my add-on needs to work with one is file type by file type I mean either animation or editing... the other one is category... then is the title of the project itself.'",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of the 'Animate Prop Visibility' feature?",
+        "supplement": "",
+        "options": [
+          "To animate individual vertices of a prop.",
+          "To control the visibility of props for rendering and viewport display.",
+          "To automatically hide props that are out of frame.",
+          "To create procedural animations for props based on their properties.",
+          "To manage the lifecycle of props within a scene."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains that animating visibility is tricky in Blender, especially for collections, and this feature helps keyframe viewport and render visibility for props, even by converting collections to instances first.",
+        "point": 1
+      },
+      {
+        "question": "The 'Move Key Frames and Markers' operator in Fuzzy Tools is described as:",
+        "supplement": "",
+        "options": [
+          "A gentle adjustment tool for timing.",
+          "A precise tool for synchronizing animations.",
+          "An aggressive tool for shifting timing at a late stage, requiring caution.",
+          "A method to automatically correct animation errors.",
+          "A way to create looping animations."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker calls it 'quite an extreme one' and 'this one is a bit more aggressive so you want to be careful when you use it.' It's described as moving all frames on one side and markers, and potentially moving things even if not visible.",
+        "point": 1
+      },
+      {
+        "question": "How does Sacha Goedegebure utilize view layers for character visibility automation?",
+        "supplement": "",
+        "options": [
+          "By assigning unique render settings to each character.",
+          "By keyframing the visibility of each character in their respective view layers.",
+          "By naming view layers after the visible characters, automating the naming process.",
+          "By using view layers to separate different animation passes.",
+          "By creating separate render passes for each character."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains: 'I actually use it to determine the visibility of my characters... the name of the vi layer is the name of the visible characters so wouldn't work with 20 characters obviously but with four five six characters really nice especially if they if they have short names so every time I add a character set the the visibility and I click on that button then my naming is automated.'",
+        "point": 1
+      },
+      {
+        "question": "What is the function of the operator that keyframes view layer visibility for rendering?",
+        "supplement": "",
+        "options": [
+          "It allows rendering of multiple layers simultaneously.",
+          "It ensures that only one specified view layer is set to render at a time, keyframing this property.",
+          "It optimizes render times by disabling unnecessary view layers.",
+          "It automatically composites different view layers after rendering.",
+          "It creates distinct render passes for each visible character."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains creating an operator that 'will key frame one to be rendered and the other ones will not be rendered' to control which layer is active for rendering at any given time.",
+        "point": 1
+      },
+      {
+        "question": "The 'Build Compositing Nodes' feature in Fuzzy Tools aims to:",
+        "supplement": "",
+        "options": [
+          "Create complex node networks for advanced compositing.",
+          "Automate the setup of basic compositing nodes by combining available view layers.",
+          "Optimize render settings for the compositor.",
+          "Generate procedural textures for compositing.",
+          "Apply various effects to rendered images."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states, 'it looks at all the available view layers and it's going to to basically put them all there combine them with a big mix note you can I can use a mix note because it's just going to always render one of them and that one will be shown as the final output.'",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary focus of the Blender Conference 2024 talk by Wyatt Hall?",
+        "supplement": "The talk is titled 'Making Stylized Visuals | Lessons from Anime and Short Films'.",
+        "options": [
+          "Advanced character rigging techniques",
+          "Creating stylized visuals inspired by anime and short films",
+          "Optimizing render performance in Blender",
+          "Storyboarding and scriptwriting for 3D animation",
+          "Using Geometry Nodes for complex simulations"
+        ],
+        "correct_answer": 1,
+        "explanation": "The title of the talk explicitly states that it's about 'Making Stylized Visuals' and draws lessons from anime and short films.",
+        "point": 1
+      },
+      {
+        "question": "What was Wyatt Hall's animation company called before fully transitioning to Blender?",
+        "supplement": "",
+        "options": [
+          "Stellar Winter Studios",
+          "Winter Stellar Animation",
+          "Winter Stellar Studios",
+          "Blender Animation Collective",
+          "Stylized Dreams Studio"
+        ],
+        "correct_answer": 2,
+        "explanation": "Wyatt Hall mentions, 'when I started my animation company winter Stellar Studios we were animating in Maya...'",
+        "point": 1
+      },
+      {
+        "question": "Which version of Blender's release significantly influenced Wyatt Hall's decision to switch his studio's pipeline to Blender?",
+        "supplement": "",
+        "options": [
+          "Blender 2.79",
+          "Blender 3.0",
+          "Blender 2.8",
+          "Blender 3.5",
+          "Blender 4.0"
+        ],
+        "correct_answer": 2,
+        "explanation": "Wyatt Hall states, 'back when 2.8 released I'd already been following blender for a really long time and uh the performance and the usability and the feat features and everything that made 3D NPR viable for a small company like us it was just simply too great to pass up...'",
+        "point": 1
+      },
+      {
+        "question": "What is the name of the first Blender animation project and original IP released by Winter Stellar Studios?",
+        "supplement": "",
+        "options": [
+          "Samurai Nights",
+          "Blue Samurai",
+          "Samurai Blue",
+          "After Image",
+          "Stellar Samurai"
+        ],
+        "correct_answer": 2,
+        "explanation": "Wyatt Hall says, '...we successfully released our first blender animation project and our first original Ip called samurai blue after image...'",
+        "point": 1
+      },
+      {
+        "question": "What is 'Goo Engine' and who developed it?",
+        "supplement": "",
+        "options": [
+          "A new rendering engine developed by the Blender Foundation.",
+          "A fork of Blender modified by Dillan Goo Studios to enhance NPR rendering.",
+          "A plugin for Maya that improves NPR capabilities.",
+          "A compotion software used by Winter Stellar Studios.",
+          "A hardware accelerator for Blender rendering."
+        ],
+        "correct_answer": 1,
+        "explanation": "Wyatt Hall introduces 'the goo engine team team from Dillan goo Studios... Dillan goo and late as usual like the whole team they released this Fork of blender called goo engine what it does is basically it modifies Eevee to be more curated for NPR rendering...'",
+        "point": 1
+      },
+      {
+        "question": "The presentation structure follows a typical pre-production to post-production workflow. What is the order of topics covered?",
+        "supplement": "",
+        "options": [
+          "Characters, Environments, Compositing, Planning",
+          "Planning and Ideation, Environments, Characters, Compositing",
+          "Environments, Planning and Ideation, Compositing, Characters",
+          "Planning and Ideation, Compositing, Environments, Characters",
+          "Characters, Planning and Ideation, Environments, Compositing"
+        ],
+        "correct_answer": 1,
+        "explanation": "Wyatt Hall outlines the structure: 'I'll start out by explaining a little bit about how we plan and ideate Concepts and pre-production um and then we'll dig into environments a little bit... then we'll get into characters and finally I'll do a brief overview of how I composite all of that in After Effects...'",
+        "point": 1
+      },
+      {
+        "question": "What was the inspiration for the story of 'Samurai Blue'?",
+        "supplement": "",
+        "options": [
+          "Ancient Japanese folklore",
+          "Street racing and car culture in Los Angeles",
+          "Cyberpunk cityscapes",
+          "A historical samurai epic",
+          "Mythological creatures of Japan"
+        ],
+        "correct_answer": 1,
+        "explanation": "Wyatt Hall explains, 'fortunately samurai blue is a story based and inspired on the street racing and car culture in Los Angeles...'",
+        "point": 1
+      },
+      {
+        "question": "What is a 'key visual' in the context of design and campaign development?",
+        "supplement": "",
+        "options": [
+          "A technical drawing of a 3D model.",
+          "A final render of the main scene.",
+          "A central image conveying the main theme, mood, or concept.",
+          "A storyboard panel.",
+          "A color palette guide."
+        ],
+        "correct_answer": 2,
+        "explanation": "Wyatt Hall defines it as: 'a central dominant image or artwork that effectively conveys the main theme mood or concept of a design or campaign'.",
+        "point": 1
+      },
+      {
+        "question": "Wyatt Hall emphasizes the importance of planning for a stylistic separation between which two elements?",
+        "supplement": "",
+        "options": [
+          "Characters and Props",
+          "Environments and Lighting",
+          "Characters and Environments",
+          "Foreground and Background",
+          "Day and Night scenes"
+        ],
+        "correct_answer": 2,
+        "explanation": "He states, 'what we knew for sure is that there was going to be a pretty drastic stylistic separation between our character rendering and our environment rendering...'",
+        "point": 1
+      },
+      {
+        "question": "What technique does Wyatt Hall discuss for achieving hand-painted light rays in the environment shaders?",
+        "supplement": "",
+        "options": [
+          "Using emission shaders with high strength.",
+          "Projecting image textures of light rays onto the scene.",
+          "Procedural noise combined with volumetric scattering.",
+          "Baking lightmaps with specific texture settings.",
+          "Animating light sources with bloom effects."
+        ],
+        "correct_answer": 1,
+        "explanation": "He describes creating 'hand painted look to light rays... did some Concepts like how does the light look on the road if it was going to be painted... that's the actual texture that we used... it lives in the environment Shader...'",
+        "point": 1
+      },
+      {
+        "question": "What is the 'edge blending trick' or 'color ramping along shadow terminators' mentioned in the presentation?",
+        "supplement": "",
+        "options": [
+          "A method to soften hard edges in toon shading.",
+          "Adding extra saturated colors along shadow edges for stylistic effect.",
+          "Creating a glow effect on silhouette edges.",
+          "A technique to simulate film grain.",
+          "Blurring textures on objects that are far from the camera."
+        ],
+        "correct_answer": 1,
+        "explanation": "Wyatt Hall explains, 'we're achieving things... we're making them more blue since this is a nighttime scene... it's essentially just kind of color ramping along the shadow Terminators...'",
+        "point": 1
+      },
+      {
+        "question": "How were lens flares implemented in 'Samurai Blue'?",
+        "supplement": "",
+        "options": [
+          "Generated procedurally within Blender's shader editor.",
+          "Manually painted in Photoshop and then tracked into the scenes in compositing.",
+          "Automatically generated by an After Effects plugin.",
+          "Baked as part of the environment render passes.",
+          "Created using Blender's compositor nodes directly."
+        ],
+        "correct_answer": 1,
+        "explanation": "He states, 'I really wanted these flares to be a standout piece... like you saw in the last slide just went into Photoshop painted a bunch of different flares and then we basically tracked and added all of these manually in comp...'",
+        "point": 1
+      },
+      {
+        "question": "What challenge did Wyatt Hall face when trying to create stylized rocks for 'Samurai Blue'?",
+        "supplement": "",
+        "options": [
+          "The difficulty of sculpting organic shapes in Blender.",
+          "Finding suitable rock assets that matched the desired graphic style.",
+          "The need to create thousands of unique rock assets by hand.",
+          "Making planar decimation modifiers create consistent results across different assets.",
+          "Achieving the correct lighting and rim lighting on stylized rocks."
+        ],
+        "correct_answer": 2,
+        "explanation": "Wyatt Hall mentions, 'making every Rock asset by hand was out of the question...'",
+        "point": 1
+      },
+      {
+        "question": "What was the proposed solution by Alan Wyatt for brush scattering, and why wasn't it used for 'Samurai Blue'?",
+        "supplement": "",
+        "options": [
+          "It was too technically complex to implement.",
+          "It produced results that looked too random and lacked artistic intent.",
+          "It required a specific hardware setup.",
+          "It was not compatible with the Goo Engine.",
+          "It took too long to render."
+        ],
+        "correct_answer": 1,
+        "explanation": "He explains, 'we tried that... but we realized that it looked a little too random \u2014 and it didn't give the illusion of artists intent that we were really looking for...'",
+        "point": 1
+      },
+      {
+        "question": "What is 'camera projection' as described by Wyatt Hall, especially when using an artist's painting as the source?",
+        "supplement": "",
+        "options": [
+          "Projecting a 3D model onto a 2D image.",
+          "Using an image as a texture and extruding geometry from it.",
+          "Mapping an image onto a 3D surface, similar to how Ian Hubert uses photos.",
+          "Rendering a 3D scene from multiple camera angles.",
+          "Creating depth maps from 2D artwork."
+        ],
+        "correct_answer": 2,
+        "explanation": "He clarifies, 'if you don't kind of know like if you've ever heard of like what Ian Hubert does where he takes an image and he just kind of extrudes off of it like it's basically like that except instead of a photo you have like just an artist's painting...'",
+        "point": 1
+      },
+      {
+        "question": "How does Wyatt Hall mimic the gradient shading used by 2D illustrators for suggesting depth without photorealism?",
+        "supplement": "",
+        "options": [
+          "By using Blender's built-in toon shader.",
+          "By adjusting shadow resolution in Eevee to create soft shadows.",
+          "By manually painting gradients in Photoshop and overlaying them.",
+          "By using specific nodes in the shader editor to control shadow falloff.",
+          "By implementing custom normal maps that simulate gradients."
+        ],
+        "correct_answer": 1,
+        "explanation": "He mentions, 'we can kind of mimic that in Eevee natively \u2014 you can just turn down the shadow resolution so that it's like really small and then you get very soft shadows...'",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of the 'curvature node' used with stylized foliage in 'Samurai Blue', and why is screen space important for it?",
+        "supplement": "",
+        "options": [
+          "To add random variations to leaf textures; screen space ensures consistent detail.",
+          "To simulate wind effects; screen space adapts detail based on camera distance.",
+          "To add shading based on the silhouette of objects; screen space ensures detail appears where an object takes up significant screen space.",
+          "To create procedural tree branches; screen space helps with LOD.",
+          "To control the color of foliage; screen space affects light interaction."
+        ],
+        "correct_answer": 2,
+        "explanation": "Wyatt Hall explains, 'it's basically that but like ported to Eevee \u2014 it's pretty handy basically what we're doing is we're taking the scene Rim output... it's calculating the actual \u2014 silhouette of an object in the in the 3D space... with the access to the screen space \u2014 information here it gives it just automat it basically automatically gives us the detail where we want it and not where we don't want it.'",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is Marion Stalke's profession, as indicated by her talk title and content?",
+        "supplement": "The talk is titled 'Animals for Games' and features discussions on rigging, animation, and modeling.",
+        "options": [
+          "Game Programmer",
+          "Concept Artist",
+          "Animator and Rigger",
+          "Game Producer",
+          "Sound Designer"
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion Stalke introduces herself as someone who has been in games since 2010, specializing in animation and rigging. She mentions doing all the rigs she animated herself.",
+        "point": 1
+      },
+      {
+        "question": "What does Marion Stalke say her last name, 'Stalke', has nothing to do with?",
+        "supplement": "",
+        "options": [
+          "Stalking",
+          "Steak",
+          "Stalemate",
+          "Stalwart",
+          "Stalwart"
+        ],
+        "correct_answer": 1,
+        "explanation": "Marion clarifies that her last name 'Stalke' has nothing to do with 'stal care', 'stal key', or similar words, but is an old German word related to steel production.",
+        "point": 1
+      },
+      {
+        "question": "How many games has Marion Stalke worked on throughout her career?",
+        "supplement": "",
+        "options": [
+          "Between 5 and 10",
+          "Between 10 and 20",
+          "More than 20",
+          "Exactly 15",
+          "Less than 5"
+        ],
+        "correct_answer": 1,
+        "explanation": "Marion states she has worked on 'something between 10 and 20 games'.",
+        "point": 1
+      },
+      {
+        "question": "What is a primary reason Marion gives for being a skilled rigger and animator?",
+        "supplement": "",
+        "options": [
+          "She has a degree in computer graphics.",
+          "She can directly critique and improve her own work as an animator.",
+          "She learned from a famous game industry veteran.",
+          "She uses highly advanced, proprietary software.",
+          "She has a natural talent for creating characters."
+        ],
+        "correct_answer": 1,
+        "explanation": "Marion explains that by doing both rigging and animation, she can 'directly shout at myself and change it,' which has significantly improved her rigs.",
+        "point": 1
+      },
+      {
+        "question": "What are the two pet animals Marion Stalke owns?",
+        "supplement": "",
+        "options": [
+          "Dogs",
+          "Cats",
+          "Bunnies",
+          "Birds",
+          "Hamsters"
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion mentions she has two pet animals, which are bunnies, and addresses the rumor that bunnies aren't expressive.",
+        "point": 1
+      },
+      {
+        "question": "According to the Medievalist blog mentioned, how did pigs in historical times differ from modern pigs in games?",
+        "supplement": "",
+        "options": [
+          "They were smaller and leaner.",
+          "They had more prominent tusks and a 'wild echo' on their back.",
+          "They were bred for speed rather than meat.",
+          "They had much longer snouts.",
+          "They were completely hairless."
+        ],
+        "correct_answer": 1,
+        "explanation": "The blog complains that historical pigs were more like wild boars, with 'wild echo case going on on the back,' 'big teeth,' and freckles.",
+        "point": 1
+      },
+      {
+        "question": "What is the 'main quest' website dedicated to, as mentioned by Marion?",
+        "supplement": "",
+        "options": [
+          "How to create realistic horse animations.",
+          "Critiques of how horses are poorly made in games.",
+          "A guide to historical equine anatomy.",
+          "A forum for discussing horse-breeding in games.",
+          "A collection of beautiful horse models from various games."
+        ],
+        "correct_answer": 1,
+        "explanation": "Marion refers to a website called 'the main quest' which is 'dedicated to how bad horses are made'.",
+        "point": 1
+      },
+      {
+        "question": "What does Marion define as 'locomotion'?",
+        "supplement": "",
+        "options": [
+          "The ability of an animal to jump high.",
+          "The process of an animal fighting.",
+          "Anything that moves something from point A to point B.",
+          "The speed at which an animal can run.",
+          "The way an animal navigates complex terrain."
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion defines locomotion as 'anything an animal Locomotion of course as well that moves something from A to B'.",
+        "point": 1
+      },
+      {
+        "question": "When comparing human legs to those of other animals like a dog or horse, what is a key difference in their primary function?",
+        "supplement": "",
+        "options": [
+          "Human legs are primarily for jumping, while animal legs are for balance.",
+          "Human legs are for locomotion, while animal legs are for manipulation.",
+          "Human legs are for keeping upright and supporting weight, while animal hind legs are often for acceleration.",
+          "Human legs are for running, while animal legs are for climbing.",
+          "Human legs are for kicking, while animal legs are for balance."
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion explains that human legs are for keeping weight centered and being upright, while the rear legs of animals like dogs and horses are for acceleration.",
+        "point": 1
+      },
+      {
+        "question": "What anatomical feature, common in apes like humans, is often absent in many animals, and why?",
+        "supplement": "",
+        "options": [
+          "The pelvis; for better jumping ability.",
+          "The sternum; for increased flexibility.",
+          "The clavicle (collarbone); as they don't need it for grasping branches.",
+          "The scapula; for enhanced wing movement.",
+          "The femur; for stronger hind leg support."
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion highlights that humans have a clavicle which apes use for grasping, and many animals, especially hoofed and predator animals, do not have it.",
+        "point": 1
+      },
+      {
+        "question": "Regarding the anatomy of horse legs, what is a common misconception that animators should avoid?",
+        "supplement": "",
+        "options": [
+          "Bending the knee too much.",
+          "Making the legs too straight.",
+          "Bending the knee joint unnaturally far forward, as they stand on their 'nails'.",
+          "Not giving enough bend to the hock joint.",
+          "Making the hooves too flat."
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion stresses that animators should remember horses stand on their 'nails' and avoid bending the knee joint too far forward, as it's anatomically incorrect.",
+        "point": 1
+      },
+      {
+        "question": "What is Marion's proposed solution to common issues with dog paw rigging, where the model has a 90-degree angle?",
+        "supplement": "",
+        "options": [
+          "To add more bones to the paw.",
+          "To use blend shapes to correct the deformation.",
+          "To model the paws with straight legs from the start, similar to human hands.",
+          "To animate the paw by hand, ignoring the rig.",
+          "To rely solely on automatic rigging tools."
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion advises modeling the character with straight legs so the paws can be positioned more naturally, like a human hand, allowing for greater posing possibilities.",
+        "point": 1
+      },
+      {
+        "question": "When animating a horse bending its neck, what other body parts should be considered for realistic movement?",
+        "supplement": "",
+        "options": [
+          "Only the neck bones should move.",
+          "The tail and ears should mimic the neck's movement.",
+          "The shoulders should engage and the body should bend, not just the neck.",
+          "The legs should remain completely still.",
+          "The head should bob up and down independently."
+        ],
+        "correct_answer": 2,
+        "explanation": "Marion emphasizes that horses don't just bend their necks; they engage their shoulders, and their bodies bend as well, using references to achieve realistic motion.",
+        "point": 1
+      },
+      {
+        "question": "How does Marion suggest differentiating male, female, and young animals in game models, beyond just size?",
+        "supplement": "",
+        "options": [
+          "Males have darker fur, females have lighter fur, and young have spots.",
+          "Males have broader shoulders and foreheads, females have thinner faces and necks, and young have longer legs.",
+          "Males have more aggressive poses, females have docile poses, and young have playful poses.",
+          "Males have horns, females have manes, and young have stripes.",
+          "There's no significant difference beyond size."
+        ],
+        "correct_answer": 1,
+        "explanation": "Marion discusses anatomical differences like broader shoulders and foreheads for males, thinner faces and necks for females, and longer legs for young animals, stressing the importance of using references.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary focus of the Alice research lab in Brussels, as mentioned in the presentation?",
+        "supplement": "",
+        "options": [
+          "Developing new architectural software from scratch",
+          "Analyzing the existing built environment and researching representation as a tool for knowledge production",
+          "Creating 3D printed architectural models for commercial sale",
+          "Focusing solely on historical architectural reconstructions",
+          "Teaching students advanced AI algorithms for design"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explicitly states, \"first thought of a computer lab in architecture is to analyze the existing build environment... our methodology is always to look at how you make drawings images in order to produce knowledge.\"",
+        "point": 1
+      },
+      {
+        "question": "The presentation discusses the use of Blender in the lab. What is a key advantage of Blender for their research, according to the speaker?",
+        "supplement": "",
+        "options": [
+          "Its advanced construction industry-focused features",
+          "Its complex matrix transformation tools",
+          "Its open-source nature and powerful Python API",
+          "Its built-in AI for architectural design suggestions",
+          "Its direct integration with CAD software"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions, \"second advantage is the python uh in API which we use as a tool in our class... by writing code they have to think about a process of making a model more than the final shape of the model.\"",
+        "point": 1
+      },
+      {
+        "question": "What is the 'missing camera' or technique that the presentation aims to introduce and integrate into Blender?",
+        "supplement": "",
+        "options": [
+          "Perspective Projection",
+          "Orthographic Projection",
+          "Axonometric Projection",
+          "Oblique Projection",
+          "Central Projection"
+        ],
+        "correct_answer": 3,
+        "explanation": "The speaker states, \"one thing which was missing was a certain type of way of projecting the model with a camera so that's the missing camera the the missing technique let's say underlying the camera is oblique projection.\"",
+        "point": 1
+      },
+      {
+        "question": "Which type of projection is characterized by parallel projection lines that are always 90 degrees to the projection plane, ensuring the object is projected orthogonally onto the plane?",
+        "supplement": "",
+        "options": [
+          "Central Projection",
+          "Oblique Projection",
+          "Orthographic Projection",
+          "Cavalier Projection",
+          "Cabinet Projection"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker defines orthographic projection as: \"the projection lines are always 90\u00b0 orographic to the plane... the object is also always projected orthogonal on the plane.\"",
+        "point": 1
+      },
+      {
+        "question": "In the context of parallel projection, what is a significant advantage mentioned for its use in historical architectural representation, particularly in fortification design?",
+        "supplement": "",
+        "options": [
+          "It allows for realistic foreshortening of distant objects.",
+          "It simplifies the creation of vanishing points for complex structures.",
+          "The scale remains consistent throughout the image, allowing for detailed representation of all parts.",
+          "It is the only method that accurately represents curved surfaces.",
+          "It requires less computational power than perspective projection."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker notes, \"parallel projection has a very good advantage which is as it doesn't join in a point scale Remains the Same throughout the image very useful for fortification design because one wants to draw the whole fortification and have the same amount of detail all around.\"",
+        "point": 1
+      },
+      {
+        "question": "How was oblique projection 'hacked' into Blender in the presented add-on, as explained by the speaker?",
+        "supplement": "",
+        "options": [
+          "By implementing a new camera matrix transformation.",
+          "By utilizing complex AI algorithms for pixel manipulation.",
+          "By adjusting the pixel ratio (stretch) of the rendered image.",
+          "By combining multiple orthographic cameras in the scene.",
+          "By manually rotating the 3D model before rendering."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains the technical solution: \"we changed the pixel ratio the ratio of X pixel so in height one has a obl camera should be changed at a certain parameter depending on which kind which kind of obl projection you would like.\"",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary topic of the Blender Conference 2024 talk by Mike Hodgetts?",
+        "supplement": "The talk is titled \"Using Geometry Nodes for Audio Reactive Music Videos\".",
+        "options": [
+          "Creating realistic car visualizations",
+          "Advanced architectural visualization techniques",
+          "Using Geometry Nodes for Audio Reactive Music Videos",
+          "Tips and tricks for Octane rendering in Blender",
+          "Developing 360-degree seamless panoramas"
+        ],
+        "correct_answer": 2,
+        "explanation": "The title of the talk directly states that it is about 'Using Geometry Nodes for Audio Reactive Music Videos'.",
+        "point": 1
+      },
+      {
+        "question": "Who is Mike Hodgetts, the speaker at the Blender Conference 2024?",
+        "supplement": "",
+        "options": [
+          "A lead developer at Blender",
+          "Head of CG for templates.com",
+          "A freelance musician",
+          "An artist specializing in physical collages",
+          "A sound engineer for music albums"
+        ],
+        "correct_answer": 1,
+        "explanation": "Mike Hodgetts introduces himself as 'the head of CG for a company called templates.com'.",
+        "point": 1
+      },
+      {
+        "question": "What is templates.com known for providing?",
+        "supplement": "",
+        "options": [
+          "3D printable models",
+          "Virtual production assets for car processing",
+          "Audio editing software",
+          "Real-time rendering engines",
+          "Algorithmic music composition tools"
+        ],
+        "correct_answer": 1,
+        "explanation": "Templates.com provides '360 panoramas uh that are totally seamless and looping uh that are CG driving plates for the virtual production industry specifically for car processing'.",
+        "point": 1
+      },
+      {
+        "question": "Which musician's project involved digitizing artwork and creating audio-reactive videos?",
+        "supplement": "",
+        "options": [
+          "Sabrina Carpenter",
+          "Greg Roberts",
+          "Jacob Collier",
+          "Dustin Yellin",
+          "A band with an NDA"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions working with Jacob Collier, and the project involved digitizing his album artwork to create audio-reactive videos.",
+        "point": 1
+      },
+      {
+        "question": "What was a significant manual task performed for the Jacob Collier project?",
+        "supplement": "",
+        "options": [
+          "Recording new music tracks",
+          "Painting thousands of images",
+          "Manually cutting out over 3,000 images using the knife tool",
+          "Rigging 3D character models",
+          "Composing original scores"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker states, 'what I ended up having to do was manually with the knife tool cutting out over 3,000 images that was a long two weeks of My Life'.",
+        "point": 1
+      },
+      {
+        "question": "In the demonstration scene, what object is used as the initial 'canvas' for the visualizer?",
+        "supplement": "",
+        "options": [
+          "A sphere",
+          "A Suzanne head",
+          "The default cube",
+          "A plane",
+          "An Icosphere"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker begins by stating, 'I'm not going to delete the default Cube... the default cube is what we're going to use as the the canvas for creating our uh visualizer'.",
+        "point": 1
+      },
+      {
+        "question": "What is the first step in the Geometry Nodes setup to prepare the mesh for the visualizer?",
+        "supplement": "",
+        "options": [
+          "Distribute points on faces",
+          "Convert the mesh to a volume",
+          "Subdivide the mesh",
+          "Extrude the mesh",
+          "Create instances on points"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains, 'what we're going to do is start by turning this mesh into a volume so we're going go mesh to volume'.",
+        "point": 1
+      },
+      {
+        "question": "When using a noise texture to offset point positions in Geometry Nodes, why is it important to subtract 0.5 from the vector?",
+        "supplement": "",
+        "options": [
+          "To increase the noise intensity",
+          "To ensure the noise is 4-dimensional",
+          "To center the vector around the zero point, preventing unwanted offset",
+          "To randomize the scale of the noise",
+          "To apply a ridge multifactor to the noise"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions, 'whenever we're using a noise texture to change the position of points we always need to subtract 0.5 from the vector uh this will Center our Vector around the zero point means that they don't get offset wonky'.",
+        "point": 1
+      },
+      {
+        "question": "The visualizer creation involves layering noise. What is the purpose of the third layer of noise, referred to as 'noise drum'?",
+        "supplement": "",
+        "options": [
+          "To distort the main guitar riff",
+          "To create the pulsing motion for the drum beat",
+          "To add complexity to the lead guitar solo",
+          "To control the color spectrum of the visualizer",
+          "To fine-tune the overall noise scale"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker describes the third layer: 'and then finally we want a third layer of noise which is going to be our drum beat and this is going to form that kind of pulsing motion where every time that the drum beat hits it pulses outwards'.",
+        "point": 1
+      },
+      {
+        "question": "To control color and strength procedurally within Geometry Nodes, instead of the Shader Editor, what nodes are used in the Shader Editor?",
+        "supplement": "",
+        "options": [
+          "Principled BSDF and Diffuse BSDF",
+          "Emission Shader and Principled BSDF",
+          "Attribute nodes for 'color' and 'strength'",
+          "Color Ramp and Noise Texture",
+          "Glossy BSDF and Transparent BSDF"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker states, 'instead of controlling the color and the strength inside our shaders I want to use attributes from geometry nodes... all we're going to do is add an attribute node. We'll call this first one color and we can duplicate it and we'll call this one strength'.",
+        "point": 1
+      },
+      {
+        "question": "How is a rainbow effect achieved for the visualizer's colors using the Color Ramp node?",
+        "supplement": "",
+        "options": [
+          "By setting the color mode to 'RGB' and using multiple stops",
+          "By setting the color mode to 'HSV' and changing it to 'Far', adjusting the first and second flags' hue, saturation, and value",
+          "By using a Gradient Texture node with a high distortion value",
+          "By directly inputting RGB values into the Color Ramp",
+          "By using the 'Fac' output of a Noise Texture node"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains, 'if you just change it the color mode to HSV and change it to far and what we can do is that will literally call go around the entire color wheel so I can set the first flag to a hue of zero and a saturation and value of one and the second second flag to a human saturation of one'.",
+        "point": 1
+      },
+      {
+        "question": "What is the function of the 'sync to audio' playback setting in Blender?",
+        "supplement": "",
+        "options": [
+          "To ensure smooth viewport animation regardless of audio",
+          "To make the viewport playback match the rendered output precisely",
+          "To allow for real-time audio manipulation during playback",
+          "To increase the rendering speed of audio-reactive elements",
+          "To enable the use of external audio hardware"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker emphasizes, 'anytime that you are dealing with audio in blender is to change your playback from play every frame to sync to audio uh because otherwise what you're going to see in the viewport is not going to be the same or it's not going to be the same as when you render'.",
+        "point": 1
+      },
+      {
+        "question": "When using the 'Sound to Samples' node in the Graph Editor, what does the resulting F-curve represent?",
+        "supplement": "",
+        "options": [
+          "The frequency spectrum of the audio",
+          "The phase of the audio wave",
+          "The volume or amplitude of the audio file over time",
+          "The tempo of the music in BPM",
+          "The precise timing of individual musical notes"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker states, 'you can see as I start scrolling through my timeline that riff value here is now changing however, I don't um just want to plug this directly into the W value because otherwise it's just going to kind of oscillate back and forth like this and give this kind of weird like jaggedy jumping motion which is not what I want'. The F-curve visually represents the audio's volume changes.",
+        "point": 1
+      },
+      {
+        "question": "What is a 'Simulation Zone' used for in Blender, according to the speaker?",
+        "supplement": "",
+        "options": [
+          "To create complex physics simulations",
+          "To render animations with advanced lighting",
+          "To track data over time, which can be used for simulations or data buffering",
+          "To generate procedural textures",
+          "To control camera motion dynamically"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains, 'for anybody who's unsure or unaware of exactly what simulation zones do um they basically allow you to track data over time that's the simplest explanation of it'.",
+        "point": 1
+      },
+      {
+        "question": "To achieve a randomized color selection based on drum beats, what is the core logic implemented using Boolean math and attributes?",
+        "supplement": "",
+        "options": [
+          "Tracking when the audio amplitude exceeds a certain threshold.",
+          "Detecting when the audio signal returns to zero after a spike, using a comparison of the current frame's 'F' attribute and the previous frame's 'F-1' attribute.",
+          "Monitoring the frequency range of the drum sounds.",
+          "Calculating the overall energy of the audio track.",
+          "Analyzing the phase difference between different audio channels."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker describes using two boolean attributes, 'F' (true when audio hits a low value) and 'F-1' (the previous state of 'F'). By using a Boolean math node to check when 'F' is true and 'F-1' is false, they identify the exact moment the audio value changes, triggering a seed change for randomization.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary goal of Laura Gingrich's technique for making previz pop?",
+        "supplement": "",
+        "options": [
+          "To create final render-quality assets directly in previz.",
+          "To blend 2D characters seamlessly into a 3D world efficiently.",
+          "To automate the entire animation process using AI.",
+          "To replace traditional storyboarding with 3D modeling.",
+          "To focus solely on character design and ignore environmental elements."
+        ],
+        "correct_answer": 1,
+        "explanation": "Laura emphasizes creating a previz aesthetic that is appealing enough to double as a final product but efficient enough to be built by one person, specifically focusing on integrating 2D elements into 3D environments.",
+        "point": 1
+      },
+      {
+        "question": "Which of the following methods did Laura find to be an 'unpractical' and time-consuming approach for storyboarding within Blender?",
+        "supplement": "",
+        "options": [
+          "Using Grease Pencil for character animation.",
+          "Creating character stands for 3D placement.",
+          "Dropping hand-drawn images as planes into the 3D scene.",
+          "Utilizing particle systems for environmental elements.",
+          "Employing tune shaders and flat colors for characters."
+        ],
+        "correct_answer": 2,
+        "explanation": "Laura explicitly states that dropping in images as planes into a storyboard is 'completely unpractical' and would take too long, especially when iterative drawings are needed.",
+        "point": 1
+      },
+      {
+        "question": "What is the significance of the 'ground' in Laura's previz workflow, even in minimal styles?",
+        "supplement": "",
+        "options": [
+          "It is primarily for aesthetic decoration and adds visual appeal.",
+          "It helps establish camera placement and understand camera movement for the audience.",
+          "It is used to define the boundaries of the 3D environment.",
+          "It is a placeholder for future detailed environmental modeling.",
+          "It is important for physics simulations within the scene."
+        ],
+        "correct_answer": 1,
+        "explanation": "Laura explains that having something on the ground, whether grass or a rug, is crucial for the audience to understand where the camera is and what it is doing, aiding in spatial comprehension.",
+        "point": 1
+      },
+      {
+        "question": "When working with multi-camera scenes in an interior environment, what technique does Laura suggest for conveying depth while maintaining efficiency?",
+        "supplement": "",
+        "options": [
+          "Completely modeling all walls and architectural details.",
+          "Using detailed textures on all surfaces.",
+          "Wireframing the outline of the room and removing walls.",
+          "Relying solely on character placement for depth perception.",
+          "Employing volumetric lighting to define the space."
+        ],
+        "correct_answer": 2,
+        "explanation": "Laura recommends wireframing the outline of the room and getting rid of the walls. Although cameras might be lost, this method still conveys depth through the corners of the room effectively.",
+        "point": 1
+      },
+      {
+        "question": "What is a potential downside of Laura's 3D storyboarding approach, where one never looks at a blank page?",
+        "supplement": "",
+        "options": [
+          "It can lead to over-reliance on pre-made assets.",
+          "It might hinder the spontaneous creation of montages and unique transitions.",
+          "It makes it difficult to incorporate traditional animation techniques.",
+          "It requires a higher level of technical skill for basic tasks.",
+          "It limits the ability to collaborate with other artists."
+        ],
+        "correct_answer": 1,
+        "explanation": "Laura mentions that while the versatility of 3D storyboarding is fantastic, a downside is that it can lead to forgetting or not immediately considering montages and really unique transitions because the focus is on working with existing elements.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary focus of Pato Calvelo's presentation at the Blender Conference 2024?",
+        "supplement": "",
+        "options": [
+          "Developing new rendering engines for Blender.",
+          "Transitioning architectural visualization workflows to Blender.",
+          "Creating realistic character models in Blender.",
+          "Exploring the use of Blender for game development.",
+          "The history of 3D modeling software."
+        ],
+        "correct_answer": 1,
+        "explanation": "Pato Calvelo explicitly states that his presentation is about the pipeline and his transition from industry-standard software to using Blender for architectural visualization.",
+        "point": 1
+      },
+      {
+        "question": "Before fully transitioning to Blender, what tasks did Pato Calvelo and his colleagues use Blender for in their architectural visualization pipeline?",
+        "supplement": "",
+        "options": [
+          "Only for creating conceptual sketches and mood boards.",
+          "Primarily for final render output and post-production.",
+          "Modeling, geometry cleanup, and camera matching.",
+          "Animation and video editing of architectural walkthroughs.",
+          "Client communication and project management."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions using Blender for modeling, cleaning geometry, and camera matching, especially for projects that didn't require extensive CGI.",
+        "point": 1
+      },
+      {
+        "question": "What were some of the key challenges or missing features that prevented an immediate full transition to Blender for architectural visualization in the past?",
+        "supplement": "",
+        "options": [
+          "Lack of basic modeling tools and a complex user interface.",
+          "Insufficient rendering capabilities and limited availability of renderers.",
+          "Absence of a good scattering system for scattering images and underdeveloped Cycles.",
+          "Poor integration with other design software like SketchUp and Revit.",
+          "High cost of the software and lack of community support."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker highlights that Cycles was not as developed, there weren't many 'liveries' (likely meaning materials or presets), and a good scatter system for stereo images was missing.",
+        "point": 1
+      },
+      {
+        "question": "Which add-ons and asset libraries are mentioned by Pato Calvelo as being helpful in his architectural visualization workflow with Blender?",
+        "supplement": "",
+        "options": [
+          "Only Cycles and Eevee render engines.",
+          "Photographer addon, Archipack, Scatter 5, Choco FX, Polygon, and various material libraries.",
+          "Blender's default modeling tools and texture painting.",
+          "Animation nodes and geometry nodes for procedural generation.",
+          "Import/export scripts for OBJ and FBX formats only."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation specifically lists several add-ons and asset sources that aided the transition and workflow, including the Photographer addon, Archipack, Scatter 5, Choco FX, Polygon, and material collections.",
+        "point": 1
+      },
+      {
+        "question": "According to Pato Calvelo, what is the main reason why Blender is not yet the industry standard for architectural visualization, despite its capabilities?",
+        "supplement": "",
+        "options": [
+          "It lacks the necessary rendering power compared to other software.",
+          "The learning curve is too steep for architects.",
+          "A significant shortage of skilled Blender artists in the industry.",
+          "It's primarily a cultural issue and a matter of mindset, as people aren't accustomed to associating Blender with this field.",
+          "Key features like real-time rendering are still not robust enough."
+        ],
+        "correct_answer": 3,
+        "explanation": "Pato Calvelo attributes the lack of industry standard status mainly to a 'cultural thing' and 'mindset,' suggesting that the perception of architectural visualization being linked with Blender needs to change.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is a key takeaway note from the speaker regarding the number of poses or drawings needed in a shot?",
+        "supplement": "",
+        "options": [
+          "Use as many as possible to convey detail.",
+          "The fewest necessary to ensure the idea is understood is best.",
+          "Always use a minimum of five poses per shot.",
+          "It depends entirely on the complexity of the camera move."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker advises, 'fewest the better \u2013 but not so much that people don't understand what the hell is going on.'",
+        "point": 1
+      },
+      {
+        "question": "What is the primary function of previs and layout in animation according to the speaker?",
+        "supplement": "",
+        "options": [
+          "To create final rendered scenes",
+          "To communicate the story through shots",
+          "To design and rig characters",
+          "To develop detailed background art"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states that at the end of the day, both previs and layout are about creating shots to communicate the story.",
+        "point": 1
+      },
+      {
+        "question": "What is a key characteristic of 'previs' compared to 'layout' in terms of art assets?",
+        "supplement": "",
+        "options": [
+          "Previs art is usually final quality.",
+          "Previs art is more disposable and flexible.",
+          "Layout involves more disposable art.",
+          "Previs art requires full design and rigging."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains that previs has more flexibility and creativity but is more 'disposable art,' meaning much of it might not make the final cut.",
+        "point": 1
+      },
+      {
+        "question": "What is a potential benefit of creating a 'shitty version' of a prop during previs?",
+        "supplement": "",
+        "options": [
+          "It saves significant time on final modeling.",
+          "It can inspire or influence final design choices.",
+          "It ensures the prop is fully rigged early on.",
+          "It is always accepted as the final design."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker mentions that a quick, imperfect prop made during previs might influence the designer's final choices regarding proportions.",
+        "point": 1
+      },
+      {
+        "question": "The speaker uses an ice cream parlor script for a demonstration. What are the main characters in this script?",
+        "supplement": "",
+        "options": [
+          "Rex and Jay",
+          "Sprite and Fried",
+          "Laurel and Hardy",
+          "Nemo and Marlin"
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker explicitly mentions using 'Rex and Jay from Sprite fried' for the script.",
+        "point": 1
+      },
+      {
+        "question": "In the ice cream parlor script, what causes Rex's initial delight?",
+        "supplement": "",
+        "options": [
+          "Jay giving him a massive sundae.",
+          "Jay placing a cup with two scoops of ice cream in front of him.",
+          "Rex discovering the sprinkle shaker.",
+          "Jay bringing out a tray of ice creams."
+        ],
+        "correct_answer": 1,
+        "explanation": "The script states, 'Jay walks over places a cup with two scoops of ice cream in front of Rex and walks away Rex is delighted.'",
+        "point": 1
+      },
+      {
+        "question": "What is the speaker's definition of 'beats' in the context of filmmaking storytelling?",
+        "supplement": "",
+        "options": [
+          "The rhythmic pacing of dialogue.",
+          "The emotional arcs of characters.",
+          "Units of information delivered to the viewer.",
+          "The sequence of camera movements."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker clarifies that 'beats' in this context refer to 'beats of information that are coming to the viewer, one beat at a time.'",
+        "point": 1
+      },
+      {
+        "question": "The speaker recommends using as few 'bones' as possible when working with rigged characters in previs/layout. Why?",
+        "supplement": "",
+        "options": [
+          "It makes the character model load faster.",
+          "It reduces the complexity of manipulation and improves mental recall.",
+          "It ensures the animation is more fluid.",
+          "It's a requirement for specific software."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains that using fewer bones reduces the mental model of things being moved and makes it easier to remember and manipulate.",
+        "point": 1
+      },
+      {
+        "question": "What technique does the speaker use to create a sense of depth in the scene during previs, even without full rendering?",
+        "supplement": "",
+        "options": [
+          "Using complex lighting setups.",
+          "Employing a semi-transparent plane with an array modifier.",
+          "Adding volumetric fog.",
+          "Increasing the polygon count of background objects."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker describes making a semi-transparent plane with an array modifier to create a feeling of depth for readability.",
+        "point": 1
+      },
+      {
+        "question": "When unsure where to initially place the camera, what is the speaker's general rule of thumb?",
+        "supplement": "",
+        "options": [
+          "Start at a low angle to emphasize power.",
+          "Begin at eye-height, splitting the difference between characters.",
+          "Place it at the highest point in the scene.",
+          "Start with a very wide shot to show the environment."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker advises, 'if you don't know if you have no idea just like start at the I height and obviously the these two guys have like two ey Heights so I like kind of splitting in the middle just start there.'",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of 'AB testing' shots early in the process, according to the speaker?",
+        "supplement": "",
+        "options": [
+          "To finalize character designs.",
+          "To determine the best camera lenses and angles.",
+          "To test different dialogue options.",
+          "To refine the sound design."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker emphasizes testing different camera lenses and angles early on, as changing them later can require significant adjustments to poses and beats.",
+        "point": 1
+      },
+      {
+        "question": "When creating a very simple version of the animation (e.g., for vetting an idea), what elements might the speaker omit?",
+        "supplement": "",
+        "options": [
+          "The main characters.",
+          "The set design.",
+          "Facial expressions and detailed hand/finger animation.",
+          "The core story beats."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions creating the 'cheapest version of this possible' by not doing facials or fingers, focusing solely on conveying the core actions.",
+        "point": 1
+      },
+      {
+        "question": "What does the speaker suggest as a reason why the first, simpler version of the animation edit might feel 'dull' or 'boring'?",
+        "supplement": "",
+        "options": [
+          "The actors' performances were weak.",
+          "There wasn't enough information conveyed visually.",
+          "The script itself was uninspired.",
+          "The lighting was too flat."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker notes that if information isn't conveyed and you linger on it because it'll be 'done later,' it looks boring. Insufficient information leads to dullness.",
+        "point": 1
+      },
+      {
+        "question": "How does the addition of sound effects and music potentially impact the previs/layout process?",
+        "supplement": "",
+        "options": [
+          "It makes the visuals less important.",
+          "It can change how the scene feels and might necessitate re-editing or re-shot adjustments.",
+          "It requires a fully rendered final output.",
+          "It adds significant time but no creative value."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states that sound can change how the thing feels and how it's edited, potentially requiring going back to shots and refiguring them.",
+        "point": 1
+      },
+      {
+        "question": "The speaker mentions a 'cinematic version' where the goal is to convey information using editing and shots. What is one approach suggested for establishing the scene?",
+        "supplement": "",
+        "options": [
+          "A wide shot outside the parlor followed by an interior shot.",
+          "Starting with a close-up of the ice cream menu.",
+          "Following an ice cream being served, then introducing the characters.",
+          "A quick montage of different ice cream flavors."
+        ],
+        "correct_answer": 2,
+        "explanation": "One suggested method is to 'Follow that ice cream that way, we're conveying that we're in a place where ice cream is being given out.'",
+        "point": 1
+      },
+      {
+        "question": "In the cinematic version's floor plan draft, what is suggested instead of Rex erupting in anger directly?",
+        "supplement": "",
+        "options": [
+          "Cutting to Jay looking increasingly covered in shadow.",
+          "Having Rex throw his ice cream.",
+          "Showing Rex silently fuming.",
+          "Introducing a new character to intervene."
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker suggests, 'what if we have like him about to do it but we're cutting to Jay and Jay is kind of getting covered in Shadow and he he doesn't realize it yet.'",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary goal of the Blender add-on presented at the Blender Conference 2024?",
+        "supplement": "",
+        "options": [
+          "To create realistic 3D animations directly within Blender.",
+          "To convert Blender scenes into datasets for Gaussian Splatting or NeRFs.",
+          "To optimize Blender scenes for real-time rendering in game engines.",
+          "To automatically generate detailed 3D models from single images."
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation focuses on a Blender add-on designed to create datasets that can then be used to generate Gaussian Splatting or NeRF files from existing 3D scenes in Blender.",
+        "point": 1
+      },
+      {
+        "question": "According to the presentation, what is a major challenge when exporting complex Blender scenes with lighting and reflections for standard 3D online viewers?",
+        "supplement": "",
+        "options": [
+          "Online viewers cannot handle high-polygon counts.",
+          "Lights and shadows often need to be baked into multiple texture sets.",
+          "Export formats do not support physically based rendering (PBR) materials.",
+          "The process requires manual retopology of the entire scene."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers explain that exporting scenes with intricate lighting and reflections requires baking them into texture sets or light maps, which can be complex and time-consuming, especially for large scenes or semi-transparent materials.",
+        "point": 1
+      },
+      {
+        "question": "How do Gaussian Splatting and NeRFs differ from traditional triangle-based mesh rendering in terms of scene representation?",
+        "supplement": "",
+        "options": [
+          "They rely heavily on UV maps and high-resolution textures.",
+          "They do not use textures, UV maps, or triangles, eliminating issues with baking and compatibility.",
+          "They are primarily designed for static scenes and cannot handle dynamic elements.",
+          "They require significantly more processing power for real-time rendering compared to meshes."
+        ],
+        "correct_answer": 1,
+        "explanation": "A key advantage highlighted is that Gaussian Splatting and NeRFs do not rely on traditional elements like textures, UV maps, or triangles, thus avoiding many of the complexities and limitations of mesh-based workflows.",
+        "point": 1
+      },
+      {
+        "question": "What are the two main components generated by the Structure from Motion (SfM) algorithm that are crucial inputs for NeRFs and Gaussian Splatting?",
+        "supplement": "",
+        "options": [
+          "3D mesh and texture maps",
+          "Camera alignments (poses) and a sparse point cloud",
+          "UV coordinates and normal maps",
+          "Color palettes and material properties"
+        ],
+        "correct_answer": 1,
+        "explanation": "The SfM algorithm provides essential information like camera positions and orientations (alignments) and an initial sparse point cloud, which are fundamental for training NeRFs and Gaussian Splatting models.",
+        "point": 1
+      },
+      {
+        "question": "In Gaussian Splatting, what replaces the traditional triangles used in computer graphics?",
+        "supplement": "",
+        "options": [
+          "Voxels",
+          "Spherical harmonics",
+          "3D Gaussians (blobs)",
+          "Neural networks"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presentation explains that in Gaussian Splatting, triangles are replaced by 3D Gaussians, described as 'blobs', which are strategically positioned and blended to represent the scene.",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of the 'Adaptive Density Control' in Gaussian Splatting?",
+        "supplement": "",
+        "options": [
+          "To adjust the color of the Gaussians based on lighting conditions.",
+          "To dynamically add more Gaussians where detail is needed and remove them where it is not.",
+          "To ensure uniform distribution of Gaussians across the entire scene.",
+          "To optimize the spherical harmonics for better reflection rendering."
+        ],
+        "correct_answer": 1,
+        "explanation": "Adaptive Density Control addresses the need for a high number of Gaussians to represent detailed scenes by adding more where necessary and removing them from less detailed areas, efficiently managing computational resources.",
+        "point": 1
+      },
+      {
+        "question": "How does Gaussian Splatting achieve realistic effects like reflections and refractions?",
+        "supplement": "",
+        "options": [
+          "By using advanced texture mapping techniques.",
+          "By employing complex shader networks similar to Blender's Cycles.",
+          "By assigning colors based on light direction using spherical harmonics.",
+          "By rendering the scene multiple times with different lighting passes."
+        ],
+        "correct_answer": 2,
+        "explanation": "Gaussian Splatting uses spherical harmonics, which store color information based on the direction of light, allowing it to simulate complex optical effects like reflections and refractions.",
+        "point": 1
+      },
+      {
+        "question": "What is the core concept behind Neural Radiance Fields (NeRFs)?",
+        "supplement": "",
+        "options": [
+          "Storing a 3D scene as a collection of 3D Gaussians.",
+          "Using a neural network to learn a function that maps 5D coordinates (position and direction) to color and density.",
+          "Generating a traditional mesh with baked lighting information.",
+          "Creating a point cloud that is then rendered using traditional rasterization."
+        ],
+        "correct_answer": 1,
+        "explanation": "NeRFs represent a 3D scene using a neural network that learns a continuous five-dimensional function defining the color and density at any point in space and in any viewing direction.",
+        "point": 1
+      },
+      {
+        "question": "What is a primary advantage of NeRFs and Gaussian Splatting regarding file size compared to traditional exported 3D models?",
+        "supplement": "",
+        "options": [
+          "NeRF files are significantly larger due to the neural network weights.",
+          "Gaussian Splatting files are large because they store millions of Gaussians.",
+          "NeRF files are typically small, storing only neural network weights, while Gaussian Splatting files can also be relatively compact.",
+          "Both methods result in very large files that are difficult to share online."
+        ],
+        "correct_answer": 2,
+        "explanation": "The presentation highlights that NeRF files are notably small as they only contain the weights of the neural network. Gaussian Splatting files are also generally more compact than traditional exported scenes with numerous assets.",
+        "point": 1
+      },
+      {
+        "question": "Why does the add-on aim to replace the Structure from Motion (SfM) algorithm entirely?",
+        "supplement": "",
+        "options": [
+          "SfM is too slow for real-time processing.",
+          "The add-on can achieve better results by using the precise camera data directly from Blender.",
+          "SfM algorithms cannot handle complex scenes with many objects.",
+          "SfM is proprietary software and cannot be freely distributed."
+        ],
+        "correct_answer": 1,
+        "explanation": "By using Blender's internal camera data, the add-on bypasses the need for SfM, leading to more accurate camera alignments, reduced overlap requirements, faster training times, and better overall reconstruction quality, even in challenging scenes.",
+        "point": 1
+      },
+      {
+        "question": "What is a significant advantage of using rendered images from Blender for NeRF and Gaussian Splatting datasets compared to real-world photos?",
+        "supplement": "",
+        "options": [
+          "Rendered images have more noise, which helps the algorithms generalize better.",
+          "Rendered images have consistent exposure, no depth of field or motion blur (by default), and controllable lighting.",
+          "Real-world photos require extensive post-processing to remove artifacts.",
+          "Rendered images are always higher resolution than real-world photos."
+        ],
+        "correct_answer": 1,
+        "explanation": "Rendered images offer a cleaner starting point with consistent camera settings, no unwanted motion blur or depth of field (unless intentionally added), and stable lighting, making them ideal for photogrammetry-based techniques.",
+        "point": 1
+      },
+      {
+        "question": "How does the add-on automate camera placement for object-centric scenes (e.g., a statue)?",
+        "supplement": "",
+        "options": [
+          "It places cameras randomly around the object.",
+          "It uniformly distributes cameras over the top hemisphere of a sphere around the object, with more density towards the object's center.",
+          "It requires manual placement of each camera by the user.",
+          "It only places cameras in a single circle around the object."
+        ],
+        "correct_answer": 1,
+        "explanation": "For object-centric scenes, the add-on places cameras uniformly on a sphere surrounding the object. It specifically distributes more cameras closer to the object's center to ensure more even distances and better capture.",
+        "point": 1
+      },
+      {
+        "question": "When placing cameras in open scenes (e.g., a room), what challenges does the add-on attempt to address?",
+        "supplement": "",
+        "options": [
+          "Avoiding placing cameras inside objects and avoiding uselessly close shots of flat surfaces.",
+          "Ensuring all cameras have identical focal lengths.",
+          "Minimizing the number of cameras needed by maximizing overlap.",
+          "Detecting and avoiding moving objects within the scene."
+        ],
+        "correct_answer": 0,
+        "explanation": "The add-on tries to intelligently place cameras within the scene's bounding box, looking in multiple directions, while also checking to prevent cameras from being placed inside objects or too close to surfaces where they capture little useful information.",
+        "point": 1
+      },
+      {
+        "question": "What key information is stored in the `transforms_train.json` file generated by the add-on?",
+        "supplement": "",
+        "options": [
+          "The 3D mesh topology and vertex colors.",
+          "The camera's intrinsic parameters (like focal length) and extrinsic parameters (position and rotation).",
+          "The texture maps and material definitions for the scene.",
+          "The training loss and convergence metrics for the NeRF or Gaussian Splatting model."
+        ],
+        "correct_answer": 1,
+        "explanation": "This file contains essential data for NeRF and Gaussian Splatting frameworks, including the scene's scale (axis-aligned bounding box), resolution, focal length, field of view, and importantly, the camera transform matrices which define the location and rotation of each camera.",
+        "point": 1
+      },
+      {
+        "question": "Which method for point cloud creation was discarded by the developers due to issues with complex geometries and non-mesh objects?",
+        "supplement": "",
+        "options": [
+          "Using Geometry Nodes to distribute points on faces.",
+          "Subdividing existing scene geometry until a target vertex density is reached.",
+          "Generating points randomly within the scene's bounding box.",
+          "Exporting vertex data directly from existing meshes."
+        ],
+        "correct_answer": 1,
+        "explanation": "The initial approach of subdividing geometry was found to be problematic with non-manifold geometry, ngons, particle systems, curves, and metaballs, leading to errors or poor results. They opted for a Geometry Nodes setup instead.",
+        "point": 1
+      },
+      {
+        "question": "What is the recommended density for the point cloud export for optimal results with Gaussian Splatting?",
+        "supplement": "",
+        "options": [
+          "A few thousand points.",
+          "Around 10,000 to 50,000 points.",
+          "A few hundred thousand to a million points.",
+          "The density does not significantly impact the results."
+        ],
+        "correct_answer": 2,
+        "explanation": "The presentation suggests aiming for a point cloud density that results in several hundred thousand to a million points for the best possible outcome when using Gaussian Splatting.",
+        "point": 1
+      },
+      {
+        "question": "What are some potential future improvements for the Blender add-on mentioned by the presenters?",
+        "supplement": "",
+        "options": [
+          "Adding support for animation exporting.",
+          "Improving indoor camera placement robustness, including vertex colors in point clouds, and optimizing point cloud creation runtime.",
+          "Integrating directly with game engines like Unity and Unreal Engine.",
+          "Developing an AI assistant to help with scene setup."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers identified areas for future development including making indoor camera placement more robust, reintroducing vertex colors for faster training, and speeding up the point cloud creation process for very large or complex scenes.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What was the capital of the Aztec Empire, as discussed in the presentation?",
+        "supplement": "",
+        "options": [
+          "Mexico City",
+          "Tenochtitlan",
+          "Amsterdam",
+          "Mesoamerica"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker identifies Tenochtitlan as the capital of the Aztec Empire.",
+        "point": 1
+      },
+      {
+        "question": "According to the presentation, when was Tenochtitlan founded and destroyed?",
+        "supplement": "",
+        "options": [
+          "Founded 1521, Destroyed 1325",
+          "Founded 1325, Destroyed 1521",
+          "Founded 1500, Destroyed 1923",
+          "Founded 1000, Destroyed 1521"
+        ],
+        "correct_answer": 1,
+        "explanation": "The presentation states that Tenochtitlan was founded approximately in 1325 and destroyed in 1521.",
+        "point": 1
+      },
+      {
+        "question": "What unique geographical feature is Tenochtitlan built upon?",
+        "supplement": "",
+        "options": [
+          "A large mountain range",
+          "A volcanic caldera",
+          "A lake",
+          "A vast desert oasis"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains that Tenochtitlan was built on a lake, leading to its nickname 'floating city'.",
+        "point": 1
+      },
+      {
+        "question": "The speaker mentions that the term 'Aztec' is somewhat outdated. What is the more accurate term for the inhabitants discussed?",
+        "supplement": "",
+        "options": [
+          "Mayans",
+          "Olmecs",
+          "Incas",
+          "Mexica"
+        ],
+        "correct_answer": 3,
+        "explanation": "The presentation clarifies that 'Mexica' is the correct term for the inhabitants, and the city was called 'Mexica-Tenochtitlan'.",
+        "point": 1
+      },
+      {
+        "question": "Which Blender feature did Thomas Kole find particularly valuable for his Tenochtitlan reconstruction project, especially for distributing elements like trees?",
+        "supplement": "",
+        "options": [
+          "Shader Editor",
+          "Sculpt Mode",
+          "Geometry Nodes",
+          "Grease Pencil"
+        ],
+        "correct_answer": 2,
+        "explanation": "Thomas Kole highlights Geometry Nodes as a crucial tool that became indispensable for his workflow, enabling complex distributions and procedural generation.",
+        "point": 1
+      },
+      {
+        "question": "What technique did the presenter use to efficiently represent vast numbers of trees on the enormous terrain, rather than individual instances?",
+        "supplement": "",
+        "options": [
+          "High-resolution texture mapping",
+          "View-aligned Voronoi islands with tree textures",
+          "Procedural generation of individual tree models",
+          "Instancing with ray tracing optimization"
+        ],
+        "correct_answer": 1,
+        "explanation": "To handle the scale, the presenter used a shader-based technique with 'view-aligned Voronoi islands' where images of trees were applied to sections of the terrain that faced the camera.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary topic of the presentation at the Blender Conference 2024?",
+        "supplement": "",
+        "options": [
+          "A tutorial on advanced rigging techniques in Blender.",
+          "A discussion on the animation process for the film 'Flow'.",
+          "An overview of the new features in Blender 4.0.",
+          "A case study on using Blender for architectural visualization.",
+          "A retrospective on the history of 2D animation."
+        ],
+        "correct_answer": 1,
+        "explanation": "The title of the presentation is 'The animation of Flow \u2014 Blender Conference 2024', and the speaker, L\u00e9o Silly-P\u00e9lissier, was the animation director for the movie 'Flow'. The content focuses on the animation methods and challenges faced during its production using Blender.",
+        "point": 1
+      },
+      {
+        "question": "Who is the speaker and what was their role in the film 'Flow'?",
+        "supplement": "",
+        "options": [
+          "Jean Bodis, the director of 'Flow'.",
+          "Kristoff Sir, the technical director.",
+          "L\u00e9o Silly-P\u00e9lissier, the animation director.",
+          "Elodie Dambrosio, a junior animator on the project.",
+          "Samuel Beru, a developer who created custom tools."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker introduces himself as L\u00e9o and states, 'I was animation director on Flow the movie'.",
+        "point": 1
+      },
+      {
+        "question": "What led the speaker to transition from 2D animation to 3D?",
+        "supplement": "",
+        "options": [
+          "A personal preference for the aesthetic of 3D animation.",
+          "The industry's shift towards 3D technology and abandonment of 2D projects.",
+          "The availability of more powerful 3D software.",
+          "A desire to create more realistic characters.",
+          "Recommendations from fellow animators."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains, 'who we've seen during studies the studios move on 3D technology and abandoning their 2D project so considering the situation I felt compelled to learn 3D'.",
+        "point": 1
+      },
+      {
+        "question": "What was the initial impression of 3D software before the speaker discovered Blender?",
+        "supplement": "",
+        "options": [
+          "User-friendly and attractive.",
+          "Technically challenging but visually appealing.",
+          "Not very user-friendly and attractive.",
+          "Limited in its animation capabilities.",
+          "Complex but offered great creative freedom."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions, 'back then 3D wasn't very user friendly and attractive'.",
+        "point": 1
+      },
+      {
+        "question": "What was the first significant project the speaker created using Blender?",
+        "supplement": "",
+        "options": [
+          "A short film about a cat.",
+          "A complex scene with over 500 characters in 3D cutout style for 'Melo Film'.",
+          "An animated short demonstrating new rigging techniques.",
+          "A character study for the film 'Flow'.",
+          "A test scene for the film 'Blue'."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states, 'after learning basics in blender I made my first shot with Michelle um for mlo film d uh a long shot with over 500 characters in 3D cutout'.",
+        "point": 1
+      },
+      {
+        "question": "Which aspect of directors like Micho and Jean Bodis is highlighted as being similar to the speaker's approach?",
+        "supplement": "",
+        "options": [
+          "Their reliance on traditional animation techniques.",
+          "Their focus on highly detailed character designs.",
+          "Their ability to create with limitations, guided by ideas rather than technical constraints.",
+          "Their preference for working with large animation teams.",
+          "Their use of complex narrative structures."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker says, 'both are authors and creat their Award with limitations they are Guided by their ID and never think of the project with techniques constraint'.",
+        "point": 1
+      },
+      {
+        "question": "What is the core theme of the film 'Flow'?",
+        "supplement": "",
+        "options": [
+          "A journey of self-discovery for a lone cat.",
+          "The challenges of surviving in a post-apocalyptic world.",
+          "Communication, understanding, respect, and solidarity between different animals.",
+          "The importance of friendship in overcoming adversity.",
+          "The beauty of nature and the impact of environmental change."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains, 'the film focus on communication understanding respect and solidarity between people and U technically it's a map like this'.",
+        "point": 1
+      },
+      {
+        "question": "What are some key technical specifications of the film 'Flow'?",
+        "supplement": "",
+        "options": [
+          "81 minutes long, 307 shots, average shot length of 380 frames.",
+          "60 minutes long, 100 shots, average shot length of 15 seconds.",
+          "95 minutes long, 500 shots, average shot length of 20 seconds.",
+          "81 minutes long, 220 shots, average shot length of 15 seconds.",
+          "75 minutes long, 307 shots, average shot length of 380 frames."
+        ],
+        "correct_answer": 0,
+        "explanation": "The speaker states, 'feature fil 81 minutes long 22 secondses 307 shots which is very few shot for a movie the aange length of thre is 380 frame so it represent 15 sign'.",
+        "point": 1
+      },
+      {
+        "question": "How did the team approach the animation style for 'Flow', considering the constraints?",
+        "supplement": "",
+        "options": [
+          "A highly realistic and detailed animation style.",
+          "A stylized, exaggerated animation style.",
+          "A naturalist style, aiming for realistic animal behavior and expressions with some freedom.",
+          "A 2D cutout animation style.",
+          "A blend of stop-motion and 3D animation."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions, 'we opted for a naturalist style of Animation in other word we had to get as close as possible to the behavior movements and natural expressions of the animals while allowing ourself a touch of freedom and Randomness'.",
+        "point": 1
+      },
+      {
+        "question": "What was a significant issue with the original rigs provided for the production?",
+        "supplement": "",
+        "options": [
+          "They were too simplistic and lacked detail.",
+          "They were too heavy with too many bones but lacked detail in facial expressions.",
+          "They were incompatible with the Blender software.",
+          "They did not allow for realistic deformations.",
+          "They were difficult to animate but very efficient."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker notes, 'unfortunately the rig weren't optimal enough to fit with the production and reach the animation needs so the rig were to heavy with too many bones but not detail enough as FAL expression'.",
+        "point": 1
+      },
+      {
+        "question": "Which of the following is NOT one of the four steps in the animation workflow described?",
+        "supplement": "",
+        "options": [
+          "Block A (essential meanings)",
+          "Block B (more details)",
+          "Spline (smooth curve)",
+          "Render",
+          "Polish (checkup)"
+        ],
+        "correct_answer": 3,
+        "explanation": "The workflow is described as separating into four steps: Block A, Block B, Spline, and Polish. 'Render' is not listed as one of these animation workflow steps.",
+        "point": 1
+      },
+      {
+        "question": "What is the main goal of the 'Block A' stage in the animation workflow?",
+        "supplement": "",
+        "options": [
+          "To refine the final details and polish the animation.",
+          "To establish the staging, improve poses, and specify intentions without transitions.",
+          "To create smooth curves and naturalistic movement.",
+          "To implement complex character interactions.",
+          "To render the final animation sequence."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains, 'block a in a way it will reproduce the staging of the layout will improve the poses and specify the intentions... the goal in block a is to understanding the intentions'.",
+        "point": 1
+      },
+      {
+        "question": "What is the purpose of the 'Spline' step in the animation workflow?",
+        "supplement": "",
+        "options": [
+          "To focus on the initial blocking and staging.",
+          "To add fine details and polish the animation.",
+          "To transpose the energy of the blocks animation into smooth curves and improve naturalistic style.",
+          "To validate the overall animation and check for bugs.",
+          "To import pre-made animation cycles."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker states, 'spline step as it said the idea to transpose the same energy as a blocks animation step in spline and improve the natural naturalistic style of the movement'.",
+        "point": 1
+      },
+      {
+        "question": "How did the team manage communication and information sharing during the production?",
+        "supplement": "",
+        "options": [
+          "Through daily in-person meetings only.",
+          "Using Slack, Discord, and a dedicated website for information and references.",
+          "Relying solely on email correspondence.",
+          "Utilizing a project management software that was entirely custom-built.",
+          "Through a series of weekly video conferences."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker mentions, 'we use slack we can use Discord and everything to send message to each other'... 'then I created a little website to regroup all the information and references'.",
+        "point": 1
+      },
+      {
+        "question": "What was a key consideration when recruiting animators for 'Flow'?",
+        "supplement": "",
+        "options": [
+          "They needed extensive experience on AAA animation projects.",
+          "They had to be highly skilled in character acting.",
+          "A good feeling and effective communication, with a significant portion of juniors being acceptable.",
+          "Expertise in traditional 2D animation techniques was mandatory.",
+          "They had to be proficient in multiple 3D software packages."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker states, 'it's important to have good feeling with the animators so be sure that the communication works well'... 'Flo was junor friendly around the 60% of the team was Juniors'.",
+        "point": 1
+      },
+      {
+        "question": "What challenge did animators face regarding character rigs and camera movement in 'Flow'?",
+        "supplement": "",
+        "options": [
+          "The rigs were too basic, and the camera was static.",
+          "The rigs were overly complex, and the camera had limited movement.",
+          "Animators were used to static cameras, but 'Flow' had constantly moving cameras, requiring rigs that could deform and hold up in all directions.",
+          "The rigs did not support facial expressions, and the camera was fixed.",
+          "The animation library was insufficient, and the camera had no control."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker explains, 'many animators use are used to deforming or destroying the rig to get the right shap... in you have long shot with constantly moving camera and Gins lets us know that he could move the camera after the animation to adjust the staging or composition As You Wish so you have to be sure that the post could work in all direction'.",
+        "point": 1
+      },
+      {
+        "question": "What was a notable aspect of the sound design for 'Flow', given its lack of dialogue?",
+        "supplement": "",
+        "options": [
+          "All sounds were synthesized digitally.",
+          "Sound effects were created first, and animation was adapted to them.",
+          "The sound was made after the animation, with mouth openings sometimes done randomly.",
+          "The entire soundtrack was composed by a single artist.",
+          "Dialogue was added in post-production using voice actors."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker says, 'because there were no dialogues the sound were made after the animation like the sound effects we have to open the mouth almost blindly according to the mood of the characters or the situation and sometimes randomly also'.",
+        "point": 1
+      },
+      {
+        "question": "What success has the film 'Flow' achieved since its selection at the Cannes Film Festival?",
+        "supplement": "",
+        "options": [
+          "It has been released globally on major streaming platforms.",
+          "It has received critical acclaim and won numerous awards at various film festivals.",
+          "It has been nominated for an Academy Award for Best Animated Feature.",
+          "It has garnered a significant cult following online.",
+          "It is currently in production for a sequel."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states, 'Flo had a chance to be selected at the International Film Festival of can... since then is frequently select by film festival and has won many awards'.",
+        "point": 1
+      },
+      {
+        "question": "What was the approximate size of the animation team for 'Flow', and how long did it take to complete the movie?",
+        "supplement": "",
+        "options": [
+          "10 animators, 12 months",
+          "20 animators, 6 months",
+          "30 animators, 9 months",
+          "15 animators, 8 months",
+          "25 animators, 7 months"
+        ],
+        "correct_answer": 1,
+        "explanation": "Near the end of the presentation, the speaker mentions, 'the basic things we are 20 animators for for this movie and we did the movie in six months'.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the primary goal of the 'we dig it' project?",
+        "supplement": "The project aims to explore how digitalization can benefit classic art education.",
+        "options": [
+          "To develop new 3D modeling software.",
+          "To create interactive 3D experiences for online exhibitions and education.",
+          "To fund art students' projects.",
+          "To host virtual concerts.",
+          "To develop new hardware for virtual reality."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers explicitly state that the initial idea was to bring exhibition efforts into the web and then into 3D, aiming to give users better opportunities in virtual reality than in real life, especially for educational and exhibition purposes.",
+        "point": 1
+      },
+      {
+        "question": "Which German government organization is funding the 'we dig it' project?",
+        "supplement": "",
+        "options": [
+          "DAAD",
+          "DFG",
+          "BMBF",
+          "Max Planck Society",
+          "Humboldt Foundation"
+        ],
+        "correct_answer": 2,
+        "explanation": "Marcus Liebich mentions, 'um to introduce the project um the project with dig is founded by the bmbf in Germany'.",
+        "point": 1
+      },
+      {
+        "question": "What was the initial inspiration for the project's focus on 3D online exhibitions?",
+        "supplement": "",
+        "options": [
+          "The desire to compete with commercial galleries.",
+          "The limitations of traditional online project websites with just text and photos.",
+          "The need to showcase student work globally.",
+          "The difficulty of organizing physical art exhibitions.",
+          "The popularity of video games."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker, Marcus Liebich, explains that traditional project websites lack the impact of physical exhibitions and that the initial idea was to translate those exhibition efforts into the web, specifically in 3D.",
+        "point": 1
+      },
+      {
+        "question": "Why did the project team decide to go open source?",
+        "supplement": "",
+        "options": [
+          "To avoid licensing issues and contribute to the open-source community.",
+          "Because open-source software is inherently more stable.",
+          "To reduce development costs.",
+          "To comply with government funding requirements.",
+          "To collaborate with a wider range of developers."
+        ],
+        "correct_answer": 0,
+        "explanation": "The speakers state, 'finally at at this stage at last we decided to go open source because you don't want to mess around with licenses... we decided to go and and mainly focus on Open Source on this project'.",
+        "point": 1
+      },
+      {
+        "question": "The project faced several challenges with third-party platforms. Which platform was initially used and later discontinued, leading to a switch?",
+        "supplement": "",
+        "options": [
+          "Mozilla Hubs",
+          "Discord",
+          "Matrix and Third Room",
+          "Spoke",
+          "Unity"
+        ],
+        "correct_answer": 2,
+        "explanation": "The first lesson learned was that 'open source projects aren' always as solid as blenders so the first launch we had was on based on Matrix and on third room and a few weeks after we set up everything on third room third room was discontinued'.",
+        "point": 1
+      },
+      {
+        "question": "After Third Room was discontinued, the team switched to Mozilla Hubs. What happened shortly after this switch?",
+        "supplement": "",
+        "options": [
+          "Mozilla Hubs became more stable and widely adopted.",
+          "Mozilla Hubs was also announced as discontinued.",
+          "The team decided to develop their own platform from scratch.",
+          "They found a new, stable open-source alternative.",
+          "They integrated with a commercial platform."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker mentions, 'we switched to Mozilla hubs... and I think two or three weeks after we finished everything on Mozilla hubs Mozilla hips was also be announced as disc discontinued'.",
+        "point": 1
+      },
+      {
+        "question": "The current solution presented by the team is hosted on which platform?",
+        "supplement": "",
+        "options": [
+          "Mozilla Hubs",
+          "A self-hosted instance of Hubs (formerly Mozilla Hubs)",
+          "Unity",
+          "Spoke",
+          "Blender"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers state, 'yeah the solution we now show is placed on bender blender and now called hubs former called Milla hubs'.",
+        "point": 1
+      },
+      {
+        "question": "What was a key motivation for rebuilding their own university in the virtual space?",
+        "supplement": "",
+        "options": [
+          "To create a completely fantastical environment.",
+          "To ensure users could easily locate content and people in the virtual space, mirroring the real-world layout.",
+          "To test the limits of Blender's rendering capabilities.",
+          "To provide a stark contrast to the real-world building.",
+          "To practice architectural modeling."
+        ],
+        "correct_answer": 1,
+        "explanation": "Marcus Liebich explains, 'the one reason was we wanted to have the virtual location uh identical to the real location so if you visit us and and you see something interesting... then you know where to go if you want to find the same uh content U or the same persons'.",
+        "point": 1
+      },
+      {
+        "question": "The university building used for the virtual recreation is an old storage building for what commodities?",
+        "supplement": "",
+        "options": [
+          "Grain and Sugar",
+          "Cotton and Coffee",
+          "Spices and Tea",
+          "Wood and Metal",
+          "Textiles and Dyes"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers mention, 'we are based in an old storage building for cotton or coffee in the former days'.",
+        "point": 1
+      },
+      {
+        "question": "When users leave a floor of the virtual building and enter an exhibition room, they are 'off the limit'. What does this imply?",
+        "supplement": "",
+        "options": [
+          "They have entered a different, disconnected virtual space.",
+          "The exhibition room is glitching.",
+          "The connection to the server is lost.",
+          "They have entered a limited-access area.",
+          "The exhibition room requires a separate download."
+        ],
+        "correct_answer": 0,
+        "explanation": "The concept is described as: 'if you leave the floor and if you pass a door to an exhibition room you're off the limit \u2013 you don't have to have any more relations to the building itself so you can have a room like you imagine'.",
+        "point": 1
+      },
+      {
+        "question": "What is a 'Behavior Graph' in the context of Hubs and Blender?",
+        "supplement": "",
+        "options": [
+          "A visual scripting system for creating interactive elements.",
+          "A tool for generating 3D models.",
+          "A method for exporting animations.",
+          "A way to manage user permissions.",
+          "A system for real-time rendering."
+        ],
+        "correct_answer": 0,
+        "explanation": "Frederick Steinmetz explains, 'the other one is the behavior graph which is optional but with the hubs components alone you'll soon uh get you'll soon have to push the boundaries because... the only interactivity like Ana just mentioned is basically those spawners... all the rest like even clicking on stuff you need the behavior graph for even the most basic stuff'.",
+        "point": 1
+      },
+      {
+        "question": "Unlike Blender's linear timeline, Behavior Graphs are described as the 'absolute opposite of linear'. Why is this?",
+        "supplement": "",
+        "options": [
+          "They operate on a continuous loop.",
+          "They are triggered by player actions and allow for non-sequential interactions.",
+          "They only function when the user is idle.",
+          "They rely on pre-recorded animations.",
+          "They are processed in reverse."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker states, 'as opposed to the linear time and blender here you can turn around click on something wait for a bit click on it again go somewhere else click on something else \u2013 it's AB it's the absolute opposite of linear'.",
+        "point": 1
+      },
+      {
+        "question": "What is a 'flip-flop' in the context of Behavior Graphs?",
+        "supplement": "",
+        "options": [
+          "A component that randomly changes the state of an object.",
+          "A node that alternates between two states each time it's triggered.",
+          "A function that reverses an animation.",
+          "A variable that stores numerical values.",
+          "A trigger that activates only once."
+        ],
+        "correct_answer": 1,
+        "explanation": "The explanation provided is: 'this one would just um flip-flop which means every time we bump it it changes its state \u2013 every time we click the on interact we click on the object the flip-flop changes its state from on to off to on to off'.",
+        "point": 1
+      },
+      {
+        "question": "What is the primary purpose of 'variables' in Behavior Graphs?",
+        "supplement": "",
+        "options": [
+          "To define the visual appearance of objects.",
+          "To store data associated with entities (objects) and allow for complex interactions.",
+          "To control the physics simulation.",
+          "To manage network connections.",
+          "To generate random events."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers explain, 'as soon as you get a little more complex is variables \u2013 we can assign variables to entities and entities is basically the fancy word for object \u2013 so each object can has have as many many variables as you want'.",
+        "point": 1
+      },
+      {
+        "question": "The Chronos group is working on integrating interactivity into which standard?",
+        "supplement": "",
+        "options": [
+          "OBJ",
+          "FBX",
+          "glTF",
+          "STL",
+          "COLLADA"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker mentions, 'the konos group currently is trying to do... they created... gltf and now what they're trying to do is to integrate into the gtf standard interactivity using those Behavior graphs'.",
+        "point": 1
+      },
+      {
+        "question": "In the 'Electro Acoustic Music and Sound Art' exhibition space, how are the audio files presented?",
+        "supplement": "",
+        "options": [
+          "As standard audio players on the walls.",
+          "Through embedded links that open in a new tab.",
+          "As spheres containing 3D audio information, allowing for spatial sound experience.",
+          "Via a global audio stream for the entire room.",
+          "As downloadable MP3 files."
+        ],
+        "correct_answer": 2,
+        "explanation": "The description states, 'within every sphere that you see you can listen to a different um sound file and we've actually exported the audio files with the 3D audio information because those are 3D audio files'.",
+        "point": 1
+      },
+      {
+        "question": "What is 'baking' in the context of 3D graphics, as discussed in the presentation?",
+        "supplement": "",
+        "options": [
+          "Creating realistic textures for models.",
+          "Pre-calculating and storing lighting information in textures to improve real-time performance.",
+          "Generating complex geometric details.",
+          "Animating character models.",
+          "Compiling code for the game engine."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explains, 'the idea of baking is that you store the lighting in textures because Lighting in real time is super expensive... but textures are cheap \u2013 so you sort the lighting in the textures'.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the main theme of the Blender Conference 2024 talk by Aras Pranckevi\u010dius?",
+        "supplement": "",
+        "options": [
+          "Deep dive into the technical aspects of the Video Sequencer.",
+          "How to accidentally start contributing to Blender.",
+          "A historical overview of Blender's development.",
+          "Showcasing new features in Blender 4.4.",
+          "The impact of the Amiga on modern software development."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker explicitly states that a small part will be about the video sequencer and the rest will be about 'how to accidentally start working on blender' because the conference theme is 'building blender'.",
+        "point": 1
+      },
+      {
+        "question": "How did Aras Pranckevi\u010dius first start contributing to Blender?",
+        "supplement": "",
+        "options": [
+          "By attending a Blender workshop.",
+          "By fixing a bug in the Video Sequencer.",
+          "By optimizing the OBJ exporter after noticing its slowness.",
+          "By contributing to the Blender community forum.",
+          "By participating in a Google Summer of Code project."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker recounts a personal story where he found the OBJ export to be slow, investigated it, discovered a faster version in a new Blender beta, and ended up contributing to the OBJ importer and exporter.",
+        "point": 1
+      },
+      {
+        "question": "What was a significant challenge when improving the OBJ importer/exporter in Blender?",
+        "supplement": "",
+        "options": [
+          "Lack of proper documentation for the OBJ format.",
+          "The code was written in an outdated programming language.",
+          "Obtaining the necessary hardware for testing.",
+          "Disagreements with other developers on the best approach.",
+          "The format's lack of a strict specification, leading to variations in implementation."
+        ],
+        "correct_answer": 4,
+        "explanation": "Aras mentions that OBJ, like other old file formats, doesn't have a strict specification, leading to issues with how different software separates numbers (spaces, tabs, or other whitespace).",
+        "point": 1
+      },
+      {
+        "question": "How did Aras Pranckevi\u010dius end up working on the Video Sequencer?",
+        "supplement": "",
+        "options": [
+          "He volunteered for the task due to his video editing experience.",
+          "He was assigned to it during a visit to the Blender office in Amsterdam.",
+          "He discovered a critical bug in the VSE and felt compelled to fix it.",
+          "He chose it as his Google Summer of Code project.",
+          "He was looking for a challenge and found the VSE code base particularly interesting."
+        ],
+        "correct_answer": 1,
+        "explanation": "He explains that during a visit to the Blender office in Amsterdam, 'Franchesco and SEI locked me up in a room and said you're going to work on on the video sequencer'.",
+        "point": 1
+      },
+      {
+        "question": "According to the speaker, what is a universal challenge when working with old codebases like parts of Blender?",
+        "supplement": "",
+        "options": [
+          "The code is always well-documented and commented.",
+          "New developers are always experts in the area.",
+          "There is a high likelihood of code being very old, potentially from days like the Amiga.",
+          "Performance optimizations are always straightforward.",
+          "The codebase is usually small and easy to understand."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker notes that many parts of Blender are old, with some image scaling code dating back to the Amiga days. He also mentions the lack of documentation and forgotten reasons for certain implementations.",
+        "point": 1
+      },
+      {
+        "question": "Which of the following is NOT mentioned as a useful tool for getting into an existing codebase?",
+        "supplement": "",
+        "options": [
+          "Good test coverage.",
+          "A debugger.",
+          "Source control (e.g., git blame).",
+          "A profiler.",
+          "A code obfuscator."
+        ],
+        "correct_answer": 4,
+        "explanation": "The speaker explicitly mentions good test coverage, a debugger, source control (git blame), and a profiler as helpful tools. A code obfuscator is not mentioned.",
+        "point": 1
+      },
+      {
+        "question": "What is a key piece of advice for making a Pull Request (PR) ship more easily within Blender?",
+        "supplement": "",
+        "options": [
+          "To make the PR description as brief as possible.",
+          "To only submit code that is a complete rewrite of a feature.",
+          "To make the reviewer's life easier by providing clear, actionable information.",
+          "To avoid including any user-visible changes.",
+          "To always include direct messages to the lead developers."
+        ],
+        "correct_answer": 2,
+        "explanation": "The speaker calls this a 'cheat code' and emphasizes that providing a description with everything the reviewer needs to know (what's being changed, why, user-visible screenshots, performance measurements) makes the process much smoother.",
+        "point": 1
+      },
+      {
+        "question": "What is a potential downside of being an inexperienced contributor to a specific area like video editing?",
+        "supplement": "",
+        "options": [
+          "You might be too quick to question existing workflows.",
+          "You lack the experience to understand if a workflow is good or makes sense.",
+          "You will always be focused on performance improvements.",
+          "You will struggle to use essential tools like debuggers.",
+          "You will likely avoid contributing to user interface related features."
+        ],
+        "correct_answer": 1,
+        "explanation": "The speaker acknowledges that while inexperience can lead to questioning things (a positive), the downside is not having the experience to judge if a workflow is good or makes sense, which is why he avoided UI work on the sequencer.",
+        "point": 1
+      }
+    ]
+  },
+  {
+    "questions": [
+      {
+        "question": "What is the name of the animated short film discussed in the presentation?",
+        "supplement": "",
+        "options": [
+          "Trophy Son",
+          "The Animated Journey",
+          "Friday Lab's Project",
+          "Flat 3D Animation"
+        ],
+        "correct_answer": 0,
+        "explanation": "'Trophy Son' is explicitly mentioned as the title of the animated short film.",
+        "point": 1
+      },
+      {
+        "question": "Who is presenting the talk about 'Trophy Son'?",
+        "supplement": "",
+        "options": [
+          "Maor Fridman",
+          "Uri Lotan",
+          "Ellie and Emma",
+          "Ayama Ravi"
+        ],
+        "correct_answer": 2,
+        "explanation": "The speakers introduce themselves as Ellie and Emma from the studio Friday Lab.",
+        "point": 1
+      },
+      {
+        "question": "What is the primary work of Friday Lab in their everyday jobs?",
+        "supplement": "",
+        "options": [
+          "Creating animated short films",
+          "Developing game assets for mobile game companies",
+          "Directing Oscar-nominated films",
+          "Designing custom Geometry Node tools"
+        ],
+        "correct_answer": 1,
+        "explanation": "The speakers state that in their everyday job, they mainly work with mobile game companies, creating assets and doing animation.",
+        "point": 1
+      },
+      {
+        "question": "What was the initial time estimate for completing 'Trophy Son'?",
+        "supplement": "",
+        "options": [
+          "1 month",
+          "4 months",
+          "1 year",
+          "6 months"
+        ],
+        "correct_answer": 1,
+        "explanation": "They initially planned for four months, comparing it to a previous month-long project, but it ended up taking much longer.",
+        "point": 1
+      },
+      {
+        "question": "Which film served as a significant inspiration for the flat 3D character style of 'Trophy Son'?",
+        "supplement": "",
+        "options": [
+          "Spider-Verse",
+          "Pinocchio (Disney)",
+          "The Mitchells vs. the Machines",
+          "Klaus"
+        ],
+        "correct_answer": 2,
+        "explanation": "The presentation specifically mentions 'The Mitchells vs. the Machines' as a great inspiration for maintaining the charm of 2D style in 3D.",
+        "point": 1
+      },
+      {
+        "question": "What kind of visual aesthetic did Friday Lab prefer for their references?",
+        "supplement": "",
+        "options": [
+          "Clean, symmetrical, and modern",
+          "Bright, saturated, and cheerful",
+          "Ugly, uneven, rough, and asymmetrical",
+          "Photorealistic and detailed"
+        ],
+        "correct_answer": 2,
+        "explanation": "They preferred 'more ugly stuff and uneven and uh rough asymmetrical' references, drawing from old cartoons and slightly disturbing imagery.",
+        "point": 1
+      },
+      {
+        "question": "Who is the director of 'Trophy Son'?",
+        "supplement": "",
+        "options": [
+          "Ellie",
+          "Emma",
+          "Uri Lotan",
+          "Luciano"
+        ],
+        "correct_answer": 2,
+        "explanation": "Uri Lotan is introduced as the director of the film, known for his Oscar-nominated work 'Black Slide'.",
+        "point": 1
+      },
+      {
+        "question": "What is the basic premise of the story in 'Trophy Son'?",
+        "supplement": "",
+        "options": [
+          "A thief breaks into a mansion and discovers it belongs to his estranged father.",
+          "An artist struggles to create a unique character style.",
+          "A musician composes a score for an animated film.",
+          "A group of friends embarks on a year-long passion project."
+        ],
+        "correct_answer": 0,
+        "explanation": "The story involves a thief breaking into a mansion, only to find that the owner is his father, leading to the resolution of old problems.",
+        "point": 1
+      },
+      {
+        "question": "What crucial advice was given by Luciano regarding the visual style?",
+        "supplement": "",
+        "options": [
+          "Make it more colorful",
+          "Make it even flatter",
+          "Add more dynamic camera angles",
+          "Increase the detail in the characters"
+        ],
+        "correct_answer": 1,
+        "explanation": "Luciano advised them to 'make it even flatter' because dynamic shots did not work well with their flat character style.",
+        "point": 1
+      },
+      {
+        "question": "Which Blender feature was instrumental in faking the flatness of characters from all angles and allowing animators flexibility?",
+        "supplement": "",
+        "options": [
+          "Grease Pencil",
+          "Lattices",
+          "Custom Normals and separate shapes",
+          "Geometry Nodes for curves"
+        ],
+        "correct_answer": 2,
+        "explanation": "They used separate shapes combined with custom normals to blend them, giving animators flexibility in shaping the face.",
+        "point": 1
+      },
+      {
+        "question": "How did Friday Lab implement the hand-drawn strokes from the concept art into the 3D animation without manual frame-by-frame drawing?",
+        "supplement": "",
+        "options": [
+          "Using a special brush in Blender",
+          "Animating them as separate 2D elements",
+          "Converting curves to Geometry Nodes and then to Grease Pencil, controlled by the rig",
+          "Manually drawing each stroke in post-production"
+        ],
+        "correct_answer": 2,
+        "explanation": "They used Geometry Nodes to convert curves to Grease Pencil, which was then controlled by the 3D character rig, allowing for animated strokes without manual repetition.",
+        "point": 1
+      }
+    ]
+  }
+]

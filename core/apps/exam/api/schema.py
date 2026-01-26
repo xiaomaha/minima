@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated
 
 from pydantic.fields import Field
 from pydantic.root_model import RootModel
@@ -15,6 +15,7 @@ from apps.common.schema import (
     TimeStampedMixinSchema,
 )
 from apps.common.util import LearningSessionStep
+from apps.exam.models import Question
 from apps.operation.api.schema import AppealSchema, HonorCodeSchema
 
 
@@ -38,7 +39,7 @@ class ExamSubmissionSchema(TimeStampedMixinSchema):
 
 class ExamQuestionSchema(Schema):
     id: int
-    format: Literal["single_choice", "text_input", "number_input", "essay"]
+    format: Question.ExamFormatChoices
     options: list[str]
     question: str
     supplement: str

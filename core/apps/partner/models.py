@@ -7,11 +7,13 @@ from django.db.models import (
     CASCADE,
     SET_NULL,
     CharField,
+    Count,
     DateField,
     EmailField,
     ForeignKey,
     ImageField,
     ManyToManyField,
+    Prefetch,
     QuerySet,
     TextField,
     UniqueConstraint,
@@ -95,6 +97,7 @@ class Member(TimeStampedMixin):
 
     if TYPE_CHECKING:
         pgh_event_model: type[Model]
+        cohortmember_set: "QuerySet[CohortMember]"
 
     ID_NUMBER_SALT = "id_number"
 
@@ -122,6 +125,27 @@ class Member(TimeStampedMixin):
     def __str__(self):
         return f"{self.name} <{self.email}>"
 
+    @classmethod
+    async def member_infos(cls, *, user_id: str):
+        return [
+            m
+            async for m in cls.objects
+            .select_related("group__partner")
+            .prefetch_related(
+                Prefetch(
+                    "cohortmember_set",
+                    queryset=CohortMember.objects
+                    .select_related("cohort")
+                    .annotate(member_count=Count("cohort__members"))
+                    .prefetch_related(
+                        Prefetch("cohort__cohortstaff_set", queryset=CohortStaff.objects.select_related("staff"))
+                    ),
+                )
+            )
+            .annotate(member_count=Count("group__member", distinct=True))
+            .filter(user=user_id)
+        ]
+
 
 @pghistory.track()
 class Cohort(TimeStampedMixin):
@@ -137,6 +161,10 @@ class Cohort(TimeStampedMixin):
     def __str__(self):
         return self.name
 
+    if TYPE_CHECKING:
+        member_count: int  # annotated
+        cohortstaff_set: "QuerySet[CohortStaff]"
+
 
 @pghistory.track()
 class CohortMember(TimeStampedMixin):
@@ -148,13 +176,14 @@ class CohortMember(TimeStampedMixin):
         verbose_name_plural = _("Cohort Members")
         constraints = [UniqueConstraint(fields=["cohort", "member"], name="partner_cohortmember_co_em_uniq")]
 
+    if TYPE_CHECKING:
+        member_count: int  # annotated
+
 
 @pghistory.track()
 class CohortStaff(Model):
     class RoleChoices(TextChoices):
         EDUCATION_MANAGER = "education_manager", _("Education Manager")
-        MARKETING_MANAGER = "marketing_manager", _("Marketing Manager")
-        FINANCIAL_MANAGER = "financial_manager", _("Financial Manager")
 
     cohort = ForeignKey(Cohort, CASCADE, verbose_name=_("Cohort"))
     staff = ForeignKey(User, CASCADE, verbose_name=_("User"))

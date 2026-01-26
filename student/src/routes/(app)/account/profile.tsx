@@ -42,7 +42,7 @@ function RouteComponent() {
   return (
     <Show when={accountStore.user}>
       <div class="m-auto max-w-md py-8 space-y-8">
-        <div class="flex gap-6 justify-center mt-8">
+        <div class="flex gap-6 justify-center">
           <AvatarEdit />
           <div class="self-center space-y-2">
             <div class="font-bold text-2xl">{displayName()}</div>

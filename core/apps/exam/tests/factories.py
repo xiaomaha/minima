@@ -49,7 +49,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
 
 class QuestionFactory(DjangoModelFactory[Question]):
     pool = SubFactory(QuestionPoolFactory)
-    format = Iterator(Question.FormatChoices)
+    format = Iterator(Question.ExamFormatChoices)
     question = Sequence(lambda n: f"{generic.text.text(quantity=generic.random.randint(1, 3))} {n}")
     supplement = LazyFunction(lambda: dummy_html() if generic.random.randint(1, 5) == 1 else "")
 
@@ -60,17 +60,17 @@ class QuestionFactory(DjangoModelFactory[Question]):
 
     @lazy_attribute
     def options(self) -> list[str]:
-        if self.format == Question.FormatChoices.SINGLE_CHOICE.value:
+        if self.format == Question.ExamFormatChoices.SINGLE_CHOICE.value:
             return [generic.text.text(quantity=generic.random.randint(1, 3)) for _ in range(5)]
         return []
 
     @lazy_attribute
     def point(self):
-        if self.format == Question.FormatChoices.SINGLE_CHOICE.value:
+        if self.format == Question.ExamFormatChoices.SINGLE_CHOICE.value:
             return 1
-        elif self.format == Question.FormatChoices.TEXT_INPUT.value:
+        elif self.format == Question.ExamFormatChoices.TEXT_INPUT.value:
             return 3
-        elif self.format == Question.FormatChoices.NUMBER_INPUT.value:
+        elif self.format == Question.ExamFormatChoices.NUMBER_INPUT.value:
             return 3
         else:
             return 10  # essay
@@ -95,9 +95,9 @@ class SolutionFactory(DjangoModelFactory[Solution]):
 
     @lazy_attribute
     def correct_answers(self: Solution):
-        if self.question.format == Question.FormatChoices.SINGLE_CHOICE.value:
+        if self.question.format == Question.ExamFormatChoices.SINGLE_CHOICE.value:
             return [str(generic.random.randint(1, len(self.question.options)))]
-        elif self.question.format == Question.FormatChoices.NUMBER_INPUT.value:
+        elif self.question.format == Question.ExamFormatChoices.NUMBER_INPUT.value:
             return [str(generic.random.randint(1, 10))]
         return []
 
@@ -170,11 +170,11 @@ class TempAnswerFactory(DjangoModelFactory[TempAnswer]):
                 else:
                     answers[str(q.pk)] = str(1)
             else:
-                if q.format == Question.FormatChoices.ESSAY.value:
+                if q.format == Question.ExamFormatChoices.ESSAY.value:
                     answers[str(q.pk)] = generic.text.text(quantity=generic.random.randint(1, 3))
-                elif q.format == Question.FormatChoices.TEXT_INPUT.value:
+                elif q.format == Question.ExamFormatChoices.TEXT_INPUT.value:
                     answers[str(q.pk)] = generic.text.word()
-                elif q.format == Question.FormatChoices.NUMBER_INPUT.value:
+                elif q.format == Question.ExamFormatChoices.NUMBER_INPUT.value:
                     answers[str(q.pk)] = str(generic.random.randint(1, 10))
         return answers
 
@@ -209,7 +209,7 @@ class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):
             grade = super().build(**kwargs)
 
             # subjective questions
-            points = grade.attempt.questions.exclude(format=Question.FormatChoices.SINGLE_CHOICE.value).only(
+            points = grade.attempt.questions.exclude(format=Question.ExamFormatChoices.SINGLE_CHOICE.value).only(
                 "pk", "point"
             )
             earned_details: dict[str, int | None] = {str(s.pk): math.ceil(s.point / 2) for s in points}

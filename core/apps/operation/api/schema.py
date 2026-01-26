@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated
 
 from django.conf import settings
 from ninja import FilterLookup, FilterSchema
@@ -8,7 +8,7 @@ from pydantic import Field, RootModel, model_validator
 from apps.account.api.schema import OwnerSchema
 from apps.common.error import ErrorCode
 from apps.common.schema import ContentTypeSchema, Schema, TimeStampedMixinSchema
-from apps.operation.models import Appeal, Comment, Inquiry
+from apps.operation.models import Appeal, Comment, Inquiry, Message, Policy
 
 
 class AnnounceSchema(TimeStampedMixinSchema):
@@ -80,7 +80,7 @@ class InquiryUpdateSchema(Schema):
 class MessageSchema(TimeStampedMixinSchema):
     id: int
     recipients: list[str]
-    channel: Literal["email", "text", "fcm"]
+    channel: Message.ChannelChoices
     group: str
     title: str
     data: dict[str, str]
@@ -123,7 +123,7 @@ class SitePolicySchema(TimeStampedMixinSchema):
 
     id: int
     effective_version: SitePolicyVersionSchema
-    kind: Literal["terms_of_service", "privacy_policy", "cookie_policy", "marketing_policy", "data_retention_policy"]
+    kind: Policy.KindChoices
     title: str
     description: str
     active: bool

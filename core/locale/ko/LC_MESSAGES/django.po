@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-26 03:16+0900\n"
+"POT-Creation-Date: 2026-01-27 01:53+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -223,8 +223,8 @@ msgstr ""
 "호를 재설정할 수 있습니다:"
 
 #: apps/account/models.py:110 apps/operation/models.py:162
-#: apps/operation/models.py:497 apps/partner/models.py:39
-#: apps/partner/models.py:79
+#: apps/operation/models.py:497 apps/partner/models.py:41
+#: apps/partner/models.py:81
 msgid "Email"
 msgstr "이메일"
 
@@ -235,9 +235,9 @@ msgstr "이메일"
 #: apps/competency/models.py:142 apps/competency/models.py:172
 #: apps/competency/models.py:238 apps/learning/models.py:310
 #: apps/operation/models.py:62 apps/operation/models.py:161
-#: apps/operation/models.py:195 apps/partner/models.py:36
-#: apps/partner/models.py:59 apps/partner/models.py:78
-#: apps/partner/models.py:128 apps/store/models.py:55 apps/store/models.py:102
+#: apps/operation/models.py:195 apps/partner/models.py:38
+#: apps/partner/models.py:61 apps/partner/models.py:80
+#: apps/partner/models.py:152 apps/store/models.py:55 apps/store/models.py:102
 #: apps/store/models.py:343
 msgid "Name"
 msgstr "이름"
@@ -250,13 +250,13 @@ msgstr "아바타"
 msgid "Nickname"
 msgstr "닉네임"
 
-#: apps/account/models.py:114 apps/partner/models.py:38
-#: apps/partner/models.py:82
+#: apps/account/models.py:114 apps/partner/models.py:40
+#: apps/partner/models.py:84
 msgid "Phone"
 msgstr "전화번호"
 
 #: apps/account/models.py:115 apps/competency/certificate.py:285
-#: apps/partner/models.py:80
+#: apps/partner/models.py:82
 msgid "Birth Date"
 msgstr "생년월일"
 
@@ -274,7 +274,7 @@ msgstr "환경설정"
 #: apps/discussion/models.py:209 apps/exam/models.py:236
 #: apps/learning/models.py:78 apps/learning/models.py:313
 #: apps/operation/models.py:166 apps/operation/models.py:214
-#: apps/operation/models.py:531 apps/quiz/models.py:237
+#: apps/operation/models.py:531 apps/quiz/models.py:240
 #: apps/store/models.py:107 apps/store/models.py:149 apps/survey/models.py:115
 msgid "Active"
 msgstr "활성"
@@ -294,8 +294,8 @@ msgstr "최고 관리자"
 #: apps/content/models.py:444 apps/learning/models.py:77
 #: apps/learning/models.py:473 apps/operation/models.py:149
 #: apps/operation/models.py:507 apps/operation/models.py:630
-#: apps/partner/admin.py:60 apps/partner/models.py:88
-#: apps/partner/models.py:160 apps/store/models.py:148
+#: apps/partner/admin.py:60 apps/partner/models.py:90
+#: apps/partner/models.py:189 apps/store/models.py:148
 msgid "User"
 msgstr "사용자"
 
@@ -473,7 +473,7 @@ msgstr "채점 기록"
 #: apps/assignment/admin.py:147 apps/assignment/models.py:431
 #: apps/course/admin.py:127 apps/discussion/admin.py:92
 #: apps/discussion/models.py:435 apps/exam/admin.py:119 apps/exam/models.py:388
-#: apps/quiz/models.py:352
+#: apps/quiz/models.py:355
 msgid "Grade"
 msgstr "채점"
 
@@ -511,8 +511,8 @@ msgstr "제목"
 #: apps/discussion/models.py:72 apps/exam/models.py:69
 #: apps/learning/models.py:311 apps/operation/models.py:196
 #: apps/operation/models.py:530 apps/operation/models.py:652
-#: apps/partner/models.py:37 apps/partner/models.py:60
-#: apps/partner/models.py:129 apps/quiz/models.py:73 apps/store/models.py:56
+#: apps/partner/models.py:39 apps/partner/models.py:62
+#: apps/partner/models.py:153 apps/quiz/models.py:73 apps/store/models.py:56
 #: apps/store/models.py:103 apps/survey/models.py:36
 msgid "Description"
 msgstr "설명"
@@ -573,7 +573,7 @@ msgstr "표절 유사도 기준"
 
 #: apps/assignment/models.py:109 apps/discussion/models.py:103
 #: apps/exam/admin.py:71 apps/exam/models.py:111 apps/exam/models.py:234
-#: apps/quiz/admin.py:51 apps/quiz/models.py:102 apps/quiz/models.py:236
+#: apps/quiz/admin.py:51 apps/quiz/models.py:102 apps/quiz/models.py:239
 #: apps/survey/models.py:66
 msgid "Questions"
 msgstr "문제"
@@ -615,23 +615,23 @@ msgstr "과제"
 
 #: apps/assignment/models.py:276 apps/course/models.py:503
 #: apps/discussion/models.py:206 apps/exam/models.py:233
-#: apps/operation/models.py:445 apps/quiz/models.py:234
+#: apps/operation/models.py:445 apps/quiz/models.py:237
 msgid "Learner"
 msgstr "학습자"
 
 #: apps/assignment/models.py:278 apps/discussion/models.py:208
-#: apps/exam/models.py:235 apps/quiz/models.py:235
+#: apps/exam/models.py:235 apps/quiz/models.py:238
 msgid "Attempt Start"
 msgstr "응시 시작"
 
 #: apps/assignment/models.py:280 apps/content/models.py:292
 #: apps/content/models.py:447 apps/discussion/models.py:210
-#: apps/exam/models.py:237 apps/quiz/models.py:238 apps/survey/models.py:116
+#: apps/exam/models.py:237 apps/quiz/models.py:241 apps/survey/models.py:116
 msgid "Context Key"
 msgstr "컨텍스트 키"
 
 #: apps/assignment/models.py:281 apps/discussion/models.py:211
-#: apps/exam/models.py:238 apps/quiz/models.py:239
+#: apps/exam/models.py:238 apps/quiz/models.py:242
 msgid "Retry"
 msgstr "재응시"
 
@@ -640,12 +640,12 @@ msgstr "재응시"
 #: apps/discussion/models.py:214 apps/discussion/models.py:324
 #: apps/discussion/models.py:431 apps/exam/models.py:241
 #: apps/exam/models.py:358 apps/exam/models.py:368 apps/exam/models.py:384
-#: apps/quiz/models.py:242 apps/quiz/models.py:339 apps/quiz/models.py:349
+#: apps/quiz/models.py:245 apps/quiz/models.py:342 apps/quiz/models.py:352
 msgid "Attempt"
 msgstr "응시"
 
 #: apps/assignment/models.py:285 apps/discussion/models.py:215
-#: apps/exam/models.py:242 apps/quiz/models.py:243
+#: apps/exam/models.py:242 apps/quiz/models.py:246
 msgid "Attempts"
 msgstr "응시"
 
@@ -659,12 +659,12 @@ msgid "Extracted Text"
 msgstr "추출된 텍스트"
 
 #: apps/assignment/models.py:399 apps/exam/models.py:372
-#: apps/quiz/models.py:343 apps/survey/models.py:119
+#: apps/quiz/models.py:346 apps/survey/models.py:119
 msgid "Submission"
 msgstr "제출"
 
 #: apps/assignment/models.py:400 apps/exam/models.py:373
-#: apps/quiz/models.py:344 apps/survey/models.py:120
+#: apps/quiz/models.py:347 apps/survey/models.py:120
 msgid "Submissions"
 msgstr "제출"
 
@@ -674,7 +674,7 @@ msgid "Grader"
 msgstr "채점자"
 
 #: apps/assignment/models.py:432 apps/discussion/models.py:436
-#: apps/exam/models.py:389 apps/quiz/models.py:353
+#: apps/exam/models.py:389 apps/quiz/models.py:356
 msgid "Grades"
 msgstr "채점"
 
@@ -1376,7 +1376,7 @@ msgid "Valid Until"
 msgstr "유효 만료일"
 
 #: apps/competency/certificate.py:329
-#: apps/competency/templates/competency/certificate_verification.html:214
+#: apps/competency/templates/competency/certificate_verification.html:206
 msgid "Issue Date"
 msgstr "발급자"
 
@@ -1462,7 +1462,7 @@ msgid "Badge Skills"
 msgstr "배지 능력"
 
 #: apps/competency/models.py:210 apps/competency/models.py:281
-#: apps/partner/apps.py:8 apps/partner/models.py:45 apps/partner/models.py:58
+#: apps/partner/apps.py:8 apps/partner/models.py:47 apps/partner/models.py:60
 #: apps/warehouse/models.py:115 apps/warehouse/views.py:43
 msgid "Partner"
 msgstr "파트너"
@@ -1571,19 +1571,11 @@ msgstr "수료증 수여"
 
 #: apps/competency/templates/competency/certificate_verification.html:8
 #: apps/competency/templates/competency/certificate_verification.html:9
-#: apps/competency/templates/competency/certificate_verification.html:181
+#: apps/competency/templates/competency/certificate_verification.html:10
 msgid "Certificate Verification"
 msgstr "수료증 검증"
 
-#: apps/competency/templates/competency/certificate_verification.html:10
-msgid "Official Certificate Verification"
-msgstr "공식 수료증 검증"
-
 #: apps/competency/templates/competency/certificate_verification.html:182
-msgid "Official Verification Service"
-msgstr "공식 검증 서비스"
-
-#: apps/competency/templates/competency/certificate_verification.html:190
 msgid ""
 "This page is an official verification page accessed via QR code or secure "
 "link."
@@ -1591,51 +1583,51 @@ msgstr ""
 "이 페이지는 QR 코드나 안전한 링크로 접근하여 수료증을 검증하는 공식 페이지입"
 "니다."
 
-#: apps/competency/templates/competency/certificate_verification.html:192
+#: apps/competency/templates/competency/certificate_verification.html:184
 msgid "The information below confirms the issuance status of the certificate."
 msgstr "아래 정보는 수료증의 발급 상태를 확인합니다."
 
-#: apps/competency/templates/competency/certificate_verification.html:195
+#: apps/competency/templates/competency/certificate_verification.html:187
 msgid "Invalid request"
 msgstr "잘못된 요청입니다."
 
-#: apps/competency/templates/competency/certificate_verification.html:197
+#: apps/competency/templates/competency/certificate_verification.html:189
 msgid "Authentic Certificate Verified"
 msgstr "수료증이 검증되었습니다."
 
-#: apps/competency/templates/competency/certificate_verification.html:201
+#: apps/competency/templates/competency/certificate_verification.html:193
 msgid "This certificate is no longer valid (expired)"
 msgstr "이 수료증은 더 이상 유효합니다. (만료됨)"
 
-#: apps/competency/templates/competency/certificate_verification.html:206
+#: apps/competency/templates/competency/certificate_verification.html:198
 msgid "Document Number"
 msgstr "문서 번호"
 
-#: apps/competency/templates/competency/certificate_verification.html:210
+#: apps/competency/templates/competency/certificate_verification.html:202
 msgid "Course / Certificate Title"
 msgstr "과정 / 수료증 제목"
 
-#: apps/competency/templates/competency/certificate_verification.html:219
+#: apps/competency/templates/competency/certificate_verification.html:211
 msgid "Expiration Date"
 msgstr "유효 기간"
 
-#: apps/competency/templates/competency/certificate_verification.html:224
+#: apps/competency/templates/competency/certificate_verification.html:216
 msgid "Issuing Authority"
 msgstr "발급 권한"
 
-#: apps/competency/templates/competency/certificate_verification.html:229
-msgid "Verified by the official certificate database at the time shown below."
-msgstr "아래 보여지는 시간 기준 검증 데이터베이스에서 검증되었습니다."
+#: apps/competency/templates/competency/certificate_verification.html:221
+msgid "Verified by the certificate database at the time shown below."
+msgstr "아래 보여지는 시간 기준으로 검증 데이터베이스에서 검증되었습니다."
 
-#: apps/competency/templates/competency/certificate_verification.html:231
+#: apps/competency/templates/competency/certificate_verification.html:223
 msgid "Verification Timestamp"
 msgstr "검증 타임스탬프"
 
-#: apps/competency/templates/competency/certificate_verification.html:232
+#: apps/competency/templates/competency/certificate_verification.html:224
 msgid "System Verified"
 msgstr "시스템 검증됨"
 
-#: apps/competency/templates/competency/certificate_verification.html:235
+#: apps/competency/templates/competency/certificate_verification.html:227
 msgid "Certificate not found"
 msgstr "수료증을 찾을 수 없습니다."
 
@@ -1644,7 +1636,7 @@ msgid "Public Access"
 msgstr "공개 접근"
 
 #: apps/content/admin.py:31 apps/quiz/apps.py:8 apps/quiz/models.py:126
-#: apps/quiz/models.py:233 apps/warehouse/models.py:134
+#: apps/quiz/models.py:236 apps/warehouse/models.py:134
 #: apps/warehouse/views.py:47
 msgid "Quiz"
 msgstr "퀴즈"
@@ -2424,7 +2416,7 @@ msgstr "정답 기준"
 msgid "Exams"
 msgstr "시험"
 
-#: apps/exam/models.py:359 apps/exam/models.py:369 apps/quiz/models.py:340
+#: apps/exam/models.py:359 apps/exam/models.py:369 apps/quiz/models.py:343
 #: apps/survey/models.py:114
 msgid "Answers"
 msgstr "답안"
@@ -2441,16 +2433,16 @@ msgstr "임시 답안"
 msgid "Learning"
 msgstr "학습"
 
-#: apps/learning/management/commands/setup_demo_data.py:28
-#: apps/learning/management/commands/setup_demo_data.py:66
+#: apps/learning/management/commands/setup_demo_data.py:32
+#: apps/learning/management/commands/setup_demo_data.py:70
 msgid "Demo Public Catalog"
 msgstr "데모 공개 카탈로그"
 
-#: apps/learning/management/commands/setup_demo_data.py:31
+#: apps/learning/management/commands/setup_demo_data.py:35
 msgid "Demo Personal Catalog"
 msgstr "데모 개인 카탈로그"
 
-#: apps/learning/management/commands/setup_demo_data.py:33
+#: apps/learning/management/commands/setup_demo_data.py:37
 msgid ""
 "Personal catalogs are available only to you. Video, PDF, Survey, Quiz, "
 "Assignment, Discussion, and Exam content are available here."
@@ -2458,11 +2450,11 @@ msgstr ""
 "개인 카탈로그는 개인에게 부여된 카탈로그입니다. 비디오, PDF, 설문조사, 퀴즈, "
 "과제, 토론, 시험 콘텐츠가 있습니다."
 
-#: apps/learning/management/commands/setup_demo_data.py:44
+#: apps/learning/management/commands/setup_demo_data.py:48
 msgid "Demo Cohort Catalog"
 msgstr "그룹 학습그룹 카탈로그"
 
-#: apps/learning/management/commands/setup_demo_data.py:46
+#: apps/learning/management/commands/setup_demo_data.py:50
 msgid ""
 "Cohort catalogs are available when you are in a cohort. Video, PDF, Survey, "
 "Quiz, Assignment, Discussion, and Exam content are available here."
@@ -2470,7 +2462,7 @@ msgstr ""
 "학습그룹 카탈로그는 학습그룹에 있는 사람이 등록한 경우에 사용할 수 있습니다. "
 "비디오, PDF, 설문조사, 퀴즈, 과제, 토론, 시험 콘텐츠가 있습니다."
 
-#: apps/learning/management/commands/setup_demo_data.py:100
+#: apps/learning/management/commands/setup_demo_data.py:124
 msgid ""
 "Public catalogs are available to everyone. Generally, public catalogs are "
 "composef of video or PDF content."
@@ -2540,8 +2532,8 @@ msgstr "사용자 카탈로그"
 msgid "User Catalogs"
 msgstr "사용자 카탈로그"
 
-#: apps/learning/models.py:486 apps/partner/models.py:134
-#: apps/partner/models.py:143 apps/partner/models.py:159
+#: apps/learning/models.py:486 apps/partner/models.py:158
+#: apps/partner/models.py:171 apps/partner/models.py:188
 #: apps/warehouse/models.py:117
 msgid "Cohort"
 msgstr "학습 그룹"
@@ -2696,8 +2688,8 @@ msgstr "텍스트"
 msgid "FCM"
 msgstr "FCM"
 
-#: apps/operation/models.py:502 apps/partner/models.py:64
-#: apps/partner/models.py:77
+#: apps/operation/models.py:502 apps/partner/models.py:66
+#: apps/partner/models.py:79
 msgid "Group"
 msgstr "그룹"
 
@@ -2844,99 +2836,91 @@ msgstr "플랫폼 기관 생성"
 msgid "%s is a LMS for micro learning"
 msgstr "마이크로 러닝을 위한 %s"
 
-#: apps/partner/models.py:40
+#: apps/partner/models.py:42
 msgid "Address"
 msgstr "주소"
 
-#: apps/partner/models.py:41
+#: apps/partner/models.py:43
 msgid "Logo"
 msgstr "로고"
 
-#: apps/partner/models.py:42
+#: apps/partner/models.py:44
 msgid "Website"
 msgstr "웹사이트"
 
-#: apps/partner/models.py:46
+#: apps/partner/models.py:48
 msgid "Partners"
 msgstr "파트너"
 
-#: apps/partner/models.py:61
+#: apps/partner/models.py:63
 msgid "Business Number"
 msgstr "사업자번호"
 
-#: apps/partner/models.py:65
+#: apps/partner/models.py:67
 msgid "Groups"
 msgstr "그룹"
 
-#: apps/partner/models.py:81
+#: apps/partner/models.py:83
 msgid "ID Number"
 msgstr "ID 번호"
 
-#: apps/partner/models.py:83
+#: apps/partner/models.py:85
 msgid "Team"
 msgstr "팀"
 
-#: apps/partner/models.py:84
+#: apps/partner/models.py:86
 msgid "Job Position"
 msgstr "직위"
 
-#: apps/partner/models.py:85
+#: apps/partner/models.py:87
 msgid "Job Title"
 msgstr "직함"
 
-#: apps/partner/models.py:86
+#: apps/partner/models.py:88
 msgid "Employment Status"
 msgstr "고용 상태"
 
-#: apps/partner/models.py:87
+#: apps/partner/models.py:89
 msgid "Employment Type"
 msgstr "고용 유형"
 
-#: apps/partner/models.py:91 apps/partner/models.py:144
+#: apps/partner/models.py:93 apps/partner/models.py:172
 msgid "Member"
 msgstr "직원"
 
-#: apps/partner/models.py:92 apps/partner/models.py:130
+#: apps/partner/models.py:94 apps/partner/models.py:154
 msgid "Members"
 msgstr "직원"
 
-#: apps/partner/models.py:131
+#: apps/partner/models.py:155
 msgid "Staffs"
 msgstr "관리자"
 
-#: apps/partner/models.py:135
+#: apps/partner/models.py:159
 msgid "Cohorts"
 msgstr "학습 그룹"
 
-#: apps/partner/models.py:147
+#: apps/partner/models.py:175
 msgid "Cohort Member"
 msgstr "학습 그룹 멤버"
 
-#: apps/partner/models.py:148
+#: apps/partner/models.py:176
 msgid "Cohort Members"
 msgstr "학습 그룹 멤버"
 
-#: apps/partner/models.py:155
+#: apps/partner/models.py:186
 msgid "Education Manager"
 msgstr "교육 담당"
 
-#: apps/partner/models.py:156
-msgid "Marketing Manager"
-msgstr "마케팅 담당"
-
-#: apps/partner/models.py:157
-msgid "Financial Manager"
-msgstr "재무 담당"
-
-#: apps/partner/models.py:161
+#: apps/partner/models.py:190
 msgid "Role"
 msgstr "역할"
 
-#: apps/partner/models.py:164
+#: apps/partner/models.py:193
 msgid "Cohort Staff"
 msgstr "학습 그룹 담당자"
 
-#: apps/partner/models.py:165
+#: apps/partner/models.py:194
 msgid "Cohort Staffs"
 msgstr "학습 그룹 담당자"
 
@@ -3051,7 +3035,7 @@ msgid "Cart Products"
 msgstr "장바구니 상품"
 
 #: apps/store/models.py:179 apps/store/models.py:356 apps/store/models.py:378
-#: apps/warehouse/templates/admin/index.html:24
+#: apps/warehouse/templates/admin/index.html:23
 msgid "Pending"
 msgstr "대기 중"
 
@@ -3435,15 +3419,15 @@ msgstr "일일 사용 통계"
 msgid "Daily Usage Facts"
 msgstr "일일 사용 통계"
 
-#: apps/warehouse/templates/admin/index.html:18
+#: apps/warehouse/templates/admin/index.html:17
 msgid "Daily Statistics"
 msgstr "일일 통계"
 
-#: apps/warehouse/templates/admin/index.html:27
+#: apps/warehouse/templates/admin/index.html:26
 msgid "unsolved inquiries"
 msgstr "미해결 문의"
 
-#: apps/warehouse/templates/admin/index.html:32
+#: apps/warehouse/templates/admin/index.html:31
 msgid "unclosed appeals"
 msgstr "미완료 채점 이의"
 
@@ -3451,15 +3435,15 @@ msgstr "미완료 채점 이의"
 msgid "Assistant"
 msgstr "AI 어시스턴트"
 
-#: apps/warehouse/views.py:93
+#: apps/warehouse/views.py:92
 msgid "Total Accounts"
 msgstr "총 계정"
 
-#: apps/warehouse/views.py:94
+#: apps/warehouse/views.py:93
 msgid "Active Enrollments"
 msgstr "등록"
 
-#: apps/warehouse/views.py:95
+#: apps/warehouse/views.py:94
 msgid "Courses Passed"
 msgstr "과정 수료"
 

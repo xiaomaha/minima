@@ -7,7 +7,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <meta name="keywords" content="{% trans "Certificate Verification" %}">
             <meta name="description" content="{% trans "Certificate Verification" %}">
-            <title>{% trans "Official Certificate Verification" %}</title>
+            <title>{% trans "Certificate Verification" %}</title>
             <style>
                 :root {
                     --bg: #f3f4f6;
@@ -40,7 +40,6 @@
                     padding: 0 20px;
                 }
 
-                /* ===== Header (Soft Official) ===== */
                 .header {
                     display: flex;
                     align-items: center;
@@ -174,15 +173,8 @@
                 <!-- Header -->
                 <div class="header">
                     <div class="header-left">
-                        <img src="{% static 'image/logo/logo.png' %}"
-                             alt="Official Logo"
-                             class="logo" />
-                        <div class="header-text">
-                            <div class="title">{% trans "Certificate Verification" %}</div>
-                            <div class="subtitle">{% trans "Official Verification Service" %}</div>
-                        </div>
+                        <img src="{% static 'image/logo/logo.png' %}" alt="Logo" class="logo" />
                     </div>
-                    <div class="header-badge">OFFICIAL</div>
                 </div>
                 <!-- Paper -->
                 <div class="paper">
@@ -226,7 +218,7 @@
                             </div>
                         </div>
                         <div class="footer">
-                            {% trans "Verified by the official certificate database at the time shown below." %}
+                            {% trans "Verified by the certificate database at the time shown below." %}
                             <br />
                             {% trans "Verification Timestamp" %}: {{ now|date:"Y-m-d H:i:s" }}
                             <div class="seal">✔ {% trans "System Verified" %}</div>

@@ -36,6 +36,13 @@ def bootstrap():
 
 
 @app.command()
+def demo():
+    commands = ["python manage.py setup_demo_data"]
+
+    subprocess.run(["docker", "compose", "exec", "minima", "sh", "-c", " && ".join(commands)])
+
+
+@app.command()
 def lint():
     subprocess.run(["pyrefly", "check"])
     subprocess.run(["ruff", "check", "."])

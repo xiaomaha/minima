@@ -31,15 +31,15 @@ class QuestionPaperFactory(DjangoModelFactory[QuestionPaper]):
             return
 
         QuestionFactory.reset_sequence()
-        QuestionFactory.create_batch(10, paper=self, format=Question.FormatChoices.SINGLE_CHOICE.value)
-        QuestionFactory.create_batch(3, paper=self, format=Question.FormatChoices.TEXT_INPUT.value)
-        QuestionFactory.create_batch(2, paper=self, format=Question.FormatChoices.NUMBER_INPUT.value)
+        QuestionFactory.create_batch(10, paper=self, format=Question.SurveyFormatChoices.SINGLE_CHOICE.value)
+        QuestionFactory.create_batch(3, paper=self, format=Question.SurveyFormatChoices.TEXT_INPUT.value)
+        QuestionFactory.create_batch(2, paper=self, format=Question.SurveyFormatChoices.NUMBER_INPUT.value)
 
 
 class QuestionFactory(DjangoModelFactory[Question]):
     ordering = Sequence(lambda n: n)
     paper = SubFactory(QuestionPaperFactory)
-    format = Iterator(Question.FormatChoices)
+    format = Iterator(Question.SurveyFormatChoices)
     question = Sequence(lambda n: f"{generic.text.text(quantity=generic.random.randint(1, 3))} {n}")
     supplement = LazyFunction(lambda: dummy_html() if generic.random.randint(1, 5) == 1 else "")
     mandatory = FactoryField("random.weighted_choice", choices={True: 9, False: 1})
@@ -49,7 +49,7 @@ class QuestionFactory(DjangoModelFactory[Question]):
 
     @lazy_attribute
     def options(self) -> list[str]:
-        if self.format == Question.FormatChoices.SINGLE_CHOICE.value:
+        if self.format == Question.SurveyFormatChoices.SINGLE_CHOICE.value:
             return [generic.text.text(quantity=generic.random.randint(1, 3)) for _ in range(5)]
         return []
 
@@ -94,11 +94,11 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
     def answers(self: Submission):
         answer_dict = {}
         for q in self.survey.paper.question_set.all():
-            if q.format == Question.FormatChoices.SINGLE_CHOICE.value:
+            if q.format == Question.SurveyFormatChoices.SINGLE_CHOICE.value:
                 answer = generic.random.randint(1, len(q.options))
-            elif q.format == Question.FormatChoices.TEXT_INPUT.value:
+            elif q.format == Question.SurveyFormatChoices.TEXT_INPUT.value:
                 answer = generic.text.word()
-            elif q.format == Question.FormatChoices.NUMBER_INPUT.value:
+            elif q.format == Question.SurveyFormatChoices.NUMBER_INPUT.value:
                 answer = generic.random.randint(1, 10)
             else:
                 raise ValueError(f"Invalid survey question format: {q.format}")

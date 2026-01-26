@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated
 
 from pydantic.fields import Field
 
@@ -9,8 +9,6 @@ from apps.competency.api.schema import CertificateAwardSchema
 from apps.course.models import Course
 from apps.operation.api.schema import FAQItemSchema, HonorCodeSchema
 from apps.partner.api.schema import PartnerSchema
-
-LevelType = Literal["beginner", "intermediate", "advanced", "common"]
 
 
 class CourseDetailSchema(LearningObjectMixinSchema):
@@ -45,7 +43,7 @@ class CourseDetailSchema(LearningObjectMixinSchema):
     objective: str
     preview_url: str | None
     effort_hours: int
-    level: LevelType
+    level: Course.LevelChoices
 
     faq_items: list[FAQItemSchema]
     categories: list[CourseCategorySchema]
@@ -117,7 +115,7 @@ class CourseSchema(LearningObjectMixinSchema):
     objective: str
     preview_url: str | None
     effort_hours: int
-    level: LevelType
+    level: Course.LevelChoices
 
     @staticmethod
     def resolve_lessons(obj: Course):

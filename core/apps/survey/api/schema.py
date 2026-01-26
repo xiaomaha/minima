@@ -1,11 +1,11 @@
-from typing import Annotated, Literal
+from typing import Annotated
 
 from ninja import Field
 from pydantic import RootModel
 
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import LearningObjectMixinSchema, Schema
-from apps.survey.models import Survey
+from apps.survey.models import Question, Survey
 
 
 class SurveySchema(LearningObjectMixinSchema):
@@ -24,7 +24,7 @@ class SurveySchema(LearningObjectMixinSchema):
 
 class SurveyQuestionSchema(Schema):
     id: int
-    format: Literal["single_choice", "text_input", "number_input"]
+    format: Question.SurveyFormatChoices
     question: str
     supplement: str
     options: list[str]

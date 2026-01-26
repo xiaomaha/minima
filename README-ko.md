@@ -3,11 +3,11 @@
 [![English](https://img.shields.io/badge/Language-English-blue)](README.md)
 [![한국어](https://img.shields.io/badge/Language-한국어-red)](README-ko.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Status](https://img.shields.io/badge/Status-Alpha-orange)
 
-현대적인 마이크로 러닝 LMS.
-Moodle, Canvas, Open edX 경량 대안.
+**마이크로 러닝 LMS. Moodle, Canvas, Open edX 대안.**
 
-> **🚧 프리 릴리스**: 아직 프로덕션 사용 준비 안 됨
+**🚀 알파 릴리스**: 핵심 기능 ready. 테스트와 피드백 환영합니다!
 
 ## 문서
 
@@ -17,33 +17,28 @@ Moodle, Canvas, Open edX 경량 대안.
 
 ```bash
 git clone https://github.com/cobel1024/minima && cd minima
-chmod +x dev.sh
-./dev.sh up
+sh dev.sh up
 ```
 
-접속 username `admin@example.com` and password `1111`
+접속 username `admin@example.com` / password `1111`
 
 - 학습자: [http://localhost:5173](http://localhost:5173)
 - 어드민: [http://localhost:8000](http://localhost:8000/admin/)
 
 ## 스크린샷
 
-![대시보드](./screenshot/student.ko.webp)
-![관리자 패널](screenshot/admin.ko.webp)
+![대시보드](./screenshot/student.webp)
+![관리자 패널](screenshot/admin.webp)
 
 ## 기술 스택
 
-### 백엔드
+- Python 3.14, Django 6, Django-ninja, Django-unfold
+- SolidJS, TypeScript, Vite, daisyUI, Tailwind CSS, Tiptap
+- PostgreSQL, Redis, Celery, OpenSearch, Apache Tika
 
-- Django 6.x, Django Ninja, Django-unfold
-- PostgreSQL, OpenSearch, Redis, MinIO
-- AI Plugin Architecture, Gemini/OpenAI/Anthropic
+## 기여
 
-### 프론트엔드
-
-- SolidJS + TypeScript
-- TanStack Router, TailwindCSS 4
-- Plyr, PDFSlick, TipTap
+이슈와 풀 리퀘스트 환영. 개발 환경 설정은 [개발](#개발) 섹션을 참고해 주세요.
 
 ## 개발
 

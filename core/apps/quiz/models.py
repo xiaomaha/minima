@@ -179,14 +179,16 @@ class Quiz(LearningObjectMixin):
         text: str,
         question_count: int,
         lang_code: str,
+        quiz_data: QuizData | None = None,
     ):
-        quiz_data = await QuizMaker().create_quiz_from_text(
-            text=text,
-            title=title,
-            description=description,
-            question_count=question_count,
-            language=get_language_info(lang_code)["name"],
-        )
+        if not quiz_data:
+            quiz_data = await QuizMaker().create_quiz_from_text(
+                text=text,
+                title=title,
+                description=description,
+                question_count=question_count,
+                language=get_language_info(lang_code)["name"],
+            )
 
         # question pool
         pool = await QuestionPool.objects.acreate(
@@ -210,6 +212,7 @@ class Quiz(LearningObjectMixin):
         solutions = [
             Solution(
                 question=question,
+                # cautious: quiz_data's correct_answer must be 0 based
                 correct_answers=[str(question_data["correct_answer"] + 1)],
                 explanation=question_data["explanation"],
             )
