@@ -28,6 +28,7 @@ class MediaSchema(LearningObjectMixinSchema):
     uploaded: bool
     url: str
     quizzes: list[QuizSchema]
+    open: datetime
 
 
 class SubtitleSchema(Schema):

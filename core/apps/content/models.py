@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files import File
+from django.core.files.base import ContentFile
 from django.db import connection
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import (
@@ -79,6 +80,7 @@ class Media(LearningObjectMixin):
         EBOOK = "ebook", _("Ebook")
         HTML = "html", _("HTML")
         PDF = "pdf", _("PDF")
+        LIVE = "live", _("Live")
 
     thumbnail = ImageField(_("Thumbnail"))
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
@@ -99,6 +101,7 @@ class Media(LearningObjectMixin):
         subtitle_set: "list[Subtitle]"
         matched_lines: list[MatchedLineDict] | None
         owner_id: str
+        open: datetime  # annotated
 
     @property
     def duration_seconds(self):
@@ -189,6 +192,11 @@ class Media(LearningObjectMixin):
             total_minutes = int(duration.total_seconds() / 60)
             count = total_minutes // self.MINUTES_PER_QUESTION
             return max(self.MIN_QUESTIONS, min(count, self.MAX_QUESTIONS))
+
+        thumbnail = None
+        if media.thumbnail:
+            thumbnail = ContentFile(media.thumbnail.read())
+            thumbnail.name = media.thumbnail.name
 
         quiz = await Quiz.create_quiz_set(
             title=media.title,

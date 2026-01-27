@@ -5,7 +5,6 @@ from django_jsonform.forms.fields import JSONFormField
 from unfold.decorators import action
 
 from apps.common.admin import HiddenModelAdmin, ModelAdmin, TabularInline
-from apps.common.util import AuthenticatedRequest
 from apps.competency.models import Certificate
 from apps.course.models import (
     TEMPLATE_SCHEDULES,
@@ -125,10 +124,10 @@ class EngagementAdmin(ModelAdmin[Engagement]):
     actions_submit_line = ["grade"]
 
     @action(description=_("Grade"), permissions=["grade"])  # type: ignore # gettext not working
-    def grade(self, request: AuthenticatedRequest, obj: Engagement):
+    def grade(self, request, obj: Engagement):
         async_to_sync(Engagement.grade)(course_id=obj.course.pk, learner_id=obj.learner.pk, grader=request.user)
 
-    def has_grade_permission(self, request: AuthenticatedRequest, object_id: str | int):
+    def has_grade_permission(self, request, object_id: str | int):
         return request.user.is_superuser
 
 

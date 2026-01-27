@@ -1,15 +1,7 @@
 import { onCleanup, onMount } from 'solid-js'
 import 'plyr/dist/plyr.css'
 import Plyr from 'plyr'
-
-interface MediaPlayerAPI {
-  duration: () => number
-  jumpToTime: (time: number) => void
-  onTimeUpdate: (callback: (time: number) => void) => void
-  play: () => void
-  pause: () => void
-  isPlaying: () => boolean
-}
+import type { MediaPlayerAPI } from './MediaPlayerAPI'
 
 interface Props {
   src: string

@@ -133,7 +133,13 @@ class Enrollment(TimeStampedMixin):
 
     @classmethod
     async def get_enrolled(cls, *, user_id: str, page: int, size: int):
-        base_qs = cls.objects.select_related("content_type").filter(user_id=user_id, active=True).order_by("-enrolled")
+        now = timezone.now()
+        base_qs = (
+            cls.objects
+            .select_related("content_type")
+            .filter(user_id=user_id, active=True, archive__gte=now)
+            .order_by("-enrolled")
+        )
         paginated = await offset_paginate(base_qs, page=page, size=size)
 
         if not paginated["items"]:

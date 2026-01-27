@@ -324,7 +324,7 @@ class CertificateAward(TimeStampedMixin):
         cls,
         *,
         certificate_id: int,
-        recipient: User,
+        recipient_id: str,
         content_type: ContentType,
         content_id: int,
         data: CertificateAwardDataDict,
@@ -336,7 +336,7 @@ class CertificateAward(TimeStampedMixin):
                 awarded=Exists(
                     CertificateAward.objects.filter(
                         certificate_id=certificate_id,
-                        recipient=recipient,
+                        recipient_id=recipient_id,
                         content_type=content_type,
                         content_id=content_id,
                     )
@@ -376,7 +376,7 @@ class CertificateAward(TimeStampedMixin):
 
         return await CertificateAward.objects.acreate(
             certificate=certificate,
-            recipient=recipient,
+            recipient_id=recipient_id,
             pdf=pdf_content,
             thumbnail=thumbnail_content,
             data=full_data,

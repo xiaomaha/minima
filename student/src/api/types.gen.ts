@@ -1230,6 +1230,11 @@ export type SkillDataSchema = {
 };
 
 /**
+ * MediaFormatChoices
+ */
+export type MediaFormatChoices = 'video' | 'short' | 'ebook' | 'html' | 'pdf' | 'live';
+
+/**
  * MediaSchema
  */
 export type MediaSchema = {
@@ -1261,10 +1266,7 @@ export type MediaSchema = {
      * Featured
      */
     featured: boolean;
-    /**
-     * Format
-     */
-    format: 'video' | 'short' | 'ebook' | 'html' | 'pdf';
+    format: MediaFormatChoices;
     /**
      * Durationseconds
      */
@@ -1310,6 +1312,10 @@ export type MediaSchema = {
      * Quizzes
      */
     quizzes: Array<QuizSchema>;
+    /**
+     * Open
+     */
+    open: string;
 };
 
 /**
@@ -1499,10 +1505,7 @@ export type WatchedMediaSchema = {
      * Thumbnail
      */
     thumbnail: string;
-    /**
-     * Format
-     */
-    format: 'video' | 'short' | 'ebook' | 'html' | 'pdf';
+    format: MediaFormatChoices;
     /**
      * Durationseconds
      */
@@ -1597,10 +1600,7 @@ export type SearchedMediaSchema = {
      * Featured
      */
     featured: boolean;
-    /**
-     * Format
-     */
-    format: 'video' | 'short' | 'ebook' | 'html' | 'pdf';
+    format: MediaFormatChoices;
     /**
      * Durationseconds
      */
@@ -1784,10 +1784,7 @@ export type CourseSchema = {
      * Efforthours
      */
     effortHours: number;
-    /**
-     * Level
-     */
-    level: 'beginner' | 'intermediate' | 'advanced' | 'common';
+    level: LevelChoices;
 };
 
 /**
@@ -1928,6 +1925,11 @@ export type LessonSchema = {
 };
 
 /**
+ * LevelChoices
+ */
+export type LevelChoices = 'beginner' | 'intermediate' | 'advanced' | 'common';
+
+/**
  * CourseCategorySchema
  */
 export type CourseCategorySchema = {
@@ -2037,10 +2039,7 @@ export type CourseDetailSchema = {
      * Efforthours
      */
     effortHours: number;
-    /**
-     * Level
-     */
-    level: 'beginner' | 'intermediate' | 'advanced' | 'common';
+    level: LevelChoices;
     /**
      * Faqitems
      */
@@ -2593,6 +2592,11 @@ export type ExamAttemptSchema = {
 };
 
 /**
+ * ExamFormatChoices
+ */
+export type ExamFormatChoices = 'single_choice' | 'text_input' | 'number_input' | 'essay';
+
+/**
  * ExamGradeSchema
  */
 export type ExamGradeSchema = {
@@ -2670,10 +2674,7 @@ export type ExamQuestionSchema = {
      * Id
      */
     id: number;
-    /**
-     * Format
-     */
-    format: 'single_choice' | 'text_input' | 'number_input' | 'essay';
+    format: ExamFormatChoices;
     /**
      * Options
      */
@@ -3498,6 +3499,11 @@ export type InquiryUpdateSchema = {
 };
 
 /**
+ * ChannelChoices
+ */
+export type ChannelChoices = 'email' | 'text' | 'fcm';
+
+/**
  * MessageSchema
  */
 export type MessageSchema = {
@@ -3517,10 +3523,7 @@ export type MessageSchema = {
      * Recipients
      */
     recipients: Array<string>;
-    /**
-     * Channel
-     */
-    channel: 'email' | 'text' | 'fcm';
+    channel: ChannelChoices;
     /**
      * Group
      */
@@ -3599,10 +3602,7 @@ export type MessageDetailSchema = {
      * Recipients
      */
     recipients: Array<string>;
-    /**
-     * Channel
-     */
-    channel: 'email' | 'text' | 'fcm';
+    channel: ChannelChoices;
     /**
      * Group
      */
@@ -3662,6 +3662,11 @@ export type AppealCreateSchema = {
 };
 
 /**
+ * KindChoices
+ */
+export type KindChoices = 'terms_of_service' | 'privacy_policy' | 'cookie_policy' | 'marketing_policy' | 'data_retention_policy';
+
+/**
  * SitePolicySchema
  */
 export type SitePolicySchema = {
@@ -3678,10 +3683,7 @@ export type SitePolicySchema = {
      */
     id: number;
     effectiveVersion: SitePolicyVersionSchema;
-    /**
-     * Kind
-     */
-    kind: 'terms_of_service' | 'privacy_policy' | 'cookie_policy' | 'marketing_policy' | 'data_retention_policy';
+    kind: KindChoices;
     /**
      * Title
      */
@@ -4178,7 +4180,7 @@ export type PartnerGroupSchema = {
 /**
  * RoleChoices
  */
-export type RoleChoices = 'education_manager' | 'marketing_manager' | 'financial_manager';
+export type RoleChoices = 'education_manager';
 
 /**
  * QuizAttemptSchema
@@ -4363,6 +4365,11 @@ export type QuizAttemptAnswersSchema = {
 };
 
 /**
+ * SurveyFormatChoices
+ */
+export type SurveyFormatChoices = 'single_choice' | 'text_input' | 'number_input';
+
+/**
  * SurveyQuestionSchema
  */
 export type SurveyQuestionSchema = {
@@ -4370,10 +4377,7 @@ export type SurveyQuestionSchema = {
      * Id
      */
     id: number;
-    /**
-     * Format
-     */
-    format: 'single_choice' | 'text_input' | 'number_input';
+    format: SurveyFormatChoices;
     /**
      * Question
      */

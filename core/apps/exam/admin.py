@@ -1,3 +1,5 @@
+from typing import cast
+
 from asgiref.sync import async_to_sync
 from django.contrib import admin
 from django.db.models import Prefetch
@@ -14,7 +16,6 @@ from apps.common.admin import (
     ReadOnlyTabularInline,
     TabularInline,
 )
-from apps.common.util import AuthenticatedRequest
 from apps.exam.models import Attempt, Exam, Grade, Question, QuestionPool, Solution, Submission, TempAnswer
 
 
@@ -126,9 +127,9 @@ class GradeAdmin(ModelAdmin[Grade]):
             )
             .get(pk=obj.pk)
         )
-        async_to_sync(grade.grade)(grader=request.user)
+        async_to_sync(grade.grade)(grader_id=cast(str, request.user.pk) if request.user else None)
 
-    def has_grade_permission(self, request: AuthenticatedRequest, object_id: str | int):
+    def has_grade_permission(self, request, object_id: str | int):
         return request.user.is_superuser
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):

@@ -164,7 +164,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
             raise ValueError(ErrorCode.EMAIL_ALREADY_EXISTS)
 
         if agreements:
-            await PolicyAgreement.agree_policies(user_id=user.id, agreements={str(id): True for id in agreements})
+            await PolicyAgreement.agree_policies(user_id=user.pk, agreements={str(id): True for id in agreements})
 
         await user.request_activation(callback_url=callback_url)
         return user

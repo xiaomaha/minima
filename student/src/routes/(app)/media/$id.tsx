@@ -8,7 +8,9 @@ import { contentV1GetMedia, type MediaSchema } from '@/api'
 import { accessContextParam } from '@/context'
 import { Avatar } from '@/shared/Avatar'
 import { ContentViewer } from '@/shared/ContentViewer'
+import { LivePlayer } from '@/shared/LivePlayer'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
+import type { MediaPlayerAPI } from '@/shared/MediaPlayerAPI'
 import { PdfViewer } from '@/shared/PdfViewer'
 import { createResizable } from '@/shared/resizable'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -29,15 +31,6 @@ export const Route = createFileRoute('/(app)/media/$id')({
   validateSearch: searchSchema,
   component: RouteComponent,
 })
-
-interface MediaPlayerAPI {
-  jumpToTime: (time: number) => void
-  onTimeUpdate: (callback: (time: number) => void) => void
-  duration: () => number
-  play: () => void
-  pause: () => void
-  isPlaying: () => boolean
-}
 
 function RouteComponent() {
   const { t } = useTranslation()
@@ -91,6 +84,15 @@ function RouteComponent() {
                     <PdfViewer duration={m().durationSeconds} src={m().url} onReady={handlePlayerReady} />
                   </Match>
                   {/* TODO each media format */}
+                  <Match when={m().format === 'live'}>
+                    <LivePlayer
+                      title={m().title}
+                      url={m().url}
+                      duration={m().durationSeconds}
+                      open={new Date(m().open)}
+                      onReady={handlePlayerReady}
+                    />
+                  </Match>
                 </Switch>
               )}
             </Show>
@@ -108,6 +110,7 @@ function RouteComponent() {
                 jumpToTime={(time) => mediaAPI()?.jumpToTime(time)}
                 duration={() => mediaAPI()?.duration() ?? 0}
                 passingPoint={m().passingPoint}
+                isLive={m().format === 'live'}
               />
               <InfoPanel media={m()} />
 
@@ -235,7 +238,10 @@ const InfoPanel = (props: { media: MediaSchema }) => {
               <span>{t('by {{channel}}', { channel: props.media.channel })}</span>
             </Show>
           </div>
-          <div class="font-bold line-clamp-1">{props.media.title}</div>
+          <div class="font-bold line-clamp-1">
+            <span class="badge badge-sm bg-red-600 text-base-100 mr-2 my-0">{t('Live')}</span>
+            {props.media.title}
+          </div>
           <div class="text-sm">{props.media.owner.nickname || props.media.owner.name}</div>
         </div>
       </div>
