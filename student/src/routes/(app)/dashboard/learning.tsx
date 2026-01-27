@@ -1,6 +1,7 @@
 import { IconDotsVertical } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
-import { createEffect, createSignal, For, Show } from 'solid-js'
+import { formatDistanceToNow } from 'date-fns'
+import { createEffect, createSignal, For, onCleanup, type Setter, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import { type EnrollmentSchema, learningV1GetEnrolled, learningV1Unenroll } from '@/api'
 import { Avatar } from '@/shared/Avatar'
@@ -116,7 +117,11 @@ const ContentCard = (props: ContentCardProps) => {
     props.setStore('count', (prev) => prev - 1)
   }
 
+  const [started, setStarted] = createSignal(new Date(props.item.start) <= new Date())
+
   const openContent = () => {
+    if (!started()) return
+
     if (props.item.contentType.model === 'quiz') {
       setActiveQuiz(props.item.content.id)
     } else {
@@ -131,13 +136,17 @@ const ContentCard = (props: ContentCardProps) => {
       <Show when={activeQuiz() === props.item.content.id}>
         <QuizDialog id={props.item.content.id} open={!!activeQuiz()} onClose={() => setActiveQuiz(undefined)} />
       </Show>
-      <div class="cursor-pointer! w-full max-w-sm mx-auto flex flex-col text-left gap-3 group" onclick={openContent}>
+      <div
+        class="w-full max-w-sm mx-auto flex flex-col text-left gap-3 group"
+        onclick={openContent}
+        classList={{ 'cursor-pointer': started() }}
+      >
         <div class="relative overflow-hidden rounded-md border border-base-300">
           <Show when={props.item.content.thumbnail} fallback={<div class="aspect-video w-full" />}>
             <img
               class="object-cover aspect-video w-full"
               src={props.item.content.thumbnail!}
-              alt={props.item.content.description}
+              alt={props.item.content.title!}
             />
           </Show>
           <div class="badge badge-neutral absolute bottom-2.5 left-2 badge-sm">
@@ -146,6 +155,19 @@ const ContentCard = (props: ContentCardProps) => {
               <span>{toHHMMSS(props.item.content.durationSeconds!)}</span>
             </Show>
           </div>
+
+          <Show when={!started()}>
+            <span class="badge bg-red-600 text-base-100 absolute top-2.5 left-2 badge-sm border-0">
+              <Show
+                when={new Date(props.item.start).getTime() - Date.now() < 60 * 60 * 24 * 1000}
+                fallback={t('Starts {{to}}', {
+                  to: formatDistanceToNow(new Date(props.item.start), { addSuffix: true }),
+                })}
+              >
+                {t('Start countdown')} <LiveCountdown start={new Date(props.item.start)} setStarted={setStarted} />
+              </Show>
+            </span>
+          </Show>
 
           <ProgressBar
             contentId={props.item.content.id}
@@ -166,9 +188,19 @@ const ContentCard = (props: ContentCardProps) => {
             </div>
           </div>
           <div class="text-sm label my-2 w-full relative">
-            <span>
-              {new Date(props.item.start!).toLocaleDateString()} ~ {new Date(props.item.end).toLocaleDateString()}
-            </span>
+            <Show
+              when={props.item.content.format !== 'live'}
+              fallback={
+                <span class="flex gap-2 items-center">
+                  <span class="badge badge-sm bg-red-600 text-base-100">{t('Live')}</span>
+                  {new Date(props.item.start).toLocaleString()}
+                </span>
+              }
+            >
+              <span>
+                {new Date(props.item.start).toLocaleDateString()} ~ {new Date(props.item.end).toLocaleDateString()}
+              </span>
+            </Show>
 
             {/* TODO: Currenly only unenroll action is needed. */}
             <Show when={props.item.canDeactivate}>
@@ -189,5 +221,46 @@ const ContentCard = (props: ContentCardProps) => {
         </div>
       </div>
     </>
+  )
+}
+
+const LiveCountdown = (props: { start: Date; setStarted: Setter<boolean> }) => {
+  const [timeLeft, setTimeLeft] = createSignal(calculateTime())
+
+  function calculateTime() {
+    const ms = props.start.getTime() - Date.now()
+    if (ms <= 0) return null
+
+    const seconds = Math.floor(ms / 1000)
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+
+    return { hours, minutes, secs }
+  }
+
+  createEffect(() => {
+    const interval = setInterval(() => {
+      const time = calculateTime()
+      if (!time) {
+        clearInterval(interval)
+        props.setStarted(true)
+      }
+      setTimeLeft(time)
+    }, 1000)
+
+    onCleanup(() => clearInterval(interval))
+  })
+
+  return (
+    <Show when={timeLeft()}>
+      {(time) => (
+        <span class="countdown font-mono">
+          <span style={`--value:${time().hours}`}>{time().hours}</span>:
+          <span style={`--value:${time().minutes}`}>{time().minutes}</span>:
+          <span style={`--value:${time().secs}`}>{time().secs}</span>
+        </span>
+      )}
+    </Show>
   )
 }

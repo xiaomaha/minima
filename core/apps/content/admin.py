@@ -8,7 +8,6 @@ from django.utils.translation import gettext_lazy as _
 from unfold.decorators import action
 
 from apps.common.admin import HiddenModelAdmin, ModelAdmin, ReadOnlyModelAdmin, TabularInline
-from apps.common.util import AuthenticatedRequest
 from apps.content.models import Media, Note, PublicAccessMedia, Subtitle, Watch
 
 log = logging.getLogger(__name__)
@@ -42,7 +41,7 @@ class MediaAdmin(ModelAdmin[Media]):
         except ValidationError as e:
             self.message_user(request, str(e), messages.ERROR)
 
-    def has_create_quiz_permission(self, request: AuthenticatedRequest, object_id: str | int):
+    def has_create_quiz_permission(self, request, object_id: str | int):
         return request.user.is_superuser
 
 

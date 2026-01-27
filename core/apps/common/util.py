@@ -3,7 +3,7 @@ import random
 import time
 from datetime import datetime
 from enum import IntEnum
-from typing import TYPE_CHECKING, Annotated, Any, NotRequired, TypedDict, cast
+from typing import Annotated, Any, NotRequired, TypedDict, cast
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 import jwt
@@ -24,10 +24,6 @@ from apps.common.schema import Schema
 
 CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 OFFSET = 1609459200
-
-
-if TYPE_CHECKING:
-    from apps.account.models import User
 
 
 def tuid(length: int = 12):
@@ -102,10 +98,6 @@ class HttpRequest(DjangoHttpRequest):
     auth: str  # from auth middleware
     access_date: "AccessDate"  # set by access_date decorator
     active_context: str  # set by active_context decorator
-
-
-class AuthenticatedRequest(HttpRequest):
-    user: User
 
 
 class OtpTokenDict(TypedDict):

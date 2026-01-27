@@ -6,6 +6,7 @@ from datetime import timedelta
 from asgiref.sync import async_to_sync
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -97,6 +98,12 @@ class Command(BaseCommand):
 
             for media in Media.objects.filter(quizzes__isnull=True):
                 quiz_data = next(quiz_data_cycle)
+
+                thumbnail = None
+                if media.thumbnail:
+                    thumbnail = ContentFile(media.thumbnail.read())
+                    thumbnail.name = media.thumbnail.name
+
                 quiz = async_to_sync(Quiz.create_quiz_set)(
                     title=f"{media.title} - {media.id}",
                     description=media.description,
@@ -131,8 +138,9 @@ class Command(BaseCommand):
 
         catalog_items = []
         for i, media in enumerate(MediaFactory.create_batch(size=media_size, format=Media.MediaFormatChoices.VIDEO)):
-            if i == 0:
-                public_catalog.thumbnail = media.thumbnail
+            if i == 0 and media.thumbnail:
+                public_catalog.thumbnail = ContentFile(media.thumbnail.read())
+                public_catalog.thumbnail.name = media.thumbnail.name
                 public_catalog.save()
 
             catalog_items.append(

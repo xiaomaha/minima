@@ -34,6 +34,8 @@ export const COURSE_PREVIEW_FALLBACK_URL = 'https://cdn.plyr.io/static/demo/View
 
 export const SEARCH_SUGGESTION_DEBOUNCE = 100
 
+export const LIVE_PLAYER_START_THRESHOLD_SECONDS = 3 * 60
+
 export const LANGUAGES = [
   { value: 'en', label: 'English 🇺🇸 ' },
   { value: 'ko', label: '한국어 🇰🇷 ' },

@@ -436,7 +436,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         attempt_id: int
         pgh_event_model: type[Model]
 
-    async def grade(self, grader: "User | None" = None):
+    async def grade(self, grader_id: str | None = None):
         rubric_data = await self.attempt.question.solution.get_rubric_data()
         default_details = {criterion["name"]: None for criterion in rubric_data["criteria"]}
         self.earned_details = default_details | (self.earned_details or {})
@@ -444,7 +444,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.earned_point = sum(filter(None, self.earned_details.values()))
         self.score = (self.earned_point * 100.0 / self.possible_point) if self.possible_point else 0
         self.passed = self.score >= (self.attempt.assignment.passing_point or 0)
-        self.grader_id = grader.pk if grader else None
+        self.grader_id = grader_id
         await self.asave()
 
 

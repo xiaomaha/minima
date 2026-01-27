@@ -29,7 +29,9 @@ router = Router(by_alias=True)
 @router.get("/media/{id}", response=MediaSchema)
 @access_date("content", "media")
 async def get_media(request: HttpRequest, id: str):
-    return await Media.get_media(id)
+    media = await Media.get_media(id)
+    media.open = request.access_date["start"]
+    return media
 
 
 @router.get("/media/{id}/subtitle", response=list[SubtitleSchema])

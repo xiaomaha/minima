@@ -25,39 +25,37 @@ export const GettingStarted = (props: Props) => {
   }
 
   return (
-    <div class="flex flex-col gap-4 p-8 h-full m-auto items-center">
+    <div class="flex flex-col gap-4 p-8 m-auto items-center">
       <div class="text-xl font-semibold">{session.quiz.title}</div>
       <Show when={session.quiz.description}>
-        <ContentViewer content={session.quiz.description!} class="text-sm my-2" />
+        <ContentViewer content={session.quiz.description!} class="text-sm my-2 w-full" />
       </Show>
 
       <button type="button" class="my-4 btn btn-primary min-w-40" onClick={start} disabled={loading()}>
         {t('Start Quiz')}
       </button>
 
-      <div class="flex gap-4">
-        <div class="rounded-box border border-base-content/5 bg-base-100">
-          <table class="table table-sm w-full max-w-150 [&_tr>td:first-child]:whitespace-nowrap text-base-content/60">
-            <tbody>
-              <tr>
-                <td>{t('Audience')}</td>
-                <td>{session.quiz.audience}</td>
-              </tr>
-              <tr>
-                <td>{t('Question Count')}</td>
-                <td>{session.quiz.questionCount}</td>
-              </tr>
-              <tr>
-                <td>{t('Passing Point')}</td>
-                <td>{session.quiz.passingPoint} %</td>
-              </tr>
-              <tr>
-                <td>{t('Max Attempts')}</td>
-                <td>{session.quiz.maxAttempts || t('Unlimited')}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="rounded-box border border-base-content/5 bg-base-100">
+        <table class="table table-sm w-full max-w-150 [&_tr>td:first-child]:whitespace-nowrap text-base-content/60">
+          <tbody>
+            <tr>
+              <td>{t('Audience')}</td>
+              <td>{session.quiz.audience}</td>
+            </tr>
+            <tr>
+              <td>{t('Question Count')}</td>
+              <td>{session.quiz.questionCount}</td>
+            </tr>
+            <tr>
+              <td>{t('Passing Point')}</td>
+              <td>{session.quiz.passingPoint} %</td>
+            </tr>
+            <tr>
+              <td>{t('Max Attempts')}</td>
+              <td>{session.quiz.maxAttempts || t('Unlimited')}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   )

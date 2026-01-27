@@ -174,7 +174,7 @@ class Quiz(LearningObjectMixin):
         title: str,
         description: str,
         audience: str,
-        thumbnail: File,
+        thumbnail: File | None,
         owner_id: str,
         text: str,
         question_count: int,

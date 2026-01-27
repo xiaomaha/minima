@@ -579,6 +579,18 @@ export const vSkillDataSchema = v.object({
 });
 
 /**
+ * MediaFormatChoices
+ */
+export const vMediaFormatChoices = v.picklist([
+    'video',
+    'short',
+    'ebook',
+    'html',
+    'pdf',
+    'live'
+]);
+
+/**
  * QuizSchema
  */
 export const vQuizSchema = v.object({
@@ -610,13 +622,7 @@ export const vMediaSchema = v.object({
     audience: v.string(),
     thumbnail: v.string(),
     featured: v.boolean(),
-    format: v.picklist([
-        'video',
-        'short',
-        'ebook',
-        'html',
-        'pdf'
-    ]),
+    format: vMediaFormatChoices,
     durationSeconds: v.number(),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
@@ -628,7 +634,8 @@ export const vMediaSchema = v.object({
     subtitleCount: v.pipe(v.number(), v.integer()),
     uploaded: v.boolean(),
     url: v.string(),
-    quizzes: v.array(vQuizSchema)
+    quizzes: v.array(vQuizSchema),
+    open: v.pipe(v.string(), v.isoTimestamp())
 });
 
 /**
@@ -680,13 +687,7 @@ export const vWatchedMediaSchema = v.object({
     mediaId: v.string(),
     title: v.string(),
     thumbnail: v.string(),
-    format: v.picklist([
-        'video',
-        'short',
-        'ebook',
-        'html',
-        'pdf'
-    ]),
+    format: vMediaFormatChoices,
     durationSeconds: v.number(),
     passingPoint: v.pipe(v.number(), v.integer()),
     url: v.string(),
@@ -724,13 +725,7 @@ export const vSearchedMediaSchema = v.object({
     audience: v.string(),
     thumbnail: v.string(),
     featured: v.boolean(),
-    format: v.picklist([
-        'video',
-        'short',
-        'ebook',
-        'html',
-        'pdf'
-    ]),
+    format: vMediaFormatChoices,
     durationSeconds: v.number(),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
@@ -828,6 +823,16 @@ export const vLessonSchema = v.object({
 });
 
 /**
+ * LevelChoices
+ */
+export const vLevelChoices = v.picklist([
+    'beginner',
+    'intermediate',
+    'advanced',
+    'common'
+]);
+
+/**
  * CourseSchema
  */
 export const vCourseSchema = v.object({
@@ -851,12 +856,7 @@ export const vCourseSchema = v.object({
     objective: v.string(),
     previewUrl: v.union([v.string(), v.null()]),
     effortHours: v.pipe(v.number(), v.integer()),
-    level: v.picklist([
-        'beginner',
-        'intermediate',
-        'advanced',
-        'common'
-    ])
+    level: vLevelChoices
 });
 
 /**
@@ -946,12 +946,7 @@ export const vCourseDetailSchema = v.object({
     objective: v.string(),
     previewUrl: v.union([v.string(), v.null()]),
     effortHours: v.pipe(v.number(), v.integer()),
-    level: v.picklist([
-        'beginner',
-        'intermediate',
-        'advanced',
-        'common'
-    ]),
+    level: vLevelChoices,
     faqItems: v.array(vFaqItemSchema),
     categories: v.array(vCourseCategorySchema),
     certificates: v.array(vCourseCertificateSchema),
@@ -1149,6 +1144,16 @@ export const vDiscussionOwnPostSchema = v.object({
 });
 
 /**
+ * ExamFormatChoices
+ */
+export const vExamFormatChoices = v.picklist([
+    'single_choice',
+    'text_input',
+    'number_input',
+    'essay'
+]);
+
+/**
  * ExamGradeSchema
  */
 export const vExamGradeSchema = v.object({
@@ -1178,12 +1183,7 @@ export const vExamQuestionPoolSchema = v.object({
  */
 export const vExamQuestionSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
-    format: v.picklist([
-        'single_choice',
-        'text_input',
-        'number_input',
-        'essay'
-    ]),
+    format: vExamFormatChoices,
     options: v.array(v.string()),
     question: v.string(),
     supplement: v.string(),
@@ -1538,6 +1538,15 @@ export const vInquiryUpdateSchema = v.object({
 });
 
 /**
+ * ChannelChoices
+ */
+export const vChannelChoices = v.picklist([
+    'email',
+    'text',
+    'fcm'
+]);
+
+/**
  * MessageSchema
  */
 export const vMessageSchema = v.object({
@@ -1545,11 +1554,7 @@ export const vMessageSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     recipients: v.array(v.string()),
-    channel: v.picklist([
-        'email',
-        'text',
-        'fcm'
-    ]),
+    channel: vChannelChoices,
     group: v.string(),
     title: v.string(),
     data: v.record(v.string(), v.string()),
@@ -1578,11 +1583,7 @@ export const vMessageDetailSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     recipients: v.array(v.string()),
-    channel: v.picklist([
-        'email',
-        'text',
-        'fcm'
-    ]),
+    channel: vChannelChoices,
     group: v.string(),
     title: v.string(),
     data: v.record(v.string(), v.string()),
@@ -1602,6 +1603,17 @@ export const vAppealCreateSchema = v.object({
     model: v.string(),
     questionId: v.pipe(v.number(), v.integer())
 });
+
+/**
+ * KindChoices
+ */
+export const vKindChoices = v.picklist([
+    'terms_of_service',
+    'privacy_policy',
+    'cookie_policy',
+    'marketing_policy',
+    'data_retention_policy'
+]);
 
 /**
  * SitePolicyVersionSchema
@@ -1624,13 +1636,7 @@ export const vSitePolicySchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     effectiveVersion: vSitePolicyVersionSchema,
-    kind: v.picklist([
-        'terms_of_service',
-        'privacy_policy',
-        'cookie_policy',
-        'marketing_policy',
-        'data_retention_policy'
-    ]),
+    kind: vKindChoices,
     title: v.string(),
     description: v.string(),
     active: v.boolean(),
@@ -1786,11 +1792,7 @@ export const vPartnerGroupSchema = v.object({
 /**
  * RoleChoices
  */
-export const vRoleChoices = v.picklist([
-    'education_manager',
-    'marketing_manager',
-    'financial_manager'
-]);
+export const vRoleChoices = v.picklist(['education_manager']);
 
 /**
  * CohortStaffSchema
@@ -1907,15 +1909,20 @@ export const vQuizSessionSchema = v.object({
 export const vQuizAttemptAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
 
 /**
+ * SurveyFormatChoices
+ */
+export const vSurveyFormatChoices = v.picklist([
+    'single_choice',
+    'text_input',
+    'number_input'
+]);
+
+/**
  * SurveyQuestionSchema
  */
 export const vSurveyQuestionSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
-    format: v.picklist([
-        'single_choice',
-        'text_input',
-        'number_input'
-    ]),
+    format: vSurveyFormatChoices,
     question: v.string(),
     supplement: v.string(),
     options: v.array(v.string()),

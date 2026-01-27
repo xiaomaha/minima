@@ -517,6 +517,7 @@ class Engagement(TimeStampedMixin):
     if TYPE_CHECKING:
         certificate_ids: list[int]  # annotated
         course_id: str
+        learner_id: str
 
     def issue_context(self):
         return issue_active_context("course", self.course_id, self.pk)
@@ -569,7 +570,7 @@ class Engagement(TimeStampedMixin):
 
         return await CertificateAward.issue(
             certificate_id=certificate_id,
-            recipient=engagement.learner,
+            recipient_id=engagement.learner_id,
             content_type=await sync_to_async(ContentType.objects.get_for_model)(engagement),
             content_id=engagement.pk,
             data=data,

@@ -278,6 +278,11 @@ class Attempt(Model):
             .order_by("id")
             .values("id")[: settings.CHILD_POST_MAX_COUNT]
         )
+
+        my_problem_subquery = Attempt.objects.filter(
+            learner_id=learner_id, discussion_id=discussion_id, context=context, active=True
+        ).values("problem_id")[:1]
+
         return (
             Post.objects
             .select_related("attempt__learner")
@@ -293,7 +298,7 @@ class Attempt(Model):
                 ),
             )
             .filter(
-                attempt__discussion_id=discussion_id,
+                attempt__problem_id__in=Subquery(my_problem_subquery),
                 attempt__context=context,
                 attempt__active=True,
                 parent__isnull=True,
@@ -439,7 +444,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pk: int
         pgh_event_model: type[Model]
 
-    async def grade(self, grader: "User | None" = None):
+    async def grade(self, grader_id: str | None = None):
         question = self.attempt.question
         post_count = await self.attempt.post_count()
 
@@ -457,6 +462,6 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.earned_point = sum(self.earned_details.values())
         self.score = self.earned_point * 100.0 / self.possible_point if self.possible_point else 0.0
         self.passed = self.score >= (self.attempt.discussion.passing_point or 0)
-        self.grader_id = grader.pk if grader else None
+        self.grader_id = grader_id
 
         await self.asave()

@@ -11,15 +11,7 @@ import {
 import { createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { useTranslation } from '@/shared/solid/i18n'
 import { toHHMMSS } from '@/shared/utils'
-
-interface MediaPlayerAPI {
-  duration: () => number
-  jumpToTime: (time: number) => void
-  onTimeUpdate: (callback: (time: number) => void) => void
-  play: () => void
-  pause: () => void
-  isPlaying: () => boolean
-}
+import type { MediaPlayerAPI } from './MediaPlayerAPI'
 
 interface PdfViewerProps {
   src: string

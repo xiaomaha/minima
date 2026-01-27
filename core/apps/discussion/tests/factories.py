@@ -139,7 +139,7 @@ class PostFactory(DjangoModelFactory[Post]):
                 )
             ]
 
-            async_to_sync(self.update_attachments)(files=files, owner_id=self.attempt.learner.pk, content=self.body)
+            async_to_sync(self.update_attachments)(files=files, owner_id=self.attempt.learner_id, content=self.body)
 
 
 class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):

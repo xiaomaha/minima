@@ -4,6 +4,7 @@ import { createEffect, createMemo, createSignal, For, on, onCleanup, Show, untra
 import { type ContentV1UpdateMediaWatchData, contentV1GetMediaWatch, type WatchInSchema } from '@/api'
 import { accessContext } from '@/context'
 import { useTranslation } from '@/shared/solid/i18n'
+import { toHHMMSS } from '@/shared/utils'
 import { getProgress, setProgress } from '../../-shared/record'
 import { getWatch, markWatched, setLastPosition, setWatch, type Watch as WatchCache } from './store'
 
@@ -13,6 +14,7 @@ interface Props {
   duration: () => number
   currentTime: () => number
   jumpToTime: (time: number) => void
+  isLive: boolean
 }
 
 export const Watch = (props: Props) => {
@@ -204,7 +206,7 @@ export const Watch = (props: Props) => {
   }
 
   return (
-    <div class="flex items-center gap-2 h-8">
+    <div class="flex items-center gap-2 h-8 text-base-content/60 text-sm font-mono">
       <div class="relative w-full h-1.5 bg-gray-300 rounded-full overflow-hidden">
         <For each={segments()}>
           {(segment) => (
@@ -218,15 +220,18 @@ export const Watch = (props: Props) => {
           )}
         </For>
       </div>
-      <Show when={!completed()}>
+      <Show when={!completed() && !props.isLive}>
         <button type="button" class="h-8 btn btn-ghost btn-circle btn-sm" onClick={() => jumpToSkipped()}>
           <div class="tooltip" data-tip={t('Jump to skipped position')}>
             <IconPlayerSkipBack size={16} />
           </div>
         </button>
       </Show>
-      <div class="font-mono text-right text-sm text-base-content/60 w-12 tooltip" data-tip={t('Watch percent')}>
-        {rate().toFixed(1)}%
+      <Show when={props.isLive}>
+        <span class="text-xs">{toHHMMSS(props.duration())}</span>
+      </Show>
+      <div class="text-right w-12 tooltip" data-tip={t('Watch percent')}>
+        <span>{rate().toFixed(1)}%</span>
       </div>
     </div>
   )
