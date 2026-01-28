@@ -239,7 +239,9 @@ const InfoPanel = (props: { media: MediaSchema }) => {
             </Show>
           </div>
           <div class="font-bold line-clamp-1">
-            <span class="badge badge-sm bg-red-600 text-base-100 mr-2 my-0">{t('Live')}</span>
+            <Show when={props.media.format === 'live'}>
+              <span class="badge badge-sm bg-red-600 text-base-100 mr-2 my-0">{t('Live')}</span>
+            </Show>
             {props.media.title}
           </div>
           <div class="text-sm">{props.media.owner.nickname || props.media.owner.name}</div>
