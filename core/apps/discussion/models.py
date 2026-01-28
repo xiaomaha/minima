@@ -278,11 +278,9 @@ class Attempt(Model):
             .order_by("id")
             .values("id")[: settings.CHILD_POST_MAX_COUNT]
         )
-
-        my_problem_subquery = Attempt.objects.filter(
+        my_question_subquery = Attempt.objects.filter(
             learner_id=learner_id, discussion_id=discussion_id, context=context, active=True
-        ).values("problem_id")[:1]
-
+        ).values("question_id")[:1]
         return (
             Post.objects
             .select_related("attempt__learner")
@@ -298,7 +296,7 @@ class Attempt(Model):
                 ),
             )
             .filter(
-                attempt__problem_id__in=Subquery(my_problem_subquery),
+                attempt__question_id=Subquery(my_question_subquery),
                 attempt__context=context,
                 attempt__active=True,
                 parent__isnull=True,
