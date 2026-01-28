@@ -11,10 +11,13 @@
 
 ## Thoughtful design decisions
 
-- **Reusable date-based content** - Content with dates can be reused without duplication or re-touching
-- **Granular permission system** - Fine-grained access control for hierarchically nested content
-- **Bitmap-based viewing tracking** - Accurately tracks not just completion, but actual viewing and skipping patterns
-- **Caption-powered search** - Search content by text and jump directly to specific timestamps
+- **Reusable date-based content architecture** - Content with dates designed to be reused without duplication or modification
+- **Granular permission system** - Fine-grained access control designed for hierarchically nested content
+- **Bitmap-based viewing tracking** - Designed to accurately track actual viewing and skipping patterns
+- **Caption-powered search** - Designed to search content by text and jump directly to specific timestamps
+
+These design choices are working well in practice.
+For example, when tracking live session attendance with events like entry, waiting, session start, temporary exit, and re-entry - the system handles all edge cases without needing server-side exception handling code.
 
 These design choices are working well in practice.
 For example, when tracking live session attendance with events like entry, waiting, session start, temporary exit, and re-entry - the system handles all edge cases without needing server-side exception handling code.
