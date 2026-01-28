@@ -9,16 +9,6 @@
 
 **🚀 Alpha Release** - Core features ready. Testing and feedback appreciated!
 
-## Thoughtful design decisions
-
-- **Reusable date-based content architecture** - Content with dates designed to be reused without duplication or modification
-- **Granular permission system** - Fine-grained access control designed for hierarchically nested content
-- **Bitmap-based viewing tracking** - Designed to accurately track actual viewing and skipping patterns
-- **Caption-powered search** - Designed to search content by text and jump directly to specific timestamps
-
-These design choices are working well in practice.
-For example, when tracking live session attendance, events like entry, waiting, session start, temporary exit, and re-entry are all accurately recorded without needing server-side exception handling code.
-
 ## Documentation
 
 [https://cobel1024.github.io/minima-docs/](https://cobel1024.github.io/minima-docs/)
