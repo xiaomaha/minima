@@ -17,10 +17,7 @@
 - **Caption-powered search** - Designed to search content by text and jump directly to specific timestamps
 
 These design choices are working well in practice.
-For example, when tracking live session attendance with events like entry, waiting, session start, temporary exit, and re-entry - the system handles all edge cases without needing server-side exception handling code.
-
-These design choices are working well in practice.
-For example, when tracking live session attendance with events like entry, waiting, session start, temporary exit, and re-entry - the system handles all edge cases without needing server-side exception handling code.
+For example, when tracking live session attendance, events like entry, waiting, session start, temporary exit, and re-entry are all accurately recorded without needing server-side exception handling code.
 
 ## Documentation
 
