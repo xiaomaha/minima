@@ -1,4 +1,3 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import { createSignal, For, Show } from 'solid-js'
 import type * as v from 'valibot'
 import { assignmentV1SubmitAttempt } from '@/api'
@@ -7,6 +6,7 @@ import { ASSIGNMENT_ATTACHMENT_MAX_SIZE } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { TextEditor } from '../../-shared/editor/TextEditor'
 import { useSession } from './context'
@@ -21,7 +21,7 @@ export const Submission = () => {
   const [session, { setStore }] = useSession()
   const s = () => session.data!
 
-  const [assignmentForm, { Form, Field }] = createForm<v.InferInput<typeof vAssignmentSubmitSchema>>({
+  const [formState, { Form, Field }] = createForm<v.InferInput<typeof vAssignmentSubmitSchema>>({
     initialValues: { answer: s().submission?.answer ?? '' },
     validate: valiForm(vAssignmentSubmitSchema),
   })
@@ -142,8 +142,8 @@ export const Submission = () => {
           <Show when={!disabled()}>
             <SubmitButton
               label={t('Submit Assignment')}
-              isPending={assignmentForm.submitting}
-              disabled={!assignmentForm.dirty}
+              isPending={formState.submitting}
+              disabled={!formState.dirty}
               class="btn btn-primary w-full"
             />
           </Show>

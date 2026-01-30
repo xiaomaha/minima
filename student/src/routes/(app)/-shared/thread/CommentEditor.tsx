@@ -1,4 +1,3 @@
-import { createForm, reset, setValue, valiForm } from '@modular-forms/solid'
 import { IconTrash } from '@tabler/icons-solidjs'
 import { createSignal, For, Show } from 'solid-js'
 import type * as v from 'valibot'
@@ -8,6 +7,7 @@ import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE, COMMENT_MIN_CHARACTERS } fro
 import { store as accountStore } from '@/routes/(app)/account/-store'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { initCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../editor/TextEditor'
@@ -27,11 +27,13 @@ export const CommentEditor = (props: Props) => {
   const [thread, { setStore: setThreadStore }] = threadStore
   const [, , { setStore: setCommentStore }] = commentStore
 
-  const [commentForm, { Form, Field }] = createForm<v.InferInput<typeof vCommentSaveSchema>>({
+  const isReply = !!(props.comment?.parentId || props.parentId)
+
+  const [formState, { Form, Field, reset, setValue }] = createForm<v.InferInput<typeof vCommentSaveSchema>>({
     initialValues: {
       id: props.comment?.id,
       comment: props.comment?.comment,
-      rating: props.comment?.rating ?? 0,
+      rating: context.options?.rating && !isReply ? (props.comment?.rating ?? 0) : undefined, // omit rating if reply
       parentId: props.comment ? props.comment.parentId : props.parentId,
     },
     validate: valiForm(vCommentSaveSchema),
@@ -93,7 +95,7 @@ export const CommentEditor = (props: Props) => {
       }
     }
 
-    reset(commentForm)
+    reset({})
     props.onSuccess?.()
   }
 
@@ -127,11 +129,9 @@ export const CommentEditor = (props: Props) => {
       )
     }
 
-    reset(commentForm)
+    reset({})
     props.onSuccess?.()
   }
-
-  const isReply = !!(props.comment?.parentId || props.parentId)
 
   return (
     <Form onSubmit={onSubmit}>
@@ -139,7 +139,6 @@ export const CommentEditor = (props: Props) => {
         <Show when={context.options?.rating && !isReply}>
           <Field
             name="rating"
-            type="number"
             validate={(value) => (!value || value < 1 || value > 5 ? t('Please select a rating.') : '')}
           >
             {(field) => (
@@ -153,7 +152,7 @@ export const CommentEditor = (props: Props) => {
                           name="rating-input"
                           class="hidden"
                           checked={field.value === i}
-                          onChange={() => setValue(commentForm, 'rating', i)}
+                          onChange={() => setValue('rating', i)}
                         />
                         <span
                           class={
@@ -202,18 +201,14 @@ export const CommentEditor = (props: Props) => {
           )}
         </Field>
 
-        <Field name="id" type="number">
-          {() => null}
-        </Field>
-        <Field name="parentId" type="number">
-          {() => null}
-        </Field>
+        <Field name="id">{() => null}</Field>
+        <Field name="parentId">{() => null}</Field>
 
         <div class="flex gap-2 items-center">
           <SubmitButton
             label={t('Save')}
-            isPending={commentForm.submitting}
-            disabled={!commentForm.dirty}
+            isPending={formState.submitting}
+            disabled={!formState.dirty}
             class="flex-1 btn btn-sm btn-neutral mt-1"
           />
           <Show when={props.comment?.id}>

@@ -25,7 +25,7 @@ export const Dialog = (props: Props) => {
           <div class="flex p-4 text-base-content/30 gap-2">
             <WindowButton title={t('Close')} colorClass="text-rose-500" onClick={props.onClose} />
             <Show when={props.title}>
-              <div class="text-sm font-semibold">{props.title}</div>
+              <div class="text-sm">{props.title}</div>
             </Show>
           </div>
           <div class="flex-1 overflow-y-auto">{props.children}</div>

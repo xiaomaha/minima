@@ -1,4 +1,3 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createResource, Show } from 'solid-js'
 import * as v from 'valibot'
@@ -8,6 +7,7 @@ import { BASE_URL } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { LoginLink } from './-LoginLink'
@@ -35,15 +35,15 @@ const RequestActivation = () => {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
-  const [requestForm, { Form, Field }] = createForm<v.InferInput<typeof vRequestActivationSchema>>({
-    initialValues: { callbackUrl: `${BASE_URL}${Route.fullPath}` },
+  const form = createForm<v.InferInput<typeof vRequestActivationSchema>>({
+    initialValues: { email: '', callbackUrl: `${BASE_URL}${Route.fullPath}` },
     validate: valiForm(vRequestActivationSchema),
   })
 
   const requestActivation = async (values: v.InferInput<typeof vRequestActivationSchema>) => {
     const { error } = await accountV1RequestActivation({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(requestForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
 
@@ -59,9 +59,11 @@ const RequestActivation = () => {
     navigate({ to: '/login', replace: true })
   }
 
+  const [formState, { Form, Field }] = form
+
   return (
     <Form onSubmit={requestActivation}>
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-5">
         <legend class="fieldset-legend mb-0">{t('Activate account')}</legend>
 
         <span class="label">{t('Enter the email you used to when you joined.')}</span>
@@ -78,8 +80,8 @@ const RequestActivation = () => {
 
         <SubmitButton
           label={t('Request activation email')}
-          isPending={requestForm.submitting}
-          disabled={!requestForm.dirty}
+          isPending={formState.submitting}
+          disabled={!formState.dirty}
           class="btn btn-neutral mt-4"
         />
 

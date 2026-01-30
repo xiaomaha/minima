@@ -1,4 +1,3 @@
-import { createForm, reset } from '@modular-forms/solid'
 import { createEffect, For, Show } from 'solid-js'
 import type * as v from 'valibot'
 import { operationV1AgreePolicies, operationV1EffectivePolicies } from '@/api'
@@ -9,6 +8,7 @@ import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { createForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { logout } from './(app)/-shared/logout'
 
@@ -29,22 +29,20 @@ export const SitePolicy = (props: SitePolicyProps) => {
     },
   )
 
-  const [agreementForm, { Form, Field }] = createForm<v.InferInput<typeof vPolicyVersionAgreementSchema>>({
+  const [formState, { Form, Field, setValue, reset }] = createForm<v.InferInput<typeof vPolicyVersionAgreementSchema>>({
     initialValues: {},
   })
 
   createEffect(() => {
     if (policies.data) {
-      reset(
-        agreementForm,
-        policies.data.reduce(
-          (acc, policy) => {
-            acc[String(policy.effectiveVersion.id)] = !!policy.effectiveVersion.accepted
-            return acc
-          },
-          {} as Record<string, boolean>,
-        ),
+      const initial = policies.data.reduce(
+        (acc, policy) => {
+          acc[String(policy.effectiveVersion.id)] = !!policy.effectiveVersion.accepted
+          return acc
+        },
+        {} as Record<string, boolean>,
       )
+      reset({ initialValues: initial })
     }
   })
 
@@ -52,23 +50,25 @@ export const SitePolicy = (props: SitePolicyProps) => {
     await operationV1AgreePolicies({ body: values })
 
     // update policy cache
-    setStore('data', (prev) => {
-      if (!prev) return prev
-      return prev.map((policy) => {
-        policy.effectiveVersion.accepted = values[String(policy.effectiveVersion.id)]
-        return policy
-      })
+    policies.data?.forEach((policy, i) => {
+      setStore('data', i, 'effectiveVersion', 'accepted', !!values[String(policy.effectiveVersion.id)])
     })
 
     // update user cache
     setUserStore('user', 'agreementRequired', false)
   }
 
-  const handleClose = async () => {
+  const close = async () => {
     if (accountStore.user?.agreementRequired) {
       await logout()
     }
     props.setOpen(false)
+  }
+
+  const agreeAll = () => {
+    policies.data?.forEach((policy) => {
+      setValue(String(policy.effectiveVersion.id), true)
+    })
   }
 
   return (
@@ -76,17 +76,20 @@ export const SitePolicy = (props: SitePolicyProps) => {
       title={t('{{platform}} Site Policies', { platform: PLATFORM_NAME })}
       boxClass="max-w-2xl"
       open={props.open && !policies.loading}
-      onClose={handleClose}
+      onClose={close}
       disableBackdrop={!!accountStore.user?.agreementRequired}
     >
       <Form onSubmit={agree}>
         <div class="px-8 space-y-6 mb-8">
           <div class="text-xs text-info mb-8">
-            {t('Before you use this site, please read and agree to the following policies.')}
+            <span class="mr-1">{t('Before you use this site, please read and agree to the following policies.')}</span>
+            <button type="button" class="btn btn-xs btn-ghost btn-primary" onClick={agreeAll}>
+              {t('Select All')}
+            </button>
           </div>
           <For each={policies.data}>
             {(policy) => (
-              <div class="space-y-2">
+              <div class="space-y-1">
                 <div class="flex items-center gap-2 justify-between mb-0">
                   <span class="text-base font-semibold">
                     <span class="mr-2">{policy.title}</span>
@@ -106,7 +109,6 @@ export const SitePolicy = (props: SitePolicyProps) => {
 
                 <Show when={accountStore.user}>
                   <Field
-                    type="boolean"
                     name={String(policy.effectiveVersion.id)}
                     validate={(value) => {
                       return policy.mandatory && !value ? t('You must agree to the policy to continue.') : ''
@@ -118,7 +120,7 @@ export const SitePolicy = (props: SitePolicyProps) => {
                           {...props}
                           type="checkbox"
                           class={`checkbox checkbox-xs ${policy.mandatory ? 'validator' : ''}`}
-                          checked={!!policy.effectiveVersion.accepted}
+                          checked={field.value}
                           required={policy.mandatory}
                         />
 
@@ -134,9 +136,9 @@ export const SitePolicy = (props: SitePolicyProps) => {
           <Show when={accountStore.user}>
             <SubmitButton
               label={t('Submit')}
-              isPending={agreementForm.submitting}
-              disabled={!agreementForm.dirty}
-              class="btn btn-neutral mt-4 w-full"
+              isPending={formState.submitting}
+              disabled={!formState.dirty}
+              class="btn btn-neutral w-full"
             />
           </Show>
         </div>

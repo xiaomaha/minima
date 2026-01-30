@@ -1,9 +1,9 @@
-import type { FieldPath } from '@modular-forms/solid'
-import { type FieldValues, type FormStore, setError } from '@modular-forms/solid'
 import type { AxiosError } from 'axios'
 import type { TOptions } from 'i18next'
 import i18n from '@/i18n.ts'
+import type { FieldValues } from '@/shared/solid/form'
 import { showToast } from '@/shared/toast/store.ts'
+import type { createForm } from './solid/form'
 
 export const handleApiError = async (error: AxiosError) => {
   let message: string = ''
@@ -61,16 +61,18 @@ interface ValidationError {
 }
 
 export const handleFormErrors = <T extends FieldValues>(
-  form: FormStore<T>,
+  form: ReturnType<typeof createForm<T>>,
   error: unknown,
   t: (key: string, options?: TOptions) => string,
 ): void => {
+  const [, actions] = form
   const detail = (error as { detail?: ValidationError[] | string }).detail
-
   if (Array.isArray(detail)) {
     detail.forEach((err) => {
       const fieldName = err.loc[err.loc.length - 1]
-      setError(form, fieldName as FieldPath<T>, t(err.msg))
+      if (fieldName) {
+        actions.setError(fieldName, t(err.msg))
+      }
     })
   }
 }

@@ -1,4 +1,3 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import {
   IconChevronDown,
   IconChevronUp,
@@ -34,6 +33,7 @@ import { FormInput } from '@/shared/FormInput'
 import { NoContent } from '@/shared/NoContent'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from './editor/TextEditor'
@@ -144,7 +144,7 @@ const InquiryEditor = (props: InquiryEditorProps) => {
   const inquiryContext = useInquiryContext()
   const [files, setFiles] = createSignal<File[]>([])
 
-  const [inquiryForm, { Form, Field }] = createForm<v.InferInput<typeof vInquiryCreateSchema>>({
+  const [formState, { Form, Field }] = createForm<v.InferInput<typeof vInquiryCreateSchema>>({
     initialValues: {
       title: props.title ?? '',
       question: props.question ?? '',
@@ -213,14 +213,12 @@ const InquiryEditor = (props: InquiryEditorProps) => {
 
           <Field name="appLabel">{() => null}</Field>
           <Field name="model">{() => null}</Field>
-          <Field name="contentId" type="string">
-            {() => null}
-          </Field>
+          <Field name="contentId">{() => null}</Field>
 
           <SubmitButton
             label={t('Submit inquiry')}
-            isPending={inquiryForm.submitting}
-            disabled={!inquiryForm.dirty}
+            isPending={formState.submitting}
+            disabled={!formState.dirty}
             class="btn btn-neutral mt-4"
           />
         </fieldset>

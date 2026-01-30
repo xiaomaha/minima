@@ -1,4 +1,3 @@
-import { createForm, getValue, setValue, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
@@ -12,6 +11,7 @@ import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { ActivationLink } from './-ActivationLink'
@@ -33,8 +33,15 @@ function RouteComponent() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
 
-  const [joinForm, { Form, Field }] = createForm<v.InferInput<typeof vJoinSchema> & { passwordConfirm: string }>({
-    initialValues: { callbackUrl: `${BASE_URL}/activate` },
+  const form = createForm<v.InferInput<typeof vJoinSchema> & { passwordConfirm: string }>({
+    initialValues: {
+      name: '',
+      email: '',
+      agreements: [],
+      password: '',
+      passwordConfirm: '',
+      callbackUrl: `${BASE_URL}/activate`,
+    },
     validate: valiForm(vJoinSchema),
   })
 
@@ -48,6 +55,7 @@ function RouteComponent() {
   )
 
   const [selectedPolicy, setSelectedPolicy] = createSignal<SitePolicySchema>()
+  const [formState, { Form, Field, setValue, getValue }] = form
 
   const join = async ({
     passwordConfirm,
@@ -55,7 +63,7 @@ function RouteComponent() {
   }: v.InferInput<typeof vJoinSchema> & { passwordConfirm: string }) => {
     const { error } = await accountV1Join({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(joinForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
     showToast({
@@ -76,7 +84,7 @@ function RouteComponent() {
 
   const agreeAll = () => {
     const allVersionIds = policies.data?.map((p) => String(p.effectiveVersion.id)) || []
-    setValue(joinForm, 'agreements', allVersionIds)
+    setValue('agreements', allVersionIds)
   }
 
   return (
@@ -100,7 +108,7 @@ function RouteComponent() {
       </Dialog>
 
       <Form onSubmit={join}>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-4">
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-5">
           <legend class="fieldset-legend mb-0">{t('Join')}</legend>
 
           <span class="label">{t('Please fill out the form below to join.')}</span>
@@ -132,7 +140,7 @@ function RouteComponent() {
           <Field
             name="passwordConfirm"
             validate={(value) => {
-              const password = getValue(joinForm, 'password')
+              const password = getValue('password')
               return value === password ? '' : t('Passwords do not match')
             }}
           >
@@ -146,7 +154,6 @@ function RouteComponent() {
           <Show when={!search().sso}>
             <Field
               name="agreements"
-              type="string[]"
               validate={(value) => {
                 const mandatoryVersionIds =
                   policies.data?.filter((p) => p.mandatory).map((p) => String(p.effectiveVersion.id)) || []
@@ -180,7 +187,7 @@ function RouteComponent() {
                                   const newValue = e.currentTarget.checked
                                     ? [...current, versionId]
                                     : current.filter((id) => id !== versionId)
-                                  setValue(joinForm, 'agreements', newValue)
+                                  setValue('agreements', newValue)
                                 }}
                                 required={policy.mandatory}
                               />
@@ -210,8 +217,8 @@ function RouteComponent() {
 
           <SubmitButton
             label={t('Join')}
-            isPending={joinForm.submitting}
-            disabled={!joinForm.dirty}
+            isPending={formState.submitting}
+            disabled={!formState.dirty}
             class="btn btn-neutral mt-4"
           />
 

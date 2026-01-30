@@ -21,11 +21,12 @@ export const Route = createFileRoute('/(app)')({
   validateSearch: searchSchema,
   beforeLoad: async () => {
     if (!accountStore.user) {
+      const nextPath = location.pathname + location.search
+      const shouldIgnoreNext = location.search.includes('token=')
+
       throw redirect({
         to: '/login',
-        search: {
-          next: location.pathname + location.search,
-        },
+        search: shouldIgnoreNext ? undefined : { next: nextPath },
       })
     }
   },
@@ -49,11 +50,12 @@ function RouteComponent() {
 
   createEffect(() => {
     if (!accountStore.user && !location.pathname.startsWith('/login')) {
+      const nextPath = location.pathname + location.search
+      const shouldIgnoreNext = location.search.includes('token=')
+
       navigate({
         to: '/login',
-        search: {
-          next: location.pathname + location.search,
-        },
+        search: shouldIgnoreNext ? undefined : { next: nextPath },
       })
     }
   })

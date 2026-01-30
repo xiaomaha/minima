@@ -1,4 +1,3 @@
-import { createForm, getValue, reset, setValue, valiForm } from '@modular-forms/solid'
 import { IconTrash } from '@tabler/icons-solidjs'
 import { For, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
@@ -16,6 +15,7 @@ import { FormInput } from '@/shared/FormInput'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { type CachedStoreState, createCachedStore } from '@/shared/solid/cached-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 
 interface Props {
@@ -37,29 +37,28 @@ export const GoalForm = (props: Props) => {
     },
   )
 
-  const [goalForm, { Form, Field }] = createForm<v.InferInput<typeof vCompetencyGoalSaveSchema>>({
+  const form = createForm<v.InferInput<typeof vCompetencyGoalSaveSchema>>({
     initialValues: {
-      name: props.goal?.name || '',
+      name: props.goal?.name ?? '',
       classificationId: props.classIdForSkills,
       factorIds: (props.goal?.factorIds || []).slice().sort((a, b) => a - b),
-      description: props.goal?.description || '',
+      description: props.goal?.description ?? '',
     },
     validate: valiForm(vCompetencyGoalSaveSchema),
   })
 
-  // modular form not supporting primitive array
-  // @ts-expect-error tricky way to allow empty array
-  const getFactorIds = () => getValue(goalForm, 'factorIds') || ([] as number[])
-  // @ts-expect-error tricky way to allow empty array
-  const setFactorIds = (val: number[]) => setValue(goalForm, 'factorIds', val)
+  const [formState, { Form, Field, reset, getValue, setValue }] = form
+
+  const getFactorIds = () => getValue('factorIds') || ([] as number[])
+  const setFactorIds = (val: number[]) => setValue('factorIds', val)
 
   const save = async (values: v.InferInput<typeof vCompetencyGoalSaveSchema>) => {
     const { data, error } = await competencyV1SaveCompetencyGoal({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(goalForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
-    reset(goalForm, { initialValues: values })
+    reset({ initialValues: { ...values } })
 
     if (props.goal) {
       props.setGoalStore('data', (prev) => prev!.map((g) => (g.id === props.goal!.id ? data! : g)))
@@ -88,7 +87,7 @@ export const GoalForm = (props: Props) => {
   return (
     <Show when={!skills.loading} fallback={<LoadingOverlay class="static" />}>
       <div class="label text-sm mb-4">{t("Select the skills you want to learn. Skill's highest level is 8.")}</div>
-      <div class="space-y-8">
+      <div class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <For each={skills.data}>
             {(item) => (
@@ -127,8 +126,7 @@ export const GoalForm = (props: Props) => {
         </div>
 
         <Form onSubmit={save}>
-          <fieldset class="fieldset space-y-4">
-            {/* @ts-expect-error tricky way to allow empty array */}
+          <fieldset class="fieldset space-y-5">
             <Field name="factorIds">{(field) => <span class="text-error">{field.error}</span>}</Field>
 
             <Field name="name">
@@ -152,15 +150,13 @@ export const GoalForm = (props: Props) => {
               )}
             </Field>
 
-            <Field name="classificationId" type="number">
-              {() => <></>}
-            </Field>
+            <Field name="classificationId">{() => <></>}</Field>
 
             <div class="flex gap-4 w-full items-center">
               <SubmitButton
                 label={t('Save goal')}
-                isPending={goalForm.submitting}
-                disabled={!goalForm.dirty}
+                isPending={formState.submitting}
+                disabled={!formState.dirty}
                 class="btn btn-primary flex-1"
               />
 

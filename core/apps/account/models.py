@@ -237,7 +237,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     async def get_user(cls, *, is_active: bool | None = None, annotate: bool = False, **kwargs):
-        from apps.operation.models import PolicyVersion
+        from apps.operation.models import PolicyAgreement, PolicyVersion
 
         manager = (
             cls.objects.annotate(
@@ -249,8 +249,14 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                 ),
                 token_expires=F("token__expires"),
                 agreement_required=Exists(
-                    PolicyVersion.get_latest_mandatory_versions_subquery().exclude(
-                        policyagreement__user_id=OuterRef("id"), policyagreement__accepted=True
+                    PolicyVersion.objects.filter(
+                        id__in=Subquery(PolicyVersion.get_latest_mandatory_versions_subquery().values("id"))
+                    ).exclude(
+                        Exists(
+                            PolicyAgreement.objects.filter(
+                                user_id=OuterRef(OuterRef("id")), version_id=OuterRef("id"), accepted=True
+                            )
+                        )
                     )
                 ),
             )

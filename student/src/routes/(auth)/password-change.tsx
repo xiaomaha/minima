@@ -1,4 +1,3 @@
-import { createForm, getValue, valiForm } from '@modular-forms/solid'
 import { createFileRoute, Link } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
 import * as v from 'valibot'
@@ -8,6 +7,7 @@ import { BASE_URL } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { LoginLink } from './-LoginLink'
@@ -35,15 +35,15 @@ const RequestPasswordChange = () => {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
-  const [requestForm, { Form, Field }] = createForm<v.InferInput<typeof vRequestPasswordChangeSchema>>({
-    initialValues: { callbackUrl: `${BASE_URL}${Route.fullPath}` },
+  const form = createForm<v.InferInput<typeof vRequestPasswordChangeSchema>>({
+    initialValues: { email: '', callbackUrl: `${BASE_URL}${Route.fullPath}` },
     validate: valiForm(vRequestPasswordChangeSchema),
   })
 
   const requestPasswordChange = async (values: v.InferInput<typeof vRequestPasswordChangeSchema>) => {
     const { error } = await accountV1RequestPasswordChange({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(requestForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
 
@@ -59,9 +59,11 @@ const RequestPasswordChange = () => {
     navigate({ to: '/login', replace: true })
   }
 
+  const [formState, { Form, Field }] = form
+
   return (
     <Form onSubmit={requestPasswordChange}>
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-5">
         <legend class="fieldset-legend mb-0">{t('Request password change')}</legend>
 
         <span class="label">{t('Enter your account email address')}</span>
@@ -78,8 +80,8 @@ const RequestPasswordChange = () => {
 
         <SubmitButton
           label={t('Request password change')}
-          isPending={requestForm.submitting}
-          disabled={!requestForm.dirty}
+          isPending={formState.submitting}
+          disabled={!formState.dirty}
           class="btn btn-neutral mt-4"
         />
 
@@ -93,17 +95,15 @@ const ApplyPasswordChange = (props: { token: string }) => {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
-  const [applyForm, { Form, Field }] = createForm<
-    v.InferInput<typeof vApplyPasswordChangeSchema> & { passwordConfirm: string }
-  >({
-    initialValues: { token: props.token },
+  const form = createForm<v.InferInput<typeof vApplyPasswordChangeSchema> & { passwordConfirm: string }>({
+    initialValues: { password: '', passwordConfirm: '', token: props.token },
     validate: valiForm(vApplyPasswordChangeSchema),
   })
 
   const applyPasswordChange = async (values: v.InferInput<typeof vApplyPasswordChangeSchema>) => {
     const { error } = await accountV1ApplyPasswordChange({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(applyForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
 
@@ -116,9 +116,11 @@ const ApplyPasswordChange = (props: { token: string }) => {
     navigate({ to: '/login', replace: true })
   }
 
+  const [formState, { Form, Field, getValue }] = form
+
   return (
     <Form onSubmit={applyPasswordChange}>
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-4">
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-5">
         <legend class="fieldset-legend mb-0">{t('Password change')}</legend>
 
         <span class="label">{t('Enter your new password')}</span>
@@ -134,7 +136,7 @@ const ApplyPasswordChange = (props: { token: string }) => {
         <Field
           name="passwordConfirm"
           validate={(value) => {
-            const password = getValue(applyForm, 'password')
+            const password = getValue('password')
             return value === password ? '' : t('Passwords do not match')
           }}
         >
@@ -149,8 +151,8 @@ const ApplyPasswordChange = (props: { token: string }) => {
 
         <SubmitButton
           label={t('Change password')}
-          isPending={applyForm.submitting}
-          disabled={!applyForm.dirty}
+          isPending={formState.submitting}
+          disabled={!formState.dirty}
           class="btn btn-neutral mt-4"
         />
 

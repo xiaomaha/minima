@@ -25,7 +25,7 @@ const RootLayout = () => {
           <aside>
             <p class="flex items-center gap-2">
               {t('Copyright © {{yearText}} - All right reserved by {{PLATFORM_NAME}}.', { yearText, PLATFORM_NAME })}
-              <button type="button" class="link link-hover" onClick={() => setPolicyOpen(true)}>
+              <button tabindex="-1" type="button" class="link link-hover" onClick={() => setPolicyOpen(true)}>
                 {t('Site Policies')}
               </button>
             </p>

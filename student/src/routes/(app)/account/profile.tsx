@@ -1,4 +1,3 @@
-import { createForm, reset, setValue, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
 import type * as v from 'valibot'
@@ -9,6 +8,7 @@ import { store as accountStore, setUser } from '@/routes/(app)/account/-store'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { AvatarEdit } from './-profile/AvatarEdit'
 import { OtpSetup } from './-profile/OtpSetup'
@@ -22,20 +22,22 @@ function RouteComponent() {
   const navigate = Route.useNavigate()
   const user = accountStore.user
 
-  const [updateForm, { Form, Field }] = createForm<v.InferInput<typeof vUserUpdateSchema>>({
+  const form = createForm<Omit<v.InferInput<typeof vUserUpdateSchema>, 'preferences'>>({
     initialValues: { ...user },
     validate: valiForm(vUserUpdateSchema),
   })
 
+  const [formState, { Form, Field, reset, setValue }] = form
+
   const updateProfile = async (values: v.InferInput<typeof vUserUpdateSchema>) => {
     const { data, error } = await accountV1UpdateMe({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(updateForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
 
     setUser(data)
-    reset(updateForm, { initialValues: values })
+    reset({ initialValues: data })
   }
 
   const displayName = () => user?.nickname || user?.name
@@ -86,7 +88,7 @@ function RouteComponent() {
                     value={field.value ?? ''}
                     onInput={(e) => {
                       const value = e.currentTarget.value
-                      setValue(updateForm, 'birthDate', value || null)
+                      setValue('birthDate', value || null)
                     }}
                     class="input w-full"
                     placeholder={t('Birthdate')}
@@ -127,8 +129,8 @@ function RouteComponent() {
 
             <SubmitButton
               label={t('Update')}
-              isPending={updateForm.submitting}
-              disabled={!updateForm.dirty}
+              isPending={formState.submitting}
+              disabled={!formState.dirty}
               class="btn btn-primary mt-4"
             />
           </fieldset>

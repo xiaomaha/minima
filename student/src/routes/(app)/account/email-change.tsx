@@ -1,4 +1,3 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import { createFileRoute, Link } from '@tanstack/solid-router'
 import { createResource, Show } from 'solid-js'
 import * as v from 'valibot'
@@ -8,6 +7,7 @@ import { BASE_URL } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { setUser } from './-store'
@@ -35,15 +35,15 @@ const RequestEmailChange = () => {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
-  const [requestForm, { Form, Field }] = createForm<v.InferInput<typeof vRequestEmailChangeSchema>>({
-    initialValues: { callbackUrl: `${BASE_URL}${Route.fullPath}` },
+  const form = createForm<v.InferInput<typeof vRequestEmailChangeSchema>>({
+    initialValues: { newEmail: '', password: '', callbackUrl: `${BASE_URL}${Route.fullPath}` },
     validate: valiForm(vRequestEmailChangeSchema),
   })
 
   const requestEmailChange = async (values: v.InferInput<typeof vRequestEmailChangeSchema>) => {
     const { error } = await accountV1RequestEmailChange({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(requestForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
 
@@ -59,10 +59,12 @@ const RequestEmailChange = () => {
     navigate({ to: '/account/profile', replace: true })
   }
 
+  const [formState, { Form, Field }] = form
+
   return (
     <div class="w-full max-w-sm mx-auto py-12 px-4">
       <Form onSubmit={requestEmailChange}>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-4">
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4 space-y-5">
           <legend class="fieldset-legend mb-0">{t('Email change')}</legend>
 
           <span class="label">{t('Enter the new email you used to when you joined.')}</span>
@@ -87,8 +89,8 @@ const RequestEmailChange = () => {
 
           <SubmitButton
             label={t('Request email change')}
-            isPending={requestForm.submitting}
-            disabled={!requestForm.dirty}
+            isPending={formState.submitting}
+            disabled={!formState.dirty}
             class="btn btn-primary mt-4"
           />
 

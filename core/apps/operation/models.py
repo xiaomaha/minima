@@ -627,9 +627,10 @@ class PolicyAgreement(TimeStampedMixin):
     accepted = BooleanField(_("Accepted"), null=True, blank=True)
 
     class Meta(TimeStampedMixin.Meta):
-        indexes = [Index(fields=["user", "accepted"])]
         verbose_name = _("Policy Agreement")
         verbose_name_plural = _("Policy Agreements")
+        indexes = [Index(fields=["user", "accepted"])]
+        constraints = [UniqueConstraint(fields=["user", "version"], name="operation_policyagreement_us_ve_uniq")]
 
     @classmethod
     async def agree_policies(cls, *, user_id: str, agreements: dict[str, bool | None]):
@@ -638,7 +639,12 @@ class PolicyAgreement(TimeStampedMixin):
             for version_id, accepted in agreements.items()
             if str(version_id).isdigit()
         ]
-        await cls.objects.abulk_create(agreement_objects, ignore_conflicts=True)
+        await cls.objects.abulk_create(
+            agreement_objects, update_conflicts=True, unique_fields=["user", "version"], update_fields=["accepted"]
+        )
+
+    if TYPE_CHECKING:
+        pgh_event_model: type[Model]
 
 
 @pghistory.track()

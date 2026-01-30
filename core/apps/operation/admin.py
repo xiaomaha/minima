@@ -9,7 +9,14 @@ from django_jsonform.forms.fields import JSONFormField
 from treebeard.forms import movenodeform_factory
 from unfold.contrib.forms.widgets import WysiwygWidget
 
-from apps.common.admin import HiddenModelAdmin, ImportExportModelAdmin, ModelAdmin, TabularInline
+from apps.common.admin import (
+    HiddenModelAdmin,
+    ImportExportModelAdmin,
+    ModelAdmin,
+    ReadOnlyHiddenModelAdmin,
+    ReadOnlyTabularInline,
+    TabularInline,
+)
 from apps.operation.import_export import CategoryResource
 from apps.operation.models import (
     FAQ,
@@ -192,6 +199,17 @@ class PolicyVersionAdmin(HiddenModelAdmin[PolicyVersion]):
 
 @admin.register(PolicyAgreement)
 class AgreementAdmin(ModelAdmin[PolicyAgreement]):
+    class AgreementEventInline(ReadOnlyTabularInline[PolicyAgreement.pgh_event_model]):
+        model = PolicyAgreement.pgh_event_model
+        exclude = ("pgh_context",)
+        verbose_name = _("Agreement History")
+        verbose_name_plural = _("Agreement Histories")
+
+    inlines = (AgreementEventInline,)
+
+
+@admin.register(PolicyAgreement.pgh_event_model)
+class PolicyAgreementEventAdmin(ReadOnlyHiddenModelAdmin[PolicyAgreement.pgh_event_model]):
     pass
 
 

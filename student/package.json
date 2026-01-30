@@ -15,7 +15,6 @@
     "openapi-ts": "openapi-ts"
   },
   "dependencies": {
-    "@modular-forms/solid": "^0.25.1",
     "@pdfslick/solid": "^3.1.0",
     "@solid-primitives/intersection-observer": "^2.2.2",
     "@solid-primitives/media": "^2.3.3",

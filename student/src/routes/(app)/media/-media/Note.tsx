@@ -1,4 +1,3 @@
-import { createForm, reset, valiForm } from '@modular-forms/solid'
 import type { Editor } from '@tiptap/core'
 import { createEffect, createSignal } from 'solid-js'
 import type * as v from 'valibot'
@@ -8,6 +7,7 @@ import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from '@/config'
 import { accessContextParam } from '@/context'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { TextEditor } from '../../-shared/editor/TextEditor'
 
@@ -20,7 +20,7 @@ export const Note = (props: Props) => {
   const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
-  const [contentForm, { Form, Field }] = createForm<v.InferInput<typeof vNoteSaveSchema>>({
+  const [formState, { Form, Field, reset }] = createForm<v.InferInput<typeof vNoteSaveSchema>>({
     initialValues: { note: '' },
     validate: valiForm(vNoteSaveSchema),
   })
@@ -34,6 +34,10 @@ export const Note = (props: Props) => {
     },
   )
 
+  createEffect(() => {
+    reset({ initialValues: { note: note.data?.note ?? '' } })
+  })
+
   const onSubmit = async (values: v.InferInput<typeof vNoteSaveSchema>) => {
     const { data } = await contentV1SaveMediaNote({
       path: { id: props.mediaId },
@@ -42,12 +46,7 @@ export const Note = (props: Props) => {
     })
 
     setStore('data', data)
-    reset(contentForm, { initialValues: { note: data.note } })
   }
-
-  createEffect(() => {
-    reset(contentForm, { initialValues: { note: note.data?.note ?? '' } })
-  })
 
   const handleClipboardWrite = (event: CustomEvent, editor: Editor) => {
     const text = event.detail.text
@@ -87,8 +86,8 @@ export const Note = (props: Props) => {
 
           <SubmitButton
             label={t('Save')}
-            isPending={contentForm.submitting}
-            disabled={!contentForm.dirty}
+            isPending={formState.submitting}
+            disabled={!formState.dirty}
             class="btn btn-sm btn-neutral mt-1"
           />
         </fieldset>
