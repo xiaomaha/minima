@@ -20,7 +20,7 @@ from apps.common.models import tuid
 @pytest.mark.django_db
 def test_account_flow(client: Client, token_spy: list[str], mimesis: Generic):
     # join policies
-    res = client.get("/api/v1/operation/policyversion/join")
+    res = client.get("/api/v1/operation/policy/effective")
     assert res.status_code == 200, "join policies"
     policy_agreements = [str(policy["effectiveVersion"]["id"]) for policy in res.json()]
 

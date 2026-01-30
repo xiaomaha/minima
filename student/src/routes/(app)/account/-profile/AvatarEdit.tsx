@@ -179,13 +179,13 @@ export const AvatarEdit = () => {
   )
 }
 
-async function resizeContainImage(
+const resizeContainImage = async (
   file: File,
   targetWidth: number,
   targetHeight: number,
   bgColor = 'transparent',
   quality = 0.9,
-) {
+) => {
   return new Promise<{ blob: Blob; url: string }>((resolve, reject) => {
     const img = new Image()
     img.src = URL.createObjectURL(file)

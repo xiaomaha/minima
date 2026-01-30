@@ -1,4 +1,4 @@
-export function GoogleIcon(props: { size?: number }) {
+export const GoogleIcon = (props: { size?: number }) => {
   const size = () => props.size || 28
   return (
     <svg width={size()} height={size()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

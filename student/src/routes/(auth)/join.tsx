@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
-import { accountV1Join, operationV1GetPoliciesToJoin } from '@/api'
+import { accountV1Join, operationV1EffectivePolicies } from '@/api'
 import { vJoinSchema } from '@/api/valibot.gen'
 import { BASE_URL, TEST_MAILER_URL } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
@@ -20,6 +20,7 @@ import { SSOButtons } from './-SSOButtons'
 
 const searchSchema = v.object({
   sso: v.optional(v.boolean()),
+  error: v.optional(v.string()),
 })
 
 export const Route = createFileRoute('/(auth)/join')({
@@ -38,10 +39,10 @@ function RouteComponent() {
   })
 
   const [policies] = createCachedStore(
-    'operationV1GetPoliciesToJoin',
+    'operationV1EffectivePolicies',
     () => ({}),
     async () => {
-      const { data } = await operationV1GetPoliciesToJoin()
+      const { data } = await operationV1EffectivePolicies()
       return data
     },
   )

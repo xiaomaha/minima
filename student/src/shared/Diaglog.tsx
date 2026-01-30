@@ -8,15 +8,18 @@ interface Props {
   title?: JSX.Element
   children: JSX.Element
   boxClass?: string
+  disableBackdrop?: boolean
 }
 
 export const Dialog = (props: Props) => {
   const { t } = useTranslation()
   return (
     <dialog class="modal" open={props.open}>
-      <form method="dialog" class="modal-backdrop">
-        <button type="button" onClick={() => props.onClose()} />
-      </form>
+      <Show when={!props.disableBackdrop}>
+        <form method="dialog" class="modal-backdrop">
+          <button type="button" onClick={() => props.onClose()} />
+        </form>
+      </Show>
       <Show when={props.open}>
         <div class={`modal-box p-0 flex flex-col ${props.boxClass}`}>
           <div class="flex p-4 text-base-content/30 gap-2">

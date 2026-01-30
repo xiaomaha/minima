@@ -4,19 +4,21 @@ import os
 from datetime import timedelta
 
 from asgiref.sync import async_to_sync
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from mimesis.plugins.factory import FactoryField
 
 from apps.account.models import User
 from apps.content.models import Media, PublicAccessMedia
 from apps.content.tests.factories import MediaFactory
 from apps.learning.models import CatalogItem
 from apps.learning.tests.factories import CatalogFactory, CohortCatalogFactory, UserCatalogFactory
-from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory
+from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory, PolicyFactory
 from apps.partner.models import Group
 from apps.partner.tests.factories import CohortFactory, MemberFactory, PartnerFactory
 from apps.quiz.models import Quiz
@@ -122,6 +124,10 @@ class Command(BaseCommand):
 
         # inquery
         InquiryFactory.create_batch(size=50, writer=test_user, content=test_user)
+
+        # site policy
+        with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
+            PolicyFactory.create_batch(5)
 
     @staticmethod
     def create_public_catalog(name: str, media_size: int):

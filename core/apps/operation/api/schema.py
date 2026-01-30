@@ -120,6 +120,7 @@ class SitePolicySchema(TimeStampedMixinSchema):
         body: str
         version: str
         effective_date: datetime
+        accepted: bool | None = None
 
     id: int
     effective_version: SitePolicyVersionSchema

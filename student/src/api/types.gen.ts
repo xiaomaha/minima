@@ -59,6 +59,10 @@ export type UserSchema = {
      */
     isActive: boolean;
     /**
+     * Haspassword
+     */
+    hasPassword: boolean;
+    /**
      * Otpenabled
      */
     otpEnabled: string | null;
@@ -67,9 +71,9 @@ export type UserSchema = {
      */
     tokenExpires: string | null;
     /**
-     * Haspassword
+     * Agreementrequired
      */
-    hasPassword: boolean;
+    agreementRequired: boolean | null;
 };
 
 /**
@@ -3744,6 +3748,10 @@ export type SitePolicyVersionSchema = {
      * Effectivedate
      */
     effectiveDate: string;
+    /**
+     * Accepted
+     */
+    accepted?: boolean | null;
 };
 
 /**
@@ -6315,14 +6323,19 @@ export type OperationV1CreateAppealResponses = {
 
 export type OperationV1CreateAppealResponse = OperationV1CreateAppealResponses[keyof OperationV1CreateAppealResponses];
 
-export type OperationV1GetPoliciesToJoinData = {
+export type OperationV1EffectivePoliciesData = {
     body?: never;
     path?: never;
-    query?: never;
-    url: '/api/v1/operation/policyversion/join';
+    query?: {
+        /**
+         * Userid
+         */
+        userId?: string | null;
+    };
+    url: '/api/v1/operation/policy/effective';
 };
 
-export type OperationV1GetPoliciesToJoinResponses = {
+export type OperationV1EffectivePoliciesResponses = {
     /**
      * Response
      *
@@ -6331,13 +6344,13 @@ export type OperationV1GetPoliciesToJoinResponses = {
     200: Array<SitePolicySchema>;
 };
 
-export type OperationV1GetPoliciesToJoinResponse = OperationV1GetPoliciesToJoinResponses[keyof OperationV1GetPoliciesToJoinResponses];
+export type OperationV1EffectivePoliciesResponse = OperationV1EffectivePoliciesResponses[keyof OperationV1EffectivePoliciesResponses];
 
 export type OperationV1AgreePoliciesData = {
     body: PolicyVersionAgreementSchema;
     path?: never;
     query?: never;
-    url: '/api/v1/operation/policyversion/agree';
+    url: '/api/v1/operation/policy/agree';
 };
 
 export type OperationV1AgreePoliciesResponses = {

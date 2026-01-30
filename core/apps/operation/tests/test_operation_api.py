@@ -58,7 +58,7 @@ def test_message_flow(client: Client, admin_user: AdminUser, mimesis: Generic):
 @pytest.mark.django_db
 def test_policy_flow(client: Client, admin_user: AdminUser):
     # get join policies
-    res = client.get("/api/v1/operation/policyversion/join")
+    res = client.get("/api/v1/operation/policy/effective")
     assert res.status_code == 200, "get join policies"
 
     join_policies: dict[str, bool] = {}
@@ -69,9 +69,7 @@ def test_policy_flow(client: Client, admin_user: AdminUser):
     admin_user.login()
 
     # agree join policies
-    res = client.post(
-        "/api/v1/operation/policyversion/agree", data=json.dumps(join_policies), content_type="application/json"
-    )
+    res = client.post("/api/v1/operation/policy/agree", data=json.dumps(join_policies), content_type="application/json")
     assert res.status_code == 200, "agree join policies"
 
 

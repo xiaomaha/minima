@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, useLocation } from '@tanstack/solid-router'
 import { For } from 'solid-js'
+import { SSO_PROVIDERS } from '@/config'
 import { useTranslation } from '@/shared/solid/i18n'
 
 export const Route = createFileRoute('/(app)/account')({
@@ -14,8 +15,11 @@ function RouteComponent() {
   const tabLabels: Record<string, string> = {
     profile: t('My Profile'),
     group: t('Cohort Group'),
-    link: t('Linked Account'),
-  } as const
+  }
+
+  if (SSO_PROVIDERS.length > 0) {
+    tabLabels.link = t('Linked Account')
+  }
 
   const currentTab = () => {
     const path = location().pathname.split('/').pop()

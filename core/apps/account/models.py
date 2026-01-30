@@ -26,6 +26,7 @@ from django.db.models import (
     DateField,
     DateTimeField,
     EmailField,
+    Exists,
     F,
     ForeignKey,
     GenericIPAddressField,
@@ -247,7 +248,11 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                     .values("created_at")[:1]
                 ),
                 token_expires=F("token__expires"),
-                agreement_required=PolicyVersion.get_agreement_required_subquery(),
+                agreement_required=Exists(
+                    PolicyVersion.get_latest_mandatory_versions_subquery().exclude(
+                        policyagreement__user_id=OuterRef("id"), policyagreement__accepted=True
+                    )
+                ),
             )
             if annotate
             else cls.objects

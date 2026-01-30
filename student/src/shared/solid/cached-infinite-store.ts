@@ -29,19 +29,27 @@ type StoreReturn<T> = [store: StoreState<T>, setObserverEl: Setter<HTMLElement |
 
 const cache = new Map<string, StoreState<unknown>>()
 
-function buildKey(prefix: string, params: unknown): string {
+const buildKey = (prefix: string, params: unknown): string => {
   return `${prefix}::${JSON.stringify(params)}`
 }
 
-function noParams<T>(): StoreState<T> {
+const noParams = <T>(): StoreState<T> => {
   return { items: [], count: 0, page: 0, pages: 0, loading: false, end: true }
 }
 
-function startFresh<T>(): StoreState<T> {
+const startFresh = <T>(): StoreState<T> => {
   return { items: [], count: 0, page: 0, pages: 0, loading: false, end: false }
 }
 
-export function initCachedInfiniteStore<T, P>(prefix: string, params: P, data?: Partial<PaginatedResponse<T>>): void {
+export const clearInfiniteStore = (): void => {
+  cache.clear()
+}
+
+export const initCachedInfiniteStore = <T, P>(
+  prefix: string,
+  params: P,
+  data?: Partial<PaginatedResponse<T>>,
+): void => {
   const key = buildKey(prefix, params)
   if (cache.has(key)) return
   cache.set(key, {
@@ -54,11 +62,11 @@ export function initCachedInfiniteStore<T, P>(prefix: string, params: P, data?: 
   })
 }
 
-export function createCachedInfiniteStore<T, P>(
+export const createCachedInfiniteStore = <T, P>(
   prefix: string,
   getParams: () => P | undefined,
   fetcher: (params: P, page: number) => Promise<PaginatedResponse<T>>,
-): StoreReturn<T> {
+): StoreReturn<T> => {
   let state: StoreState<T>
   let setState: SetStoreFunction<StoreState<T>>
   let setObserver: Setter<HTMLElement | undefined>

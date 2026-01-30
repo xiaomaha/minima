@@ -545,8 +545,8 @@ class Policy(TimeStampedMixin):
         return self.title
 
     @classmethod
-    async def get_policies_to_join(cls):
-        latest_versions = (
+    async def effective_policies(cls, *, user_id: str | None = None):
+        latest_versions_qs = (
             PolicyVersion.objects
             .filter(effective_date__lte=timezone.now())
             .annotate(
@@ -557,35 +557,33 @@ class Policy(TimeStampedMixin):
                 )
             )
             .filter(row_number=1)
-            .values("id")
+            .order_by("-effective_date", "-id")
         )
+
+        if user_id is not None:
+            latest_versions_qs = latest_versions_qs.annotate(
+                accepted=Exists(
+                    PolicyAgreement.objects.filter(user_id=user_id, version_id=OuterRef("id"), accepted=True)
+                )
+            )
 
         policies = [
             policy
-            async for policy in (
-                cls.objects
-                .filter(active=True, policyversion__id__in=latest_versions)
-                .prefetch_related(
-                    Prefetch(
-                        "policyversion_set",
-                        queryset=PolicyVersion.objects.filter(id__in=latest_versions).order_by(
-                            "-effective_date", "-id"
-                        ),
-                    )
-                )
-                .order_by("priority")
-                .distinct()
-            )
+            async for policy in cls.objects
+            .filter(active=True, policyversion__id__in=Subquery(latest_versions_qs.values("id")))
+            .prefetch_related(Prefetch("policyversion_set", queryset=latest_versions_qs))
+            .order_by("priority")
+            .distinct()
         ]
 
-        effective_policies = []
+        effectives = []
         for policy in policies:
-            effective_versions = policy.policyversion_set.all()  # from cache
+            effective_versions = policy.policyversion_set.all()
             if effective_versions:
                 policy.effective_version = effective_versions[0]
-                effective_policies.append(policy)
+                effectives.append(policy)
 
-        return effective_policies
+        return effectives
 
 
 @pghistory.track()
@@ -620,14 +618,6 @@ class PolicyVersion(TimeStampedMixin):
     async def get_effective_mandatory_version_ids(cls):
         version_ids = cls.get_latest_mandatory_versions_subquery().values_list("id", flat=True)
         return [version_id async for version_id in version_ids]
-
-    @classmethod
-    def get_agreement_required_subquery(cls):
-        return Exists(
-            cls.get_latest_mandatory_versions_subquery().exclude(
-                policyagreement__user_id=OuterRef("id"), policyagreement__accepted=True
-            )
-        )
 
 
 @pghistory.track()

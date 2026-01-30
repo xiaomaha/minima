@@ -22,9 +22,10 @@ export const vUserSchema = v.object({
     phone: v.string(),
     preferences: v.optional(v.object({})),
     isActive: v.boolean(),
+    hasPassword: v.boolean(),
     otpEnabled: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
     tokenExpires: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    hasPassword: v.boolean()
+    agreementRequired: v.union([v.boolean(), v.null()])
 });
 
 /**
@@ -1626,7 +1627,8 @@ export const vSitePolicyVersionSchema = v.object({
     dataCategory: v.record(v.string(), v.array(v.string())),
     body: v.string(),
     version: v.string(),
-    effectiveDate: v.pipe(v.string(), v.isoTimestamp())
+    effectiveDate: v.pipe(v.string(), v.isoTimestamp()),
+    accepted: v.optional(v.union([v.boolean(), v.null()]))
 });
 
 /**
@@ -2970,10 +2972,12 @@ export const vOperationV1CreateAppealData = v.object({
  */
 export const vOperationV1CreateAppealResponse = vAppealSchema;
 
-export const vOperationV1GetPoliciesToJoinData = v.object({
+export const vOperationV1EffectivePoliciesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
-    query: v.optional(v.never())
+    query: v.optional(v.object({
+        userId: v.optional(v.union([v.string(), v.null()]))
+    }))
 });
 
 /**
@@ -2981,7 +2985,7 @@ export const vOperationV1GetPoliciesToJoinData = v.object({
  *
  * OK
  */
-export const vOperationV1GetPoliciesToJoinResponse = v.array(vSitePolicySchema);
+export const vOperationV1EffectivePoliciesResponse = v.array(vSitePolicySchema);
 
 export const vOperationV1AgreePoliciesData = v.object({
     body: vPolicyVersionAgreementSchema,

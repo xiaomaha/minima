@@ -2,14 +2,15 @@ import { IconBrightnessUp, IconHazeMoon, IconLogout, IconUser } from '@tabler/ic
 import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
 import { createEffect, onMount, Show, Suspense } from 'solid-js'
 import * as v from 'valibot'
-import { accountV1Logout, learningV1GetRecords } from '@/api'
+import { learningV1GetRecords } from '@/api'
 import { setRecords } from '@/routes/(app)/-shared/record'
 import { SearchBox } from '@/routes/(app)/-shared/SearchBox'
-import { store as accountStore, setUser } from '@/routes/(app)/account/-store'
+import { store as accountStore } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { Chat } from './-shared/aichat/Chat'
+import { logout } from './-shared/logout'
 
 const searchSchema = v.object({
   // program: v.optional(v.pipe(v.string())),
@@ -98,10 +99,9 @@ const AccountButton = () => {
     document.activeElement instanceof HTMLElement && document.activeElement.blur()
   }
 
-  const logout = async () => {
+  const handleLogout = async () => {
     closeDropdown()
-    await accountV1Logout()
-    setUser(null)
+    await logout()
   }
 
   const goToProfile = () => {
@@ -124,7 +124,7 @@ const AccountButton = () => {
             </button>
           </li>
           <li>
-            <button type="button" class="btn btn-ghost justify-start gap-4 border-0 font-normal" onClick={logout}>
+            <button type="button" class="btn btn-ghost justify-start gap-4 border-0 font-normal" onClick={handleLogout}>
               <IconLogout />
               {t('Logout')}
             </button>

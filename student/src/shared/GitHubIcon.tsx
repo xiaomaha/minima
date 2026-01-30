@@ -1,4 +1,4 @@
-export function GitHubIcon(props: { size?: number }) {
+export const GitHubIcon = (props: { size?: number }) => {
   const size = () => props.size || 28
   return (
     <svg width={size()} height={size()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

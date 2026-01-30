@@ -1,4 +1,3 @@
-import { IconLogin2 } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createMemo, For, Match, onMount, Show, Switch } from 'solid-js'
 import * as v from 'valibot'
@@ -8,7 +7,6 @@ import { store as accountStore } from '@/routes/(app)/account/-store'
 import { GitHubIcon } from '@/shared/GitHubIcon'
 import { GoogleIcon } from '@/shared/icon/GoogleIcon'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
-import { NoContent } from '@/shared/NoContent'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { createPersistentSignal } from '@/shared/solid/persistent-signal'
@@ -103,63 +101,51 @@ function RouteComponent() {
 
   return (
     <div class="m-auto max-w-md space-y-4">
-      <Show when={accounts.data?.length === 0}>
-        <NoContent icon={IconLogin2} message={t('No accounts connected')} />
-      </Show>
-      <Show when={accounts.data?.length}>
-        <div class="text-sm label my-4 mt-8">
-          {t('Connect external accounts to sign in easily without entering your password')}
-        </div>
-        <For each={SSO_PROVIDERS}>
-          {(provider) => (
-            <div class="rounded shadow-sm p-4 flex items-center gap-4 justify-between relative">
-              <Show when={linking() === provider}>
-                <LoadingOverlay class={'absolute!'} />
-              </Show>
-              <div class="flex items-center gap-4">
-                <Switch>
-                  <Match when={provider === 'google'}>
-                    <GoogleIcon size={48} />
-                  </Match>
-                  <Match when={provider === 'github'}>
-                    <GitHubIcon size={48} />
-                  </Match>
-                </Switch>
-                <div class="text-base-content/60">
-                  <div class="mb-0.5 text-base-content">{t(capitalize(provider))}</div>
-                  <Show
-                    when={accountMap()[provider]}
-                    fallback={
-                      <Show when={accounts.loading}>
-                        <div class="h-5 w-46 skeleton" />
-                      </Show>
-                    }
-                  >
-                    <div class="text-sm">{accountMap()[provider]!.email}</div>
-                  </Show>
-                </div>
-              </div>
-              <label class="label text-xs">
-                <Show when={accountMap()[provider]} fallback={<div class="text-xs">{t('Not connected')}</div>}>
-                  <span class="badge badge-xs badge-primary">{t('Connected')}</span>
+      <div class="text-sm label my-4 mt-8">
+        {t('Connect external accounts to sign in easily without entering your password')}
+      </div>
+      <For each={SSO_PROVIDERS}>
+        {(provider) => (
+          <div class="rounded shadow-sm p-4 flex items-center gap-4 justify-between relative">
+            <Show when={linking() === provider}>
+              <LoadingOverlay class={'absolute!'} />
+            </Show>
+            <div class="flex items-center gap-4">
+              <Switch>
+                <Match when={provider === 'google'}>
+                  <GoogleIcon size={48} />
+                </Match>
+                <Match when={provider === 'github'}>
+                  <GitHubIcon size={48} />
+                </Match>
+              </Switch>
+              <div class="text-base-content/60">
+                <div class="mb-0.5 text-base-content">{t(capitalize(provider))}</div>
+                <Show when={accountMap()[provider]}>
+                  <div class="text-sm">{accountMap()[provider]!.email}</div>
                 </Show>
-
-                <input
-                  type="checkbox"
-                  class="toggle ml-1"
-                  checked={!!accountMap()[provider]}
-                  onchange={async (e) => {
-                    const result = await handleLink(accountMap()[provider], provider, e.currentTarget.checked)
-                    if (result === false) {
-                      e.currentTarget.checked = !e.currentTarget.checked
-                    }
-                  }}
-                />
-              </label>
+              </div>
             </div>
-          )}
-        </For>
-      </Show>
+            <label class="label text-xs">
+              <Show when={accountMap()[provider]}>
+                <span class="badge badge-xs badge-primary">{t('Connected')}</span>
+              </Show>
+
+              <input
+                type="checkbox"
+                class="toggle ml-1"
+                checked={!!accountMap()[provider]}
+                onchange={async (e) => {
+                  const result = await handleLink(accountMap()[provider], provider, e.currentTarget.checked)
+                  if (result === false) {
+                    e.currentTarget.checked = !e.currentTarget.checked
+                  }
+                }}
+              />
+            </label>
+          </div>
+        )}
+      </For>
     </div>
   )
 }
