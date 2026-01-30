@@ -23,9 +23,9 @@ function RouteComponent() {
   )
 
   return (
-    <div class="m-auto max-w-lg py-8 space-y-8">
+    <div class="m-auto max-w-lg space-y-8">
       <Show
-        when={members.data}
+        when={members.data?.length}
         fallback={<NoContent icon={IconUsersGroup} message={t('No groups have been registered yet.')} />}
       >
         <For each={members.data}>

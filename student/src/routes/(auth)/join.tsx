@@ -1,7 +1,7 @@
 import { createForm, getValue, setValue, valiForm } from '@modular-forms/solid'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
-import type * as v from 'valibot'
+import * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
 import { accountV1Join, operationV1GetPoliciesToJoin } from '@/api'
 import { vJoinSchema } from '@/api/valibot.gen'
@@ -16,13 +16,20 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { ActivationLink } from './-ActivationLink'
 import { LoginLink } from './-LoginLink'
+import { SSOButtons } from './-SSOButtons'
+
+const searchSchema = v.object({
+  sso: v.optional(v.boolean()),
+})
 
 export const Route = createFileRoute('/(auth)/join')({
+  validateSearch: searchSchema,
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const { t } = useTranslation()
+  const search = Route.useSearch()
   const navigate = Route.useNavigate()
 
   const [joinForm, { Form, Field }] = createForm<v.InferInput<typeof vJoinSchema> & { passwordConfirm: string }>({
@@ -100,7 +107,7 @@ function RouteComponent() {
           <Field name="name">
             {(field, props) => (
               <FormInput error={field.error}>
-                <input {...props} class="input" placeholder={t('Name')} autofocus />
+                <input {...props} class="input" placeholder={t('Name')} autofocus={!search().sso} />
               </FormInput>
             )}
           </Field>
@@ -135,66 +142,68 @@ function RouteComponent() {
             )}
           </Field>
 
-          <Field
-            name="agreements"
-            type="string[]"
-            validate={(value) => {
-              const mandatoryVersionIds =
-                policies.data?.filter((p) => p.mandatory).map((p) => String(p.effectiveVersion.id)) || []
-              const allMandatoryAgreed = mandatoryVersionIds.every((id) => value?.includes(id))
-              return allMandatoryAgreed ? '' : t('Check all mandatory policies')
-            }}
-          >
-            {(field) => (
-              <div>
-                <div class="flex items-center justify-between my-3">
-                  <span class={`label ${field.error ? 'text-error' : ''}`}>
-                    {t('Please agree to the following policies')}
-                  </span>
-                  <button type="button" class="btn btn-xs btn-link px-0" onClick={agreeAll}>
-                    {t('Agree to all')}
-                  </button>
+          <Show when={!search().sso}>
+            <Field
+              name="agreements"
+              type="string[]"
+              validate={(value) => {
+                const mandatoryVersionIds =
+                  policies.data?.filter((p) => p.mandatory).map((p) => String(p.effectiveVersion.id)) || []
+                const allMandatoryAgreed = mandatoryVersionIds.every((id) => value?.includes(id))
+                return allMandatoryAgreed ? '' : t('Check all mandatory policies')
+              }}
+            >
+              {(field) => (
+                <div>
+                  <div class="flex items-center justify-between my-3">
+                    <span class={`label ${field.error ? 'text-error' : ''}`}>
+                      {t('Please agree to the following policies')}
+                    </span>
+                    <button type="button" class="btn btn-xs btn-link px-0" onClick={agreeAll}>
+                      {t('Agree to all')}
+                    </button>
+                  </div>
+                  <div class="space-y-3">
+                    <For each={policies.data}>
+                      {(policy) => {
+                        const versionId = String(policy.effectiveVersion.id)
+                        return (
+                          <div class="flex items-center justify-between">
+                            <label class="label text-sm">
+                              <input
+                                type="checkbox"
+                                class={`checkbox checkbox-xs ${policy.mandatory ? 'validator' : ''}`}
+                                checked={field.value?.includes(versionId)}
+                                onChange={(e) => {
+                                  const current = field.value || []
+                                  const newValue = e.currentTarget.checked
+                                    ? [...current, versionId]
+                                    : current.filter((id) => id !== versionId)
+                                  setValue(joinForm, 'agreements', newValue)
+                                }}
+                                required={policy.mandatory}
+                              />
+                              {policy.title}
+                              <Show when={!policy.mandatory}>
+                                <span class="text-xs ml-1">({t('optional')})</span>
+                              </Show>
+                            </label>
+                            <button
+                              type="button"
+                              class="btn btn-xs btn-link p-0"
+                              onClick={() => setSelectedPolicy(policy)}
+                            >
+                              {t('Open')}
+                            </button>
+                          </div>
+                        )
+                      }}
+                    </For>
+                  </div>
                 </div>
-                <div class="space-y-3">
-                  <For each={policies.data}>
-                    {(policy) => {
-                      const versionId = String(policy.effectiveVersion.id)
-                      return (
-                        <div class="flex items-center justify-between">
-                          <label class="label text-sm">
-                            <input
-                              type="checkbox"
-                              class={`checkbox checkbox-xs ${policy.mandatory ? 'validator' : ''}`}
-                              checked={field.value?.includes(versionId)}
-                              onChange={(e) => {
-                                const current = field.value || []
-                                const newValue = e.currentTarget.checked
-                                  ? [...current, versionId]
-                                  : current.filter((id) => id !== versionId)
-                                setValue(joinForm, 'agreements', newValue)
-                              }}
-                              required={policy.mandatory}
-                            />
-                            {policy.title}
-                            <Show when={!policy.mandatory}>
-                              <span class="text-xs ml-1">({t('optional')})</span>
-                            </Show>
-                          </label>
-                          <button
-                            type="button"
-                            class="btn btn-xs btn-link p-0"
-                            onClick={() => setSelectedPolicy(policy)}
-                          >
-                            {t('Open')}
-                          </button>
-                        </div>
-                      )
-                    }}
-                  </For>
-                </div>
-              </div>
-            )}
-          </Field>
+              )}
+            </Field>
+          </Show>
 
           <Field name="callbackUrl">{() => null}</Field>
 
@@ -204,6 +213,8 @@ function RouteComponent() {
             disabled={!joinForm.dirty}
             class="btn btn-neutral mt-4"
           />
+
+          <SSOButtons search={search} />
 
           <LoginLink class="mb-0" />
           <ActivationLink />

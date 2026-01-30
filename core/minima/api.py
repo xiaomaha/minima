@@ -49,7 +49,7 @@ def cookie_auth(request):
 class MinimaAPI(NinjaAPI):
     def __init__(self):
         super().__init__(
-            title="Minima API", version="0.1.0", auth=cookie_auth, renderer=MsgSpecRenderer(), parser=MsgSpecParser()
+            title="Minima API", version="v1", auth=cookie_auth, renderer=MsgSpecRenderer(), parser=MsgSpecParser()
         )
 
     def get_openapi_operation_id(self, operation):

@@ -21,6 +21,7 @@ from django.db.models import (
     Count,
     DateTimeField,
     EmailField,
+    Exists,
     F,
     FileField,
     FloatField,
@@ -530,7 +531,6 @@ class Policy(TimeStampedMixin):
     description = TextField(_("Description"), blank=True, default="")
     active = BooleanField(_("Active"), default=True)
     mandatory = BooleanField(_("Mandatory"), default=True)
-    show_on_join = BooleanField(_("Show on Join"), default=True)
     priority = PositiveSmallIntegerField(_("Priority"))
 
     class Meta(TimeStampedMixin.Meta):
@@ -564,7 +564,7 @@ class Policy(TimeStampedMixin):
             policy
             async for policy in (
                 cls.objects
-                .filter(show_on_join=True, active=True, policyversion__id__in=latest_versions)
+                .filter(active=True, policyversion__id__in=latest_versions)
                 .prefetch_related(
                     Prefetch(
                         "policyversion_set",
@@ -602,15 +602,10 @@ class PolicyVersion(TimeStampedMixin):
         constraints = [UniqueConstraint(fields=["policy", "version"], name="operation_policyversion_po_ve_uniq")]
 
     @classmethod
-    async def get_effective_mandatory_version_ids_to_join(cls):
-        version_ids = (
+    def get_latest_mandatory_versions_subquery(cls):
+        return (
             cls.objects
-            .filter(
-                effective_date__lte=timezone.now(),
-                policy__show_on_join=True,
-                policy__active=True,
-                policy__mandatory=True,
-            )
+            .filter(effective_date__lte=timezone.now(), policy__active=True, policy__mandatory=True)
             .annotate(
                 row_number=Window(
                     expression=RowNumber(),
@@ -619,10 +614,20 @@ class PolicyVersion(TimeStampedMixin):
                 )
             )
             .filter(row_number=1)
-            .values_list("id", flat=True)
         )
 
+    @classmethod
+    async def get_effective_mandatory_version_ids(cls):
+        version_ids = cls.get_latest_mandatory_versions_subquery().values_list("id", flat=True)
         return [version_id async for version_id in version_ids]
+
+    @classmethod
+    def get_agreement_required_subquery(cls):
+        return Exists(
+            cls.get_latest_mandatory_versions_subquery().exclude(
+                policyagreement__user_id=OuterRef("id"), policyagreement__accepted=True
+            )
+        )
 
 
 @pghistory.track()

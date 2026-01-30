@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-28 02:30+0900\n"
+"POT-Creation-Date: 2026-01-29 13:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,11 +34,11 @@ msgstr ""
 msgid "Login Tokens"
 msgstr ""
 
-#: apps/account/admin.py:44 apps/account/models.py:573
+#: apps/account/admin.py:44 apps/account/models.py:579
 msgid "OTP Log"
 msgstr ""
 
-#: apps/account/admin.py:45 apps/account/models.py:574
+#: apps/account/admin.py:45 apps/account/models.py:580
 msgid "OTP Logs"
 msgstr ""
 
@@ -52,11 +52,11 @@ msgid ""
 "Temporary password created for {user}: {password}. Expires in {hours} hours."
 msgstr ""
 
-#: apps/account/admin.py:87 minima/settings.py:153
+#: apps/account/admin.py:87 minima/settings.py:154
 msgid "English"
 msgstr ""
 
-#: apps/account/admin.py:87 minima/settings.py:153
+#: apps/account/admin.py:87 minima/settings.py:154
 msgid "Korean"
 msgstr ""
 
@@ -203,7 +203,7 @@ msgstr ""
 
 #: apps/account/models.py:110 apps/operation/models.py:162
 #: apps/operation/models.py:497 apps/partner/models.py:41
-#: apps/partner/models.py:81
+#: apps/partner/models.py:81 apps/sso/models.py:33
 msgid "Email"
 msgstr ""
 
@@ -266,15 +266,16 @@ msgstr ""
 msgid "Superuser"
 msgstr ""
 
-#: apps/account/models.py:132 apps/account/models.py:528
-#: apps/account/models.py:539 apps/account/models.py:562
+#: apps/account/models.py:132 apps/account/models.py:534
+#: apps/account/models.py:545 apps/account/models.py:568
 #: apps/assistant/models.py:27 apps/assistant/models.py:40
 #: apps/competency/models.py:141 apps/content/models.py:294
 #: apps/content/models.py:452 apps/learning/models.py:77
 #: apps/learning/models.py:479 apps/operation/models.py:149
 #: apps/operation/models.py:507 apps/operation/models.py:630
 #: apps/partner/admin.py:60 apps/partner/models.py:90
-#: apps/partner/models.py:189 apps/store/models.py:148
+#: apps/partner/models.py:189 apps/sso/models.py:30 apps/sso/models.py:50
+#: apps/store/models.py:148
 msgid "User"
 msgstr ""
 
@@ -282,84 +283,84 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: apps/account/models.py:276
+#: apps/account/models.py:282
 msgid "Account Activation"
 msgstr ""
 
-#: apps/account/models.py:294
+#: apps/account/models.py:300
 msgid "Email Change"
 msgstr ""
 
-#: apps/account/models.py:305
+#: apps/account/models.py:311
 msgid "Password Change"
 msgstr ""
 
-#: apps/account/models.py:529
+#: apps/account/models.py:535
 msgid "Password"
 msgstr ""
 
-#: apps/account/models.py:530 apps/account/models.py:541
-#: apps/account/models.py:553 apps/competency/models.py:224
-#: apps/competency/models.py:300 apps/store/models.py:345
+#: apps/account/models.py:536 apps/account/models.py:547
+#: apps/account/models.py:559 apps/competency/models.py:224
+#: apps/competency/models.py:300 apps/sso/models.py:51 apps/store/models.py:345
 msgid "Expires"
 msgstr ""
 
-#: apps/account/models.py:533
+#: apps/account/models.py:539
 msgid "Temporary Password"
 msgstr ""
 
-#: apps/account/models.py:534
+#: apps/account/models.py:540
 msgid "Temporary Passwords"
 msgstr ""
 
-#: apps/account/models.py:540 apps/account/models.py:546
-#: apps/account/models.py:552
+#: apps/account/models.py:546 apps/account/models.py:552
+#: apps/account/models.py:558
 msgid "Token"
 msgstr ""
 
-#: apps/account/models.py:542
+#: apps/account/models.py:548
 msgid "IP Address"
 msgstr ""
 
-#: apps/account/models.py:543
+#: apps/account/models.py:549
 msgid "User Agent"
 msgstr ""
 
-#: apps/account/models.py:547
+#: apps/account/models.py:553
 msgid "Tokens"
 msgstr ""
 
-#: apps/account/models.py:556
+#: apps/account/models.py:562
 msgid "Blacklisted Token"
 msgstr ""
 
-#: apps/account/models.py:557
+#: apps/account/models.py:563
 msgid "Blacklisted Tokens"
 msgstr ""
 
-#: apps/account/models.py:563 apps/competency/models.py:60
+#: apps/account/models.py:569 apps/competency/models.py:60
 #: apps/competency/models.py:103 apps/competency/models.py:123
 #: apps/operation/models.py:183 apps/store/models.py:101
 msgid "Code"
 msgstr ""
 
-#: apps/account/models.py:564
+#: apps/account/models.py:570
 msgid "Success"
 msgstr ""
 
-#: apps/account/models.py:565
+#: apps/account/models.py:571
 msgid "Fingerprint"
 msgstr ""
 
-#: apps/account/models.py:566
+#: apps/account/models.py:572
 msgid "Device Type"
 msgstr ""
 
-#: apps/account/models.py:568
+#: apps/account/models.py:574
 msgid "Consumer Type"
 msgstr ""
 
-#: apps/account/models.py:569
+#: apps/account/models.py:575
 msgid "Consumer ID"
 msgstr ""
 
@@ -449,7 +450,7 @@ msgstr ""
 
 #: apps/assignment/admin.py:148 apps/assignment/models.py:431
 #: apps/course/admin.py:126 apps/discussion/admin.py:93
-#: apps/discussion/models.py:440 apps/exam/admin.py:120 apps/exam/models.py:388
+#: apps/discussion/models.py:438 apps/exam/admin.py:120 apps/exam/models.py:388
 #: apps/quiz/models.py:355
 msgid "Grade"
 msgstr ""
@@ -472,7 +473,7 @@ msgstr ""
 
 #: apps/assignment/models.py:71 apps/assistant/models.py:39
 #: apps/common/models.py:171 apps/course/models.py:91 apps/course/models.py:296
-#: apps/discussion/models.py:71 apps/discussion/models.py:331
+#: apps/discussion/models.py:71 apps/discussion/models.py:329
 #: apps/exam/models.py:68 apps/operation/models.py:117
 #: apps/operation/models.py:182 apps/operation/models.py:363
 #: apps/operation/models.py:503 apps/operation/models.py:529
@@ -614,8 +615,8 @@ msgstr ""
 
 #: apps/assignment/models.py:284 apps/assignment/models.py:394
 #: apps/assignment/models.py:427 apps/assignment/models.py:459
-#: apps/discussion/models.py:214 apps/discussion/models.py:329
-#: apps/discussion/models.py:436 apps/exam/models.py:241
+#: apps/discussion/models.py:214 apps/discussion/models.py:327
+#: apps/discussion/models.py:434 apps/exam/models.py:241
 #: apps/exam/models.py:358 apps/exam/models.py:368 apps/exam/models.py:384
 #: apps/quiz/models.py:245 apps/quiz/models.py:342 apps/quiz/models.py:352
 msgid "Attempt"
@@ -646,11 +647,11 @@ msgid "Submissions"
 msgstr ""
 
 #: apps/assignment/models.py:428 apps/course/models.py:706
-#: apps/discussion/models.py:437 apps/exam/models.py:385
+#: apps/discussion/models.py:435 apps/exam/models.py:385
 msgid "Grader"
 msgstr ""
 
-#: apps/assignment/models.py:432 apps/discussion/models.py:441
+#: apps/assignment/models.py:432 apps/discussion/models.py:439
 #: apps/exam/models.py:389 apps/quiz/models.py:356
 msgid "Grades"
 msgstr ""
@@ -1692,7 +1693,7 @@ msgstr ""
 msgid "Public Access Medias"
 msgstr ""
 
-#: apps/content/models.py:243 apps/discussion/models.py:332
+#: apps/content/models.py:243 apps/discussion/models.py:330
 #: apps/operation/models.py:118 apps/operation/models.py:504
 #: apps/operation/models.py:594
 msgid "Body"
@@ -2290,7 +2291,7 @@ msgstr ""
 msgid "Gradebooks"
 msgstr ""
 
-#: apps/discussion/admin.py:107 apps/discussion/models.py:335
+#: apps/discussion/admin.py:107 apps/discussion/models.py:333
 msgid "Post"
 msgstr ""
 
@@ -2320,11 +2321,11 @@ msgstr ""
 msgid "Discussions"
 msgstr ""
 
-#: apps/discussion/models.py:330 apps/operation/models.py:677
+#: apps/discussion/models.py:328 apps/operation/models.py:677
 msgid "Parent"
 msgstr ""
 
-#: apps/discussion/models.py:336
+#: apps/discussion/models.py:334
 msgid "Posts"
 msgstr ""
 
@@ -2875,6 +2876,46 @@ msgstr ""
 msgid "Select Count"
 msgstr ""
 
+#: apps/sso/apps.py:8
+msgid "SSO"
+msgstr ""
+
+#: apps/sso/models.py:31 apps/sso/models.py:48
+msgid "Provider"
+msgstr ""
+
+#: apps/sso/models.py:32
+msgid "Provider User ID"
+msgstr ""
+
+#: apps/sso/models.py:36
+msgid "SSO Account"
+msgstr ""
+
+#: apps/sso/models.py:37
+msgid "SSO Accounts"
+msgstr ""
+
+#: apps/sso/models.py:46
+msgid "State"
+msgstr ""
+
+#: apps/sso/models.py:47
+msgid "Nonce"
+msgstr ""
+
+#: apps/sso/models.py:49
+msgid "Redirect To"
+msgstr ""
+
+#: apps/sso/models.py:54
+msgid "SSO Session"
+msgstr ""
+
+#: apps/sso/models.py:55
+msgid "SSO Sessions"
+msgstr ""
+
 #: apps/store/apps.py:8 apps/warehouse/views.py:72
 msgid "Store"
 msgstr ""
@@ -3391,6 +3432,6 @@ msgstr ""
 msgid "Courses Passed"
 msgstr ""
 
-#: minima/settings.py:226
+#: minima/settings.py:241
 msgid "Storage"
 msgstr ""

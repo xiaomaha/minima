@@ -22,8 +22,8 @@ export const Route = createFileRoute('/(auth)/password-change')({
 })
 
 function RouteComponent() {
-  const params = Route.useSearch()
-  const token = params().token
+  const search = Route.useSearch()
+  const token = search().token
   return (
     <Show when={!!token} fallback={<RequestPasswordChange />}>
       <ApplyPasswordChange token={token!} />

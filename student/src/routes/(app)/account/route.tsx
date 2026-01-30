@@ -14,6 +14,7 @@ function RouteComponent() {
   const tabLabels: Record<string, string> = {
     profile: t('My Profile'),
     group: t('Cohort Group'),
+    link: t('Linked Account'),
   } as const
 
   const currentTab = () => {
@@ -23,8 +24,8 @@ function RouteComponent() {
 
   return (
     <div class="mx-auto max-w-lg py-4">
-      <div class="flex items-center mb-6 gap-4">
-        <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box mb-0 space-x-2 gap-y-2">
+      <div class="flex items-center gap-4 justify-center">
+        <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box space-x-2 gap-y-2">
           <For each={Object.keys(tabLabels)}>
             {(tab) => (
               <li class="mb-0">

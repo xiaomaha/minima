@@ -128,7 +128,6 @@ class SitePolicySchema(TimeStampedMixinSchema):
     description: str
     active: bool
     mandatory: bool
-    show_on_join: bool
     priority: int
 
 

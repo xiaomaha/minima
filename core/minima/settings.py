@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     # apps
     "apps.common",
     "apps.account",
+    "apps.sso",
     "apps.operation",
     "apps.partner",
     "apps.competency",
@@ -175,6 +176,23 @@ LOGGING = {
     "loggers": {"django.db.backends": {"handlers": ["console"], "level": "DEBUG", "propagate": False}},
     "root": {"handlers": ["console"], "level": "INFO"},
 }
+
+# SSO
+SSO_PROVIDERS = {
+    "google": {
+        "type": "oidc",
+        "client_id": os.environ.get("GOOGLE_CLIENT_ID", ""),
+        "client_secret": os.environ.get("GOOGLE_CLIENT_SECRET", ""),
+        "server_metadata_url": "https://accounts.google.com/.well-known/openid-configuration",
+    },
+    "github": {
+        "type": "oidc",
+        "client_id": os.environ.get("GITHUB_CLIENT_ID", ""),
+        "client_secret": os.environ.get("GITHUB_CLIENT_SECRET", ""),
+    },
+}
+SSO_SESSION_EXPIRE_SECONDS = 600
+ALLOWED_REDIRECT_ORIGINS = ["http://localhost:5173"] if DEBUG else json.loads(os.environ["ALLOWED_REDIRECT_ORIGINS"])
 
 
 # smtp

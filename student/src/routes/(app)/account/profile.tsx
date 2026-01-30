@@ -20,9 +20,10 @@ export const Route = createFileRoute('/(app)/account/profile')({
 function RouteComponent() {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
+  const user = accountStore.user
 
   const [updateForm, { Form, Field }] = createForm<v.InferInput<typeof vUserUpdateSchema>>({
-    initialValues: { ...accountStore.user },
+    initialValues: { ...user },
     validate: valiForm(vUserUpdateSchema),
   })
 
@@ -37,16 +38,16 @@ function RouteComponent() {
     reset(updateForm, { initialValues: values })
   }
 
-  const displayName = () => accountStore.user?.nickname || accountStore.user?.name
+  const displayName = () => user?.nickname || user?.name
 
   return (
-    <Show when={accountStore.user}>
+    <Show when={user}>
       <div class="m-auto max-w-md py-8 space-y-8">
         <div class="flex gap-6 justify-center">
           <AvatarEdit />
           <div class="self-center space-y-2">
             <div class="font-bold text-2xl">{displayName()}</div>
-            <div class="label text-sm">{new Date(accountStore.user!.modified).toLocaleString()}</div>
+            <div class="label text-sm">{new Date(user!.modified).toLocaleString()}</div>
           </div>
         </div>
 
@@ -113,7 +114,7 @@ function RouteComponent() {
 
             <FormInput help={t('Email change requires verifying your new email address.')}>
               <label class="input w-full">
-                <input type="email" value={accountStore.user?.email} readOnly />
+                <input type="email" value={user!.email} readOnly />
                 <button
                   type="button"
                   class="btn btn-link btn-sm"
@@ -133,7 +134,9 @@ function RouteComponent() {
           </fieldset>
         </Form>
 
-        <OtpSetup />
+        <Show when={user!.otpEnabled}>
+          <OtpSetup />
+        </Show>
       </div>
     </Show>
   )
