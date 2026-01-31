@@ -82,10 +82,14 @@ export const SitePolicy = (props: SitePolicyProps) => {
       <Form onSubmit={agree}>
         <div class="px-8 space-y-6 mb-8">
           <div class="text-xs text-info mb-8">
-            <span class="mr-1">{t('Before you use this site, please read and agree to the following policies.')}</span>
-            <button type="button" class="btn btn-xs btn-ghost btn-primary" onClick={agreeAll}>
-              {t('Select All')}
-            </button>
+            <Show when={accountStore.user}>
+              <span class="mr-1">
+                {t('Before you use this site, please read and agree to the following policies.')}
+              </span>
+              <button type="button" class="btn btn-xs btn-ghost btn-primary" onClick={agreeAll}>
+                {t('Select All')}
+              </button>
+            </Show>
           </div>
           <For each={policies.data}>
             {(policy) => (

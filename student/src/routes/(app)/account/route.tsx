@@ -12,13 +12,17 @@ function RouteComponent() {
   const navigate = Route.useNavigate()
   const location = useLocation()
 
-  const tabLabels: Record<string, string> = {
-    profile: t('My Profile'),
-    group: t('Cohort Group'),
-  }
+  const tabs = () => {
+    const result: [string, string][] = [
+      ['profile', t('My Profile')],
+      ['group', t('Cohort Group')],
+    ]
 
-  if (SSO_PROVIDERS.length > 0) {
-    tabLabels.link = t('Linked Account')
+    if (SSO_PROVIDERS.length > 0) {
+      result.splice(1, 0, ['link', t('Linked Account')])
+    }
+
+    return result
   }
 
   const currentTab = () => {
@@ -28,18 +32,18 @@ function RouteComponent() {
 
   return (
     <div class="mx-auto max-w-lg py-4">
-      <div class="flex items-center gap-4 justify-center">
+      <div class="flex items-center gap-4 justify-center mb-4">
         <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box space-x-2 gap-y-2">
-          <For each={Object.keys(tabLabels)}>
-            {(tab) => (
+          <For each={tabs()}>
+            {([key, label]) => (
               <li class="mb-0">
                 <button
                   type="button"
                   class="min-w-16 justify-center"
-                  classList={{ 'menu-active': currentTab() === tab }}
-                  onClick={() => navigate({ to: `/account/${tab}` })}
+                  classList={{ 'menu-active': currentTab() === key }}
+                  onClick={() => navigate({ to: `/account/${key}` })}
                 >
-                  {tabLabels[tab]}
+                  {label}
                 </button>
               </li>
             )}

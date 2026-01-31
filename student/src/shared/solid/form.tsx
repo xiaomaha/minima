@@ -1,5 +1,3 @@
-/** @jsxImportSource solid-js */
-
 import { createMemo, createSignal, type JSX, onCleanup } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import * as v from 'valibot'
@@ -27,7 +25,7 @@ type FormConfig<T extends FieldValues> = {
   revalidateOn?: ValidateOn
 }
 
-export function createForm<T extends FieldValues>(config: FormConfig<T>) {
+export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
   const validateOn = config.validateOn ?? 'submit'
 
   const [initialValues, setInitialValues] = createSignal(config.initialValues)
@@ -121,7 +119,8 @@ export function createForm<T extends FieldValues>(config: FormConfig<T>) {
     onCleanup(() => fieldValidators.delete(name))
 
     const handleInput = async (e: InputEvent) => {
-      const target = e.target as HTMLInputElement
+      const target = e.target as HTMLInputElement | null
+      if (!target) return
       if (target.type === 'checkbox' || target.type === 'radio') return
 
       let next = target.value as T[K]
@@ -172,11 +171,24 @@ export function createForm<T extends FieldValues>(config: FormConfig<T>) {
     }
 
     const handleChange = async (e: Event) => {
-      const target = e.target as HTMLInputElement
+      const target = e.target as HTMLInputElement | null
+      if (!target) return
 
       let next: T[K]
       if (target.type === 'checkbox') {
-        next = target.checked as T[K]
+        const currentValue = values[props.name]
+
+        if (Array.isArray(currentValue)) {
+          const valueSet = new Set(currentValue)
+          if (target.checked) {
+            valueSet.add(target.value)
+          } else {
+            valueSet.delete(target.value)
+          }
+          next = Array.from(valueSet) as T[K]
+        } else {
+          next = target.checked as T[K]
+        }
       } else if (target.type === 'radio') {
         next = target.value as T[K]
       } else {
@@ -202,7 +214,10 @@ export function createForm<T extends FieldValues>(config: FormConfig<T>) {
 
     const inputProps = {
       name,
-      value: values[props.name],
+      get value() {
+        const val = values[props.name]
+        return Array.isArray(val) ? val.join(',') : val
+      },
       onInput: handleInput,
       onBlur: handleBlur,
       onChange: handleChange,
@@ -229,8 +244,14 @@ export function createForm<T extends FieldValues>(config: FormConfig<T>) {
     const next = opts?.initialValues ?? initialValues()
     setInitialValues(() => next)
     setValues({ ...next })
-    setErrors({})
-    setTouched({})
+
+    Object.keys(errors).forEach((key) => {
+      setErrors(key, undefined)
+    })
+    Object.keys(touched).forEach((key) => {
+      setTouched(key, undefined)
+    })
+
     hasSubmitted = false
   }
 
@@ -273,7 +294,7 @@ export function createForm<T extends FieldValues>(config: FormConfig<T>) {
   ] as const
 }
 
-export function valiForm<TSchema extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>(schema: TSchema) {
+export const valiForm = <TSchema extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>>(schema: TSchema) => {
   return async (values: v.InferInput<TSchema>): Promise<FieldErrors> => {
     const result = await v.safeParseAsync(schema, values)
     if (result.success) return {}
@@ -289,6 +310,7 @@ export function valiForm<TSchema extends v.BaseSchema<unknown, unknown, v.BaseIs
   }
 }
 
-export function toCustom<T>(fn: TransformFn<T>, opts: { on: 'blur' | 'input' }) {
-  return { fn, on: opts.on }
-}
+export const toCustom = <T,>(fn: TransformFn<T>, opts: { on: 'blur' | 'input' }) => ({
+  fn,
+  on: opts.on,
+})

@@ -5,7 +5,7 @@ import { store as accountStore } from '@/routes/(app)/account/-store'
 import { DateLocaleProvider } from '@/shared/DateLocaleProvider'
 import { I18nProvider, useTranslation } from '@/shared/solid/i18n'
 import { ToastContainer } from '@/shared/toast/ToastContainer'
-import { SitePolicy } from './SitePolicy'
+import { SitePolicy } from './-SitePolicy'
 
 const startYear = 2025
 const currentYear = new Date().getFullYear()

@@ -101,7 +101,7 @@ function RouteComponent() {
 
   return (
     <div class="m-auto max-w-md space-y-4">
-      <div class="text-sm label my-4 mt-8">
+      <div class="text-sm label mb-4">
         {t('Connect external accounts to sign in easily without entering your password')}
       </div>
       <For each={SSO_PROVIDERS}>
