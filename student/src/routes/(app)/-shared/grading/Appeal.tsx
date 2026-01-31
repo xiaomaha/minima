@@ -1,4 +1,3 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import { createSignal, Match, Show, Switch } from 'solid-js'
 import type * as v from 'valibot'
 import { type AppealSchema, operationV1CreateAppeal } from '@/api'
@@ -7,6 +6,7 @@ import { APPEAL_MIN_CHARACTERS, ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../editor/TextEditor'
@@ -23,7 +23,7 @@ export const Appeal = (props: Props) => {
   const { t } = useTranslation()
   const [files, setFiles] = createSignal<File[]>([])
 
-  const [appealForm, { Form, Field }] = createForm<v.InferInput<typeof vAppealCreateSchema>>({
+  const form = createForm<v.InferInput<typeof vAppealCreateSchema>>({
     initialValues: {
       explanation: props.appeal?.explanation ?? '',
       appLabel: props.appLabel,
@@ -37,7 +37,7 @@ export const Appeal = (props: Props) => {
     if (!confirm(t('This action cannot be undone. Are you sure you want to proceed?'))) return
     const { data, error } = await operationV1CreateAppeal({ body: { ...values, files: files() }, throwOnError: false })
     if (error) {
-      handleFormErrors(appealForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
     props.onCreate(data!)
@@ -45,6 +45,8 @@ export const Appeal = (props: Props) => {
 
   // reactive
   const appeal = () => props.appeal
+
+  const [formState, { Form, Field }] = form
 
   return (
     <div class="px-6 py-4">
@@ -84,16 +86,14 @@ export const Appeal = (props: Props) => {
 
           <Field name="appLabel">{() => null}</Field>
           <Field name="model">{() => null}</Field>
-          <Field name="questionId" type="number">
-            {() => null}
-          </Field>
+          <Field name="questionId">{() => null}</Field>
 
           <Switch>
             <Match when={!appeal()}>
               <SubmitButton
                 label={t('Submit Appeal')}
-                isPending={appealForm.submitting}
-                disabled={!appealForm.dirty}
+                isPending={formState.submitting}
+                disabled={!formState.dirty}
                 class="btn btn-neutral"
               />
             </Match>

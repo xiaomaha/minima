@@ -21,6 +21,7 @@ from django.db.models import (
     Count,
     DateTimeField,
     EmailField,
+    Exists,
     F,
     FileField,
     FloatField,
@@ -530,7 +531,6 @@ class Policy(TimeStampedMixin):
     description = TextField(_("Description"), blank=True, default="")
     active = BooleanField(_("Active"), default=True)
     mandatory = BooleanField(_("Mandatory"), default=True)
-    show_on_join = BooleanField(_("Show on Join"), default=True)
     priority = PositiveSmallIntegerField(_("Priority"))
 
     class Meta(TimeStampedMixin.Meta):
@@ -545,8 +545,8 @@ class Policy(TimeStampedMixin):
         return self.title
 
     @classmethod
-    async def get_policies_to_join(cls):
-        latest_versions = (
+    async def effective_policies(cls, *, user_id: str | None = None):
+        latest_versions_qs = (
             PolicyVersion.objects
             .filter(effective_date__lte=timezone.now())
             .annotate(
@@ -557,35 +557,33 @@ class Policy(TimeStampedMixin):
                 )
             )
             .filter(row_number=1)
-            .values("id")
+            .order_by("-effective_date", "-id")
         )
+
+        if user_id is not None:
+            latest_versions_qs = latest_versions_qs.annotate(
+                accepted=Exists(
+                    PolicyAgreement.objects.filter(user_id=user_id, version_id=OuterRef("id"), accepted=True)
+                )
+            )
 
         policies = [
             policy
-            async for policy in (
-                cls.objects
-                .filter(show_on_join=True, active=True, policyversion__id__in=latest_versions)
-                .prefetch_related(
-                    Prefetch(
-                        "policyversion_set",
-                        queryset=PolicyVersion.objects.filter(id__in=latest_versions).order_by(
-                            "-effective_date", "-id"
-                        ),
-                    )
-                )
-                .order_by("priority")
-                .distinct()
-            )
+            async for policy in cls.objects
+            .filter(active=True, policyversion__id__in=Subquery(latest_versions_qs.values("id")))
+            .prefetch_related(Prefetch("policyversion_set", queryset=latest_versions_qs))
+            .order_by("priority")
+            .distinct()
         ]
 
-        effective_policies = []
+        effectives = []
         for policy in policies:
-            effective_versions = policy.policyversion_set.all()  # from cache
+            effective_versions = policy.policyversion_set.all()
             if effective_versions:
                 policy.effective_version = effective_versions[0]
-                effective_policies.append(policy)
+                effectives.append(policy)
 
-        return effective_policies
+        return effectives
 
 
 @pghistory.track()
@@ -602,15 +600,10 @@ class PolicyVersion(TimeStampedMixin):
         constraints = [UniqueConstraint(fields=["policy", "version"], name="operation_policyversion_po_ve_uniq")]
 
     @classmethod
-    async def get_effective_mandatory_version_ids_to_join(cls):
-        version_ids = (
+    def get_latest_mandatory_versions_subquery(cls):
+        return (
             cls.objects
-            .filter(
-                effective_date__lte=timezone.now(),
-                policy__show_on_join=True,
-                policy__active=True,
-                policy__mandatory=True,
-            )
+            .filter(effective_date__lte=timezone.now(), policy__active=True, policy__mandatory=True)
             .annotate(
                 row_number=Window(
                     expression=RowNumber(),
@@ -619,9 +612,11 @@ class PolicyVersion(TimeStampedMixin):
                 )
             )
             .filter(row_number=1)
-            .values_list("id", flat=True)
         )
 
+    @classmethod
+    async def get_effective_mandatory_version_ids(cls):
+        version_ids = cls.get_latest_mandatory_versions_subquery().values_list("id", flat=True)
         return [version_id async for version_id in version_ids]
 
 
@@ -632,9 +627,10 @@ class PolicyAgreement(TimeStampedMixin):
     accepted = BooleanField(_("Accepted"), null=True, blank=True)
 
     class Meta(TimeStampedMixin.Meta):
-        indexes = [Index(fields=["user", "accepted"])]
         verbose_name = _("Policy Agreement")
         verbose_name_plural = _("Policy Agreements")
+        indexes = [Index(fields=["user", "accepted"])]
+        constraints = [UniqueConstraint(fields=["user", "version"], name="operation_policyagreement_us_ve_uniq")]
 
     @classmethod
     async def agree_policies(cls, *, user_id: str, agreements: dict[str, bool | None]):
@@ -643,7 +639,12 @@ class PolicyAgreement(TimeStampedMixin):
             for version_id, accepted in agreements.items()
             if str(version_id).isdigit()
         ]
-        await cls.objects.abulk_create(agreement_objects, ignore_conflicts=True)
+        await cls.objects.abulk_create(
+            agreement_objects, update_conflicts=True, unique_fields=["user", "version"], update_fields=["accepted"]
+        )
+
+    if TYPE_CHECKING:
+        pgh_event_model: type[Model]
 
 
 @pghistory.track()

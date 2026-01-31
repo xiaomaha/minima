@@ -19,7 +19,7 @@ interface PdfViewerProps {
   onReady?: (api: MediaPlayerAPI) => void
 }
 
-export function PdfViewer(props: PdfViewerProps) {
+export const PdfViewer = (props: PdfViewerProps) => {
   const {
     isDocumentLoaded,
     viewerRef,
@@ -180,7 +180,7 @@ export function PdfViewer(props: PdfViewerProps) {
   )
 }
 
-function Toolbar(props: { store: PDFSlickState }) {
+const Toolbar = (props: { store: PDFSlickState }) => {
   const { t } = useTranslation()
   const [pageInput, setPageInput] = createSignal('')
 

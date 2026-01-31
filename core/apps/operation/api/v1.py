@@ -117,12 +117,14 @@ async def create_appeal(
     return await Appeal.create(**data.model_dump(), learner_id=request.auth, files=files)
 
 
-@router.get("/policyversion/join", auth=None, response=list[SitePolicySchema])
-async def get_policies_to_join(request: HttpRequest):
-    return await Policy.get_policies_to_join()
+@router.get("/policy/effective", auth=None, response=list[SitePolicySchema])
+async def effective_policies(
+    request: HttpRequest, user_id: Annotated[str | None, functions.Query(None, alias="userId")]
+):
+    return await Policy.effective_policies(user_id=user_id)
 
 
-@router.post("/policyversion/agree")
+@router.post("/policy/agree")
 async def agree_policies(request: HttpRequest, data: PolicyVersionAgreementSchema):
     return await PolicyAgreement.agree_policies(user_id=request.auth, agreements=data.model_dump())
 

@@ -22,8 +22,10 @@ export const vUserSchema = v.object({
     phone: v.string(),
     preferences: v.optional(v.object({})),
     isActive: v.boolean(),
+    hasPassword: v.boolean(),
     otpEnabled: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    tokenExpires: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    tokenExpires: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    agreementRequired: v.union([v.boolean(), v.null()])
 });
 
 /**
@@ -1625,7 +1627,8 @@ export const vSitePolicyVersionSchema = v.object({
     dataCategory: v.record(v.string(), v.array(v.string())),
     body: v.string(),
     version: v.string(),
-    effectiveDate: v.pipe(v.string(), v.isoTimestamp())
+    effectiveDate: v.pipe(v.string(), v.isoTimestamp()),
+    accepted: v.optional(v.union([v.boolean(), v.null()]))
 });
 
 /**
@@ -1641,7 +1644,6 @@ export const vSitePolicySchema = v.object({
     description: v.string(),
     active: v.boolean(),
     mandatory: v.boolean(),
-    showOnJoin: v.boolean(),
     priority: v.pipe(v.number(), v.integer())
 });
 
@@ -1907,6 +1909,29 @@ export const vQuizSessionSchema = v.object({
  * QuizAttemptAnswersSchema
  */
 export const vQuizAttemptAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
+
+/**
+ * AuthorizeResponseSchema
+ */
+export const vAuthorizeResponseSchema = v.object({
+    authorizationUrl: v.string()
+});
+
+/**
+ * AuthorizeSchema
+ */
+export const vAuthorizeSchema = v.object({
+    redirectTo: v.string()
+});
+
+/**
+ * SSOAccountSchema
+ */
+export const vSsoAccountSchema = v.object({
+    id: v.string(),
+    provider: v.string(),
+    email: v.string()
+});
 
 /**
  * SurveyFormatChoices
@@ -2947,10 +2972,12 @@ export const vOperationV1CreateAppealData = v.object({
  */
 export const vOperationV1CreateAppealResponse = vAppealSchema;
 
-export const vOperationV1GetPoliciesToJoinData = v.object({
+export const vOperationV1EffectivePoliciesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
-    query: v.optional(v.never())
+    query: v.optional(v.object({
+        userId: v.optional(v.union([v.string(), v.null()]))
+    }))
 });
 
 /**
@@ -2958,7 +2985,7 @@ export const vOperationV1GetPoliciesToJoinData = v.object({
  *
  * OK
  */
-export const vOperationV1GetPoliciesToJoinResponse = v.array(vSitePolicySchema);
+export const vOperationV1EffectivePoliciesResponse = v.array(vSitePolicySchema);
 
 export const vOperationV1AgreePoliciesData = v.object({
     body: vPolicyVersionAgreementSchema,
@@ -3120,6 +3147,64 @@ export const vQuizV1DeactivateAttemptData = v.object({
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
+});
+
+export const vSsoV1AuthorizeData = v.object({
+    body: vAuthorizeSchema,
+    path: v.object({
+        provider: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vSsoV1AuthorizeResponse = vAuthorizeResponseSchema;
+
+export const vSsoV1CallbackData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        provider: v.string()
+    }),
+    query: v.object({
+        code: v.string(),
+        state: v.string()
+    })
+});
+
+export const vSsoV1LinkData = v.object({
+    body: vAuthorizeSchema,
+    path: v.object({
+        provider: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vSsoV1LinkResponse = vAuthorizeResponseSchema;
+
+export const vSsoV1GetAccountsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vSsoV1GetAccountsResponse = v.array(vSsoAccountSchema);
+
+export const vSsoV1DeleteAccountData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
 });
 
 export const vSurveyV1GetSurveyData = v.object({

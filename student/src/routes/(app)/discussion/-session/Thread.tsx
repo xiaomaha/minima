@@ -1,4 +1,3 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import { IconEdit, IconHelpCircleFilled, IconMessage, IconPlus } from '@tabler/icons-solidjs'
 import { formatDistanceToNow } from 'date-fns'
 import { createSignal, For, Show } from 'solid-js'
@@ -20,6 +19,7 @@ import { Dialog } from '@/shared/Diaglog'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { extractText } from '@/shared/utils'
 import { TextEditor } from '../../-shared/editor/TextEditor'
@@ -311,7 +311,7 @@ const ContentEditor = (props: ContentEditorProps) => {
   // session
   const [, { setStore: setSessionStore }] = useSession()
 
-  const [contentForm, { Form, Field }] = createForm<v.InferInput<typeof vDiscussionPostSaveSchema>>({
+  const [formState, { Form, Field }] = createForm<v.InferInput<typeof vDiscussionPostSaveSchema>>({
     initialValues: {
       title: props.title ?? '',
       body: props.body ?? '',
@@ -408,8 +408,8 @@ const ContentEditor = (props: ContentEditorProps) => {
 
           <SubmitButton
             label={t('Save')}
-            isPending={contentForm.submitting}
-            disabled={!contentForm.dirty}
+            isPending={formState.submitting}
+            disabled={!formState.dirty}
             class="btn btn-neutral mt-4"
           />
         </fieldset>

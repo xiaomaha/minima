@@ -30,6 +30,7 @@ import { Route as appDashboardCatalogRouteImport } from './routes/(app)/dashboar
 import { Route as appDashboardAnnouncementRouteImport } from './routes/(app)/dashboard/announcement'
 import { Route as appDashboardAchievementRouteImport } from './routes/(app)/dashboard/achievement'
 import { Route as appAccountProfileRouteImport } from './routes/(app)/account/profile'
+import { Route as appAccountLinkRouteImport } from './routes/(app)/account/link'
 import { Route as appAccountGroupRouteImport } from './routes/(app)/account/group'
 import { Route as appAccountEmailChangeRouteImport } from './routes/(app)/account/email-change'
 import { Route as appExamIdSessionRouteImport } from './routes/(app)/exam/$id.session'
@@ -141,6 +142,11 @@ const appAccountProfileRoute = appAccountProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => appAccountRouteRoute,
 } as any)
+const appAccountLinkRoute = appAccountLinkRouteImport.update({
+  id: '/link',
+  path: '/link',
+  getParentRoute: () => appAccountRouteRoute,
+} as any)
 const appAccountGroupRoute = appAccountGroupRouteImport.update({
   id: '/group',
   path: '/group',
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/password-change': typeof authPasswordChangeRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
   '/account/group': typeof appAccountGroupRoute
+  '/account/link': typeof appAccountLinkRoute
   '/account/profile': typeof appAccountProfileRoute
   '/dashboard/achievement': typeof appDashboardAchievementRoute
   '/dashboard/announcement': typeof appDashboardAnnouncementRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/password-change': typeof authPasswordChangeRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
   '/account/group': typeof appAccountGroupRoute
+  '/account/link': typeof appAccountLinkRoute
   '/account/profile': typeof appAccountProfileRoute
   '/dashboard/achievement': typeof appDashboardAchievementRoute
   '/dashboard/announcement': typeof appDashboardAnnouncementRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/(auth)/password-change': typeof authPasswordChangeRoute
   '/(app)/account/email-change': typeof appAccountEmailChangeRoute
   '/(app)/account/group': typeof appAccountGroupRoute
+  '/(app)/account/link': typeof appAccountLinkRoute
   '/(app)/account/profile': typeof appAccountProfileRoute
   '/(app)/dashboard/achievement': typeof appDashboardAchievementRoute
   '/(app)/dashboard/announcement': typeof appDashboardAnnouncementRoute
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/password-change'
     | '/account/email-change'
     | '/account/group'
+    | '/account/link'
     | '/account/profile'
     | '/dashboard/achievement'
     | '/dashboard/announcement'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
     | '/password-change'
     | '/account/email-change'
     | '/account/group'
+    | '/account/link'
     | '/account/profile'
     | '/dashboard/achievement'
     | '/dashboard/announcement'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/(auth)/password-change'
     | '/(app)/account/email-change'
     | '/(app)/account/group'
+    | '/(app)/account/link'
     | '/(app)/account/profile'
     | '/(app)/dashboard/achievement'
     | '/(app)/dashboard/announcement'
@@ -496,6 +508,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof appAccountProfileRouteImport
       parentRoute: typeof appAccountRouteRoute
     }
+    '/(app)/account/link': {
+      id: '/(app)/account/link'
+      path: '/link'
+      fullPath: '/account/link'
+      preLoaderRoute: typeof appAccountLinkRouteImport
+      parentRoute: typeof appAccountRouteRoute
+    }
     '/(app)/account/group': {
       id: '/(app)/account/group'
       path: '/group'
@@ -544,12 +563,14 @@ declare module '@tanstack/solid-router' {
 interface appAccountRouteRouteChildren {
   appAccountEmailChangeRoute: typeof appAccountEmailChangeRoute
   appAccountGroupRoute: typeof appAccountGroupRoute
+  appAccountLinkRoute: typeof appAccountLinkRoute
   appAccountProfileRoute: typeof appAccountProfileRoute
 }
 
 const appAccountRouteRouteChildren: appAccountRouteRouteChildren = {
   appAccountEmailChangeRoute: appAccountEmailChangeRoute,
   appAccountGroupRoute: appAccountGroupRoute,
+  appAccountLinkRoute: appAccountLinkRoute,
   appAccountProfileRoute: appAccountProfileRoute,
 }
 

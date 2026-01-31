@@ -1,17 +1,20 @@
-import { createForm, valiForm } from '@modular-forms/solid'
 import { createFileRoute, Link, useLocation } from '@tanstack/solid-router'
 import * as v from 'valibot'
 import { accountV1Login } from '@/api/sdk.gen'
 import { vLoginSchema } from '@/api/valibot.gen'
-import { LOGIN_REDIRECT_URL } from '@/config'
+import { LOGIN_REDIRECT_PATH } from '@/config'
 import { handleFormErrors } from '@/shared/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { setUser } from '../(app)/account/-store'
+import { SSOButtons } from '../(auth)/-SSOButtons'
 
 const searchSchema = v.object({
   next: v.optional(v.pipe(v.string(), v.startsWith('/'))),
+  sso: v.optional(v.boolean()),
+  error: v.optional(v.string()),
 })
 
 export const Route = createFileRoute('/(auth)/login')({
@@ -21,23 +24,26 @@ export const Route = createFileRoute('/(auth)/login')({
 
 function RouteComponent() {
   const { t } = useTranslation()
-  const params = Route.useSearch()
+  const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const location = useLocation()
 
-  const [loginForm, { Form, Field }] = createForm<v.InferInput<typeof vLoginSchema>>({
+  const form = createForm<v.InferInput<typeof vLoginSchema>>({
+    initialValues: { email: location().state?.email ?? '', password: '' },
     validate: valiForm(vLoginSchema),
   })
 
   const login = async (values: v.InferInput<typeof vLoginSchema>) => {
     const { data: user, error } = await accountV1Login({ body: values, throwOnError: false })
     if (error) {
-      handleFormErrors(loginForm, error, t)
+      handleFormErrors(form, error, t)
       return
     }
     setUser(user)
-    navigate({ to: params().next || LOGIN_REDIRECT_URL })
+    navigate({ to: search().next || LOGIN_REDIRECT_PATH, replace: true })
   }
+
+  const [formState, { Form, Field }] = form
 
   return (
     <Form onSubmit={login}>
@@ -46,14 +52,7 @@ function RouteComponent() {
         <Field name="email">
           {(field, props) => (
             <FormInput error={field.error}>
-              <input
-                {...props}
-                type="email"
-                value={location().state?.email ?? ''}
-                class="input"
-                placeholder={t('Email')}
-                autofocus
-              />
+              <input {...props} type="email" class="input" placeholder={t('Email')} autofocus={!search().sso} />
             </FormInput>
           )}
         </Field>
@@ -69,10 +68,13 @@ function RouteComponent() {
         </Link>
         <SubmitButton
           label={t('Login')}
-          isPending={loginForm.submitting}
-          disabled={!loginForm.dirty}
+          isPending={formState.submitting}
+          disabled={!formState.dirty}
           class="btn btn-neutral mt-4"
         />
+
+        <SSOButtons search={search} />
+
         <div class="justify-center label">
           {t("Haven't account?")}
           <Link to="/join" class="ml-1 link link-hover">

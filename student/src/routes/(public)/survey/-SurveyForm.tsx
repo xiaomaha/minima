@@ -1,4 +1,3 @@
-import { createForm, getValue, toCustom, validate, valiForm } from '@modular-forms/solid'
 import { For, type JSX, onMount, Show } from 'solid-js'
 import type * as v from 'valibot'
 import {
@@ -16,6 +15,7 @@ import { store as accountStore } from '@/routes/(app)/account/-store'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
+import { createForm, toCustom, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { WordFrequency } from '@/shared/WordFrequency'
 
@@ -23,7 +23,7 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
   const { t } = useTranslation()
   const user = accountStore.user
 
-  const [submitForm, { Form, Field }] = createForm<v.InferInput<typeof vSurveyAnswersSchema>>({
+  const [formState, { Form, Field, getValue }] = createForm<v.InferInput<typeof vSurveyAnswersSchema>>({
     initialValues: props.survey.questions.reduce(
       (acc, q) => {
         acc[String(q.id)] = ''
@@ -42,10 +42,6 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
     setProgress(props.survey.id, 100, accessContext())
     scrollTo(0, 0)
   }
-
-  const questionRefs: Record<string, HTMLElement> = {}
-
-  onMount(() => queueMicrotask(() => validate(submitForm)))
 
   onMount(async () => {
     // Because survey is outside of app route
@@ -73,6 +69,8 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
       return data
     },
   )
+
+  const questionRefs: Record<string, HTMLElement> = {}
 
   return (
     <>
@@ -213,7 +211,7 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
 
           <Show when={!submitted()}>
             <div class="sticky bottom-8 w-full min-h-6">
-              <Show when={submitForm.invalid}>
+              <Show when={formState.invalid}>
                 <div class="absolute flex h-full w-full cursor-pointer">
                   <For each={Object.entries(questionRefs)}>
                     {([qID, ref], i) => (
@@ -222,7 +220,7 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
                         classList={{
                           'rounded-l-md': i() === 0,
                           'rounded-r-md': i() === Object.keys(questionRefs).length - 1,
-                          'bg-primary/40': !!getValue(submitForm, qID),
+                          'bg-primary/40': !!getValue(qID),
                         }}
                         data-tip={t('Question {{num}}', { num: i() + 1 })}
                         onclick={() => ref.scrollIntoView({ behavior: 'smooth', block: 'center' })}
@@ -234,8 +232,8 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
 
               <SubmitButton
                 label={t('Submit Answers')}
-                isPending={submitForm.submitting}
-                disabled={submitForm.invalid} // cf. submitForm.dirty
+                isPending={formState.submitting}
+                disabled={formState.invalid || !formState.dirty}
                 class="btn btn-primary w-full"
               />
             </div>

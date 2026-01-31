@@ -3,11 +3,11 @@ interface AccessContextSchema {
 }
 
 export const accessContextParam = () => {
-  const params = new URLSearchParams(window.location.search)
+  const search = new URLSearchParams(window.location.search)
   const context: AccessContextSchema = {}
 
-  if (params.has('course')) {
-    context.course = params.get('course')!
+  if (search.has('course')) {
+    context.course = search.get('course')!
   } else {
     return {}
   }

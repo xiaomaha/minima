@@ -54,8 +54,8 @@ function RouteComponent() {
       </div>
 
       <Show when={enrollments.end && enrollments.count === 0}>
-        <NoContent message={t('No content enrolled yet.')}>
-          <div class="mt-8 text-base-content/70 space-y-4">
+        <NoContent message={t('No content enrolled yet.')} class="my-16">
+          <div class="text-base-content/70 space-y-2 mt-2">
             <div class="flex items-center justify-center">
               <Trans>
                 You can enroll content from the catalogs in{' '}
@@ -225,9 +225,7 @@ const ContentCard = (props: ContentCardProps) => {
 }
 
 const LiveCountdown = (props: { start: Date; setStarted: Setter<boolean> }) => {
-  const [timeLeft, setTimeLeft] = createSignal(calculateTime())
-
-  function calculateTime() {
+  const calculateTime = () => {
     const ms = props.start.getTime() - Date.now()
     if (ms <= 0) return null
 
@@ -238,6 +236,8 @@ const LiveCountdown = (props: { start: Date; setStarted: Setter<boolean> }) => {
 
     return { hours, minutes, secs }
   }
+
+  const [timeLeft, setTimeLeft] = createSignal(calculateTime())
 
   createEffect(() => {
     const interval = setInterval(() => {

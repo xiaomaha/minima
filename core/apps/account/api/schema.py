@@ -30,14 +30,20 @@ class UserSchema(TimeStampedMixinSchema):
     phone: str
     preferences: Annotated[dict[str, bool | str | int], Field(None)]
     is_active: bool
+    has_password: bool
     otp_enabled: datetime | None
     token_expires: datetime | None
+    agreement_required: bool | None
 
     @staticmethod
     def resolve_phone(obj):
         if not obj.phone:
             return ""
         return str(obj.phone)
+
+    @staticmethod
+    def resolve_has_password(obj):
+        return bool(obj.password)
 
 
 class JoinSchema(Schema):

@@ -59,6 +59,10 @@ export type UserSchema = {
      */
     isActive: boolean;
     /**
+     * Haspassword
+     */
+    hasPassword: boolean;
+    /**
      * Otpenabled
      */
     otpEnabled: string | null;
@@ -66,6 +70,10 @@ export type UserSchema = {
      * Tokenexpires
      */
     tokenExpires: string | null;
+    /**
+     * Agreementrequired
+     */
+    agreementRequired: boolean | null;
 };
 
 /**
@@ -3701,10 +3709,6 @@ export type SitePolicySchema = {
      */
     mandatory: boolean;
     /**
-     * Showonjoin
-     */
-    showOnJoin: boolean;
-    /**
      * Priority
      */
     priority: number;
@@ -3744,6 +3748,10 @@ export type SitePolicyVersionSchema = {
      * Effectivedate
      */
     effectiveDate: string;
+    /**
+     * Accepted
+     */
+    accepted?: boolean | null;
 };
 
 /**
@@ -4362,6 +4370,44 @@ export type QuizSubmissionSchema = {
  */
 export type QuizAttemptAnswersSchema = {
     [key: string]: string;
+};
+
+/**
+ * AuthorizeResponseSchema
+ */
+export type AuthorizeResponseSchema = {
+    /**
+     * Authorizationurl
+     */
+    authorizationUrl: string;
+};
+
+/**
+ * AuthorizeSchema
+ */
+export type AuthorizeSchema = {
+    /**
+     * Redirectto
+     */
+    redirectTo: string;
+};
+
+/**
+ * SSOAccountSchema
+ */
+export type SsoAccountSchema = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * Email
+     */
+    email: string;
 };
 
 /**
@@ -6277,14 +6323,19 @@ export type OperationV1CreateAppealResponses = {
 
 export type OperationV1CreateAppealResponse = OperationV1CreateAppealResponses[keyof OperationV1CreateAppealResponses];
 
-export type OperationV1GetPoliciesToJoinData = {
+export type OperationV1EffectivePoliciesData = {
     body?: never;
     path?: never;
-    query?: never;
-    url: '/api/v1/operation/policyversion/join';
+    query?: {
+        /**
+         * Userid
+         */
+        userId?: string | null;
+    };
+    url: '/api/v1/operation/policy/effective';
 };
 
-export type OperationV1GetPoliciesToJoinResponses = {
+export type OperationV1EffectivePoliciesResponses = {
     /**
      * Response
      *
@@ -6293,13 +6344,13 @@ export type OperationV1GetPoliciesToJoinResponses = {
     200: Array<SitePolicySchema>;
 };
 
-export type OperationV1GetPoliciesToJoinResponse = OperationV1GetPoliciesToJoinResponses[keyof OperationV1GetPoliciesToJoinResponses];
+export type OperationV1EffectivePoliciesResponse = OperationV1EffectivePoliciesResponses[keyof OperationV1EffectivePoliciesResponses];
 
 export type OperationV1AgreePoliciesData = {
     body: PolicyVersionAgreementSchema;
     path?: never;
     query?: never;
-    url: '/api/v1/operation/policyversion/agree';
+    url: '/api/v1/operation/policy/agree';
 };
 
 export type OperationV1AgreePoliciesResponses = {
@@ -6585,6 +6636,113 @@ export type QuizV1DeactivateAttemptData = {
 };
 
 export type QuizV1DeactivateAttemptResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type SsoV1AuthorizeData = {
+    body: AuthorizeSchema;
+    path: {
+        /**
+         * Provider
+         */
+        provider: string;
+    };
+    query?: never;
+    url: '/api/v1/sso/{provider}/authorize';
+};
+
+export type SsoV1AuthorizeResponses = {
+    /**
+     * OK
+     */
+    200: AuthorizeResponseSchema;
+};
+
+export type SsoV1AuthorizeResponse = SsoV1AuthorizeResponses[keyof SsoV1AuthorizeResponses];
+
+export type SsoV1CallbackData = {
+    body?: never;
+    path: {
+        /**
+         * Provider
+         */
+        provider: string;
+    };
+    query: {
+        /**
+         * Code
+         */
+        code: string;
+        /**
+         * State
+         */
+        state: string;
+    };
+    url: '/api/v1/sso/{provider}/callback';
+};
+
+export type SsoV1CallbackResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type SsoV1LinkData = {
+    body: AuthorizeSchema;
+    path: {
+        /**
+         * Provider
+         */
+        provider: string;
+    };
+    query?: never;
+    url: '/api/v1/sso/{provider}/link';
+};
+
+export type SsoV1LinkResponses = {
+    /**
+     * OK
+     */
+    200: AuthorizeResponseSchema;
+};
+
+export type SsoV1LinkResponse = SsoV1LinkResponses[keyof SsoV1LinkResponses];
+
+export type SsoV1GetAccountsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/sso/account';
+};
+
+export type SsoV1GetAccountsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<SsoAccountSchema>;
+};
+
+export type SsoV1GetAccountsResponse = SsoV1GetAccountsResponses[keyof SsoV1GetAccountsResponses];
+
+export type SsoV1DeleteAccountData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/sso/account/{id}';
+};
+
+export type SsoV1DeleteAccountResponses = {
     /**
      * OK
      */

@@ -28,7 +28,7 @@ const { getActiveTab, setActiveTab_ } = createRoot(() => {
   return { getActiveTab, setActiveTab_: setActiveTab }
 })
 
-export default function RouteComponent() {
+function RouteComponent() {
   const { t } = useTranslation()
   const params = Route.useParams()
   const courseId = params().id

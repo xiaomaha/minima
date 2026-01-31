@@ -9,7 +9,7 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue>()
 
-export function I18nProvider(props: ParentProps) {
+export const I18nProvider = (props: ParentProps) => {
   const [tick, setTick] = createSignal(0)
 
   i18next.on('languageChanged', () => setTick((v) => v + 1))
@@ -33,7 +33,7 @@ interface TransProps {
   children: JSX.Element
 }
 
-export function Trans(props: TransProps) {
+export const Trans = (props: TransProps) => {
   const { t } = useTranslation()
 
   const childrenArray = Array.isArray(props.children) ? props.children : [props.children]

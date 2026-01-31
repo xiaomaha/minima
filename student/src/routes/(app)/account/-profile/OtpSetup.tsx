@@ -85,7 +85,7 @@ export const OtpSetup = () => {
         <div class="alert alert-warning">
           <IconAlertCircle />
           <div class="flex-1">
-            <h3 class="font-bold mb-2">{t('Set up OTP')}</h3>
+            <div class="font-bold mb-2 text-xl">{t('Set up OTP')}</div>
             <div class="text-sm">{t('You need to set up OTP to access restricted content.')}</div>
           </div>
           <button type="button" class="btn btn-sm min-w-18" onClick={startSetup} disabled={setupData.loading}>

@@ -20,7 +20,6 @@ class Command(BaseCommand):
                     "description": str(label),
                     "active": True,
                     "mandatory": value != Policy.KindChoices.MARKETING_POLICY.value,
-                    "show_on_join": True,
                     "priority": i,
                 },
             )

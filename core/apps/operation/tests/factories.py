@@ -162,7 +162,6 @@ class PolicyFactory(DjangoModelFactory[Policy]):
     description = FactoryField("text")
     active = True
     mandatory = True
-    show_on_join = True
 
     class Meta:
         model = Policy

@@ -1,12 +1,12 @@
-import { createForm, getValue, toCustom, validate, valiForm } from '@modular-forms/solid'
 import { debounce } from '@solid-primitives/scheduled'
-import { For, type JSX, onMount, Show } from 'solid-js'
+import { For, type JSX, Show } from 'solid-js'
 import type * as v from 'valibot'
 import { examV1SaveAnswers, examV1SubmitAttempt, type LearningSessionStep } from '@/api'
 import { vExamAttemptAnswersSchema } from '@/api/valibot.gen'
 import { SAVE_ATTEMPT_INTERVAL_SECONDS } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, toCustom, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useSession } from './context'
 
@@ -23,7 +23,7 @@ export const TakeExam = () => {
   const questionRefs: Record<string, HTMLElement> = {}
   const savedAnswers = { ...(s().attempt?.savedAnswers || {}) }
 
-  const [submitForm, { Form, Field }] = createForm<v.InferInput<typeof vExamAttemptAnswersSchema>>({
+  const [formState, { Form, Field, getValue }] = createForm<v.InferInput<typeof vExamAttemptAnswersSchema>>({
     initialValues: {
       ...s().attempt!.questions.reduce(
         (acc, question) => {
@@ -51,7 +51,7 @@ export const TakeExam = () => {
     const changedAnswers: Record<string, string> = {}
     questions.forEach((q) => {
       const qId = String(q.id)
-      const currentValue = getValue(submitForm, qId) ?? ''
+      const currentValue = getValue(qId) ?? ''
       if (currentValue !== (savedAnswers[qId] ?? '') && currentValue.trim() !== '') {
         changedAnswers[qId] = currentValue
       }
@@ -61,8 +61,6 @@ export const TakeExam = () => {
       Object.assign(savedAnswers, changedAnswers)
     }
   }, SAVE_ATTEMPT_INTERVAL_SECONDS * 1000)
-
-  onMount(() => queueMicrotask(() => validate(submitForm)))
 
   const disabled = () => s().step !== SITTING
 
@@ -166,7 +164,7 @@ export const TakeExam = () => {
           </For>
 
           <div class="sticky bottom-8 w-full min-h-6">
-            <Show when={submitForm.invalid || disabled()}>
+            <Show when={formState.invalid || !formState.dirty || disabled()}>
               <div class="absolute flex h-full w-full cursor-pointer">
                 <For each={Object.entries(questionRefs)}>
                   {([qID, ref], i) => (
@@ -175,7 +173,7 @@ export const TakeExam = () => {
                       classList={{
                         'rounded-l-md': i() === 0,
                         'rounded-r-md': i() === Object.keys(questionRefs).length - 1,
-                        'bg-primary/40': !!getValue(submitForm, qID),
+                        'bg-primary/40': !!getValue(qID),
                       }}
                       data-tip={t('Question {{num}}', { num: i() + 1 })}
                       onclick={() => ref.scrollIntoView({ behavior: 'smooth', block: 'center' })}
@@ -188,8 +186,8 @@ export const TakeExam = () => {
             <Show when={!disabled()}>
               <SubmitButton
                 label={t('Submit Answers')}
-                isPending={submitForm.submitting}
-                disabled={submitForm.invalid} // cf. submitForm.dirty
+                isPending={formState.submitting}
+                disabled={formState.invalid || !formState.dirty}
                 class="btn btn-primary w-full"
               />
             </Show>

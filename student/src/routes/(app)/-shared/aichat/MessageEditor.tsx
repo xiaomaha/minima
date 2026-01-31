@@ -1,4 +1,3 @@
-import { createForm, reset, valiForm } from '@modular-forms/solid'
 import { IconPlus, IconSettings, IconX } from '@tabler/icons-solidjs'
 import { createSignal, onMount, Show } from 'solid-js'
 import type * as v from 'valibot'
@@ -7,6 +6,7 @@ import { vChatMessageCreateSchema } from '@/api/valibot.gen'
 import { AI_CHAT_MAX_CHARACTERS, AI_CHAT_MIN_CHARACTERS, ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from '@/config'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { initCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { extractText } from '@/shared/utils'
@@ -20,7 +20,7 @@ export const MessageEditor = () => {
   const [isStreaming, setIsStreaming] = createSignal(false)
   const [abortController, setAbortController] = createSignal<AbortController | null>(null)
 
-  const [chatForm, { Form, Field }] = createForm<v.InferInput<typeof vChatMessageCreateSchema>>({
+  const [formState, { Form, Field, reset }] = createForm<v.InferInput<typeof vChatMessageCreateSchema>>({
     initialValues: { message: '', url: '' },
     validate: valiForm(vChatMessageCreateSchema),
   })
@@ -107,7 +107,7 @@ export const MessageEditor = () => {
   }
 
   const resetEditor = () => {
-    reset(chatForm)
+    reset({})
     setFiles([])
     focusEditor()
   }
@@ -185,13 +185,13 @@ export const MessageEditor = () => {
             <SubmitButton
               label={t('Send Message')}
               isPending={isStreaming()}
-              disabled={!chatForm.dirty}
+              disabled={!formState.dirty}
               class="flex-1 btn btn-sm btn-neutral"
             />
 
             <button
               title={t('Start New Chat')}
-              disabled={!chatForm.dirty && !activeChat()}
+              disabled={!formState.dirty && !activeChat()}
               type="button"
               class="btn btn-xs btn-circle btn-ghost"
               onClick={startNewChat}

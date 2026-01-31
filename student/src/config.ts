@@ -6,7 +6,7 @@ export const DEFAULT_LANGUAGE = import.meta.env.VITE_DEFAULT_LANGUAGE || 'en'
 
 export const TEST_MAILER_URL = import.meta.env.VITE_TEST_MAILER_URL || 'http://localhost:8025'
 
-export const LOGIN_REDIRECT_URL = '/dashboard'
+export const LOGIN_REDIRECT_PATH = '/dashboard'
 
 export const ATTACHMENT_MAX_SIZE = 1024 * 1024 * 3
 
@@ -40,6 +40,8 @@ export const LANGUAGES = [
   { value: 'en', label: 'English 🇺🇸 ' },
   { value: 'ko', label: '한국어 🇰🇷 ' },
 ]
+
+export const SSO_PROVIDERS = ['google', 'github']
 
 export const SAVE_ATTEMPT_INTERVAL_SECONDS = 3
 

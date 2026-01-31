@@ -6,13 +6,14 @@ interface Props {
   icon?: Component<{ size: number }>
   message?: string
   children?: JSX.Element
+  class?: string
 }
 
 export const NoContent = (props: Props) => {
   const { t } = useTranslation()
   const Icon = props.icon ?? IconSearch
   return (
-    <div class="flex flex-col items-center justify-center w-full h-full min-h-60 gap-4">
+    <div class={`flex flex-col items-center justify-center w-full h-full min-h-40 gap-4 ${props.class}`}>
       <div class="flex gap-4 items-center justify-center">
         <Icon size={36} />
         <span class="text-xl font-light">{props.message || t('No content found')}</span>

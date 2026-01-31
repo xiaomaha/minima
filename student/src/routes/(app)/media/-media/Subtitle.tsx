@@ -278,7 +278,7 @@ export const Subtitle = (props: Props) => {
   )
 }
 
-function parseSubtitles(apiData: SubtitleSchema[]): Cue[] {
+const parseSubtitles = (apiData: SubtitleSchema[]): Cue[] => {
   const cuesBySecond = new Map<number, Map<string, string>>()
 
   apiData.forEach((item) => {
@@ -317,7 +317,7 @@ function parseSubtitles(apiData: SubtitleSchema[]): Cue[] {
     })
 }
 
-function toSeconds(time: string): number {
+const toSeconds = (time: string): number => {
   const parts = time.split(':').map(parseFloat)
   if (parts.length === 3) {
     return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0)

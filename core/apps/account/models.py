@@ -26,6 +26,7 @@ from django.db.models import (
     DateField,
     DateTimeField,
     EmailField,
+    Exists,
     F,
     ForeignKey,
     GenericIPAddressField,
@@ -140,9 +141,6 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         token_expires: "datetime | None"  # annotated
         pk: str
 
-        # TODO: remove this
-        async def acheck_password(self, raw_password: str) -> bool: ...
-
     def __str__(self):
         return f"{self.name} <{self.email}>"
 
@@ -154,7 +152,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
     async def join(cls, *, name: str, email: str, password: str, agreements: list[str], callback_url: str):
         from apps.operation.models import PolicyAgreement, PolicyVersion
 
-        mandatory_version_ids = await PolicyVersion.get_effective_mandatory_version_ids_to_join()
+        mandatory_version_ids = await PolicyVersion.get_effective_mandatory_version_ids()
         if not set(str(id) for id in mandatory_version_ids).issubset(set(agreements)):
             raise ValueError(ErrorCode.MANDATORY_POLICY_NOT_ACCEPTED)
 
@@ -172,13 +170,19 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.name.split(" ")[0]
 
-    async def token_login(self, *, password: str, request: HttpRequest, response: HttpResponse):
+    async def token_login(
+        self, *, request: HttpRequest, response: HttpResponse, password: str = "", skip_password_check: bool = False
+    ):
         if not self.is_active:
             raise ValueError(ErrorCode.USER_NOT_ACTIVE)
-        if not await self.acheck_password(password):
-            if await self.check_password_change_required(password):
-                raise ValueError(ErrorCode.PASSWORD_CHANGE_REQUIRED)
-            raise ValueError(ErrorCode.INVALID_PASSWORD)
+
+        if not skip_password_check:
+            if not password:
+                raise ValueError(ErrorCode.INVALID_PASSWORD)
+            if not await self.acheck_password(password):
+                if await self.check_password_change_required(password):
+                    raise ValueError(ErrorCode.PASSWORD_CHANGE_REQUIRED)
+                raise ValueError(ErrorCode.INVALID_PASSWORD)
 
         # access token
         options = auth_cookie_options()
@@ -233,6 +237,8 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
 
     @classmethod
     async def get_user(cls, *, is_active: bool | None = None, annotate: bool = False, **kwargs):
+        from apps.operation.models import PolicyAgreement, PolicyVersion
+
         manager = (
             cls.objects.annotate(
                 otp_enabled=Subquery(
@@ -242,6 +248,17 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                     .values("created_at")[:1]
                 ),
                 token_expires=F("token__expires"),
+                agreement_required=Exists(
+                    PolicyVersion.objects.filter(
+                        id__in=Subquery(PolicyVersion.get_latest_mandatory_versions_subquery().values("id"))
+                    ).exclude(
+                        Exists(
+                            PolicyAgreement.objects.filter(
+                                user_id=OuterRef(OuterRef("id")), version_id=OuterRef("id"), accepted=True
+                            )
+                        )
+                    )
+                ),
             )
             if annotate
             else cls.objects

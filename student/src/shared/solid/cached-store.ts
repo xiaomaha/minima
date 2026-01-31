@@ -17,15 +17,19 @@ type CachedStoreReturn<T> = [
 
 const storeCache = new Map<string, CachedStoreReturn<unknown>>()
 
-function getCacheKey(key: string, params: unknown): string {
+export const clearStore = () => {
+  storeCache.clear()
+}
+
+const getCacheKey = (key: string, params: unknown): string => {
   return `${key}_${JSON.stringify(params)}`
 }
 
-export function createCachedStore<TData, TParams>(
+export const createCachedStore = <TData, TParams>(
   key: string,
   getParams: () => TParams | undefined,
   fetcher: (params: TParams) => Promise<TData>,
-): CachedStoreReturn<TData> {
+): CachedStoreReturn<TData> => {
   let store: CachedStoreState<TData>
   let setStore: SetStoreFunction<CachedStoreState<TData>>
   let actions: CachedStoreReturn<TData>[1]
@@ -107,7 +111,14 @@ export function createCachedStore<TData, TParams>(
       ),
     )
 
-    actions = { refetch, setStore }
+    const wrappedSetStore: SetStoreFunction<CachedStoreState<TData>> = ((...args: unknown[]) => {
+      setStore(...(args as [never]))
+      if (currentCacheKey) {
+        updateCache(currentCacheKey)
+      }
+    }) as SetStoreFunction<CachedStoreState<TData>>
+
+    actions = { refetch, setStore: wrappedSetStore }
   })
 
   return [store!, actions!]

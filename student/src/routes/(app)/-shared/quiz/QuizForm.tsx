@@ -1,4 +1,3 @@
-import { createForm, getValue, validate, valiForm } from '@modular-forms/solid'
 import { IconArrowLeft, IconChevronLeft, IconChevronRight, IconRefresh } from '@tabler/icons-solidjs'
 import { createEffect, For, onMount, Show } from 'solid-js'
 import { reconcile, type SetStoreFunction } from 'solid-js/store'
@@ -13,6 +12,7 @@ import {
 import { vQuizAttemptAnswersSchema } from '@/api/valibot.gen'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
+import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { FinalScore } from '../grading/FinalScore'
 import { setProgress } from '../record'
@@ -29,7 +29,7 @@ export const QuizForm = (props: Props) => {
   const { t } = useTranslation()
   const s = () => props.session
 
-  const [submitForm, { Form, Field }] = createForm<v.InferInput<typeof vQuizAttemptAnswersSchema>>({
+  const [formState, { Form, Field, getValue }] = createForm<v.InferInput<typeof vQuizAttemptAnswersSchema>>({
     initialValues: s().attempt!.questions.reduce(
       (acc, question) => {
         acc[String(question.id)] = s().submission?.answers[question.id] || ''
@@ -46,8 +46,6 @@ export const QuizForm = (props: Props) => {
   let currentIdx = 0
 
   onMount(() => {
-    queueMicrotask(() => validate(submitForm))
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -114,7 +112,7 @@ export const QuizForm = (props: Props) => {
   }
 
   return (
-    <Form onSubmit={submit} class="contents">
+    <Form onSubmit={submit}>
       <div class="fixed z-100 flex justify-between w-full px-4 pointer-events-none">
         <button type="button" class="btn btn-sm pointer-events-auto btn-ghost btn-circle" onClick={prev}>
           <IconChevronLeft size={16} />
@@ -257,7 +255,7 @@ export const QuizForm = (props: Props) => {
         <div class="flex gap-4 fixed justify-center bottom-4 w-full px-8">
           <Show when={!disabled()}>
             <div class="sticky bottom-4 w-full min-h-6">
-              <Show when={submitForm.invalid}>
+              <Show when={formState.invalid}>
                 <div class="absolute flex h-full w-full cursor-pointer">
                   <For each={Object.entries(questionRefs)}>
                     {([qID, ref], i) => (
@@ -266,7 +264,7 @@ export const QuizForm = (props: Props) => {
                         classList={{
                           'rounded-l-md': i() === 0,
                           'rounded-r-md': i() === Object.keys(questionRefs).length - 1,
-                          'bg-primary/40': !!getValue(submitForm, qID),
+                          'bg-primary/40': !!getValue(qID),
                         }}
                         data-tip={t('Question {{num}}', { num: i() + 1 })}
                         onclick={() => {
@@ -280,11 +278,11 @@ export const QuizForm = (props: Props) => {
                 </div>
               </Show>
 
-              <Show when={!submitForm.invalid}>
+              <Show when={!formState.invalid}>
                 <SubmitButton
                   label={t('Submit Answers')}
-                  isPending={submitForm.submitting}
-                  disabled={submitForm.invalid}
+                  isPending={formState.submitting}
+                  disabled={formState.invalid || !formState.dirty}
                   class="btn btn-primary w-full btn-sm"
                 />
               </Show>
