@@ -44,7 +44,7 @@ function RouteComponent() {
 
   return (
     <Show when={user}>
-      <div class="m-auto max-w-md py-8 space-y-8">
+      <div class="m-auto max-w-md space-y-8">
         <div class="flex gap-6 justify-center">
           <AvatarEdit />
           <div class="self-center space-y-2">
@@ -137,7 +137,9 @@ function RouteComponent() {
         </Form>
 
         <Show when={user!.otpEnabled}>
-          <OtpSetup />
+          <div class="mt-4">
+            <OtpSetup />
+          </div>
         </Show>
       </div>
     </Show>
