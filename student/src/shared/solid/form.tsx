@@ -119,8 +119,7 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
     onCleanup(() => fieldValidators.delete(name))
 
     const handleInput = async (e: InputEvent) => {
-      const target = e.target as HTMLInputElement | null
-      if (!target) return
+      const target = e.target as HTMLInputElement
       if (target.type === 'checkbox' || target.type === 'radio') return
 
       let next = target.value as T[K]
@@ -171,24 +170,11 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
     }
 
     const handleChange = async (e: Event) => {
-      const target = e.target as HTMLInputElement | null
-      if (!target) return
+      const target = e.target as HTMLInputElement
 
       let next: T[K]
       if (target.type === 'checkbox') {
-        const currentValue = values[props.name]
-
-        if (Array.isArray(currentValue)) {
-          const valueSet = new Set(currentValue)
-          if (target.checked) {
-            valueSet.add(target.value)
-          } else {
-            valueSet.delete(target.value)
-          }
-          next = Array.from(valueSet) as T[K]
-        } else {
-          next = target.checked as T[K]
-        }
+        next = target.checked as T[K]
       } else if (target.type === 'radio') {
         next = target.value as T[K]
       } else {
@@ -214,10 +200,7 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
 
     const inputProps = {
       name,
-      get value() {
-        const val = values[props.name]
-        return Array.isArray(val) ? val.join(',') : val
-      },
+      value: values[props.name],
       onInput: handleInput,
       onBlur: handleBlur,
       onChange: handleChange,
@@ -244,14 +227,8 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
     const next = opts?.initialValues ?? initialValues()
     setInitialValues(() => next)
     setValues({ ...next })
-
-    Object.keys(errors).forEach((key) => {
-      setErrors(key, undefined)
-    })
-    Object.keys(touched).forEach((key) => {
-      setTouched(key, undefined)
-    })
-
+    setErrors({})
+    setTouched({})
     hasSubmitted = false
   }
 

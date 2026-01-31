@@ -35,7 +35,7 @@ export const GettingStarted = (props: Props) => {
         {t('Start Quiz')}
       </button>
 
-      <div class="rounded-box border border-base-content/5 bg-base-100">
+      <div class="rounded-box border border-base-content/5 bg-base-100 max-w-140 w-full">
         <table class="table table-sm w-full max-w-150 [&_tr>td:first-child]:whitespace-nowrap text-base-content/60">
           <tbody>
             <tr>
