@@ -1,7 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
-from itertools import chain
 from typing import TYPE_CHECKING, NotRequired, TypedDict
 
 import pghistory
@@ -150,7 +149,7 @@ class Course(LearningObjectMixin):
         course = (
             await cls.objects
             .select_related("owner", "gradingpolicy", "honor_code")
-            .prefetch_related(  # type: ignore
+            .prefetch_related(
                 Prefetch(
                     "lesson_set",
                     queryset=Lesson.objects.order_by("start_offset").prefetch_related(
@@ -161,18 +160,20 @@ class Course(LearningObjectMixin):
                             ),
                         )
                     ),
-                ),
+                )
+            )
+            .prefetch_related(
                 Prefetch(
                     "coursesurvey_set",
                     queryset=CourseSurvey.objects.annotate(title=F("survey__title")).order_by("start_offset"),
-                ),
+                )
             )
             .aget(id=course_id)
         )
         course.grading_criteria = await course.gradingpolicy.grading_criteria(access_date)
         session = SessionDict(access_date=access_date, course=course)
 
-        for unit in chain(course.lesson_set.all(), course.coursesurvey_set.all()):
+        for unit in [*course.lesson_set.all(), *course.coursesurvey_set.all()]:
             unit.start_date = access_date["start"] + timedelta(days=unit.start_offset)
             unit.end_date = (
                 unit.start_date + timedelta(days=unit.end_offset) if unit.end_offset is not None else access_date["end"]

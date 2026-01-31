@@ -52,10 +52,6 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
     const plainValues = JSON.parse(JSON.stringify(values)) as T
     const result = await config.validate(plainValues)
 
-    Object.keys(values).forEach((key) => {
-      setErrors(key, undefined)
-    })
-
     Object.entries(result).forEach(([key, error]) => {
       setErrors(key, error as string)
     })

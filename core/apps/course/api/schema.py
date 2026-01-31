@@ -63,7 +63,7 @@ class CourseDetailSchema(LearningObjectMixinSchema):
 class CourseEngagementSchema(TimeStampedMixinSchema):
     class CourseGradebookSchema(TimeStampedMixinSchema):
         id: int
-        details: dict[str, float]
+        details: dict[str, dict[str, bool | float | int] | None]
         score: float
         completion_rate: float
         passed: bool
