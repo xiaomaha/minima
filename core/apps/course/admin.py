@@ -123,7 +123,7 @@ class EngagementAdmin(ModelAdmin[Engagement]):
 
     actions_submit_line = ["grade"]
 
-    @action(description=_("Grade"), permissions=["grade"])  # type: ignore # gettext not working
+    @action(description=_("Grade"), permissions=["grade"])  # type: ignore
     def grade(self, request, obj: Engagement):
         async_to_sync(Engagement.grade)(course_id=obj.course.pk, learner_id=obj.learner.pk, grader=request.user)
 
@@ -133,7 +133,16 @@ class EngagementAdmin(ModelAdmin[Engagement]):
 
 @admin.register(Gradebook)
 class GradebookAdmin(ModelAdmin[Gradebook]):
-    pass
+    actions_submit_line = ["grade"]
+
+    @action(description=_("Grade"), permissions=["grade"])  # type: ignore
+    def grade(self, request, obj: Gradebook):
+        async_to_sync(Engagement.grade)(
+            course_id=obj.engagement.course.pk, learner_id=obj.engagement.learner.pk, grader=request.user
+        )
+
+    def has_grade_permission(self, request, object_id: str | int):
+        return request.user.is_superuser
 
 
 @admin.register(MessagePreset)

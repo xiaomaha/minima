@@ -59,6 +59,11 @@ export const Outline = () => {
         </div>
       </div>
 
+      <div class="max-w-lg mx-auto">
+        <p class="font-bold text-sm">{t('Course Progress')}</p>
+        <CourseProgressBar accessDate={s().accessDate} />
+      </div>
+
       <div class="min-w-200">
         <p class="font-bold text-sm">{t('Assessments')}</p>
         <table class="table tabular-nums">
@@ -213,6 +218,55 @@ export const Outline = () => {
             </For>
           </tbody>
         </table>
+      </div>
+    </div>
+  )
+}
+
+type CourseProgressBarProps = {
+  accessDate: { start: string; end: string }
+}
+
+export const CourseProgressBar = (props: CourseProgressBarProps) => {
+  const { t } = useTranslation()
+  const now = new Date()
+  const startDate = new Date(props.accessDate.start)
+  const endDate = new Date(props.accessDate.end)
+
+  const totalDuration = endDate.getTime() - startDate.getTime()
+  const elapsed = now.getTime() - startDate.getTime()
+  const progressPercentage = totalDuration > 0 ? Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100) : 0
+
+  const daysUntilEnd = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const daysUntilStart = Math.ceil((startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+  const isNotOpen = startDate > now
+  const isClosed = endDate < now
+  const isOpen = !isNotOpen && !isClosed
+
+  return (
+    <div class="flex flex-col gap-1">
+      <progress
+        class="progress"
+        classList={{
+          'progress-warning': isNotOpen,
+          'progress-info': isOpen,
+          'progress-error': isClosed,
+        }}
+        value={progressPercentage}
+        max={100}
+      />
+      <div class="flex justify-between items-center text-sm">
+        <span class="font-medium">
+          <Show when={isNotOpen}>
+            {daysUntilStart > 0 ? t('D-{{days}}', { days: daysUntilStart }) : t('Opening soon')}
+          </Show>
+          <Show when={isOpen}>{daysUntilEnd > 0 ? t('D-{{days}}', { days: daysUntilEnd }) : t('Closes today')}</Show>
+          <Show when={isClosed}>{t('Closed')}</Show>
+        </span>
+        <span class="text-neutral-500">
+          {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
+        </span>
       </div>
     </div>
   )

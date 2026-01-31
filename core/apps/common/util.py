@@ -63,7 +63,7 @@ def encode_token(payload: TokenDict, algorithm: str = "HS256"):
 
 
 def decode_token(token: str, algorithm: str = "HS256") -> TokenDict:
-    return jwt.decode(token, settings.SECRET_KEY, algorithms=[algorithm])
+    return cast(TokenDict, jwt.decode(token, settings.SECRET_KEY, algorithms=[algorithm]))
 
 
 class AccessDeniedError(Exception):
