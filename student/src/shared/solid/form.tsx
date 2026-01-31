@@ -1,5 +1,3 @@
-/** @jsxImportSource solid-js */
-
 import { createMemo, createSignal, type JSX, onCleanup } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import * as v from 'valibot'

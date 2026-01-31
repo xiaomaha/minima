@@ -53,12 +53,16 @@
   "devDependencies": {
     "@biomejs/biome": "^2.3.13",
     "@hey-api/openapi-ts": "^0.91.1",
+    "@solidjs/testing-library": "^0.8.10",
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^25.1.0",
     "daisyui": "^5.5.14",
     "i18next-cli": "^1.41.0",
+    "jsdom": "^27.4.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-biome": "^1.1.0",
-    "vite-plugin-solid": "^2.11.10"
+    "vite-plugin-solid": "^2.11.10",
+    "vitest": "^4.0.18"
   }
 }
