@@ -223,8 +223,14 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
     const next = opts?.initialValues ?? initialValues()
     setInitialValues(() => next)
     setValues({ ...next })
-    setErrors({})
-    setTouched({})
+
+    Object.keys(errors).forEach((key) => {
+      setErrors(key, undefined)
+    })
+    Object.keys(touched).forEach((key) => {
+      setTouched(key, undefined)
+    })
+
     hasSubmitted = false
   }
 

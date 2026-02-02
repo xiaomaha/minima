@@ -1,16 +1,15 @@
-import { IconBrightnessUp, IconHazeMoon, IconLogout, IconUser } from '@tabler/icons-solidjs'
 import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
-import { createEffect, onMount, Show, Suspense } from 'solid-js'
+import { createEffect, onMount, Suspense } from 'solid-js'
 import * as v from 'valibot'
 import { learningV1GetRecords } from '@/api'
 import { setRecords } from '@/routes/(app)/-shared/record'
 import { SearchBox } from '@/routes/(app)/-shared/SearchBox'
-import { store as accountStore } from '@/routes/(app)/account/-store'
-import { Avatar } from '@/shared/Avatar'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
-import { useTranslation } from '@/shared/solid/i18n'
+import { ThemeButton } from '@/shared/ThemeButton'
+import { AccountButton } from './-shared/AccountButton'
 import { Chat } from './-shared/aichat/Chat'
-import { logout } from './-shared/logout'
+import { Notification } from './-shared/Notification'
 
 const searchSchema = v.object({
   // program: v.optional(v.pipe(v.string())),
@@ -65,7 +64,8 @@ function RouteComponent() {
       {/* Navbar */}
       <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
         <div class="cursor-pointer px-4 flex shrink-0" onclick={() => navigate({ to: '/dashboard' })}>
-          <img src="/image/logo/logo.png" alt="Logo" class="w-30 h-8" />
+          <img src="/image/logo/logo.png" alt="Logo" class="w-30 h-8 in-data-[theme=dark]:hidden" />
+          <img src="/image/logo/logo-dark.png" alt="Logo" class="w-30 h-8 hidden in-data-[theme=dark]:block" />
         </div>
 
         <SearchBox />
@@ -74,13 +74,10 @@ function RouteComponent() {
           <Suspense>
             <Chat />
           </Suspense>
-          <button type="button" class="btn btn-ghost btn-circle">
-            <label class="swap swap-rotate">
-              <input type="checkbox" class="theme-controller" value="dark" />
-              <IconBrightnessUp class="swap-off h-8 w-8" />
-              <IconHazeMoon class="swap-on h-8 w-8" />
-            </label>
-          </button>
+
+          <ThemeButton />
+
+          <Notification />
 
           <AccountButton />
         </div>
@@ -90,49 +87,5 @@ function RouteComponent() {
         <Outlet />
       </main>
     </div>
-  )
-}
-
-const AccountButton = () => {
-  const { t } = useTranslation()
-  const navigate = Route.useNavigate()
-
-  const closeDropdown = () => {
-    document.activeElement instanceof HTMLElement && document.activeElement.blur()
-  }
-
-  const handleLogout = async () => {
-    closeDropdown()
-    await logout()
-  }
-
-  const goToProfile = () => {
-    closeDropdown()
-    navigate({ to: '/account/profile' })
-  }
-
-  return (
-    <Show when={accountStore.user}>
-      <div class="dropdown dropdown-end">
-        <Avatar user={accountStore.user!} />
-        <ul
-          tabindex="0"
-          class="rounded-box bg-base-100 menu dropdown-content [&_li>*]:rounded-none p-1 py-2 z-1 mt-4 w-60 shadow-xl"
-        >
-          <li>
-            <button type="button" class="btn btn-ghost justify-start gap-4 border-0 font-normal" onClick={goToProfile}>
-              <IconUser />
-              {t('Profile')}
-            </button>
-          </li>
-          <li>
-            <button type="button" class="btn btn-ghost justify-start gap-4 border-0 font-normal" onClick={handleLogout}>
-              <IconLogout />
-              {t('Logout')}
-            </button>
-          </li>
-        </ul>
-      </div>
-    </Show>
   )
 }

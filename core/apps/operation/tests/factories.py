@@ -132,8 +132,8 @@ class InquiryFactory(DjangoModelFactory[Inquiry]):
         if self.inquiryresponse_set.exists():
             return
 
-        for i in range(generic.random.randint(0, 3)):
-            InquiryResponseFactory.create(inquiry=self, solved=timezone.now() if (i == 2) else False)
+        for i in range(generic.random.randint(0, 2)):
+            InquiryResponseFactory.create(inquiry=self, solved=timezone.now() if (i == 2) else None)
 
 
 class InquiryResponseFactory(DjangoModelFactory[InquiryResponse]):
@@ -146,11 +146,10 @@ class InquiryResponseFactory(DjangoModelFactory[InquiryResponse]):
 
 
 class MessageFactory(DjangoModelFactory[Message]):
-    channel = Iterator(Message.ChannelChoices)
+    user = SubFactory(UserFactory)
     title = LazyFunction(lambda: generic.text.title())
     body = LazyFunction(lambda: generic.text.text())
-    recipients = LazyFunction(lambda: [generic.person.email()])
-    user = SubFactory(UserFactory)
+    data = {"app_label": "", "model": "", "object_id": "", "path": ""}
 
     class Meta:
         model = Message

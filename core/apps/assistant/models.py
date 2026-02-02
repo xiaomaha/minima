@@ -17,7 +17,7 @@ from django.db.models import (
 from django.utils.translation import gettext_lazy as _
 
 from apps.assistant.trigger import chat_ensure_single_active, chat_sync_message_count
-from apps.common.models import BooleanNowField, SoftDeleteMixin, TimeStampedMixin
+from apps.common.models import SoftDeleteMixin, TimeStampedMixin
 from apps.operation.models import AttachmentMixin
 
 User = get_user_model()
@@ -63,8 +63,8 @@ class ChatMessage(SoftDeleteMixin, TimeStampedMixin, AttachmentMixin):
     chat = ForeignKey(Chat, CASCADE, verbose_name=_("Chat"))
     message = TextField(_("Message"), default="", blank=True)
     response = TextField(_("Response"), default="", blank=True)
-    url = CharField(_("URL"), max_length=500, default="", blank=True)
-    completed = BooleanNowField(_("Completed"), null=True, blank=True)
+    path = CharField(_("Path"), max_length=500, default="", blank=True)
+    completed = DateTimeField(_("Completed"), null=True, blank=True)
     bookmarked = BooleanField(_("Bookmarked"), default=False)
     rating = PositiveSmallIntegerField(_("Rating"), null=True, blank=True)
     input_tokens = PositiveIntegerField(_("Input Tokens"), null=True, blank=True)
@@ -87,7 +87,7 @@ class ChatMessage(SoftDeleteMixin, TimeStampedMixin, AttachmentMixin):
 
     @classmethod
     async def create(
-        cls, *, user_id: str, message: str, url: str, files: Sequence[File] | None, chat_id: int | None = None
+        cls, *, user_id: str, message: str, path: str, files: Sequence[File] | None, chat_id: int | None = None
     ) -> ChatMessage:
 
         if chat_id:
@@ -96,7 +96,7 @@ class ChatMessage(SoftDeleteMixin, TimeStampedMixin, AttachmentMixin):
             title = BeautifulSoup(message, "html.parser").get_text(separator=" ", strip=True)[:50]
             chat = await Chat.objects.acreate(user_id=user_id, title=title or _("New Chat"))
 
-        chat_message = await ChatMessage.objects.acreate(chat=chat, message=message, url=url)
+        chat_message = await ChatMessage.objects.acreate(chat=chat, message=message, path=path)
         await chat_message.update_attachments(files=files, owner_id=user_id, content=chat_message.message)
         return chat_message
 

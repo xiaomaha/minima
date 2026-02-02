@@ -63,6 +63,7 @@ dev = [
   "mjml-python",
   "openpyxl",
   "django-stubs",
+  "typing-extensions>=4.15.0",
 ]
 
 [tool.django-stubs]

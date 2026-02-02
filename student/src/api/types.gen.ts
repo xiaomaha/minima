@@ -360,6 +360,10 @@ export type AppealSchema = {
      * Closed
      */
     closed: string | null;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -797,9 +801,9 @@ export type ChatMessageCreateSchema = {
      */
     message: string;
     /**
-     * Url
+     * Path
      */
-    url: string;
+    path: string;
     /**
      * Chatid
      */
@@ -899,9 +903,9 @@ export type ChatMessageSchema = {
      */
     response: string;
     /**
-     * Url
+     * Path
      */
-    url: string;
+    path: string;
     /**
      * Completed
      */
@@ -1691,7 +1695,9 @@ export type CourseGradebookSchema = {
      * Details
      */
     details: {
-        [key: string]: number;
+        [key: string]: {
+            [key: string]: boolean | number | number;
+        } | null;
     };
     /**
      * Score
@@ -3412,6 +3418,10 @@ export type InquirySchema = {
      * Contentid
      */
     contentId: string | number;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -3464,6 +3474,10 @@ export type InquirySavedSchema = {
      * Question
      */
     question: string;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -3490,6 +3504,10 @@ export type InquiryCreateSchema = {
      * Contentid
      */
     contentId: string | number;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -3507,9 +3525,27 @@ export type InquiryUpdateSchema = {
 };
 
 /**
- * ChannelChoices
+ * MessageDataSchema
  */
-export type ChannelChoices = 'email' | 'text' | 'fcm';
+export type MessageDataSchema = {
+    /**
+     * Applabel
+     */
+    appLabel: string;
+    /**
+     * Model
+     */
+    model: string;
+    /**
+     * Objectid
+     */
+    objectId: number | string;
+    /**
+     * Path
+     */
+    path: string;
+    [key: string]: unknown | string | number | string;
+};
 
 /**
  * MessageSchema
@@ -3528,40 +3564,18 @@ export type MessageSchema = {
      */
     id: number;
     /**
-     * Recipients
-     */
-    recipients: Array<string>;
-    channel: ChannelChoices;
-    /**
-     * Group
-     */
-    group: string;
-    /**
      * Title
      */
     title: string;
     /**
-     * Data
+     * Body
      */
-    data: {
-        [key: string]: string;
-    };
-    /**
-     * Reserved
-     */
-    reserved: string | null;
-    /**
-     * Sent
-     */
-    sent: string | null;
+    body: string;
+    data: MessageDataSchema;
     /**
      * Read
      */
     read: string | null;
-    /**
-     * Error
-     */
-    error: string;
 };
 
 /**
@@ -3591,63 +3605,6 @@ export type PagedMessageSchema = {
 };
 
 /**
- * MessageDetailSchema
- */
-export type MessageDetailSchema = {
-    /**
-     * Created
-     */
-    created: string;
-    /**
-     * Modified
-     */
-    modified: string;
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Recipients
-     */
-    recipients: Array<string>;
-    channel: ChannelChoices;
-    /**
-     * Group
-     */
-    group: string;
-    /**
-     * Title
-     */
-    title: string;
-    /**
-     * Data
-     */
-    data: {
-        [key: string]: string;
-    };
-    /**
-     * Reserved
-     */
-    reserved: string | null;
-    /**
-     * Sent
-     */
-    sent: string | null;
-    /**
-     * Read
-     */
-    read: string | null;
-    /**
-     * Error
-     */
-    error: string;
-    /**
-     * Body
-     */
-    body: string;
-};
-
-/**
  * AppealCreateSchema
  */
 export type AppealCreateSchema = {
@@ -3667,6 +3624,10 @@ export type AppealCreateSchema = {
      * Questionid
      */
     questionId: number;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -3801,6 +3762,10 @@ export type ThreadSchema = {
      * Closed
      */
     closed: boolean | null;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -3827,6 +3792,10 @@ export type ThreadCreateSchema = {
      * Description
      */
     description: string;
+    /**
+     * Path
+     */
+    path: string;
 };
 
 /**
@@ -4920,9 +4889,9 @@ export type AssistantV1ChatMessageData = {
          */
         message: string;
         /**
-         * Url
+         * Path
          */
-        url: string;
+        path: string;
         /**
          * Chatid
          */
@@ -6176,6 +6145,10 @@ export type OperationV1CreateInquiryData = {
          */
         contentId: string | number;
         /**
+         * Path
+         */
+        path: string;
+        /**
          * Files
          *
          * Max size: 3MB
@@ -6235,7 +6208,7 @@ export type OperationV1UpdateInquiryResponses = {
 
 export type OperationV1UpdateInquiryResponse = OperationV1UpdateInquiryResponses[keyof OperationV1UpdateInquiryResponses];
 
-export type OperationV1GetMessagesData = {
+export type OperationV1GetUnreadMessagesData = {
     body?: never;
     path?: never;
     query?: {
@@ -6251,16 +6224,16 @@ export type OperationV1GetMessagesData = {
     url: '/api/v1/operation/message';
 };
 
-export type OperationV1GetMessagesResponses = {
+export type OperationV1GetUnreadMessagesResponses = {
     /**
      * OK
      */
     200: PagedMessageSchema;
 };
 
-export type OperationV1GetMessagesResponse = OperationV1GetMessagesResponses[keyof OperationV1GetMessagesResponses];
+export type OperationV1GetUnreadMessagesResponse = OperationV1GetUnreadMessagesResponses[keyof OperationV1GetUnreadMessagesResponses];
 
-export type OperationV1GetMessageData = {
+export type OperationV1ReadMessageData = {
     body?: never;
     path: {
         /**
@@ -6269,17 +6242,15 @@ export type OperationV1GetMessageData = {
         id: number;
     };
     query?: never;
-    url: '/api/v1/operation/message/{id}';
+    url: '/api/v1/operation/message/{id}/read';
 };
 
-export type OperationV1GetMessageResponses = {
+export type OperationV1ReadMessageResponses = {
     /**
      * OK
      */
-    200: MessageDetailSchema;
+    200: unknown;
 };
-
-export type OperationV1GetMessageResponse = OperationV1GetMessageResponses[keyof OperationV1GetMessageResponses];
 
 export type OperationV1CreateAppealData = {
     /**
@@ -6302,6 +6273,10 @@ export type OperationV1CreateAppealData = {
          * Questionid
          */
         questionId: number;
+        /**
+         * Path
+         */
+        path: string;
         /**
          * Files
          *

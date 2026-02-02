@@ -19,6 +19,7 @@ from django.db.models import (
     BooleanField,
     CharField,
     Count,
+    DateTimeField,
     F,
     FloatField,
     ForeignKey,
@@ -44,8 +45,8 @@ from apps.account.models import OtpLog
 from apps.assignment.models import Assignment
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
-from apps.common.models import BooleanNowField, LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AccessDate, OtpTokenDict, issue_active_context
+from apps.common.models import LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.util import AccessDate, OtpTokenDict, issue_active_context, track_fields
 from apps.competency.models import Certificate, CertificateAward, CertificateAwardDataDict
 from apps.content.models import Media
 from apps.course.trigger import course_create_grading_policy, lessonmedia_unifier
@@ -53,7 +54,7 @@ from apps.discussion.models import Discussion
 from apps.discussion.models import Grade as DiscussionGrade
 from apps.exam.models import Exam
 from apps.exam.models import Grade as ExamGrade
-from apps.operation.models import FAQ, Category, FAQItem, HonorCode, Instructor
+from apps.operation.models import FAQ, Category, FAQItem, HonorCode, Instructor, MessageType, user_message_created
 from apps.survey.models import Survey
 
 User = get_user_model()
@@ -695,6 +696,7 @@ class Engagement(TimeStampedMixin):
         )
 
 
+@track_fields("confirmed")
 @pghistory.track()
 class Gradebook(TimeStampedMixin):
     engagement = OneToOneField(Engagement, CASCADE, verbose_name=_("Engagement"))
@@ -702,7 +704,7 @@ class Gradebook(TimeStampedMixin):
     score = FloatField(_("Score"))
     completion_rate = FloatField(_("Completion Rate"))
     passed = BooleanField(_("Passed"))
-    confirmed = BooleanNowField(_("Confirmed"), null=True, blank=True)
+    confirmed = DateTimeField(_("Confirmed"), null=True, blank=True)
     note = TextField(_("Note"), blank=True, default="")
     grader = ForeignKey(User, CASCADE, null=True, blank=True, verbose_name=_("Grader"), related_name="+")
 
@@ -713,3 +715,15 @@ class Gradebook(TimeStampedMixin):
     @property
     def certificate_eligible(self):
         return bool(self.confirmed and self.passed)
+
+    def on_confirmed_changed(self, old_value: datetime | None):
+        if self.confirmed:
+            user_message_created.send(
+                source=self.engagement.course,
+                path="",
+                message=MessageType(
+                    user_id=self.engagement.learner_id,
+                    title=_("Course Grading Confirmed"),
+                    body=self.engagement.course.title,
+                ),
+            )

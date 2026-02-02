@@ -1,8 +1,7 @@
 import logging
 from datetime import timedelta
-from typing import TYPE_CHECKING, Collection
+from typing import TYPE_CHECKING
 
-from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import (
     BooleanField,
@@ -18,11 +17,9 @@ from django.db.models import (
     QuerySet,
     TextField,
 )
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from unfold.widgets import UnfoldBooleanSwitchWidget
 
-from apps.common.util import AccessDate, GradingDate, tuid
+from apps.common.util import AccessDate, GradingDate, track_fields, tuid
 
 log = logging.getLogger(__name__)
 
@@ -97,54 +94,6 @@ class OrderableMixin(Model):
                 self.reorder(new_position=self.ordering)
 
 
-class BooleanNowField(DateTimeField):
-    def contribute_to_class(self, cls: type[Model], name: str, private_only: bool = False):
-        super().contribute_to_class(cls, name)
-        if not hasattr(cls, "_boolean_now_from_db_patched"):
-            self._patch_from_db(cls)
-            setattr(cls, "_boolean_now_from_db_patched", True)
-
-    def _patch_from_db(self, cls: type[Model]) -> None:
-        original_from_db = cls.from_db.__func__
-
-        def new_from_db(
-            model_cls: type[Model], db: str | None, field_names: Collection[str], values: Collection[object]
-        ) -> Model:
-            instance = original_from_db(model_cls, db, field_names, values)
-            for fname, value in zip(field_names, values):
-                setattr(instance, f"_original_{fname}", value)
-            return instance
-
-        setattr(cls, "from_db", classmethod(new_from_db))
-
-    class BooleanNowFormField(forms.Field):
-        def to_python(self, value):
-            if value in (True, "True", "true", "1", 1, "on"):
-                return timezone.now()
-            return None
-
-        def prepare_value(self, value):
-            return bool(value)
-
-    def formfield(self, form_class=None, choices_form_class=None, **kwargs):
-        kwargs["form_class"] = BooleanNowField.BooleanNowFormField
-        kwargs["widget"] = UnfoldBooleanSwitchWidget
-        kwargs["required"] = False
-        return super().formfield(**kwargs)
-
-    def pre_save(self, model_instance, add):
-        value = getattr(model_instance, self.attname)
-
-        if not value:
-            return None
-
-        if add:
-            return timezone.now()
-
-        original_value = getattr(model_instance, f"_original_{self.attname}", None)
-        return original_value if original_value else timezone.now()
-
-
 class SoftDeleteQuerySet(QuerySet):
     def active(self):
         return self.filter(deleted__isnull=True)
@@ -159,7 +108,7 @@ class SoftDeleteManager(Manager):
 
 
 class SoftDeleteMixin(Model):
-    deleted = BooleanNowField(_("Deleted"), null=True, blank=True)
+    deleted = DateTimeField(_("Deleted"), null=True, blank=True)
 
     objects = SoftDeleteManager()
 
@@ -190,6 +139,7 @@ class LearningObjectMixin(TuidMixin, TimeStampedMixin):
         return self.duration.total_seconds() if self.duration else None
 
 
+@track_fields("completed", "confirmed")
 class GradeFieldMixin(Model):
     earned_details = JSONField(_("Earned Details"))
     possible_point = PositiveSmallIntegerField(_("Possible Point"))
@@ -197,8 +147,8 @@ class GradeFieldMixin(Model):
     score = FloatField(_("Score"))
     passed = BooleanField(_("Passed"), default=False)
     feedback = JSONField(_("Feedback"), blank=True, default=dict)
-    completed = BooleanNowField(_("Completed"), null=True, blank=True)
-    confirmed = BooleanNowField(_("Confirmed"), null=True, blank=True)
+    completed = DateTimeField(_("Completed"), null=True, blank=True)
+    confirmed = DateTimeField(_("Confirmed"), null=True, blank=True)
 
     class Meta:
         abstract = True

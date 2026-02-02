@@ -68,7 +68,7 @@ class MemberAdmin(ImportExportModelAdmin[Member]):
     def get_list_display(self, request: HttpRequest):
         list_display = super().get_list_display(request)
         return tuple(
-            f for f in list_display if f not in ["encrypted_id_number", "employment_status", "employment_type"]
+            f for f in list_display if f not in ["encrypted_personal_id", "employment_status", "employment_type"]
         ) + ("linked_user",)
 
 
@@ -79,7 +79,7 @@ class CohortAdmin(ModelAdmin[Cohort]):
 
     class MemberInline(TabularInline[CohortMember]):
         model = CohortMember
-        exclude = ("encrypted_id_number", "employment_status", "employment_type")
+        exclude = ("encrypted_personal_id", "employment_status", "employment_type")
 
     exclude = ("members",)
     inlines = (StaffInline, MemberInline)

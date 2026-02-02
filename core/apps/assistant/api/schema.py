@@ -26,7 +26,7 @@ class ChatListSchema(Schema):
 
 class ChatMessageCreateSchema(Schema):
     message: str
-    url: str
+    path: str
     chat_id: int | None = None
 
 
@@ -36,7 +36,7 @@ class ChatMessageSchema(Schema):
     modified: datetime
     message: str
     response: str
-    url: str
+    path: str
     completed: datetime | None
     bookmarked: bool
     rating: int | None

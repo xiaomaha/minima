@@ -38,7 +38,6 @@ export const Chat = () => {
   return (
     <>
       <button type="button" class="btn btn-ghost btn-circle relative" onClick={() => setOpen(!open())}>
-        <div class="status status-info absolute top-0.5 right-0.5" />
         <IconAi class="h-10 w-10" />
       </button>
 

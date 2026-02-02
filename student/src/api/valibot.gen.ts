@@ -172,7 +172,8 @@ export const vAppealSchema = v.object({
     questionId: v.pipe(v.number(), v.integer()),
     explanation: v.string(),
     review: v.string(),
-    closed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    closed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    path: v.string()
 });
 
 /**
@@ -370,7 +371,7 @@ export const vAssistantNoteSaveSchema = v.object({
  */
 export const vChatMessageCreateSchema = v.object({
     message: v.string(),
-    url: v.string(),
+    path: v.string(),
     chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()]))
 });
 
@@ -418,7 +419,7 @@ export const vChatMessageSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     message: v.string(),
     response: v.string(),
-    url: v.string(),
+    path: v.string(),
     completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
     bookmarked: v.boolean(),
     rating: v.union([v.pipe(v.number(), v.integer()), v.null()])
@@ -758,7 +759,7 @@ export const vCourseGradebookSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
-    details: v.record(v.string(), v.number()),
+    details: v.object({}),
     score: v.number(),
     completionRate: v.number(),
     passed: v.boolean(),
@@ -1495,7 +1496,8 @@ export const vInquirySchema = v.object({
     title: v.string(),
     question: v.string(),
     contentType: vContentTypeSchema,
-    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())])
+    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())]),
+    path: v.string()
 });
 
 /**
@@ -1517,7 +1519,8 @@ export const vInquirySavedSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     title: v.string(),
-    question: v.string()
+    question: v.string(),
+    path: v.string()
 });
 
 /**
@@ -1528,7 +1531,8 @@ export const vInquiryCreateSchema = v.object({
     question: v.pipe(v.string(), v.minLength(1)),
     appLabel: v.string(),
     model: v.string(),
-    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())])
+    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())]),
+    path: v.string()
 });
 
 /**
@@ -1540,13 +1544,14 @@ export const vInquiryUpdateSchema = v.object({
 });
 
 /**
- * ChannelChoices
+ * MessageDataSchema
  */
-export const vChannelChoices = v.picklist([
-    'email',
-    'text',
-    'fcm'
-]);
+export const vMessageDataSchema = v.objectWithRest({
+    appLabel: v.string(),
+    model: v.string(),
+    objectId: v.union([v.pipe(v.number(), v.integer()), v.string()]),
+    path: v.string()
+}, v.unknown());
 
 /**
  * MessageSchema
@@ -1555,15 +1560,10 @@ export const vMessageSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
-    recipients: v.array(v.string()),
-    channel: vChannelChoices,
-    group: v.string(),
     title: v.string(),
-    data: v.record(v.string(), v.string()),
-    reserved: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    sent: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    read: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    error: v.string()
+    body: v.string(),
+    data: vMessageDataSchema,
+    read: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
 });
 
 /**
@@ -1578,32 +1578,14 @@ export const vPagedMessageSchema = v.object({
 });
 
 /**
- * MessageDetailSchema
- */
-export const vMessageDetailSchema = v.object({
-    created: v.pipe(v.string(), v.isoTimestamp()),
-    modified: v.pipe(v.string(), v.isoTimestamp()),
-    id: v.pipe(v.number(), v.integer()),
-    recipients: v.array(v.string()),
-    channel: vChannelChoices,
-    group: v.string(),
-    title: v.string(),
-    data: v.record(v.string(), v.string()),
-    reserved: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    sent: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    read: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    error: v.string(),
-    body: v.string()
-});
-
-/**
  * AppealCreateSchema
  */
 export const vAppealCreateSchema = v.object({
     explanation: v.pipe(v.string(), v.minLength(1)),
     appLabel: v.string(),
     model: v.string(),
-    questionId: v.pipe(v.number(), v.integer())
+    questionId: v.pipe(v.number(), v.integer()),
+    path: v.string()
 });
 
 /**
@@ -1664,7 +1646,8 @@ export const vThreadSchema = v.object({
     commentCount: v.pipe(v.number(), v.integer()),
     ratingCount: v.pipe(v.number(), v.integer()),
     ratingAvg: v.number(),
-    closed: v.union([v.boolean(), v.null()])
+    closed: v.union([v.boolean(), v.null()]),
+    path: v.string()
 });
 
 /**
@@ -1675,7 +1658,8 @@ export const vThreadCreateSchema = v.object({
     appLabel: v.string(),
     model: v.string(),
     subjectId: v.string(),
-    description: v.string()
+    description: v.string(),
+    path: v.string()
 });
 
 /**
@@ -2195,7 +2179,7 @@ export const vAssistantV1SaveAssistantNoteData = v.object({
 export const vAssistantV1ChatMessageData = v.object({
     body: v.object({
         message: v.string(),
-        url: v.string(),
+        path: v.string(),
         chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
         files: v.optional(v.array(v.string()))
     }),
@@ -2900,6 +2884,7 @@ export const vOperationV1CreateInquiryData = v.object({
         appLabel: v.string(),
         model: v.string(),
         contentId: v.union([v.string(), v.pipe(v.number(), v.integer())]),
+        path: v.string(),
         files: v.optional(v.array(v.string()))
     }),
     path: v.optional(v.never()),
@@ -2928,7 +2913,7 @@ export const vOperationV1UpdateInquiryData = v.object({
  */
 export const vOperationV1UpdateInquiryResponse = vInquirySavedSchema;
 
-export const vOperationV1GetMessagesData = v.object({
+export const vOperationV1GetUnreadMessagesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
@@ -2940,9 +2925,9 @@ export const vOperationV1GetMessagesData = v.object({
 /**
  * OK
  */
-export const vOperationV1GetMessagesResponse = vPagedMessageSchema;
+export const vOperationV1GetUnreadMessagesResponse = vPagedMessageSchema;
 
-export const vOperationV1GetMessageData = v.object({
+export const vOperationV1ReadMessageData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.pipe(v.number(), v.integer())
@@ -2950,17 +2935,13 @@ export const vOperationV1GetMessageData = v.object({
     query: v.optional(v.never())
 });
 
-/**
- * OK
- */
-export const vOperationV1GetMessageResponse = vMessageDetailSchema;
-
 export const vOperationV1CreateAppealData = v.object({
     body: v.object({
         explanation: v.pipe(v.string(), v.minLength(1)),
         appLabel: v.string(),
         model: v.string(),
         questionId: v.pipe(v.number(), v.integer()),
+        path: v.string(),
         files: v.optional(v.array(v.string()))
     }),
     path: v.optional(v.never()),

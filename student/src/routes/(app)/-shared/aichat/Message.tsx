@@ -21,10 +21,10 @@ export const Message = (props: Props) => {
   const navigate = useNavigate()
   const [showLink, setShowLink] = createSignal(false)
 
-  const checkUrl = () => {
-    if (!props.message.url) return
-    const currentUrl = location().pathname + location().searchStr
-    setShowLink(props.message.url !== currentUrl)
+  const checkPath = () => {
+    if (!props.message.path) return
+    const currentPath = location().pathname + location().searchStr
+    setShowLink(props.message.path !== currentPath)
   }
 
   return (
@@ -53,7 +53,7 @@ export const Message = (props: Props) => {
 
       <Show when={props.message.response}>
         <div class="group">
-          <div class="px-4 flex gap-2 items-center cursor-default label" onmouseenter={checkUrl}>
+          <div class="px-4 flex gap-2 items-center cursor-default label" onmouseenter={checkPath}>
             <Avatar user={{ avatar: null, name: '', nickname: t('AI Assistant') }} />
             <div class="text-sm font-semibold">{t('AI Assistant')}</div>
             <Show when={props.message.completed} fallback={<div class="status status-warning" />}>
@@ -67,8 +67,8 @@ export const Message = (props: Props) => {
                 <button
                   type="button"
                   class="btn btn-sm btn-circle btn-ghost"
-                  title={props.message.url}
-                  onclick={() => navigate({ to: props.message.url })}
+                  title={props.message.path}
+                  onclick={() => navigate({ to: props.message.path })}
                 >
                   <IconLink size={16} />
                 </button>

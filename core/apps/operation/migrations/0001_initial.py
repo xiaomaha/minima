@@ -238,7 +238,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Created')),
                 ('modified', models.DateTimeField(auto_now=True, db_index=True, verbose_name='Modified')),
                 ('answer', models.TextField(verbose_name='Answer')),
-                ('solved', apps.common.models.BooleanNowField(blank=True, null=True, verbose_name='Solved')),
+                ('solved', apps.common.models.BooleanField(blank=True, null=True, verbose_name='Solved')),
             ],
             options={
                 'verbose_name': 'Inquiry Response',
@@ -256,7 +256,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='Created')),
                 ('modified', models.DateTimeField(auto_now=True, verbose_name='Modified')),
                 ('answer', models.TextField(verbose_name='Answer')),
-                ('solved', apps.common.models.BooleanNowField(blank=True, null=True, verbose_name='Solved')),
+                ('solved', apps.common.models.BooleanField(blank=True, null=True, verbose_name='Solved')),
             ],
             options={
                 'abstract': False,
@@ -517,7 +517,7 @@ class Migration(migrations.Migration):
                 ('rating_count', models.PositiveIntegerField(default=0, verbose_name='Rating Count')),
                 ('rating_sum', models.PositiveIntegerField(default=0, verbose_name='Rating Sum')),
                 ('rating_avg', models.FloatField(default=0, verbose_name='Rating Average')),
-                ('closed', apps.common.models.BooleanNowField(blank=True, null=True, verbose_name='Closed')),
+                ('closed', apps.common.models.BooleanField(blank=True, null=True, verbose_name='Closed')),
             ],
             options={
                 'verbose_name': 'Thread',
@@ -541,7 +541,7 @@ class Migration(migrations.Migration):
                 ('rating_count', models.PositiveIntegerField(default=0, verbose_name='Rating Count')),
                 ('rating_sum', models.PositiveIntegerField(default=0, verbose_name='Rating Sum')),
                 ('rating_avg', models.FloatField(default=0, verbose_name='Rating Average')),
-                ('closed', apps.common.models.BooleanNowField(blank=True, null=True, verbose_name='Closed')),
+                ('closed', apps.common.models.BooleanField(blank=True, null=True, verbose_name='Closed')),
             ],
             options={
                 'abstract': False,
@@ -610,7 +610,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True, db_index=True, verbose_name='Modified')),
                 ('explanation', models.TextField(verbose_name='Explanation')),
                 ('review', models.TextField(blank=True, default='', verbose_name='Review')),
-                ('closed', apps.common.models.BooleanNowField(blank=True, null=True, verbose_name='Closed')),
+                ('closed', apps.common.models.BooleanField(blank=True, null=True, verbose_name='Closed')),
                 ('question_id', models.IntegerField(verbose_name='Question ID')),
                 ('learner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL, verbose_name='Learner')),
                 ('question_type', models.ForeignKey(limit_choices_to={'model__in': ['question']}, on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype', verbose_name='Question Type')),
@@ -632,7 +632,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True, verbose_name='Modified')),
                 ('explanation', models.TextField(verbose_name='Explanation')),
                 ('review', models.TextField(blank=True, default='', verbose_name='Review')),
-                ('closed', apps.common.models.BooleanNowField(blank=True, null=True, verbose_name='Closed')),
+                ('closed', apps.common.models.BooleanField(blank=True, null=True, verbose_name='Closed')),
                 ('question_id', models.IntegerField(verbose_name='Question ID')),
                 ('learner', models.ForeignKey(db_constraint=False, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', related_query_name='+', to=settings.AUTH_USER_MODEL, verbose_name='Learner')),
                 ('pgh_context', models.ForeignKey(db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='pghistory.context')),

@@ -21,7 +21,7 @@ export const MessageEditor = () => {
   const [abortController, setAbortController] = createSignal<AbortController | null>(null)
 
   const [formState, { Form, Field, reset }] = createForm<v.InferInput<typeof vChatMessageCreateSchema>>({
-    initialValues: { message: '', url: '' },
+    initialValues: { message: '', path: '' },
     validate: valiForm(vChatMessageCreateSchema),
   })
 
@@ -38,7 +38,7 @@ export const MessageEditor = () => {
 
     // sse stream
     const { stream } = await assistantV1ChatMessage({
-      body: { message, url: location.pathname + location.search, files: files(), chatId: activeChat()?.id },
+      body: { message, path: location.pathname + location.search, files: files(), chatId: activeChat()?.id },
       signal: controller.signal,
 
       onSseError: (error) => {
@@ -77,12 +77,7 @@ export const MessageEditor = () => {
         } else if (event === 'chunk') {
           setChatMessages('items', 0, 'response', (prev) => prev + (data as { response: string }).response)
         } else if (event === 'done') {
-          setChatMessages(
-            'items',
-            (item) => item.id === (data as { id: number }).id,
-            'completed',
-            (data as { completed: string }).completed,
-          )
+          setChatMessages('items', 0, 'completed', (data as { completed: string }).completed)
           // update chat list
           setChatList(
             'data',
@@ -179,7 +174,7 @@ export const MessageEditor = () => {
             )}
           </Field>
 
-          <Field name="url">{() => null}</Field>
+          <Field name="path">{() => null}</Field>
 
           <fieldset class="flex gap-2 items-center" disabled={isStreaming() && !abortController()}>
             <SubmitButton

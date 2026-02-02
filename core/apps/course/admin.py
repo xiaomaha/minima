@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django_jsonform.forms.fields import JSONFormField
 from unfold.decorators import action
 
-from apps.common.admin import HiddenModelAdmin, ModelAdmin, TabularInline
+from apps.common.admin import BooleanDatetimeFormMixin, HiddenModelAdmin, ModelAdmin, TabularInline
 from apps.competency.models import Certificate
 from apps.course.models import (
     TEMPLATE_SCHEDULES,
@@ -117,6 +117,10 @@ class LessonMediaAdmin(HiddenModelAdmin[LessonMedia]):
 @admin.register(Engagement)
 class EngagementAdmin(ModelAdmin[Engagement]):
     class GradebookInline(TabularInline[Gradebook]):
+        class GradebookForm(BooleanDatetimeFormMixin):
+            boolean_datetime_fields = ["confirmed"]
+
+        form = GradebookForm
         model = Gradebook
 
     inlines = (GradebookInline,)
@@ -133,6 +137,11 @@ class EngagementAdmin(ModelAdmin[Engagement]):
 
 @admin.register(Gradebook)
 class GradebookAdmin(ModelAdmin[Gradebook]):
+    class GradebookForm(BooleanDatetimeFormMixin):
+        boolean_datetime_fields = ["confirmed"]
+
+    form = GradebookForm
+
     actions_submit_line = ["grade"]
 
     @action(description=_("Grade"), permissions=["grade"])  # type: ignore

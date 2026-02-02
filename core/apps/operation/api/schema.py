@@ -3,12 +3,12 @@ from typing import Annotated
 
 from django.conf import settings
 from ninja import FilterLookup, FilterSchema
-from pydantic import Field, RootModel, model_validator
+from pydantic import ConfigDict, Field, RootModel, model_validator
 
 from apps.account.api.schema import OwnerSchema
 from apps.common.error import ErrorCode
 from apps.common.schema import ContentTypeSchema, Schema, TimeStampedMixinSchema
-from apps.operation.models import Appeal, Comment, Inquiry, Message, Policy
+from apps.operation.models import Appeal, Comment, Inquiry, Policy
 
 
 class AnnounceSchema(TimeStampedMixinSchema):
@@ -46,6 +46,7 @@ class InquirySchema(TimeStampedMixinSchema):
     question: str
     content_type: ContentTypeSchema
     content_id: str | int
+    path: str
 
     @staticmethod
     def resolve_question(obj: Inquiry):
@@ -56,6 +57,7 @@ class InquirySavedSchema(TimeStampedMixinSchema):
     id: int
     title: str
     question: str
+    path: str
 
 
 class InquiryFilterSchema(FilterSchema, Schema):
@@ -70,6 +72,7 @@ class InquiryCreateSchema(Schema):
     app_label: str
     model: str
     content_id: str | int
+    path: str
 
 
 class InquiryUpdateSchema(Schema):
@@ -78,20 +81,18 @@ class InquiryUpdateSchema(Schema):
 
 
 class MessageSchema(TimeStampedMixinSchema):
+    class MessageDataSchema(Schema):
+        app_label: str
+        model: str
+        object_id: int | str
+        path: str
+        model_config = ConfigDict(extra="allow")
+
     id: int
-    recipients: list[str]
-    channel: Message.ChannelChoices
-    group: str
     title: str
-    data: dict[str, str]
-    reserved: datetime | None
-    sent: datetime | None
-    read: datetime | None
-    error: str
-
-
-class MessageDetailSchema(MessageSchema):
     body: str
+    data: MessageDataSchema
+    read: datetime | None
 
 
 class AppealSchema(TimeStampedMixinSchema):
@@ -100,6 +101,7 @@ class AppealSchema(TimeStampedMixinSchema):
     explanation: str
     review: str
     closed: datetime | None
+    path: str
 
     @staticmethod
     def resolve_explanation(obj: Appeal):
@@ -111,6 +113,7 @@ class AppealCreateSchema(Schema):
     app_label: str
     model: str
     question_id: int
+    path: str
 
 
 class SitePolicySchema(TimeStampedMixinSchema):
@@ -144,6 +147,7 @@ class ThreadSchema(TimeStampedMixinSchema):
     rating_count: int
     rating_avg: float
     closed: bool | None
+    path: str
 
 
 class ThreadCreateSchema(Schema):
@@ -152,6 +156,7 @@ class ThreadCreateSchema(Schema):
     model: str
     subject_id: str
     description: str
+    path: str
 
 
 class CommentSchema(TimeStampedMixinSchema):

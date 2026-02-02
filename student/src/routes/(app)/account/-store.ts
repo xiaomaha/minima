@@ -25,7 +25,14 @@ function loadInitialUser(): UserSchema | null | undefined {
   return user
 }
 
-export const { store, setStore, setUser, getPreferences, setPreferences, getUserLanguage } = createRoot(() => {
+export const {
+  store: accountStore,
+  setStore,
+  setUser,
+  getPreferences,
+  setPreferences,
+  getUserLanguage,
+} = createRoot(() => {
   const [store, setStore] = createStore<Store>({ user: loadInitialUser() })
 
   createEffect(() => {

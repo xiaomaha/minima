@@ -12,7 +12,7 @@ import {
 import { vDiscussionPostSaveSchema } from '@/api/valibot.gen'
 import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE } from '@/config'
 import { accessContextParam } from '@/context'
-import { store as accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'

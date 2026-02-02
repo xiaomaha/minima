@@ -30,11 +30,14 @@ ATTACHMENT_MAX_COUNT = 3
 ATTACHMENT_MAX_SIZE_MB = 3
 DEFAULT_REVIEW_PERIOD_DAYS = 30
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
 SECRET_KEY = "django-insecure-session-key" if DEBUG else os.environ["SECRET_KEY"]
+
+PERSONAL_ID_SALT = "minima" if DEBUG else os.environ["PERSONAL_ID_SALT"]
 
 ALLOWED_HOSTS = ["localhost", "minima"] if DEBUG else json.loads(os.environ["ALLOWED_HOSTS"])
 
@@ -248,7 +251,7 @@ UNFOLD = {
     "SITE_HEADER": PLATFORM_NAME,
     "SITE_LOGO": {
         "light": staticfiles_storage.url("image/logo/logo.png"),
-        "dark": staticfiles_storage.url("image/logo/logo.png"),
+        "dark": staticfiles_storage.url("image/logo/logo-dark.png"),
     },
     "SITE_FAVICONS": [
         {"rel": "icon", "type": "image/x-icon", "href": staticfiles_storage.url("image/favicon/favicon.ico")}

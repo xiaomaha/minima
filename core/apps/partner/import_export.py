@@ -8,14 +8,16 @@ from apps.partner.models import Member
 
 
 class MemberResource(ModelResource):
-    id_number = Field(attribute="encrypted_id_number", column_name="id_number", widget=CharWidget(allow_blank=True))
+    personal_id = Field(
+        attribute="encrypted_personal_id", column_name="personal_id", widget=CharWidget(allow_blank=True)
+    )
 
     class Meta:
         model = Member
         skip_unchanged = True
-        export_order = ("id", "cohort", "name", "email", "birth_date", "id_number")
+        export_order = ("id", "cohort", "name", "email", "birth_date", "personal_id")
         import_order = export_order
-        exclude = ("created", "modified", "encrypted_id_number", "user")
+        exclude = ("created", "modified", "encrypted_personal_id", "user")
 
     def before_import_row(self, row, **kwargs):
         for k, v in row.items():
@@ -24,12 +26,12 @@ class MemberResource(ModelResource):
             elif isinstance(v, str):
                 row[k] = v.strip()
 
-        if "id_number" in row and row["id_number"]:
-            row["id_number"] = Member.encrypt_id_number(row["id_number"])
-        elif "id_number" in row:
-            del row["id_number"]
+        if "personal_id" in row and row["personal_id"]:
+            row["personal_id"] = Member.encrypt_personal_id(row["personal_id"])
+        elif "personal_id" in row:
+            del row["personal_id"]
 
         super().before_import_row(row, **kwargs)
 
-    def dehydrate_id_number(self, obj):
+    def dehydrate_personal_id(self, obj):
         return ""

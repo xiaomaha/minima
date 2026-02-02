@@ -22,6 +22,7 @@ from apps.assignment.models import (
     Submission,
 )
 from apps.common.admin import (
+    BooleanDatetimeFormMixin,
     HiddenModelAdmin,
     ModelAdmin,
     ReadOnlyHiddenModelAdmin,
@@ -92,6 +93,10 @@ class AttemptAdmin(ModelAdmin[Attempt]):
         exclude = ("extracted_text",)
 
     class GradeInline(TabularInline[Grade]):
+        class GradeForm(BooleanDatetimeFormMixin):
+            boolean_datetime_fields = ["completed", "confirmed"]
+
+        form = GradeForm
         model = Grade
 
     class PlagiarismCheckInline(TabularInline[PlagiarismCheck]):
@@ -136,6 +141,11 @@ class GradeEventAdmin(ReadOnlyHiddenModelAdmin[Grade.pgh_event_model]):
 
 @admin.register(Grade)
 class GradeAdmin(ModelAdmin[Grade]):
+    class GradeForm(BooleanDatetimeFormMixin):
+        boolean_datetime_fields = ["completed", "confirmed"]
+
+    form = GradeForm
+
     class GradeEventInline(ReadOnlyTabularInline[Grade.pgh_event_model]):
         model = Grade.pgh_event_model
         verbose_name = _("Grading History")

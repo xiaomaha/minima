@@ -24,7 +24,7 @@ export const Avatar = (props: Props) => {
   const config = () => SIZE_CONFIG[props.size || 'md']
 
   return (
-    <div class={`avatar avatar-placeholder capitalize cursor-pointer ${props.class ?? ''}`} tabindex="0">
+    <div class={`select-none avatar avatar-placeholder capitalize cursor-pointer ${props.class ?? ''}`}>
       <div
         class={`${config().container} mask mask-squircle bg-base-content/10`}
         classList={{ 'rounded-full': props.rounded, 'mask mask-squircle': props.rounded }}

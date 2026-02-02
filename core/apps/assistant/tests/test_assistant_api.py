@@ -33,7 +33,7 @@ def test_assistant_flow(client: Client, admin_user: AdminUser, mimesis: Generic,
     res = client.get("/api/v1/assistant/chat")
     res.status_code == 200
 
-    message_data = {"message": mimesis.text.sentence(), "url": f"/course/{mimesis.cryptographic.uuid()[:12]}"}
+    message_data = {"message": mimesis.text.sentence(), "path": f"/course/{mimesis.cryptographic.uuid()[:12]}"}
     res = client.post("/api/v1/assistant/chat/message", data=message_data, format="multipart")
     assert res.status_code == 200, "create message"
 

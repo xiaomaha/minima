@@ -68,8 +68,8 @@ class MemberFactory(DjangoModelFactory[Member]):
     name = FactoryField("full_name")
     email = FactoryField("email")
     birth_date = FactoryField("date", start=1950, end=2000)
-    encrypted_id_number = LazyFunction(
-        lambda: Member.encrypt_id_number(f"{generic.person.identifier()}-{generic.cryptographic.uuid()[:8]}")
+    encrypted_personal_id = LazyFunction(
+        lambda: Member.encrypt_personal_id(f"{generic.person.identifier()}-{generic.cryptographic.uuid()[:8]}")
     )
     phone = FactoryField("phone_number")
     team = FactoryField("fruit")
