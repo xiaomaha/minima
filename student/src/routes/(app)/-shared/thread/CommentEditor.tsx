@@ -4,7 +4,7 @@ import type * as v from 'valibot'
 import { type CommentSchema, operationV1CreateThread, operationV1DeleteComment, operationV1SaveComment } from '@/api'
 import { vCommentSaveSchema } from '@/api/valibot.gen'
 import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE, COMMENT_MIN_CHARACTERS } from '@/config'
-import { store as accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { initCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createForm, valiForm } from '@/shared/solid/form'
@@ -45,7 +45,14 @@ export const CommentEditor = (props: Props) => {
     if (!thread.data) {
       const { appLabel, model, subjectId, title, description } = context
       const { data } = await operationV1CreateThread({
-        body: { appLabel, model, subjectId, title: title ?? '', description: description ?? '' },
+        body: {
+          appLabel,
+          model,
+          subjectId,
+          title: title ?? '',
+          description: description ?? '',
+          path: `${window.location.pathname}${window.location.search}`,
+        },
       })
 
       // set comment list cache to disable fetch empty data

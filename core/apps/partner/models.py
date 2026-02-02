@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 import pghistory
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import signing
 from django.db.models import (
@@ -26,11 +27,15 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedMixin
+from apps.common.util import track_fields
+from apps.operation.models import MessageType, user_message_created
 
 User = get_user_model()
 
 if TYPE_CHECKING:
     from apps.account.models import User
+
+PERSONAL_ID_SALT = settings.PERSONAL_ID_SALT
 
 
 @pghistory.track()
@@ -74,13 +79,14 @@ class Group(TimeStampedMixin):
         return self.name
 
 
+@track_fields("user_id")
 @pghistory.track()
 class Member(TimeStampedMixin):
     group = ForeignKey(Group, CASCADE, verbose_name=_("Group"))
     name = CharField(_("Name"), max_length=50)
     email = EmailField(_("Email"))
     birth_date = DateField(_("Birth Date"), null=True, blank=True)
-    encrypted_id_number = CharField(_("ID Number"), blank=True, max_length=255)
+    encrypted_personal_id = CharField(_("ID Number"), blank=True, max_length=255)
     phone = PhoneNumberField(_("Phone"), blank=True, default="")
     team = CharField(_("Team"), blank=True, default="", max_length=50)
     job_position = CharField(_("Job Position"), blank=True, default="", max_length=50)
@@ -98,29 +104,28 @@ class Member(TimeStampedMixin):
     if TYPE_CHECKING:
         pgh_event_model: type[Model]
         cohortmember_set: "QuerySet[CohortMember]"
-
-    ID_NUMBER_SALT = "id_number"
+        user_id: str
 
     @classmethod
-    def encrypt_id_number(cls, id_number: str):
-        if not id_number:
+    def encrypt_personal_id(cls, personal_id: str):
+        if not personal_id:
             return ""
-        return signing.dumps(id_number, salt=cls.ID_NUMBER_SALT)
+        return signing.dumps(personal_id, salt=PERSONAL_ID_SALT)
 
     @classmethod
-    def decrypt_id_number(cls, encrypted_data: str):
-        return signing.loads(encrypted_data, salt=cls.ID_NUMBER_SALT)
+    def decrypt_personal_id(cls, encrypted_data: str):
+        return signing.loads(encrypted_data, salt=PERSONAL_ID_SALT)
 
-    def set_id_number(self, id_number: str):
-        self.encrypted_id_number = self.encrypt_id_number(id_number) if id_number else ""
+    def set_personal_id(self, personal_id: str):
+        self.encrypted_personal_id = self.encrypt_personal_id(personal_id) if personal_id else ""
 
-    def check_id_number(self, id_number: str):
-        if not self.encrypted_id_number and not id_number:
+    def check_personal_id(self, personal_id: str):
+        if not self.encrypted_personal_id and not personal_id:
             return True
-        if not self.encrypted_id_number or not id_number:
+        if not self.encrypted_personal_id or not personal_id:
             return False
-        decrypted = self.decrypt_id_number(self.encrypted_id_number)
-        return decrypted == id_number
+        decrypted = self.decrypt_personal_id(self.encrypted_personal_id)
+        return decrypted == personal_id
 
     def __str__(self):
         return f"{self.name} <{self.email}>"
@@ -145,6 +150,25 @@ class Member(TimeStampedMixin):
             .annotate(member_count=Count("group__member", distinct=True))
             .filter(user=user_id)
         ]
+
+    def save(self, *args, **kwargs):
+        is_new = not self.pk
+        super().save(*args, **kwargs)
+
+        if is_new and self.user_id:
+            user_message_created.send(
+                source=self.group,
+                path="",
+                message=MessageType(user_id=self.user_id, title=_("Cohort Membership Added"), body=self.group.name),
+            )
+
+    def on_user_id_changed(self, old_value):
+        if self.user_id:
+            user_message_created.send(
+                source=self.group,
+                path="",
+                message=MessageType(user_id=self.user_id, title=_("Cohort Membership Changed"), body=self.group.name),
+            )
 
 
 @pghistory.track()

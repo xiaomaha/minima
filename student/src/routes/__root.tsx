@@ -1,7 +1,7 @@
 import { createRootRoute, Outlet, redirect } from '@tanstack/solid-router'
 import { createSignal } from 'solid-js'
 import { PLATFORM_NAME } from '@/config'
-import { store as accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { DateLocaleProvider } from '@/shared/DateLocaleProvider'
 import { I18nProvider, useTranslation } from '@/shared/solid/i18n'
 import { ToastContainer } from '@/shared/toast/ToastContainer'

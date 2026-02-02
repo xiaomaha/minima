@@ -1,7 +1,7 @@
 import { createSignal, Show } from 'solid-js'
 import { accountV1VerifyOtp } from '@/api'
 import { OtpSetup } from '@/routes/(app)/account/-profile/OtpSetup'
-import { store as accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { PinInput } from '@/shared/PinInput'
 import { useTranslation } from '@/shared/solid/i18n'
 import { generateFingerprint } from '@/shared/utils'

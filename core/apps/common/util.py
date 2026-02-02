@@ -249,3 +249,56 @@ def normalize_context(context: str) -> str:
     if len(parts) != 3:
         raise ImproperlyConfigured(f"Invalid context: {context}")
     return f"{parts[0]}={parts[1]}"
+
+
+def track_fields(*field_names):
+    def decorator(cls):
+        if hasattr(cls, "_track_fields_applied"):
+            raise ImproperlyConfigured("@track_fields already applied")
+
+        original_init = cls.__init__
+        original_save = cls.save
+
+        if hasattr(original_init, "_track_fields_patched"):
+            raise RuntimeError("__init__ already patched by @track_fields")
+
+        if hasattr(original_save, "_track_fields_patched"):
+            raise RuntimeError("save already patched by @track_fields")
+
+        def new_init(self, *args, **kwargs):
+            original_init(self, *args, **kwargs)
+            if not hasattr(self, "_tracked_originals"):
+                self._tracked_originals = {}
+            for field_name in field_names:
+                self._tracked_originals[field_name] = getattr(self, field_name, None)
+
+        def new_save(self, *args, **kwargs):
+            changes = {}
+            for field_name in field_names:
+                original_value = self._tracked_originals.get(field_name)
+                current_value = getattr(self, field_name, None)
+                if original_value != current_value:
+                    changes[field_name] = original_value
+
+            result = original_save(self, *args, **kwargs)
+
+            for field_name, old_value in changes.items():
+                handler = getattr(self, f"on_{field_name}_changed", None)
+                if handler:
+                    handler(old_value)
+
+            for field_name in field_names:
+                self._tracked_originals[field_name] = getattr(self, field_name, None)
+
+            return result
+
+        new_init._track_fields_patched = True  # type: ignore
+        new_save._track_fields_patched = True  # type: ignore
+
+        cls.__init__ = new_init
+        cls.save = new_save
+        cls._track_fields_applied = True
+
+        return cls
+
+    return decorator

@@ -2,7 +2,8 @@ import hashlib
 import mimetypes
 import os
 import re
-from typing import TYPE_CHECKING, Sequence
+from datetime import datetime
+from typing import TYPE_CHECKING, Any, Sequence
 
 import pghistory
 from asgiref.sync import sync_to_async
@@ -32,6 +33,7 @@ from django.db.models import (
     JSONField,
     ManyToManyField,
     Model,
+    OneToOneField,
     OuterRef,
     PositiveIntegerField,
     PositiveSmallIntegerField,
@@ -45,14 +47,17 @@ from django.db.models import (
     Window,
 )
 from django.db.models.functions.window import RowNumber
+from django.dispatch import Signal, receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
 from taggit.models import CommonGenericTaggedItemBase, TagBase, TaggedItemBase
 from treebeard.mp_tree import MP_Node
+from typing_extensions import TypedDict
 
 from apps.common.error import ErrorCode
-from apps.common.models import BooleanNowField, OrderableMixin, SoftDeleteMixin, TimeStampedMixin
+from apps.common.models import OrderableMixin, SoftDeleteMixin, TimeStampedMixin
+from apps.common.util import track_fields
 from apps.operation.trigger import thread_comment_stats
 
 User = get_user_model()
@@ -367,6 +372,7 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
     content_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Content Type"))
     content_id = CharField(_("Content ID"), max_length=36, db_index=True)
     content = GenericForeignKey("content_type", "content_id")
+    path = CharField(_("Path"), max_length=500, default="", blank=True)
 
     class Meta(TimeStampedMixin.Meta, AttachmentMixin.Meta):
         verbose_name = _("Inquiry")
@@ -374,9 +380,10 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
         indexes = [Index(fields=["content_type", "content_id"])]
 
     if TYPE_CHECKING:
-        solved: bool  # annotated
+        solved: datetime  # annotated
         inquiryresponse_set: "QuerySet[InquiryResponse]"
         response_count: int  # annotated
+        writer_id: str
 
     @property
     def responses(self):
@@ -397,10 +404,16 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
         content_id: int,
         writer_id: str,
         files: Sequence[File] | None,
+        path: str,
     ):
         content_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
         inquiry = await cls.objects.acreate(
-            title=title, question=question, writer_id=writer_id, content_type=content_type, content_id=content_id
+            title=title,
+            question=question,
+            writer_id=writer_id,
+            content_type=content_type,
+            content_id=content_id,
+            path=path,
         )
         await inquiry.update_attachments(files=files, owner_id=writer_id, content=inquiry.question)
         return inquiry
@@ -429,7 +442,7 @@ class InquiryResponse(TimeStampedMixin):
     inquiry = ForeignKey(Inquiry, CASCADE, verbose_name=_("Inquiry"))
     answer = TextField(_("Answer"))
     writer = ForeignKey(User, CASCADE, verbose_name=_("Writer"))
-    solved = BooleanNowField(_("Solved"), null=True, blank=True)
+    solved = DateTimeField(_("Solved"), null=True, blank=True)
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Inquiry Response")
@@ -440,13 +453,26 @@ class InquiryResponse(TimeStampedMixin):
             )
         ]
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
+        user_message_created.send(
+            source=self.inquiry,
+            path=self.inquiry.path,
+            message=MessageType(
+                user_id=self.inquiry.writer_id, title=_("Inquiry response added"), body=self.inquiry.title
+            ),
+        )
+
+
+@track_fields("closed")
 @pghistory.track()
 class Appeal(TimeStampedMixin, AttachmentMixin):
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     explanation = TextField(_("Explanation"))
     review = TextField(_("Review"), blank=True, default="")
-    closed = BooleanNowField(_("Closed"), null=True, blank=True)
+    closed = DateTimeField(_("Closed"), null=True, blank=True)
+    path = CharField(_("Path"), max_length=500, default="", blank=True)
 
     limit_choices_to = {"model__in": ["question"]}
     question_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Question Type"), limit_choices_to=limit_choices_to)
@@ -461,6 +487,9 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
                 fields=["question_type", "question_id", "learner"], name="operation_appeal_quid_quty_le_uniq"
             )
         ]
+
+    if TYPE_CHECKING:
+        learner_id: str
 
     @property
     def cleaned_explanation(self):
@@ -491,30 +520,79 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
         await appeal.update_attachments(files=files, owner_id=learner_id, content=appeal.explanation)
         return appeal
 
+    def on_closed_changed(self, old_value: datetime | None):
+        if self.closed:
+            user_message_created.send(
+                source=self,
+                path=self.path,
+                message=MessageType(
+                    user_id=self.learner_id, title=_("Grade Appeal Resolved"), body=self.explanation[:50]
+                ),
+            )
+
 
 @pghistory.track(exclude=["body"])
 class Message(TimeStampedMixin):
-    class ChannelChoices(TextChoices):
-        EMAIL = "email", _("Email")
-        TEXT = "text", _("Text")
-        FCM = "fcm", _("FCM")
-
-    channel = CharField(_("Channel"), max_length=20, choices=ChannelChoices)
-    group = CharField(_("Group"), blank=True, default="", max_length=255)
+    user = ForeignKey(User, SET_NULL, null=True, blank=True, verbose_name=_("User"))
     title = CharField(_("Title"), max_length=255)
     body = TextField(_("Body"))
+    group = CharField(_("Group"), blank=True, default="", max_length=255)
     data = JSONField(_("Data"), default=dict, blank=True)
-    recipients = ArrayField(CharField(max_length=255), verbose_name=_("Recipient Addresses"))
-    user = ForeignKey(User, SET_NULL, null=True, blank=True, verbose_name=_("User"))
-    reserved = DateTimeField(_("Reserved"), null=True, blank=True)
-    sent = DateTimeField(_("Sent"), null=True, blank=True)
-    read = DateTimeField(_("Read"), null=True, blank=True)
-    error = TextField(_("Error"), blank=True, default="")
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
-        indexes = [Index(fields=["group"]), Index(fields=["reserved"])]
+        indexes = [Index(fields=["group"])]
+
+    if TYPE_CHECKING:
+        read: datetime | None  # annotated
+
+    @classmethod
+    def get_unread_messages(cls, user_id: str):
+        return (
+            cls.objects.annotate(read=F("messageread__read")).filter(user_id=user_id, read__isnull=True).order_by("-id")
+        )
+
+
+class MessageRead(Model):
+    message = OneToOneField(Message, CASCADE, verbose_name=_("Message"))
+    read = DateTimeField(_("Read at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Message Read")
+        verbose_name_plural = _("Message Reads")
+
+
+class MessageDataDict(TypedDict, extra_items=Any):
+    app_label: str
+    model: str
+    object_id: int | str
+    path: str
+
+
+class MessageType(TypedDict):
+    user_id: str
+    title: Any  # str | _StrPromise
+    body: Any  # str | _StrPromise
+
+
+class MessageSignal(Signal):
+    def send(self, *, source: Model, path: str, message: MessageType, **kwargs):
+        return super().send(sender=source.__class__, source=source, path=path, message=message, **kwargs)
+
+
+user_message_created = MessageSignal()
+
+
+@receiver(user_message_created)
+def user_message_created_receiver(source: Model, path: str, message: MessageType, **kwargs):
+    data: MessageDataDict = {
+        "app_label": source._meta.app_label,
+        "model": source._meta.model.__name__.lower(),
+        "object_id": source.pk,
+        "path": path,
+    }
+    Message.objects.create(**message, data=data)
 
 
 @pghistory.track()
@@ -658,7 +736,8 @@ class Thread(TimeStampedMixin):
     rating_count = PositiveIntegerField(_("Rating Count"), default=0)
     rating_sum = PositiveIntegerField(_("Rating Sum"), default=0)
     rating_avg = FloatField(_("Rating Average"), default=0)
-    closed = BooleanNowField(_("Closed"), null=True, blank=True)
+    closed = DateTimeField(_("Closed"), null=True, blank=True)
+    path = CharField(_("Path"), max_length=500, default="", blank=True)
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Thread")
@@ -690,6 +769,7 @@ class Comment(TimeStampedMixin, AttachmentMixin):
         pk: int
         parent_id: int
         children: QuerySet[Comment]
+        writer_id: str
 
     def __str__(self):
         return f"{self.pk} - {self.comment[:10]}"
@@ -711,6 +791,18 @@ class Comment(TimeStampedMixin, AttachmentMixin):
 
         await comment.update_attachments(files=files, owner_id=data.pop("writer_id"), content=comment.comment)
         return comment
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.parent:
+            user_message_created.send(
+                source=self.thread,
+                path=self.thread.path,
+                message=MessageType(
+                    user_id=self.parent.writer_id, title=_("Comment Reply Added"), body=self.parent.comment[:50]
+                ),
+            )
 
 
 setattr(Comment._meta, "triggers", thread_comment_stats(Thread._meta.db_table, Comment._meta.db_table))

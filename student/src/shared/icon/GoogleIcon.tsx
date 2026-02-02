@@ -4,7 +4,7 @@ export const GoogleIcon = (props: { size?: number }) => {
     <svg width={size()} height={size()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
       <title>Google</title>
       <g>
-        <path d="m0 0H512V512H0" fill="#fff"></path>
+        <circle cx="256" cy="256" r="256" fill="#fff"></circle>
         <path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path>
         <path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path>
         <path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path>

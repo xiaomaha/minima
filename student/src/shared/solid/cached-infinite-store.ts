@@ -110,7 +110,21 @@ export const createCachedInfiniteStore = <T, P>(
         setState('loading', false)
         throw error
       } finally {
+        const wasInitialLoad = isInitialLoad
         isInitialLoad = false
+
+        if (wasInitialLoad && !state.end) {
+          queueMicrotask(() => {
+            const el = obs()
+            if (el) {
+              const rect = el.getBoundingClientRect()
+              const inViewport = rect.top < window.innerHeight && rect.bottom > 0
+              if (inViewport && !state.loading && !state.end) {
+                loadMore()
+              }
+            }
+          })
+        }
       }
     }
 
@@ -168,6 +182,8 @@ export const createCachedInfiniteStore = <T, P>(
       }
       const key = buildKey(prefix, params)
       if (activeKey === key) return
+
+      const previousKey = activeKey
       activeKey = key
 
       const saved = cache.get(key) as StoreState<T> | undefined
@@ -177,7 +193,11 @@ export const createCachedInfiniteStore = <T, P>(
           items: [...saved.items],
         })
       } else {
-        setState(startFresh())
+        if (previousKey) {
+          setState('loading', true)
+        } else {
+          setState(startFresh())
+        }
         isInitialLoad = true
         loadMoreInternal(params)
       }

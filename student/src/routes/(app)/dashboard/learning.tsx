@@ -187,7 +187,7 @@ const ContentCard = (props: ContentCardProps) => {
               </div>
             </div>
           </div>
-          <div class="text-sm label my-2 w-full relative">
+          <div class="text-sm label my-2 w-full relative justify-between">
             <Show
               when={props.item.content.format !== 'live'}
               fallback={
@@ -204,18 +204,27 @@ const ContentCard = (props: ContentCardProps) => {
 
             {/* TODO: Currenly only unenroll action is needed. */}
             <Show when={props.item.canDeactivate}>
-              <details class="dropdown dropdown-end absolute right-0 bottom-0" onclick={(e) => e.stopPropagation()}>
-                <summary class="btn btn-sm btn-circle btn-ghost">
-                  <IconDotsVertical />
-                </summary>
-                <ul class="menu dropdown-content opacity-100! bg-base-100 rounded-box z-100 w-52 p-2 shadow-2xl">
+              <div class="dropdown dropdown-end" onclick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  tabindex="0"
+                  class="btn btn-circle btn-ghost btn-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <IconDotsVertical size={20} />
+                </button>
+                <ul
+                  tabindex="0"
+                  class="mt-0 rounded-box bg-base-100 menu dropdown-content [&_li>*]:rounded-none p-1 py-2 z-1 w-60 shadow-xl"
+                  onclick={(e) => e.stopPropagation()}
+                >
                   <li class="bg-transparent-0 mb-0">
                     <button type="button" title={t('Remove this content from my learning list.')} onClick={deactivate}>
                       {t('Unenroll')}
                     </button>
                   </li>
                 </ul>
-              </details>
+              </div>
             </Show>
           </div>
         </div>

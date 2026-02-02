@@ -10,6 +10,7 @@ from treebeard.forms import movenodeform_factory
 from unfold.contrib.forms.widgets import WysiwygWidget
 
 from apps.common.admin import (
+    BooleanDatetimeFormMixin,
     HiddenModelAdmin,
     ImportExportModelAdmin,
     ModelAdmin,
@@ -32,6 +33,7 @@ from apps.operation.models import (
     InquiryResponse,
     Instructor,
     Message,
+    MessageRead,
     Policy,
     PolicyAgreement,
     PolicyVersion,
@@ -101,6 +103,10 @@ class InquiryAdmin(ModelAdmin[Inquiry]):
         verbose_name_plural = _("Attachments")
 
     class ResponseInline(TabularInline[InquiryResponse]):
+        class ResponseForm(BooleanDatetimeFormMixin):
+            boolean_datetime_fields = ["solved"]
+
+        form = ResponseForm
         model = InquiryResponse
 
     inlines = (AttachmentInline, ResponseInline)
@@ -113,7 +119,7 @@ class InquiryAdmin(ModelAdmin[Inquiry]):
 
     @admin.display(boolean=True, description=_("Solved"))
     def solved(self, obj: Inquiry):
-        return obj.solved > 0
+        return obj.solved
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -140,6 +146,11 @@ class InquiryResponseAdmin(HiddenModelAdmin[InquiryResponse]):
 
 @admin.register(Appeal)
 class AppealAdmin(ModelAdmin[Appeal]):
+    class AppealForm(BooleanDatetimeFormMixin):
+        boolean_datetime_fields = ["closed"]
+
+    form = AppealForm
+
     class AttachmentInline(TabularInline[Attachment]):
         model = Appeal.attachments.through
         verbose_name = _("Attachments")
@@ -169,7 +180,10 @@ class AttachmentAdmin(ModelAdmin[Attachment]):
 
 @admin.register(Message)
 class MessageAdmin(ModelAdmin[Message]):
-    pass
+    class MessageReadInline(TabularInline[MessageRead]):
+        model = MessageRead
+
+    inlines = (MessageReadInline,)
 
 
 @admin.register(Policy)
@@ -215,7 +229,10 @@ class PolicyAgreementEventAdmin(ReadOnlyHiddenModelAdmin[PolicyAgreement.pgh_eve
 
 @admin.register(Thread)
 class ThreadAdmin(ModelAdmin[Thread]):
-    pass
+    class ThreadForm(BooleanDatetimeFormMixin):
+        boolean_datetime_fields = ["closed"]
+
+    form = ThreadForm
 
 
 @admin.register(Comment)

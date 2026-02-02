@@ -68,4 +68,7 @@ export const NOOP = [
   t('Video'),
   t('Engagement'),
   t('education_manager'),
+  t('Inquiry'),
+  t('Quiz'),
+  t('Group'),
 ]

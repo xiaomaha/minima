@@ -11,7 +11,7 @@ import {
 import { vSurveyAnswersSchema } from '@/api/valibot.gen'
 import { accessContext } from '@/context'
 import { getProgress, setProgress, setRecords } from '@/routes/(app)/-shared/record'
-import { store as accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'

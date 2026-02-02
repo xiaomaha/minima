@@ -29,6 +29,7 @@ export const Appeal = (props: Props) => {
       appLabel: props.appLabel,
       model: props.model,
       questionId: props.questionId,
+      path: `${window.location.pathname}${window.location.search}`,
     },
     validate: valiForm(vAppealCreateSchema),
   })

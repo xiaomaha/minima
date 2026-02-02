@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pghistory
 from django.conf import settings
@@ -43,7 +43,7 @@ from apps.assignment.models import Assignment
 from apps.assignment.models import Attempt as AssignmentAttempt
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
-from apps.common.models import OrderableMixin, TimeStampedMixin
+from apps.common.models import LearningObjectMixin, OrderableMixin, TimeStampedMixin
 from apps.common.util import normalize_context, offset_paginate
 from apps.content.models import Media, Watch
 from apps.course.models import Course, Engagement, Gradebook
@@ -54,6 +54,7 @@ from apps.exam.models import Attempt as ExamAttempt
 from apps.exam.models import Exam
 from apps.exam.models import Grade as ExamGrade
 from apps.learning.trigger import content_exists_trigger
+from apps.operation.models import MessageType, user_message_created
 from apps.partner.models import Cohort
 from apps.quiz.models import Attempt as QuziAttempt
 from apps.quiz.models import Grade as QuizGrade
@@ -307,6 +308,20 @@ class Enrollment(TimeStampedMixin):
 
         return dict(zip(columns, row))
 
+    def save(self, *args, **kwargs):
+        is_new = not self.pk
+        super().save(*args, **kwargs)
+
+        if is_new and self.user_id != self.enrolled_by_id:
+            content = cast(LearningObjectMixin, self.content)
+            user_message_created.send(
+                source=self,
+                path="",
+                message=MessageType(
+                    user_id=self.user_id, title=_("%s Enrollment") % self.content_type.model, body=content.title
+                ),
+            )
+
 
 setattr(Enrollment._meta, "triggers", [content_exists_trigger(Enrollment._meta.db_table, ContentType._meta.db_table)])
 
@@ -485,6 +500,21 @@ class UserCatalog(TimeStampedMixin):
         verbose_name = _("User Catalog")
         verbose_name_plural = _("User Catalogs")
         constraints = [UniqueConstraint(fields=["user", "catalog"], name="learning_usercatalog_us_ca_uniq")]
+
+    if TYPE_CHECKING:
+        user_id: str
+        granted_by_id: str
+
+    def save(self, *args, **kwargs):
+        is_new = not self.pk
+        super().save(*args, **kwargs)
+
+        if is_new and self.user_id != self.granted_by_id:
+            user_message_created.send(
+                source=self.catalog,
+                path="",
+                message=MessageType(user_id=self.user_id, title=_("User Catalog Enrollment"), body=self.catalog.name),
+            )
 
 
 @pghistory.track()

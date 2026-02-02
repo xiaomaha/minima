@@ -22,7 +22,6 @@ from apps.operation.api.schema import (
     InquirySavedSchema,
     InquirySchema,
     InquiryUpdateSchema,
-    MessageDetailSchema,
     MessageSchema,
     PolicyVersionAgreementSchema,
     SitePolicySchema,
@@ -36,6 +35,7 @@ from apps.operation.models import (
     Comment,
     Inquiry,
     Message,
+    MessageRead,
     Policy,
     PolicyAgreement,
     Thread,
@@ -95,13 +95,14 @@ async def update_inquiry(
 
 @router.get("/message", response=list[MessageSchema])
 @paginate(Pagination)
-async def get_messages(request: HttpRequest):
-    return Message.objects.filter(user_id=request.auth)
+async def get_unread_messages(request: HttpRequest):
+    return Message.get_unread_messages(user_id=request.auth)
 
 
-@router.get("/message/{id}", response=MessageDetailSchema)
-async def get_message(request: HttpRequest, id: int):
-    return await aget_object_or_404(Message.objects.filter(user_id=request.auth), id=id)
+@router.post("/message/{id}/read")
+async def read_message(request: HttpRequest, id: int):
+    await aget_object_or_404(Message, id=id, user_id=request.auth)
+    await MessageRead.objects.aget_or_create(message_id=id)
 
 
 @router.post("/appeal", response=AppealSchema)

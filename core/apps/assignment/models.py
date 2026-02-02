@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, NotRequired, Sequence, TypedDict
 
 import pghistory
@@ -38,7 +38,7 @@ from apps.assignment.trigger import attempt_retry_count
 from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
-from apps.operation.models import Appeal, AttachmentMixin, HonorCode
+from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
 User = get_user_model()
 
@@ -446,6 +446,30 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.passed = self.score >= (self.attempt.assignment.passing_point or 0)
         self.grader_id = grader_id
         await self.asave()
+
+    def on_completed_changed(self, old_value: datetime | None):
+        if self.completed and not self.confirmed:
+            user_message_created.send(
+                source=self.attempt.assignment,
+                path="",
+                message=MessageType(
+                    user_id=self.attempt.learner_id,
+                    title=_("Assignment Grading Completed"),
+                    body=self.attempt.assignment.title,
+                ),
+            )
+
+    def on_confirmed_changed(self, old_value: datetime | None):
+        if self.confirmed:
+            user_message_created.send(
+                source=self.attempt.assignment,
+                path="",
+                message=MessageType(
+                    user_id=self.attempt.learner_id,
+                    title=_("Assignment Grading Confirmed"),
+                    body=self.attempt.assignment.title,
+                ),
+            )
 
 
 @pghistory.track()

@@ -25,7 +25,7 @@ import type * as v from 'valibot'
 import { type InquirySchema, operationV1CreateInquiry, operationV1GetInquiries, operationV1UpdateInquiry } from '@/api'
 import { vInquiryCreateSchema } from '@/api/valibot.gen'
 import { ATTACHMENT_MAX_COUNT, ATTACHMENT_MAX_SIZE, INQUIRY_MIN_CHARACTERS } from '@/config'
-import { store as accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
@@ -148,6 +148,7 @@ const InquiryEditor = (props: InquiryEditorProps) => {
     initialValues: {
       title: props.title ?? '',
       question: props.question ?? '',
+      path: `${window.location.pathname}${window.location.search}`,
       ...inquiryContext,
     },
     validate: valiForm(vInquiryCreateSchema),

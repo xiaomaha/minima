@@ -30,6 +30,7 @@ def test_inquiry_flow(client: Client, admin_user: AdminUser, mimesis: Generic):
             "model": "user",
             "contentId": admin_user.id,
             "files": files,
+            "path": "",
         },
         format="multipart",
     )
@@ -46,12 +47,6 @@ def test_message_flow(client: Client, admin_user: AdminUser, mimesis: Generic):
     # get messages
     res = client.get("/api/v1/operation/message")
     assert res.status_code == 200, "get messages"
-
-    # get message
-    items = res.json()["items"]
-    message_id = items[-1]["id"]
-    res = client.get(f"/api/v1/operation/message/{message_id}")
-    assert res.status_code == 200, "get message"
 
 
 @pytest.mark.e2e
@@ -88,6 +83,7 @@ def test_thread_flow(client: Client, admin_user: AdminUser, mimesis: Generic):
         "subjectId": admin_user.id,
         "description": text.text(),
         "deadline": None,
+        "path": "",
     }
     res = client.post("/api/v1/operation/thread", data=json.dumps(thread_data), content_type="application/json")
     assert res.status_code == 200, "create thread"

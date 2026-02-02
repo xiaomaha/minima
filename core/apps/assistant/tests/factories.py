@@ -58,9 +58,9 @@ class ChatMessageFactory(DjangoModelFactory[ChatMessage]):
     bookmarked = FactoryField("random.weighted_choice", choices={True: 1, False: 10})
 
     @lazy_attribute
-    def url(self):
-        url_patterns = ["/course/", "/assignment/", "/exam/", "/content/media/", "/discussion/thread/"]
-        pattern = generic.random.choice(url_patterns)
+    def path(self):
+        patterns = ["/course/", "/assignment/", "/exam/", "/content/media/", "/discussion/thread/"]
+        pattern = generic.random.choice(patterns)
         return f"{pattern}{generic.cryptographic.uuid()[:12]}"
 
     class Meta:

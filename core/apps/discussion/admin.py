@@ -10,6 +10,7 @@ from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.decorators import action
 
 from apps.common.admin import (
+    BooleanDatetimeFormMixin,
     HiddenModelAdmin,
     ModelAdmin,
     ReadOnlyHiddenModelAdmin,
@@ -43,6 +44,10 @@ class DiscussionAdmin(ModelAdmin[Discussion]):
 @admin.register(Attempt)
 class AttemptAdmin(ModelAdmin[Attempt]):
     class GradeInline(TabularInline[Grade]):
+        class GradeForm(BooleanDatetimeFormMixin):
+            boolean_datetime_fields = ["completed", "confirmed"]
+
+        form = GradeForm
         model = Grade
 
     class PostInline(TabularInline[Post]):
@@ -82,6 +87,11 @@ class GradeEventAdmin(ReadOnlyHiddenModelAdmin[Grade.pgh_event_model]):
 
 @admin.register(Grade)
 class GradeAdmin(ModelAdmin[Grade]):
+    class GradeForm(BooleanDatetimeFormMixin):
+        boolean_datetime_fields = ["completed", "confirmed"]
+
+    form = GradeForm
+
     class GradeEventInline(ReadOnlyTabularInline[Grade.pgh_event_model]):
         model = Grade.pgh_event_model
         verbose_name = _("Grading History")

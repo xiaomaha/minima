@@ -22,10 +22,11 @@ from django.db.models import (
     TextField,
     URLField,
 )
-from django.forms import Select
+from django.forms import BooleanField, ModelForm, Select
 from django.http import HttpRequest
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportModelAdmin as BaseImportExportModelAdmin
@@ -35,7 +36,7 @@ from unfold.contrib.forms.widgets import ArrayWidget
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
 from unfold.forms import UserChangeForm, UserCreationForm
 from unfold.sites import UnfoldAdminSite
-from unfold.widgets import UnfoldAdminSelectWidget, UnfoldAdminTextareaWidget
+from unfold.widgets import UnfoldAdminSelectWidget, UnfoldAdminTextareaWidget, UnfoldBooleanSwitchWidget
 
 from apps.common.util import ArrayField as FixedArrayField
 
@@ -363,6 +364,38 @@ class PermissionAdmin(HiddenModelAdmin[Permission]):
 @admin.register(Group)
 class GroupAdmin(HiddenModelAdmin[Group]):
     pass
+
+
+class BooleanDatetimeFormMixin(ModelForm):
+    boolean_datetime_fields = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            for field in self.boolean_datetime_fields:
+                setattr(self, f"_original_{field}", getattr(self.instance, field))
+                self.initial[field] = bool(getattr(self.instance, field))
+
+        for field in self.boolean_datetime_fields:
+            self.fields[field] = BooleanField(required=False, widget=UnfoldBooleanSwitchWidget)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data:
+            return cleaned_data
+
+        for field in self.boolean_datetime_fields:
+            if cleaned_data.get(field):
+                original = getattr(self, f"_original_{field}", None)
+                cleaned_data[field] = original or timezone.now()
+            else:
+                cleaned_data[field] = None
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance
 
 
 # reorder admin app list

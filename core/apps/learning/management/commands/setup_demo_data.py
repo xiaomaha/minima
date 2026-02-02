@@ -123,7 +123,7 @@ class Command(BaseCommand):
         AnnouncementFactory.create_batch(size=50)
 
         # inquery
-        InquiryFactory.create_batch(size=50, writer=test_user, content=test_user)
+        InquiryFactory.create_batch(size=5, writer=test_user, content=test_user)
 
         # site policy
         with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
