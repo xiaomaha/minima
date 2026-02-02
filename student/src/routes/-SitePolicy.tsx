@@ -29,9 +29,9 @@ export const SitePolicy = (props: SitePolicyProps) => {
     },
   )
 
-  const [formState, { Form, Field, setValue, reset }] = createForm<v.InferInput<typeof vPolicyVersionAgreementSchema>>({
-    initialValues: {},
-  })
+  const [formState, { Form, Field, setValues, reset }] = createForm<v.InferInput<typeof vPolicyVersionAgreementSchema>>(
+    { initialValues: {} },
+  )
 
   createEffect(() => {
     if (policies.data) {
@@ -46,13 +46,18 @@ export const SitePolicy = (props: SitePolicyProps) => {
     }
   })
 
-  const agree = async (values: v.InferInput<typeof vPolicyVersionAgreementSchema>) => {
+  const submit = async (values: v.InferInput<typeof vPolicyVersionAgreementSchema>) => {
     await operationV1AgreePolicies({ body: values })
 
-    // update policy cache
-    policies.data?.forEach((policy, i) => {
-      setStore('data', i, 'effectiveVersion', 'accepted', !!values[String(policy.effectiveVersion.id)])
-    })
+    setStore('data', (prev) =>
+      prev?.map((policy) => ({
+        ...policy,
+        effectiveVersion: {
+          ...policy.effectiveVersion,
+          accepted: !!values[String(policy.effectiveVersion.id)],
+        },
+      })),
+    )
 
     // update user cache
     setUserStore('user', 'agreementRequired', false)
@@ -66,9 +71,14 @@ export const SitePolicy = (props: SitePolicyProps) => {
   }
 
   const agreeAll = () => {
-    policies.data?.forEach((policy) => {
-      setValue(String(policy.effectiveVersion.id), true)
-    })
+    const updates = policies.data?.reduce(
+      (acc, policy) => {
+        acc[String(policy.effectiveVersion.id)] = true
+        return acc
+      },
+      {} as Record<string, boolean>,
+    )
+    if (updates) setValues(updates)
   }
 
   return (
@@ -79,7 +89,7 @@ export const SitePolicy = (props: SitePolicyProps) => {
       onClose={close}
       disableBackdrop={!!accountStore.user?.agreementRequired}
     >
-      <Form onSubmit={agree}>
+      <Form onSubmit={submit}>
         <div class="px-8 space-y-6 mb-8">
           <div class="text-xs text-info mb-8">
             <Show when={accountStore.user}>

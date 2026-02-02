@@ -43,6 +43,8 @@ export const Notification = () => {
   const goToTarget = (item: MessageSchema) => {
     closeDropdown()
 
+    if (!item.read) readMessage(item.id)
+
     if (item.data.path) {
       // appeal, inquiry, comment reply
       navigate({ to: item.data.path })

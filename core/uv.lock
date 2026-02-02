@@ -682,14 +682,14 @@ wheels = [
 
 [[package]]
 name = "django-unfold"
-version = "0.77.1"
+version = "0.78.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/10/61/242b2b4b325951fded9497b0e058fb97f6c30e0b08b72cf8e70fd3e0b9d9/django_unfold-0.77.1.tar.gz", hash = "sha256:c8611a74cc1a944787c89e950bfbe29a8b8351078a79269f80fd974dc578dbd5", size = 1108615, upload-time = "2026-01-26T13:40:55.62Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/ad/af07a81930a063f5153c56d74468a953b220bde8b0265a75f06e3d4e1172/django_unfold-0.78.0.tar.gz", hash = "sha256:07bae46c0e3be9c24d8d2970cba2b16f02cc83761bfd6c1f54418da237b12b30", size = 1109489, upload-time = "2026-02-02T08:35:28Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8a/d4/c0004a8d5369060c92a1419623de2866375a73180f16732e7cc4c9ad3e32/django_unfold-0.77.1-py3-none-any.whl", hash = "sha256:9a4305d4c65eff4de37800f60c176e242f6cb4fa2c5e96b69a5d300390c86d11", size = 1223570, upload-time = "2026-01-26T13:40:53.706Z" },
+    { url = "https://files.pythonhosted.org/packages/20/eb/c34069a7e1b46c439da1868ef29b04edfbec1640e867b304492637ffdff6/django_unfold-0.78.0-py3-none-any.whl", hash = "sha256:dbf4ebaab2ac16d364b6eef449f09a8b618e9a11e57e580d458e9247a6a560e2", size = 1224843, upload-time = "2026-02-02T08:35:26.837Z" },
 ]
 
 [[package]]

@@ -1,5 +1,5 @@
 import { createMemo, createSignal, type JSX, onCleanup } from 'solid-js'
-import { createStore, produce } from 'solid-js/store'
+import { createStore, produce, reconcile } from 'solid-js/store'
 import * as v from 'valibot'
 
 export type FieldValues = Record<string, FieldValue>
@@ -222,15 +222,9 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
   const reset = (opts?: { initialValues?: T }) => {
     const next = opts?.initialValues ?? initialValues()
     setInitialValues(() => next)
-    setValues({ ...next })
-
-    Object.keys(errors).forEach((key) => {
-      setErrors(key, undefined)
-    })
-    Object.keys(touched).forEach((key) => {
-      setTouched(key, undefined)
-    })
-
+    setValues(reconcile(next))
+    setErrors(reconcile({}))
+    setTouched(reconcile({}))
     hasSubmitted = false
   }
 
@@ -238,6 +232,14 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
     setValues(
       produce((draft) => {
         draft[name] = value
+      }),
+    )
+  }
+
+  const setMultipleValues = (updates: Partial<T>) => {
+    setValues(
+      produce((draft) => {
+        Object.assign(draft, updates)
       }),
     )
   }
@@ -268,6 +270,7 @@ export const createForm = <T extends FieldValues>(config: FormConfig<T>) => {
       validate: validateForm,
       setValue,
       getValue,
+      setValues: setMultipleValues,
       setError,
     },
   ] as const
