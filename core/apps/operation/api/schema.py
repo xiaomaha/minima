@@ -224,3 +224,18 @@ class CommentBriefSchema(TimeStampedMixinSchema):
     pinned: bool
     deleted: bool
     rating: int | None
+
+
+class DeviceSchema(Schema):
+    id: int
+    created: datetime
+    token: str
+    platform: str
+    device_name: str
+    active: bool
+
+
+class DeviceRegisterSchema(Schema):
+    token: str
+    platform: str
+    device_name: str

@@ -22,8 +22,7 @@ export const Route = createFileRoute('/(app)/dashboard/search')({
 })
 
 const [filter, setFilter] = createRoot(() => {
-  const [filter, setFilter] = createSignal<'public' | 'all'>('public')
-  return [filter, setFilter]
+  return createSignal<'public' | 'all'>('public')
 })
 
 function RouteComponent() {

@@ -35,7 +35,7 @@ function RouteComponent() {
     <DashboardProvider value={{ newEnrollments, setRefreshHandler }}>
       <div class="mx-auto max-w-7xl p-4">
         <div class="flex items-center mb-6 gap-4">
-          <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box mb-0 space-x-2 gap-y-2">
+          <ul class="ml-0 menu menu-sm  menu-horizontal bg-base-200 rounded-box mb-0 space-x-2 gap-y-2">
             <For each={Object.keys(tabLabels)}>
               {(tab) => (
                 <li class="mb-0">

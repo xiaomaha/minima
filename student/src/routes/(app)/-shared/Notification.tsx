@@ -1,7 +1,7 @@
 import { IconBell, IconRefresh } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
-import { createEffect, createSignal, For, Show } from 'solid-js'
+import { createEffect, createSignal, For, onMount, Show } from 'solid-js'
 import { type MessageSchema, operationV1GetUnreadMessages, operationV1ReadMessage } from '@/api'
 import { accountStore } from '@/routes/(app)/account/-store'
 import { NoContent } from '@/shared/NoContent'
@@ -13,14 +13,22 @@ export const Notification = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
+  const [enabled, setEnabled] = createSignal(false)
+
   const [messages, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'operationV1GetUnreadMessages',
-    () => ({}),
+    () => (enabled() ? {} : undefined),
     async (options, page) => {
       const { data } = await operationV1GetUnreadMessages({ ...options, query: { page } })
       return data
     },
   )
+
+  onMount(() => {
+    setTimeout(() => {
+      setEnabled(true)
+    }, 1000 * 2)
+  })
 
   const [unreadCount, setUnreadCount] = createSignal(0)
 

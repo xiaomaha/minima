@@ -33,6 +33,7 @@ import { Route as appAccountProfileRouteImport } from './routes/(app)/account/pr
 import { Route as appAccountLinkRouteImport } from './routes/(app)/account/link'
 import { Route as appAccountGroupRouteImport } from './routes/(app)/account/group'
 import { Route as appAccountEmailChangeRouteImport } from './routes/(app)/account/email-change'
+import { Route as appAccountDeviceRouteImport } from './routes/(app)/account/device'
 import { Route as appExamIdSessionRouteImport } from './routes/(app)/exam/$id.session'
 import { Route as appDiscussionIdSessionRouteImport } from './routes/(app)/discussion/$id.session'
 import { Route as appCourseIdSessionRouteImport } from './routes/(app)/course/$id.session'
@@ -157,6 +158,11 @@ const appAccountEmailChangeRoute = appAccountEmailChangeRouteImport.update({
   path: '/email-change',
   getParentRoute: () => appAccountRouteRoute,
 } as any)
+const appAccountDeviceRoute = appAccountDeviceRouteImport.update({
+  id: '/device',
+  path: '/device',
+  getParentRoute: () => appAccountRouteRoute,
+} as any)
 const appExamIdSessionRoute = appExamIdSessionRouteImport.update({
   id: '/exam/$id/session',
   path: '/exam/$id/session',
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
+  '/account/device': typeof appAccountDeviceRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
   '/account/group': typeof appAccountGroupRoute
   '/account/link': typeof appAccountLinkRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
+  '/account/device': typeof appAccountDeviceRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
   '/account/group': typeof appAccountGroupRoute
   '/account/link': typeof appAccountLinkRoute
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/(auth)/join': typeof authJoinRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/password-change': typeof authPasswordChangeRoute
+  '/(app)/account/device': typeof appAccountDeviceRoute
   '/(app)/account/email-change': typeof appAccountEmailChangeRoute
   '/(app)/account/group': typeof appAccountGroupRoute
   '/(app)/account/link': typeof appAccountLinkRoute
@@ -274,6 +283,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/login'
     | '/password-change'
+    | '/account/device'
     | '/account/email-change'
     | '/account/group'
     | '/account/link'
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/login'
     | '/password-change'
+    | '/account/device'
     | '/account/email-change'
     | '/account/group'
     | '/account/link'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/(auth)/join'
     | '/(auth)/login'
     | '/(auth)/password-change'
+    | '/(app)/account/device'
     | '/(app)/account/email-change'
     | '/(app)/account/group'
     | '/(app)/account/link'
@@ -529,6 +541,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof appAccountEmailChangeRouteImport
       parentRoute: typeof appAccountRouteRoute
     }
+    '/(app)/account/device': {
+      id: '/(app)/account/device'
+      path: '/device'
+      fullPath: '/account/device'
+      preLoaderRoute: typeof appAccountDeviceRouteImport
+      parentRoute: typeof appAccountRouteRoute
+    }
     '/(app)/exam/$id/session': {
       id: '/(app)/exam/$id/session'
       path: '/exam/$id/session'
@@ -561,6 +580,7 @@ declare module '@tanstack/solid-router' {
 }
 
 interface appAccountRouteRouteChildren {
+  appAccountDeviceRoute: typeof appAccountDeviceRoute
   appAccountEmailChangeRoute: typeof appAccountEmailChangeRoute
   appAccountGroupRoute: typeof appAccountGroupRoute
   appAccountLinkRoute: typeof appAccountLinkRoute
@@ -568,6 +588,7 @@ interface appAccountRouteRouteChildren {
 }
 
 const appAccountRouteRouteChildren: appAccountRouteRouteChildren = {
+  appAccountDeviceRoute: appAccountDeviceRoute,
   appAccountEmailChangeRoute: appAccountEmailChangeRoute,
   appAccountGroupRoute: appAccountGroupRoute,
   appAccountLinkRoute: appAccountLinkRoute,

@@ -328,10 +328,16 @@ ASSISTANT_AGENT = os.environ.get("ASSISTANT_AGENT", "your-assistant-agent-here")
 ASSISTANT_AGENT_API_KEY = os.environ.get("ASSISTANT_AGENT_API_KEY", "your-assistant-agent-api-key-here")
 
 # font log
-
 logging.getLogger("fontTools.subset").setLevel(logging.WARNING)
 logging.getLogger("fontTools.ttLib.ttFont").setLevel(logging.WARNING)
 logging.getLogger("fpdf.svg").propagate = False
+
+# firebase
+FIREBASE_CREDENTIALS_JSON = os.getenv("FIREBASE_CREDENTIALS_JSON")
+if FIREBASE_CREDENTIALS_JSON:
+    FIREBASE_CREDENTIALS = json.loads(FIREBASE_CREDENTIALS_JSON)
+else:
+    FIREBASE_CREDENTIALS = None
 
 
 if DEBUG:
