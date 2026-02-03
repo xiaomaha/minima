@@ -15,7 +15,7 @@ const router = createRouter({
   defaultErrorComponent: ({ error }) => {
     console.error(error)
     // TODO
-    return <div>Error: {error.message}</div>
+    return <div>Error: {error.stack}</div>
   },
 })
 
