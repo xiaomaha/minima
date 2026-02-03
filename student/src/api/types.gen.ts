@@ -4059,6 +4059,54 @@ export type PagedCommentBriefSchema = {
 };
 
 /**
+ * DeviceSchema
+ */
+export type DeviceSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Token
+     */
+    token: string;
+    /**
+     * Platform
+     */
+    platform: string;
+    /**
+     * Devicename
+     */
+    deviceName: string;
+    /**
+     * Active
+     */
+    active: boolean;
+};
+
+/**
+ * DeviceRegisterSchema
+ */
+export type DeviceRegisterSchema = {
+    /**
+     * Token
+     */
+    token: string;
+    /**
+     * Platform
+     */
+    platform: string;
+    /**
+     * Devicename
+     */
+    deviceName: string;
+};
+
+/**
  * CohortSchema
  */
 export type CohortSchema = {
@@ -6504,6 +6552,78 @@ export type OperationV1GetCommentsResponses = {
 };
 
 export type OperationV1GetCommentsResponse = OperationV1GetCommentsResponses[keyof OperationV1GetCommentsResponses];
+
+export type OperationV1GetDevicesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/operation/device';
+};
+
+export type OperationV1GetDevicesResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<DeviceSchema>;
+};
+
+export type OperationV1GetDevicesResponse = OperationV1GetDevicesResponses[keyof OperationV1GetDevicesResponses];
+
+export type OperationV1RegisterDeviceData = {
+    body: DeviceRegisterSchema;
+    path?: never;
+    query?: never;
+    url: '/api/v1/operation/device';
+};
+
+export type OperationV1RegisterDeviceResponses = {
+    /**
+     * OK
+     */
+    200: DeviceSchema;
+};
+
+export type OperationV1RegisterDeviceResponse = OperationV1RegisterDeviceResponses[keyof OperationV1RegisterDeviceResponses];
+
+export type OperationV1DeleteDeviceData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/operation/device/{id}';
+};
+
+export type OperationV1DeleteDeviceResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type OperationV1ToggleDeviceActiveData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/operation/device/{id}/active';
+};
+
+export type OperationV1ToggleDeviceActiveResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type PartnerV1MemberInfosData = {
     body?: never;

@@ -18,6 +18,7 @@ from django.db.models import (
     CASCADE,
     SET_NULL,
     BooleanField,
+    Case,
     CharField,
     Count,
     DateTimeField,
@@ -44,11 +45,14 @@ from django.db.models import (
     TextChoices,
     TextField,
     UniqueConstraint,
+    Value,
+    When,
     Window,
 )
 from django.db.models.functions.window import RowNumber
 from django.dispatch import Signal, receiver
 from django.utils import timezone
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
 from taggit.models import CommonGenericTaggedItemBase, TagBase, TaggedItemBase
@@ -58,6 +62,7 @@ from typing_extensions import TypedDict
 from apps.common.error import ErrorCode
 from apps.common.models import OrderableMixin, SoftDeleteMixin, TimeStampedMixin
 from apps.common.util import track_fields
+from apps.operation.fcm import send_fcm
 from apps.operation.trigger import thread_comment_stats
 
 User = get_user_model()
@@ -460,7 +465,7 @@ class InquiryResponse(TimeStampedMixin):
             source=self.inquiry,
             path=self.inquiry.path,
             message=MessageType(
-                user_id=self.inquiry.writer_id, title=_("Inquiry response added"), body=self.inquiry.title
+                user_id=self.inquiry.writer_id, title=t("Inquiry response added"), body=self.inquiry.title
             ),
         )
 
@@ -526,7 +531,7 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
                 source=self,
                 path=self.path,
                 message=MessageType(
-                    user_id=self.learner_id, title=_("Grade Appeal Resolved"), body=self.explanation[:50]
+                    user_id=self.learner_id, title=t("Grade Appeal Resolved"), body=self.explanation[:50]
                 ),
             )
 
@@ -546,6 +551,7 @@ class Message(TimeStampedMixin):
 
     if TYPE_CHECKING:
         read: datetime | None  # annotated
+        user_id: str
 
     @classmethod
     def get_unread_messages(cls, user_id: str):
@@ -592,7 +598,26 @@ def user_message_created_receiver(source: Model, path: str, message: MessageType
         "object_id": source.pk,
         "path": path,
     }
-    Message.objects.create(**message, data=data)
+    msg = Message.objects.create(**message, data=data)
+
+    # TODO background task
+
+    tokens = list(NotificationDevice.objects.filter(user_id=msg.user_id, active=True).values_list("token", flat=True))
+    if tokens:
+        send_fcm(tokens=tokens, title=msg.title, body=msg.body, data=msg.data)
+
+
+@pghistory.track()
+class NotificationDevice(TimeStampedMixin):
+    user = ForeignKey(User, CASCADE, verbose_name=_("User"))
+    token = CharField(_("Token"), max_length=255, unique=True)
+    platform = CharField(_("Platform"), max_length=50)
+    device_name = CharField(_("Device Name"), max_length=100)
+    active = BooleanField(_("Active"), default=True)
+
+    @classmethod
+    async def toggle_active(cls, id: int):
+        await cls.objects.filter(id=id).aupdate(active=Case(When(active=True, then=Value(False)), default=Value(True)))
 
 
 @pghistory.track()
@@ -800,7 +825,7 @@ class Comment(TimeStampedMixin, AttachmentMixin):
                 source=self.thread,
                 path=self.thread.path,
                 message=MessageType(
-                    user_id=self.parent.writer_id, title=_("Comment Reply Added"), body=self.parent.comment[:50]
+                    user_id=self.parent.writer_id, title=t("Comment Reply Added"), body=self.parent.comment[:50]
                 ),
             )
 

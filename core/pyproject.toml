@@ -41,8 +41,9 @@ dependencies = [
   "fpdf2",
   "pypdfium2",
   "webvtt-py",
-  "authlib>=1.6.6",
-  "httpx>=0.28.1",
+  "authlib",
+  "httpx",
+  "firebase-admin>=7.1.0",
 ]
 
 [dependency-groups]
@@ -63,7 +64,7 @@ dev = [
   "mjml-python",
   "openpyxl",
   "django-stubs",
-  "typing-extensions>=4.15.0",
+  "typing-extensions",
 ]
 
 [tool.django-stubs]

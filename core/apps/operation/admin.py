@@ -34,6 +34,7 @@ from apps.operation.models import (
     Instructor,
     Message,
     MessageRead,
+    NotificationDevice,
     Policy,
     PolicyAgreement,
     PolicyVersion,
@@ -184,6 +185,11 @@ class MessageAdmin(ModelAdmin[Message]):
         model = MessageRead
 
     inlines = (MessageReadInline,)
+
+
+@admin.register(NotificationDevice)
+class NotificationDeviceAdmin(ModelAdmin[NotificationDevice]):
+    pass
 
 
 @admin.register(Policy)

@@ -23,6 +23,7 @@ from django.db.models import (
 from django.db.models.base import Model
 from django.db.models.enums import TextChoices
 from django.db.models.indexes import Index
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -159,7 +160,7 @@ class Member(TimeStampedMixin):
             user_message_created.send(
                 source=self.group,
                 path="",
-                message=MessageType(user_id=self.user_id, title=_("Cohort Membership Added"), body=self.group.name),
+                message=MessageType(user_id=self.user_id, title=t("Cohort Membership Added"), body=self.group.name),
             )
 
     def on_user_id_changed(self, old_value):
@@ -167,7 +168,7 @@ class Member(TimeStampedMixin):
             user_message_created.send(
                 source=self.group,
                 path="",
-                message=MessageType(user_id=self.user_id, title=_("Cohort Membership Changed"), body=self.group.name),
+                message=MessageType(user_id=self.user_id, title=t("Cohort Membership Changed"), body=self.group.name),
             )
 
 

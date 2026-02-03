@@ -30,6 +30,7 @@ from django.db.models import (
 from django.db.models.fields import BooleanField, DateTimeField
 from django.db.utils import IntegrityError
 from django.utils import timezone
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 from tika import parser
 
@@ -454,7 +455,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
                 path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id,
-                    title=_("Assignment Grading Completed"),
+                    title=t("Assignment Grading Completed"),
                     body=self.attempt.assignment.title,
                 ),
             )
@@ -466,7 +467,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
                 path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id,
-                    title=_("Assignment Grading Confirmed"),
+                    title=t("Assignment Grading Confirmed"),
                     body=self.attempt.assignment.title,
                 ),
             )

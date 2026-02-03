@@ -1767,6 +1767,27 @@ export const vPagedCommentBriefSchema = v.object({
 });
 
 /**
+ * DeviceSchema
+ */
+export const vDeviceSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    token: v.string(),
+    platform: v.string(),
+    deviceName: v.string(),
+    active: v.boolean()
+});
+
+/**
+ * DeviceRegisterSchema
+ */
+export const vDeviceRegisterSchema = v.object({
+    token: v.string(),
+    platform: v.string(),
+    deviceName: v.string()
+});
+
+/**
  * PartnerGroupSchema
  */
 export const vPartnerGroupSchema = v.object({
@@ -3057,6 +3078,46 @@ export const vOperationV1GetCommentsData = v.object({
  * OK
  */
 export const vOperationV1GetCommentsResponse = vPagedCommentBriefSchema;
+
+export const vOperationV1GetDevicesData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vOperationV1GetDevicesResponse = v.array(vDeviceSchema);
+
+export const vOperationV1RegisterDeviceData = v.object({
+    body: vDeviceRegisterSchema,
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vOperationV1RegisterDeviceResponse = vDeviceSchema;
+
+export const vOperationV1DeleteDeviceData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vOperationV1ToggleDeviceActiveData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
 
 export const vPartnerV1MemberInfosData = v.object({
     body: v.optional(v.never()),

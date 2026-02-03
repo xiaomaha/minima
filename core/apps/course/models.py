@@ -39,6 +39,7 @@ from django.db.models import (
 from django.db.models.query import Prefetch
 from django.db.utils import IntegrityError
 from django.utils import timezone
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
@@ -723,7 +724,7 @@ class Gradebook(TimeStampedMixin):
                 path="",
                 message=MessageType(
                     user_id=self.engagement.learner_id,
-                    title=_("Course Grading Confirmed"),
+                    title=t("Course Grading Confirmed"),
                     body=self.engagement.course.title,
                 ),
             )

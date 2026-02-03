@@ -33,6 +33,7 @@ from django.db.models import (
 )
 from django.db.utils import IntegrityError
 from django.utils import timezone
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
@@ -440,7 +441,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
                 source=self.attempt.exam,
                 path="",
                 message=MessageType(
-                    user_id=self.attempt.learner_id, title=_("Exam Grading Completed"), body=self.attempt.exam.title
+                    user_id=self.attempt.learner_id, title=t("Exam Grading Completed"), body=self.attempt.exam.title
                 ),
             )
 
@@ -450,6 +451,6 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
                 source=self.attempt.exam,
                 path="",
                 message=MessageType(
-                    user_id=self.attempt.learner_id, title=_("Exam Grading Confirmed"), body=self.attempt.exam.title
+                    user_id=self.attempt.learner_id, title=t("Exam Grading Confirmed"), body=self.attempt.exam.title
                 ),
             )

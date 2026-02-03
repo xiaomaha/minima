@@ -15,6 +15,7 @@ function RouteComponent() {
   const tabs = () => {
     const result: [string, string][] = [
       ['profile', t('My Profile')],
+      ['device', t('Notification Devices')],
       ['group', t('Cohort Group')],
     ]
 
@@ -33,7 +34,7 @@ function RouteComponent() {
   return (
     <div class="mx-auto max-w-lg py-4">
       <div class="flex items-center gap-4 justify-center mb-4">
-        <ul class="menu menu-sm  menu-horizontal bg-base-200 rounded-box space-x-2 gap-y-2">
+        <ul class="ml-0 menu menu-sm  menu-horizontal bg-base-200 rounded-box space-x-2 gap-y-2">
           <For each={tabs()}>
             {([key, label]) => (
               <li class="mb-0">

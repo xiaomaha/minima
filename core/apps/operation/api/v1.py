@@ -17,6 +17,8 @@ from apps.operation.api.schema import (
     CommentNestedSchema,
     CommentSavedSchema,
     CommentSaveSchema,
+    DeviceRegisterSchema,
+    DeviceSchema,
     InquiryCreateSchema,
     InquiryFilterSchema,
     InquirySavedSchema,
@@ -36,6 +38,7 @@ from apps.operation.models import (
     Inquiry,
     Message,
     MessageRead,
+    NotificationDevice,
     Policy,
     PolicyAgreement,
     Thread,
@@ -196,3 +199,26 @@ async def get_comments(request: HttpRequest):
         .filter(writer_id=request.auth)
         .order_by("-pinned", "-created")
     )
+
+
+@router.get("/device", response=list[DeviceSchema])
+async def get_devices(request: HttpRequest):
+    return [d async for d in NotificationDevice.objects.filter(user_id=request.auth).order_by("id")]
+
+
+@router.post("/device", response=DeviceSchema)
+async def register_device(request: HttpRequest, data: DeviceRegisterSchema):
+    device, _ = await NotificationDevice.objects.aupdate_or_create(
+        token=data.token, defaults={"user_id": request.auth, "platform": data.platform, "device_name": data.device_name}
+    )
+    return device
+
+
+@router.delete("/device/{id}")
+async def delete_device(request: HttpRequest, id: int):
+    await NotificationDevice.objects.filter(id=id).adelete()
+
+
+@router.post("/device/{id}/active")
+async def toggle_device_active(request: HttpRequest, id: int):
+    await NotificationDevice.toggle_active(id=id)

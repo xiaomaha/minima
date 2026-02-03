@@ -72,3 +72,17 @@ export const NOOP = [
   t('Quiz'),
   t('Group'),
 ]
+
+// firebase
+export const FIREBASE_CONFIG = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyD0zYOkIjjrcoOxYqI6tT7cq3LyxgYO36A',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'minima-9f028.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'minima-9f028',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'minima-9f028.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '906425046596',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:906425046596:web:159eda4ee639cc7ff58e11',
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-D1LZ8T1X3L',
+}
+export const V_API_KEY =
+  import.meta.env.VITE_FIREBASE_VAPID_KEY ||
+  'BCcSJ_V_bCYA9vhI90dd2ZtX10s6uACog0BIx27BEebGJxfa8H9mNw4_Bzr6xSokMAvXvhof5mLK-iKWC4CrenE'

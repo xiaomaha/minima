@@ -31,6 +31,7 @@ from django.db.models.functions import Length
 from django.db.models.query import Prefetch
 from django.db.utils import IntegrityError
 from django.utils import timezone
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
@@ -470,7 +471,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
                 path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id,
-                    title=_("Discussion Grading Completed"),
+                    title=t("Discussion Grading Completed"),
                     body=self.attempt.discussion.title,
                 ),
             )
@@ -482,7 +483,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
                 path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id,
-                    title=_("Discussion Grading Confirmed"),
+                    title=t("Discussion Grading Confirmed"),
                     body=self.attempt.discussion.title,
                 ),
             )

@@ -37,6 +37,7 @@ from django.db.models.functions import Concat, JSONObject
 from django.db.models.functions.math import Round
 from django.forms import ValidationError
 from django.utils import timezone
+from django.utils.translation import gettext as t
 from django.utils.translation import gettext_lazy as _
 
 from apps.assignment.models import Assignment
@@ -318,7 +319,7 @@ class Enrollment(TimeStampedMixin):
                 source=self,
                 path="",
                 message=MessageType(
-                    user_id=self.user_id, title=_("%s Enrollment") % self.content_type.model, body=content.title
+                    user_id=self.user_id, title=t("%s Enrollment") % self.content_type.model, body=content.title
                 ),
             )
 
@@ -513,7 +514,7 @@ class UserCatalog(TimeStampedMixin):
             user_message_created.send(
                 source=self.catalog,
                 path="",
-                message=MessageType(user_id=self.user_id, title=_("User Catalog Enrollment"), body=self.catalog.name),
+                message=MessageType(user_id=self.user_id, title=t("User Catalog Enrollment"), body=self.catalog.name),
             )
 
 
