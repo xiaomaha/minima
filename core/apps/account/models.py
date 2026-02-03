@@ -184,16 +184,18 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                     raise ValueError(ErrorCode.PASSWORD_CHANGE_REQUIRED)
                 raise ValueError(ErrorCode.INVALID_PASSWORD)
 
+        roles = [g.name async for g in self.groups.all()]
+
         # access token
         options = auth_cookie_options()
         max_age = settings.ACCESS_TOKEN_EXPIRE_SECONDS
-        access_payload: TokenDict = {"sub": self.pk, "exp": int(time()) + max_age, "type": "access"}
+        access_payload: TokenDict = {"sub": self.pk, "exp": int(time()) + max_age, "type": "access", "roles": roles}
         access_token = encode_token(access_payload)
         response.set_cookie(key="access_token", value=access_token, max_age=max_age, **options)
 
         # refresh token
         max_age = settings.REFRESH_TOKEN_EXPIRE_SECONDS
-        refresh_payload: TokenDict = {"sub": self.pk, "exp": int(time()) + max_age, "type": "refresh"}
+        refresh_payload: TokenDict = {"sub": self.pk, "exp": int(time()) + max_age, "type": "refresh", "roles": roles}
         refresh_token = encode_token(refresh_payload)
         response.set_cookie(key="refresh_token", value=refresh_token, max_age=max_age, **options)
 

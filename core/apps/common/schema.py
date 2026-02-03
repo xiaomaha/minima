@@ -38,6 +38,12 @@ class LearningObjectMixinSchema(Schema):
     verification_required: bool
 
 
+class GradeWorkflowMixinSchema(Schema):
+    grade_due_days: int
+    appeal_deadline_days: int
+    confirm_due_days: int
+
+
 class GradeFieldMixinSchema(Schema):
     earned_details: dict[str, int | None]
     possible_point: int
