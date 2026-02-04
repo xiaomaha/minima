@@ -132,13 +132,6 @@ class InquiryAdmin(ModelAdmin[Inquiry]):
     def display_question(self, obj: Inquiry):
         return mark_safe(obj.cleaned_question)
 
-    def get_readonly_fields(self, request, obj=None):
-        return (
-            tuple(f.name for f in self.model._meta.fields if f.name != "question")
-            + super().get_readonly_fields(request, obj)
-            + ("display_question",)
-        )
-
 
 @admin.register(InquiryResponse)
 class InquiryResponseAdmin(HiddenModelAdmin[InquiryResponse]):
@@ -167,11 +160,6 @@ class AppealAdmin(ModelAdmin[Appeal]):
         return mark_safe(obj.cleaned_explanation)
 
     exclude = ("explanation",)
-
-    def get_readonly_fields(self, request, obj=None):
-        return [f.name for f in self.model._meta.fields if f.name not in ["review", "closed", "explanation"]] + [
-            "display_explanation"
-        ]
 
 
 @admin.register(Attachment)

@@ -3,7 +3,7 @@ import random
 import time
 from datetime import datetime
 from enum import IntEnum
-from typing import Annotated, Any, Literal, NotRequired, TypedDict, cast
+from typing import Annotated, Any, NotRequired, TypedDict, cast
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 import jwt
@@ -97,7 +97,7 @@ class GradingDate(TypedDict):
 
 class HttpRequest(DjangoHttpRequest):
     auth: str  # from auth middleware
-    roles: list[Literal["editor", "grader", "partner_staff"]]  # from auth middleware
+    roles: list[str]  # from auth middleware
     access_date: "AccessDate"  # set by access_date decorator
     active_context: str  # set by active_context decorator
 

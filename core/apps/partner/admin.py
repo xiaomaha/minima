@@ -25,10 +25,6 @@ class PartnerAdmin(ModelAdmin[Partner]):
         def id_(self, obj: Partner):
             return obj.pk
 
-        def get_readonly_fields(self, request: HttpRequest, obj: Group | None = None):
-            readonly_fields = list(super().get_readonly_fields(request, obj))
-            return ["id_"] + readonly_fields
-
     inlines = (GroupInline,)
 
 
