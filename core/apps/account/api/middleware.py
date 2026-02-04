@@ -13,6 +13,7 @@ from apps.common.util import HttpRequest, decode_token, encode_token
 def cookie_auth_middleware(get_response):
     async def middleware(request: HttpRequest):
         request.auth = ""
+        request.roles = []
 
         try:
             refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
@@ -21,18 +22,23 @@ def cookie_auth_middleware(get_response):
 
             access_token = request.COOKIES.get(settings.ACCESS_TOKEN_NAME)
             if access_token:
-                request.auth = decode_token(access_token).get("sub")
+                decoded = decode_token(access_token)
+                request.auth = decoded.get("sub")
+                request.roles = decoded.get("roles", [])
                 return await get_response(request)
 
             if await BlacklistedToken.objects.filter(token=refresh_token, expires__gt=timezone.now()).aexists():
                 return await get_response(request)
 
-            user_id = decode_token(refresh_token).get("sub")
+            decoded = decode_token(refresh_token)
+            user_id = decoded.get("sub")
+            roles = decoded.get("roles", [])
             request.auth = user_id
+            request.roles = roles
 
             max_age = settings.ACCESS_TOKEN_EXPIRE_SECONDS
             expires = int(time()) + max_age
-            access_token = encode_token({"sub": user_id, "exp": expires, "type": "access"})
+            access_token = encode_token({"sub": user_id, "exp": expires, "type": "access", "roles": roles})
             options = auth_cookie_options()
 
             response = await get_response(request)

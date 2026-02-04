@@ -24,7 +24,7 @@ class UserAdmin(ModelAdmin[User]):
     # add_form = UserCreationForm
 
     list_filter_submit = True
-    exclude = ("password", "groups", "user_permissions")
+    exclude = ("password", "user_permissions")
 
     class UserEventInline(ReadOnlyTabularInline[User.pgh_event_model]):
         model = User.pgh_event_model

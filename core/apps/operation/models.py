@@ -510,13 +510,14 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
         model: str,
         explanation: str,
         files: Sequence[File] | None,
+        path: str,
     ):
         question_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
         appeal, created = await cls.objects.aget_or_create(
             learner_id=learner_id,
             question_id=question_id,
             question_type=question_type,
-            defaults={"explanation": explanation},
+            defaults={"explanation": explanation, "path": path},
         )
 
         if not created:

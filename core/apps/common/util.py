@@ -56,6 +56,7 @@ class TokenDict(TypedDict):
     exp: int
     type: str
     to: NotRequired[str]
+    roles: NotRequired[list[str]]
 
 
 def encode_token(payload: TokenDict, algorithm: str = "HS256"):
@@ -96,6 +97,7 @@ class GradingDate(TypedDict):
 
 class HttpRequest(DjangoHttpRequest):
     auth: str  # from auth middleware
+    roles: list[str]  # from auth middleware
     access_date: "AccessDate"  # set by access_date decorator
     active_context: str  # set by active_context decorator
 
