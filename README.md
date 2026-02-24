@@ -1,7 +1,6 @@
 # Minima LMS
 
 [![English](https://img.shields.io/badge/Language-English-blue)](README.md)
-[![한국어](https://img.shields.io/badge/Language-한국어-red)](README-ko.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Status](https://img.shields.io/badge/Status-Alpha-orange)
 
@@ -22,12 +21,21 @@ sh dev.sh up
 
 Access with username `admin@example.com` and password `1111`
 
-- student: [http://localhost:5173](http://localhost:5173)
+- web: [http://localhost:5173](http://localhost:5173)
 - admin: [http://localhost:8000](http://localhost:8000/admin/)
 
 ## Screenshots
 
-![Dashboard](./screenshot/student.webp)
+- Student Dashboard
+
+![Dashboard](./screenshot/web.webp)
+
+- Content Studio
+
+![Content Studio](screenshot/studio.webp)
+
+- Admin Panel
+
 ![Admin Panel](screenshot/admin.webp)
 
 ## Tech Stack
@@ -43,7 +51,7 @@ Issues and pull requests welcome. Check [Development](#development) section for 
 ## Development
 
 - [Core Development](core/README.md)
-- [Student Development](student/README.md)
+- [Web Development](web/README.md)
 
 ## License
 

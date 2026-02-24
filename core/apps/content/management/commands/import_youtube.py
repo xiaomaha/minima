@@ -163,7 +163,6 @@ class Command(BaseCommand):
             duration=timedelta(seconds=info.get("duration", 0)),
             license=info.get("license", ""),
             channel=info.get("channel", ""),
-            uploaded=True,
             thumbnail=thumbnail_file,
         )
 

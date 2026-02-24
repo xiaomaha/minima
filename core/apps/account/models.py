@@ -15,6 +15,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import storages
 from django.core.mail import send_mail
@@ -35,7 +36,9 @@ from django.db.models import (
     JSONField,
     Model,
     OneToOneField,
+    Q,
     TextField,
+    Value,
 )
 from django.db.models.expressions import OuterRef, Subquery
 from django.db.models.query import QuerySet
@@ -261,6 +264,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                         )
                     )
                 ),
+                roles=ArrayAgg("groups__name", filter=Q(groups__isnull=False), default=Value([])),
             )
             if annotate
             else cls.objects

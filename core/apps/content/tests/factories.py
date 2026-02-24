@@ -101,7 +101,6 @@ class MediaFactory(LearningObjectFactory[Media]):
     max_attempts = 0
     verification_required = False
     owner = SubFactory(UserFactory)
-    uploaded = True
 
     @classmethod
     def _generate(cls, strategy, params):

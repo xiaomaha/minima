@@ -3,7 +3,7 @@ import mimetypes
 import os
 import re
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence, cast
 
 import pghistory
 from asgiref.sync import sync_to_async
@@ -84,7 +84,7 @@ class Category(MP_Node):
         return " / ".join(self.ancestors + [self.name])
 
     def save(self, *args, **kwargs):
-        parent = self.get_parent()
+        parent = cast(Category, self.get_parent())
         self.ancestors = parent.ancestors + [parent.name] if parent else []
         return super().save(*args, **kwargs)
 
@@ -190,7 +190,7 @@ class Instructor(TimeStampedMixin):
 
 @pghistory.track()
 class HonorCode(TimeStampedMixin):
-    title = CharField(max_length=255, verbose_name=_("Title"), unique=True)
+    title = CharField(max_length=255, verbose_name=_("Title"))
     code = TextField(_("Code"))
 
     class Meta(TimeStampedMixin.Meta):
@@ -357,16 +357,6 @@ class AttachmentMixin(Model):
             content = re.sub(link_pattern, replace_href, content)
 
         return content
-
-    @staticmethod
-    def validate_files(
-        files: Sequence[File], *, max_count: int = ATTACHMENT_MAX_COUNT, max_size: int = ATTACHMENT_MAX_SIZE
-    ):
-        if len(files) > max_count:
-            raise ValueError(ErrorCode.ATTACHMENT_TOO_MANY)
-        for f in files or []:
-            if f.size > max_size:
-                raise ValueError(ErrorCode.ATTACHMENT_TOO_LARGE)
 
 
 @pghistory.track()
@@ -579,8 +569,8 @@ class MessageDataDict(TypedDict, extra_items=Any):
 
 class MessageType(TypedDict):
     user_id: str
-    title: Any  # str | _StrPromise
-    body: Any  # str | _StrPromise
+    title: str
+    body: str
 
 
 class MessageSignal(Signal):

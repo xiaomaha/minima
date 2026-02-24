@@ -12,6 +12,7 @@ from apps.account.tests.factories import UserFactory
 from apps.common.tests.factories import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
 from apps.discussion.models import Attempt, Discussion, Grade, Post, Question, QuestionPool
 from apps.operation.tests.factories import HonorCodeFactory
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -44,13 +45,11 @@ class QuestionFactory(DjangoModelFactory[Question]):
         lambda: "\n\n".join([generic.text.text(quantity=generic.random.randint(2, 6)) for _ in range(3)])
     )
     supplement = LazyFunction(lambda: dummy_html())
-    point_requirements = FactoryField(
-        "choice",
-        items=[
-            {"post": 2, "reply": 2, "tutor_assessment": 2, "post_min_characters": 200, "reply_min_characters": 100},
-            {"post": 1, "reply": 3, "tutor_assessment": 2, "post_min_characters": 200, "reply_min_characters": 100},
-        ],
-    )
+    post_point = FactoryField("choice", items=[2, 4])
+    reply_point = FactoryField("choice", items=[2, 4])
+    tutor_assessment_point = FactoryField("choice", items=[2, 4])
+    post_min_characters = FactoryField("choice", items=[200, 300, 400])
+    reply_min_characters = FactoryField("choice", items=[100, 200, 300])
 
     class Meta:
         model = Question
@@ -63,9 +62,9 @@ class DiscussionFactory(LearningObjectFactory[Discussion], GradeWorkflowFactory[
     max_attempts = 1
     verification_required = True
 
-    owner = SubFactory(UserFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
+    question_pool = SubFactory(QuestionPoolFactory, owner=owner)
     honor_code = SubFactory(HonorCodeFactory)
-    question_pool = SubFactory(QuestionPoolFactory)
 
     class Meta:
         model = Discussion

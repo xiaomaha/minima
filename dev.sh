@@ -25,8 +25,8 @@ up)
   uv run dev.py bootstrap
   uv run dev.py demo
 
-  echo "Starting student..."
-  cd "$SCRIPT_DIR/student"
+  echo "Starting web..."
+  cd "$SCRIPT_DIR/web"
   docker compose up -d
 
   wait_for_port 5173
@@ -35,36 +35,36 @@ up)
   echo "All services are ready!"
   echo ""
   echo "Admin:   http://localhost:8000/admin"
-  echo "Student: http://localhost:5173"
+  echo "Web: http://localhost:5173"
   echo ""
   ;;
 
 down)
   cd "$SCRIPT_DIR/core" && docker compose down
-  cd "$SCRIPT_DIR/student" && docker compose down
+  cd "$SCRIPT_DIR/web" && docker compose down
   ;;
 
 clean)
   cd "$SCRIPT_DIR/core" && docker compose down -v
-  cd "$SCRIPT_DIR/student" && docker compose down -v
+  cd "$SCRIPT_DIR/web" && docker compose down -v
   ;;
 
 stop)
   cd "$SCRIPT_DIR/core" && docker compose stop
-  cd "$SCRIPT_DIR/student" && docker compose stop
+  cd "$SCRIPT_DIR/web" && docker compose stop
   ;;
 
 restart)
   cd "$SCRIPT_DIR/core" && docker compose restart
-  cd "$SCRIPT_DIR/student" && docker compose restart
+  cd "$SCRIPT_DIR/web" && docker compose restart
   ;;
 
 logs)
   if [ $# -eq 1 ]; then
-    docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/student/docker-compose.yml" logs -f --tail=100
+    docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/web/docker-compose.yml" logs -f --tail=100
   else
     shift
-    docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/student/docker-compose.yml" logs "$@"
+    docker compose -f "$SCRIPT_DIR/core/docker-compose.yml" -f "$SCRIPT_DIR/web/docker-compose.yml" logs "$@"
   fi
   ;;
 

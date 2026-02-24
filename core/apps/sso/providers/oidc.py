@@ -51,5 +51,5 @@ class OIDCProvider(BaseProvider):
             return res.json()
 
     @abstractmethod
-    async def get_user_info(self, tokens: dict, nonce: str) -> UserInfo:
+    async def get_user_info(self, tokens: TokenResponse, nonce: str) -> UserInfo:
         pass

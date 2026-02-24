@@ -4,7 +4,7 @@ from typing import Annotated
 from pydantic.fields import Field
 
 from apps.account.api.schema import OwnerSchema
-from apps.assignment.models import Submission
+from apps.assignment.models import Question, Submission
 from apps.common.schema import (
     AccessDateSchema,
     GradeFieldMixinSchema,
@@ -43,6 +43,10 @@ class AssignmentQuestionSchema(Schema):
     plagiarism_threshold: int
     solution: "AssignmentSolutionSchema"
 
+    @staticmethod
+    def resolve_supplement(obj: Question):
+        return obj.cleaned_supplement
+
 
 class AssignmentAttemptSchema(Schema):
     id: int
@@ -58,7 +62,6 @@ class AssignmentGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
 
 class AssignmentSolutionSchema(Schema):
     id: int
-    reference: list[str]
     rubric_data: "RubricSchema"
     explanation: str
 

@@ -8,6 +8,7 @@ from ninja.pagination import paginate
 from ninja.params import Form, functions
 from ninja.router import Router
 
+from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, PaginatedResponse, Pagination
 from apps.content.api.schema import (
     MediaSchema,
@@ -84,11 +85,10 @@ async def save_media_note(
     id: str,
     data: Form[NoteSaveSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Note.validate_files(files)
     return await Note.upsert(
         media_id=id, user_id=request.auth, context=request.active_context, note=data.note, files=files
     )

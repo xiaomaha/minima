@@ -73,7 +73,7 @@ class Classification(MP_Node):
         return " / ".join(self.ancestors + [self.name])
 
     def save(self, *args, **kwargs):
-        parent = self.get_parent()
+        parent = cast(Classification, self.get_parent())
         self.ancestors = parent.ancestors + [parent.name] if parent else []
         return super().save(*args, **kwargs)
 

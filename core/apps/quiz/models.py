@@ -25,6 +25,7 @@ from django.db.models import (
     QuerySet,
     TextField,
     UniqueConstraint,
+    aprefetch_related_objects,
 )
 from django.utils import timezone
 from django.utils.translation import get_language_info
@@ -32,8 +33,9 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.assistant.plugin.quiz import QuizMaker
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.models import GradeFieldMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, LearningSessionStep, ScoreStatsDict, get_score_stats
+from apps.operation.models import AttachmentMixin
 from apps.quiz.trigger import attempt_retry_count
 
 User = get_user_model()
@@ -90,7 +92,7 @@ class QuestionPool(Model):
 
 
 @pghistory.track()
-class Question(Model):
+class Question(AttachmentMixin):
     pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
@@ -104,6 +106,10 @@ class Question(Model):
     if TYPE_CHECKING:
         pk: int
         solution: "Solution"
+
+    @property
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
 
 
 @pghistory.track()
@@ -122,7 +128,7 @@ class Quiz(LearningObjectMixin):
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     question_pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
 
-    class Meta(LearningObjectMixin.Meta, GradeWorkflowMixin.Meta):
+    class Meta:
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
         constraints = [UniqueConstraint(fields=["owner", "title"], name="quiz_quiz_ow_ti_uniq")]
@@ -139,6 +145,7 @@ class Quiz(LearningObjectMixin):
             .prefetch_related(
                 Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
             )
+            .prefetch_related("questions__attachments")
             .alast()
         )
 
@@ -261,6 +268,7 @@ class Attempt(TimeStampedMixin):
     async def start(cls, *, quiz_id: str, learner_id: str, context: str):
         quiz = await Quiz.objects.prefetch_related("question_pool__question_set").aget(id=quiz_id)
         questions = await quiz.question_pool.select_questions()
+        await aprefetch_related_objects(questions, "attachments")  # type: ignore
 
         try:
             attempt = await Attempt.objects.acreate(
@@ -291,6 +299,7 @@ class Attempt(TimeStampedMixin):
             .prefetch_related(
                 Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
             )
+            .prefetch_related("questions__attachments")
             .aget(quiz_id=quiz_id, learner_id=learner_id, context=context, active=True)
         )
 

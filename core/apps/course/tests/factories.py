@@ -25,6 +25,7 @@ from apps.exam.tests.factories import ExamFactory
 from apps.operation.models import Category
 from apps.operation.tests.factories import FAQFactory, HonorCodeFactory, InstructorFactory
 from apps.survey.tests.factories import SurveyFactory
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -45,7 +46,7 @@ class CourseFactory(LearningObjectFactory[Course]):
     max_attempts = FactoryField("choice", items=[1, 2])
     verification_required = True
 
-    owner = SubFactory(UserFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
     objective = FactoryField("text")
     preview_url = None
     effort_hours = FactoryField("choice", items=[8, 16, 32])

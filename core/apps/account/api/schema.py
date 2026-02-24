@@ -34,6 +34,7 @@ class UserSchema(TimeStampedMixinSchema):
     otp_enabled: datetime | None
     token_expires: datetime | None
     agreement_required: bool | None
+    roles: list[str]
 
     @staticmethod
     def resolve_phone(obj):

@@ -138,6 +138,13 @@ class LearningObjectMixin(TuidMixin, TimeStampedMixin):
     def duration_seconds(self):
         return self.duration.total_seconds() if self.duration else None
 
+    @duration_seconds.setter
+    def duration_seconds(self, value: int | None):
+        if value is None:
+            self.duration = None
+        else:
+            self.duration = timedelta(seconds=value)
+
 
 @track_fields("completed", "confirmed")
 class GradeFieldMixin(Model):

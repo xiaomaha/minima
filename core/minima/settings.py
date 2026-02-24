@@ -26,16 +26,33 @@ DEFAULT_PAGINATION_SIZE: int = 24
 CHILD_COMMENT_MAX_COUNT: int = 20
 CHILD_POST_MAX_COUNT: int = 10
 AVATAR_MAX_SIZE_MB = 3
+DEFAULT_REVIEW_PERIOD_DAYS = 30
 ATTACHMENT_MAX_COUNT = 3
 ATTACHMENT_MAX_SIZE_MB = 3
-DEFAULT_REVIEW_PERIOD_DAYS = 30
+ATTACHMENT_ALLOWED_TYPES = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",  # .xls
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "text/plain",
+    "text/csv",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "application/zip",
+    "application/x-zip-compressed",
+]
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
-SECRET_KEY = "django-insecure-session-key" if DEBUG else os.environ["SECRET_KEY"]
+SECRET_KEY = "django-insecure-session-debug-key" if DEBUG else os.environ["SECRET_KEY"]
 
 PERSONAL_ID_SALT = "minima" if DEBUG else os.environ["PERSONAL_ID_SALT"]
 
@@ -86,7 +103,7 @@ INSTALLED_APPS = [
     "apps.learning",
     "apps.store",
     "apps.assistant",
-    # "apps.studio",
+    "apps.studio",
     "apps.tracking",
     "apps.warehouse",
 ]

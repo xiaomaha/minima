@@ -15,7 +15,6 @@ from django.db.models import (
     F,
     ForeignKey,
     Index,
-    JSONField,
     Model,
     OneToOneField,
     OuterRef,
@@ -25,6 +24,7 @@ from django.db.models import (
     Subquery,
     TextField,
     UniqueConstraint,
+    aprefetch_related_objects,
 )
 from django.db.models.fields import BooleanField, DateTimeField
 from django.db.models.functions import Length
@@ -93,39 +93,27 @@ class QuestionPool(Model):
 
 
 @pghistory.track()
-class Question(Model):
+class Question(AttachmentMixin):
     pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
     directive = TextField(_("Directive"))
     supplement = TextField(_("Supplement"), blank=True, default="")
-    point_requirements = JSONField(_("Point Requirements"))
+    post_point = PositiveSmallIntegerField(_("Post Point"), default=1)
+    reply_point = PositiveSmallIntegerField(_("Reply Point"), default=1)
+    tutor_assessment_point = PositiveSmallIntegerField(_("Tutor Assessment Point"), default=1)
+    post_min_characters = PositiveSmallIntegerField(_("Post Min Characters"), default=200)
+    reply_min_characters = PositiveSmallIntegerField(_("Reply Min Characters"), default=100)
 
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
 
     @property
-    def post_point(self):
-        return self.point_requirements.get("post", 1)
-
-    @property
-    def reply_point(self):
-        return self.point_requirements.get("reply", 1)
-
-    @property
-    def tutor_assessment_point(self):
-        return self.point_requirements.get("tutor_assessment", 1)
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
 
     @property
     def point(self):
         return self.post_point + self.reply_point + self.tutor_assessment_point
-
-    @property
-    def post_min_characters(self):
-        return self.point_requirements.get("post_min_characters", 200)
-
-    @property
-    def reply_min_characters(self):
-        return self.point_requirements.get("reply_min_characters", 100)
 
 
 @pghistory.track()
@@ -159,6 +147,7 @@ class Discussion(LearningObjectMixin, GradeWorkflowMixin):
             await Attempt.objects
             .filter(discussion_id=discussion_id, learner_id=learner_id, context=context, active=True)
             .select_related("discussion", "grade", "question")
+            .prefetch_related("question__attachments")
             .alast()
         )
 
@@ -238,6 +227,7 @@ class Attempt(Model):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
 
         question = await QuestionPool(id=discussion.question_pool_id).select_question()
+        await aprefetch_related_objects([question], "attachments")  # type: ignore
 
         try:
             attempt = await Attempt.objects.acreate(

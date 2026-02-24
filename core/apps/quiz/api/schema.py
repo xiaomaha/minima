@@ -14,7 +14,7 @@ from apps.common.schema import (
     TimeStampedMixinSchema,
 )
 from apps.common.util import LearningSessionStep
-from apps.quiz.models import Quiz
+from apps.quiz.models import Question, Quiz
 
 
 class QuizSchema(LearningObjectMixinSchema):
@@ -38,6 +38,10 @@ class QuizQuestionSchema(Schema):
     question: str
     supplement: str
     point: int
+
+    @staticmethod
+    def resolve_supplement(obj: Question):
+        return obj.cleaned_supplement
 
 
 class QuizAttemptSchema(Schema):

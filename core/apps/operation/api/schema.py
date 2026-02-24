@@ -59,6 +59,10 @@ class InquirySavedSchema(TimeStampedMixinSchema):
     question: str
     path: str
 
+    @staticmethod
+    def resolve_question(obj: Inquiry):
+        return obj.cleaned_question
+
 
 class InquiryFilterSchema(FilterSchema, Schema):
     content_id: Annotated[str | int | None, FilterLookup(None)] = None
