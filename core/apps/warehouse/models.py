@@ -108,7 +108,7 @@ class DailyUsageFact(ExecutionMetricsMixin):
     attachment_count = IntegerField(_("Attachment"), default=0)
     inquiry_count = IntegerField(_("Inquiry"), default=0)
     appeal_count = IntegerField(_("Appeal"), default=0)
-    message_sent_count = IntegerField(_("Message Sent"), default=0)
+    message_count = IntegerField(_("Message"), default=0)
     comment_count = IntegerField(_("Comment"), default=0)
 
     # partner
@@ -186,7 +186,7 @@ class DailyUsageFact(ExecutionMetricsMixin):
         ("attachment_count", Attachment, "created"),
         ("inquiry_count", Inquiry, "created"),
         ("appeal_count", Appeal, "created"),
-        ("message_sent_count", Message, "sent"),
+        ("message_count", Message, "created"),
         ("comment_count", Comment, "created"),
         # partner
         ("partner_count", Partner, "created"),

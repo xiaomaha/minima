@@ -11,7 +11,7 @@ from django_opensearch_dsl.documents import Document
 from django_opensearch_dsl.registries import registry
 from opensearchpy import Q
 
-from apps.content.models import MatchedLineDict, Media, Subtitle
+from apps.content.models import Media, Subtitle
 
 
 @registry.register_document
@@ -146,6 +146,11 @@ def get_search_suggestion(*, q: str, limit: int = 10):
                     break
 
     return suggestions[:limit]
+
+
+class MatchedLineDict(TypedDict):
+    start: int
+    line: str
 
 
 class SearchResultDict(TypedDict):

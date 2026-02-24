@@ -30,6 +30,7 @@ from django.db.models import (
     TextChoices,
     TextField,
     UniqueConstraint,
+    aprefetch_related_objects,
 )
 from django.db.utils import IntegrityError
 from django.utils import timezone
@@ -41,7 +42,7 @@ from apps.common.error import ErrorCode
 from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
 from apps.exam.trigger import attempt_retry_count
-from apps.operation.models import Appeal, HonorCode, MessageType, user_message_created
+from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
 User = get_user_model()
 
@@ -93,15 +94,15 @@ class QuestionPool(Model):
 
 
 @pghistory.track()
-class Question(Model):
-    class ExamFormatChoices(TextChoices):
+class Question(AttachmentMixin):
+    class ExamQuestionFormatChoices(TextChoices):
         SINGLE_CHOICE = "single_choice", _("Single Choice")
         TEXT_INPUT = "text_input", _("Text Input")
         NUMBER_INPUT = "number_input", _("Number Input")
         ESSAY = "essay", _("Essay")
 
     pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
-    format = CharField(_("Format"), max_length=20, choices=ExamFormatChoices.choices)
+    format = CharField(_("Format"), max_length=20, choices=ExamQuestionFormatChoices.choices)
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     options = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Options"))
@@ -118,6 +119,10 @@ class Question(Model):
     def __str__(self):
         return f"({self.pk}) {self.question[:30]} {'...' if len(self.question) > 30 else ''}"
 
+    @property
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
+
 
 @pghistory.track()
 class Solution(Model):
@@ -125,7 +130,6 @@ class Solution(Model):
     correct_answers = ArrayField(CharField(max_length=50), blank=True, default=list, verbose_name=_("Correct Answers"))
     correct_criteria = TextField(_("Correct Criteria"), blank=True, default="")
     explanation = TextField(_("Explanation"), blank=True, default="")
-    reference = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Reference"))
 
     class Meta:
         verbose_name = _("Solution")
@@ -148,10 +152,6 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
         question_pool_id: int
         pk: str
 
-    @property
-    def duration_seconds(self):
-        return self.duration.total_seconds()
-
     @classmethod
     async def get_session(cls, *, exam_id: str, learner_id: str, context: str, access_date: AccessDate):
         exam = await Exam.objects.select_related("owner", "honor_code", "question_pool").aget(id=exam_id)
@@ -169,6 +169,7 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
             .prefetch_related(
                 Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
             )
+            .prefetch_related("questions__attachments")
             .alast()
         )
 
@@ -270,6 +271,7 @@ class Attempt(Model):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
 
         questions = await exam.question_pool.compose_questions()
+        await aprefetch_related_objects(questions, "attachments")  # type: ignore
 
         try:
             attempt = await Attempt.objects.acreate(

@@ -8,6 +8,7 @@ from ninja.pagination import paginate
 from ninja.params import Form, Query, functions
 from ninja.router import Router
 
+from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, Pagination
 from apps.operation.api.schema import (
     AnnounceSchema,
@@ -75,10 +76,11 @@ async def get_inquiries(request: HttpRequest, filter: Query[InquiryFilterSchema]
 async def create_inquiry(
     request: HttpRequest,
     data: Form[InquiryCreateSchema],
-    files: list[UploadedFile] = functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
+    files: Annotated[
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
+    ],
 ):
-    if files:
-        Inquiry.validate_files(files)
     return await Inquiry.create(**data.model_dump(), writer_id=request.auth, files=files)
 
 
@@ -88,11 +90,10 @@ async def update_inquiry(
     id: int,
     data: Form[InquiryUpdateSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Inquiry.validate_files(files)
     return await Inquiry.update(**data.model_dump(), writer_id=request.auth, id=id, files=files)
 
 
@@ -113,11 +114,10 @@ async def create_appeal(
     request: HttpRequest,
     data: Form[AppealCreateSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Appeal.validate_files(files)
     return await Appeal.create(**data.model_dump(), learner_id=request.auth, files=files)
 
 
@@ -173,11 +173,10 @@ async def save_comment(
     id: int,
     data: Form[CommentSaveSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Inquiry.validate_files(files)
     return await Comment.upsert(
         **data.model_dump(exclude_unset=True), thread_id=id, writer_id=request.auth, files=files
     )

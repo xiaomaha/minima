@@ -21,7 +21,7 @@ from apps.operation.api.schema import AppealSchema, HonorCodeSchema
 
 class ExamQuestionPoolSchema(Schema):
     id: int
-    composition: dict[str, int]
+    composition: dict[Question.ExamQuestionFormatChoices, int]
 
 
 class ExamSchema(LearningObjectMixinSchema):
@@ -39,11 +39,15 @@ class ExamSubmissionSchema(TimeStampedMixinSchema):
 
 class ExamQuestionSchema(Schema):
     id: int
-    format: Question.ExamFormatChoices
+    format: Question.ExamQuestionFormatChoices
     options: list[str]
     question: str
     supplement: str
     point: int
+
+    @staticmethod
+    def resolve_supplement(obj: Question):
+        return obj.cleaned_supplement
 
 
 class ExamAttemptSchema(Schema):
@@ -66,7 +70,6 @@ class ExamGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
 class ExamSolutionSchema(Schema):
     id: int
     correct_answers: list[str]
-    reference: list[str]
     correct_criteria: str
     explanation: str
 

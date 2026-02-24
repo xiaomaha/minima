@@ -25,7 +25,6 @@ class MediaSchema(LearningObjectMixinSchema):
     owner: OwnerSchema
     subtitle_count: int
     format: Media.MediaFormatChoices
-    uploaded: bool
     url: str
     quizzes: list[QuizSchema]
     open: datetime
@@ -98,7 +97,6 @@ class SearchedMediaSchema(LearningObjectMixinSchema):
     duration_seconds: float
     owner: OwnerSchema
     format: Media.MediaFormatChoices
-    uploaded: bool
     url: str
 
     accessible: bool

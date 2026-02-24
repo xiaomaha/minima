@@ -21,11 +21,13 @@ from django.db.models import (
     Model,
     OneToOneField,
     PositiveSmallIntegerField,
+    Prefetch,
     Q,
     QuerySet,
     TextChoices,
     TextField,
     UniqueConstraint,
+    aprefetch_related_objects,
 )
 from django.db.models.fields import BooleanField, DateTimeField
 from django.db.utils import IntegrityError
@@ -85,24 +87,21 @@ class QuestionPool(Model):
         return self.title
 
     async def select_question(self):
-        question = await self.question_set.select_related("solution__rubric").order_by("?").afirst()
+        question = await self.question_set.order_by("?").afirst()
         if not question:
             raise ValueError(ErrorCode.QUESTION_POOL_EMPTY)
 
         return question
 
 
-ATTACHMENT_MAX_SIZE_MB = 100
-
-
 @pghistory.track()
-class Question(Model):
+class Question(AttachmentMixin):
     pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     attachment_file_count = PositiveSmallIntegerField(_("Attachment File Count"), default=1)
     attachment_file_types = ArrayField(CharField(max_length=10), blank=True, default=list, verbose_name=_("Attachment File Types"))  # fmt: off
-    sample_attachment = FileField(_("Sample Attachment"), blank=True, null=True)
+    sample_attachment = FileField(_("Sample Attachment"), max_length=255, blank=True, null=True)
     plagiarism_threshold = PositiveSmallIntegerField(_("Plagiarism Threshold Percentage"))
 
     class Meta:
@@ -111,6 +110,10 @@ class Question(Model):
 
     if TYPE_CHECKING:
         solution: "Solution"
+
+    @property
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
 
     @property
     def sample_attachment_url(self):
@@ -123,7 +126,6 @@ class Solution(Model):
     question = OneToOneField(Question, CASCADE, verbose_name=_("Question"))
     rubric = ForeignKey("Rubric", CASCADE, verbose_name=_("Rubric"))
     explanation = TextField(_("Explanation"), blank=True, default="")
-    reference = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Reference"))
 
     class Meta:
         verbose_name = _("Solution")
@@ -138,40 +140,29 @@ class Solution(Model):
         self._rubric_data = data
 
     async def get_rubric_data(self) -> RubricDataDict:
-        levels = [
-            level
-            async for level in PerformanceLevel.objects
-            .filter(criterion__rubric=self.rubric)
-            .select_related("criterion")
-            .order_by("criterion__id", "point")
-            .values("id", "name", "description", "point", "criterion__id", "criterion__name", "criterion__description")
-        ]
+        criteria_dict: dict[int, RubricCriterionDataDict] = {}
+        max_points_by_criterion: dict[int, dict[str, int]] = {}
 
-        criteria_dict = {}
-        max_points_by_criterion = {}
+        async for criterion in self.rubric.rubriccriterion_set.all():
+            criterion_id = criterion.pk
+            criteria_dict[criterion_id] = {
+                "id": criterion_id,
+                "name": criterion.name,
+                "description": criterion.description,
+                "performance_levels": [],
+            }
+            max_points_by_criterion[criterion_id] = {"max_point": 0}
 
-        for level in levels:
-            criterion_id = level["criterion__id"]
-
-            if criterion_id not in criteria_dict:
-                criteria_dict[criterion_id] = {
-                    "id": criterion_id,
-                    "name": level["criterion__name"],
-                    "description": level["criterion__description"],
-                    "performance_levels": [],
-                }
-                max_points_by_criterion[criterion_id] = {"max_point": level["point"]}
-            else:
+            async for level in criterion.performancelevel_set.all():
                 max_points_by_criterion[criterion_id]["max_point"] = max(
-                    max_points_by_criterion[criterion_id]["max_point"], level["point"]
+                    max_points_by_criterion[criterion_id]["max_point"], level.point
                 )
-
-            criteria_dict[criterion_id]["performance_levels"].append({
-                "id": level["id"],
-                "name": level["name"],
-                "description": level["description"],
-                "point": level["point"],
-            })
+                criteria_dict[criterion_id]["performance_levels"].append({
+                    "id": level.pk,
+                    "name": level.name,
+                    "description": level.description,
+                    "point": level.point,
+                })
 
         possible_point = sum(data["max_point"] for data in max_points_by_criterion.values())
 
@@ -215,6 +206,8 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
             await Attempt.objects
             .filter(assignment_id=assignment_id, learner_id=learner_id, context=context, active=True)
             .select_related("assignment", "submission", "grade", "question__solution__rubric")
+            .prefetch_related("question__solution__rubric__rubriccriterion_set__performancelevel_set")
+            .prefetch_related("question__attachments")
             .alast()
         )
 
@@ -310,6 +303,14 @@ class Attempt(Model):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
 
         question = await QuestionPool(id=assignment.question_pool_id).select_question()
+        await aprefetch_related_objects(
+            [question],
+            "attachments",
+            Prefetch(
+                "solution__rubric__rubriccriterion_set__performancelevel_set",
+                queryset=PerformanceLevel.objects.order_by("point"),
+            ),
+        )
         question.solution.rubric_data = await question.solution.get_rubric_data()
 
         try:
@@ -335,14 +336,18 @@ class Attempt(Model):
         attempt = await cls.objects.select_related("assignment", "question__solution__rubric").aget(
             assignment_id=assignment_id, learner_id=learner_id, context=context, active=True
         )
+        await aprefetch_related_objects(
+            [attempt],
+            Prefetch(
+                "question__solution__rubric__rubriccriterion_set__performancelevel_set",
+                queryset=PerformanceLevel.objects.order_by("point"),
+            ),
+        )
 
         file_count = attempt.question.attachment_file_count
         if file_count > 0:
             if not files or len(files) < file_count:
                 raise ValueError(ErrorCode.ATTACHMENT_TOO_FEW)
-            Submission.validate_files(
-                files, max_count=attempt.question.attachment_file_count, max_size=ATTACHMENT_MAX_SIZE_MB * 1024 * 1024
-            )
 
         content = BeautifulSoup(answer, "html.parser").get_text(separator=" ", strip=True)
         for f in files or []:

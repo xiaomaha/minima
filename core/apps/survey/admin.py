@@ -2,7 +2,7 @@ from django.contrib import admin
 from unfold.contrib.forms.widgets import WysiwygWidget
 
 from apps.common.admin import HiddenModelAdmin, ModelAdmin, TabularInline
-from apps.survey.models import Question, QuestionPaper, Submission, Survey
+from apps.survey.models import Question, QuestionPool, Submission, Survey
 
 
 @admin.register(Survey)
@@ -10,8 +10,8 @@ class SurveyAdmin(ModelAdmin[Survey]):
     pass
 
 
-@admin.register(QuestionPaper)
-class QuestionPaperAdmin(ModelAdmin[QuestionPaper]):
+@admin.register(QuestionPool)
+class QuestionPool(ModelAdmin[QuestionPool]):
     pass
 
     class QuestionInline(TabularInline[Question]):

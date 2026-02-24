@@ -90,7 +90,6 @@ COMMON_SEARCH_FIELDS = [
     "code",
     "slug",
     "number",
-    "reference",
     "status",
     "category",
     "type",

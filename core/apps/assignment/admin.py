@@ -2,6 +2,7 @@ from typing import cast
 
 from asgiref.sync import async_to_sync
 from django.contrib import admin
+from django.db.models import Prefetch, prefetch_related_objects
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_jsonform.forms.fields import JSONFormField
@@ -159,6 +160,13 @@ class GradeAdmin(ModelAdmin[Grade]):
     def grade(self, request: HttpRequest, obj: Grade):
         grade = Grade.objects.select_related("attempt__assignment", "attempt__question__solution__rubric").get(
             pk=obj.pk
+        )
+        prefetch_related_objects(
+            [grade.attempt],
+            Prefetch(
+                "question__solution__rubric__rubriccriterion_set__performancelevel_set",
+                queryset=PerformanceLevel.objects.order_by("point"),
+            ),
         )
         async_to_sync(grade.grade)(grader_id=cast(str, request.user.pk) if request.user else None)
 

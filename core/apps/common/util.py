@@ -117,7 +117,15 @@ class PaginatedResponse[T](Schema):
     pages: int
 
 
-async def offset_paginate(queryset, *, page: int, size: int):
+class PaginationDict[T](TypedDict):
+    items: list[T]
+    count: int
+    size: int
+    page: int
+    pages: int
+
+
+async def offset_paginate[T](queryset, *, page: int, size: int) -> PaginationDict[T]:
     offset = (page - 1) * size
     count = await queryset.acount()
     pages = math.ceil(count / size) if count > 0 else 1

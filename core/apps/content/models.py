@@ -2,7 +2,7 @@ import logging
 import re
 from datetime import date, datetime, time, timedelta
 from io import StringIO
-from typing import TYPE_CHECKING, Literal, Sequence, TypedDict
+from typing import TYPE_CHECKING, Literal, Sequence
 
 import pghistory
 import webvtt
@@ -36,6 +36,7 @@ from django.db.models import (
     OneToOneField,
     OuterRef,
     Prefetch,
+    QuerySet,
     TextChoices,
     TextField,
     UniqueConstraint,
@@ -45,12 +46,13 @@ from django.db.models import (
 )
 from django.db.models.functions import Replace
 from django.utils import timezone
+from django.utils.translation import get_language_info
 from django.utils.translation import gettext_lazy as _
 from webvtt.errors import MalformedFileError
 
 from apps.common.error import ErrorCode
 from apps.common.models import LearningObjectMixin, TimeStampedMixin
-from apps.common.util import offset_paginate
+from apps.common.util import PaginationDict, offset_paginate
 from apps.operation.models import AttachmentMixin
 from apps.quiz.models import Quiz
 
@@ -65,11 +67,6 @@ WATCH = "1"
 class VarBitField(Field):
     def db_type(self, connection: BaseDatabaseWrapper):
         return "varbit"
-
-
-class MatchedLineDict(TypedDict):
-    start: int
-    line: str
 
 
 @pghistory.track()
@@ -88,9 +85,8 @@ class Media(LearningObjectMixin):
     duration = DurationField(_("Duration"))
     license = CharField(_("License"), max_length=255, blank=True, default="")
     channel = CharField(_("Channel"), max_length=255, blank=True, default="")
-    uploaded = BooleanField(_("Uploaded"), default=False)
     url = URLField(_("URL"), max_length=500, unique=True)
-    quizzes = ManyToManyField(Quiz, blank=True, verbose_name=_("Quizzes"))
+    quizzes = ManyToManyField(Quiz, through="MediaQuiz", blank=True, verbose_name=_("Quizzes"))
 
     class Meta(LearningObjectMixin.Meta):
         verbose_name = _("Media")
@@ -98,10 +94,10 @@ class Media(LearningObjectMixin):
 
     if TYPE_CHECKING:
         pk: str
-        subtitle_set: "list[Subtitle]"
-        matched_lines: list[MatchedLineDict] | None
+        subtitle_set: "QuerySet[Subtitle]"
         owner_id: str
         open: datetime  # annotated
+        quiz_ids: list[str]  # annotated
 
     @property
     def duration_seconds(self):
@@ -149,7 +145,7 @@ class Media(LearningObjectMixin):
         else:
             # document search
             searched = await sync_to_async(document_search)(q=q, page=page, size=size)
-            paginated: dict = {
+            paginated: PaginationDict = {
                 "items": [m async for m in qs.filter(id__in=searched["lines"].keys())],
                 "count": searched["count"],
                 "size": size,
@@ -169,7 +165,7 @@ class Media(LearningObjectMixin):
     async def create_quiz(self, *, lang_code: str = settings.DEFAULT_LANGUAGE):
         subtitle = (
             await Subtitle.objects
-            .annotate(quiz_exist=Exists(Media.quizzes.through.objects.filter(media_id=OuterRef("media_id"))))
+            .annotate(quiz_exist=Exists(MediaQuiz.objects.filter(media_id=OuterRef("media_id"), lang=lang_code)))
             .select_related("media")
             .filter(media_id=self.pk)
             .order_by(Case(When(lang=lang_code, then=Value(0)), default=Value(1), output_field=IntegerField()))
@@ -177,16 +173,20 @@ class Media(LearningObjectMixin):
         )
 
         if not subtitle:
-            raise ValidationError(_("No subtitle found"))
+            raise ValueError(ErrorCode.NOT_FOUND)
 
         if subtitle.quiz_exist:
-            raise ValidationError(_("Quiz already exists"))
+            raise ValueError(ErrorCode.ALREADY_EXISTS)
+
+        media = subtitle.media
+        title = f"{media.title} - {get_language_info('ko')['name_local']}"
+
+        if await Quiz.objects.filter(title=title, owner_id=media.owner_id).aexists():
+            raise ValueError(ErrorCode.ALREADY_EXISTS)
 
         text = subtitle.get_plain_text()
         if not text or len(text) < 300:
-            raise ValidationError(_("Insufficient subtitle content for quiz"))
-
-        media = subtitle.media
+            raise ValueError(ErrorCode.INSUFFICIENT_CONTENT)
 
         def _calculate_question_count(duration: timedelta) -> int:
             total_minutes = int(duration.total_seconds() / 60)
@@ -199,7 +199,7 @@ class Media(LearningObjectMixin):
             thumbnail.name = media.thumbnail.name
 
         quiz = await Quiz.create_quiz_set(
-            title=media.title,
+            title=title,
             description=media.description,
             audience=media.audience,
             thumbnail=media.thumbnail,
@@ -209,7 +209,9 @@ class Media(LearningObjectMixin):
             lang_code=lang_code,
         )
 
-        await self.quizzes.aadd(quiz)
+        await MediaQuiz.objects.acreate(media=media, quiz=quiz, lang=lang_code)
+
+        return quiz
 
     @classmethod
     async def content_inline_access(cls, *, media_id: str, content_id: str, app_label: str, model: str):
@@ -217,6 +219,18 @@ class Media(LearningObjectMixin):
             if await cls.objects.filter(id=media_id, quizzes__id=content_id).aexists():
                 return
         raise ValueError(ErrorCode.CONTENT_NOT_AVAILABLE)
+
+
+@pghistory.track()
+class MediaQuiz(Model):
+    media = ForeignKey(Media, CASCADE, verbose_name=_("Media"))
+    quiz = ForeignKey(Quiz, CASCADE, verbose_name=_("Quiz"))
+    lang = CharField(_("Language"), max_length=30, null=True, blank=True)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=["media", "quiz", "lang"], name="content_media_quiz_me_qu_la_uniq")]
+        verbose_name = _("Media Quiz")
+        verbose_name_plural = _("Media Quizzes")
 
 
 @pghistory.track()

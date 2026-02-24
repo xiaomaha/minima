@@ -3,6 +3,7 @@ from asgiref.sync import async_to_sync
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.db.models import Prefetch, prefetch_related_objects
 from django.utils import timezone
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
@@ -25,6 +26,7 @@ from apps.assignment.models import (
 )
 from apps.common.tests.factories import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
 from apps.operation.tests.factories import HonorCodeFactory
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -132,7 +134,6 @@ class SolutionFactory(DjangoModelFactory[Solution]):
     question = SubFactory(QuestionFactory)
     rubric = SubFactory(RubricFactory)
     explanation = FactoryField("text")
-    reference = FactoryField("words", quantity=generic.random.randint(1, 3))
 
     class Meta:
         model = Solution
@@ -144,9 +145,9 @@ class AssignmentFactory(LearningObjectFactory[Assignment], GradeWorkflowFactory[
     max_attempts = 1
     verification_required = True
 
-    owner = SubFactory(UserFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
+    question_pool = SubFactory(QuestionPoolFactory, owner=owner)
     honor_code = SubFactory(HonorCodeFactory)
-    question_pool = SubFactory(QuestionPoolFactory)
 
     class Meta:
         model = Assignment
@@ -211,23 +212,21 @@ class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):
             grade = Grade.objects.get(attempt=kwargs["attempt"])
         except Grade.DoesNotExist:
             grade = super().build(**kwargs)
-
-            # earned_details
             attempt = Attempt.objects.select_related("question__solution__rubric", "assignment").get(
                 id=grade.attempt_id
             )
-
-            solution = Solution.objects.select_related("rubric").get(question=attempt.question)
-            rubric_data = async_to_sync(solution.get_rubric_data)()
-
+            prefetch_related_objects(
+                [attempt],
+                Prefetch(
+                    "question__solution__rubric__rubriccriterion_set__performancelevel_set",
+                    queryset=PerformanceLevel.objects.order_by("point"),
+                ),
+            )
+            rubric_data = async_to_sync(attempt.question.solution.get_rubric_data)()
             grade.earned_details = {
                 criterion["name"]: generic.random.choice([level["point"] for level in criterion["performance_levels"]])
                 for criterion in rubric_data["criteria"]
             }
-
-            # fix SynchronousOnlyOperation
             grade.attempt = attempt
-
             async_to_sync(grade.grade)()
-
         return grade

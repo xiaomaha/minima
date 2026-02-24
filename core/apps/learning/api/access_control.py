@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 from functools import wraps
 
 from celery.exceptions import ImproperlyConfigured
@@ -8,7 +9,7 @@ from apps.common.error import ErrorCode
 from apps.common.util import AccessDate, HttpRequest, openapi_query_param
 from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
-from apps.learning.models import Enrollment
+from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
 from apps.quiz.models import Quiz
 
 log = logging.getLogger(__name__)
@@ -56,6 +57,20 @@ def access_date(app_label, model, *, id_field: str = "id"):
                 public_access = await PublicAccessMedia.get_access_date(media_id=content_id)
             elif media_id:
                 public_access = await PublicAccessMedia.get_access_date(media_id=media_id)
+
+            if not (enrollment or public_access):
+                if "editor" in request.roles:
+                    ContentModel = ENROLLABLE_MODEL_MAP[(app_label, model)]
+                    # Check ownership
+                    if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
+                        # grant 1 hour temporary access to editor
+                        now = timezone.now()
+                        accessible = AccessDate(
+                            start=now, end=now + timedelta(hours=1), archive=now + timedelta(hours=1)
+                        )
+                        request.access_date = accessible
+                        request.active_context = ""
+                        return await func(request, *args, **kwargs)
 
             # more favorable access date between enrollment and public access
             accessible = _get_favorable_date(enrollment, public_access)
