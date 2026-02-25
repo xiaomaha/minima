@@ -7,6 +7,7 @@ from pydantic.root_model import RootModel
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import (
     AccessDateSchema,
+    AttemptMixinSchema,
     GradeFieldMixinSchema,
     GradingDateSchema,
     LearningObjectMixinSchema,
@@ -50,12 +51,10 @@ class ExamQuestionSchema(Schema):
         return obj.cleaned_supplement
 
 
-class ExamAttemptSchema(Schema):
+class ExamAttemptSchema(AttemptMixinSchema):
     id: int
     saved_answers: dict[str, str] | None
     questions: list[ExamQuestionSchema]
-    started: datetime
-    active: bool
     retry: int
 
 

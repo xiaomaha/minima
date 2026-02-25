@@ -4,7 +4,13 @@ from typing import Annotated
 from pydantic.fields import Field
 
 from apps.account.api.schema import OwnerSchema
-from apps.common.schema import AccessDateSchema, LearningObjectMixinSchema, Schema, TimeStampedMixinSchema
+from apps.common.schema import (
+    AccessDateSchema,
+    AttemptMixinSchema,
+    LearningObjectMixinSchema,
+    Schema,
+    TimeStampedMixinSchema,
+)
 from apps.competency.api.schema import CertificateAwardSchema
 from apps.course.models import Course
 from apps.operation.api.schema import FAQItemSchema, HonorCodeSchema
@@ -60,7 +66,7 @@ class CourseDetailSchema(LearningObjectMixinSchema):
         return obj.lesson_set.all()
 
 
-class CourseEngagementSchema(TimeStampedMixinSchema):
+class CourseEngagementSchema(AttemptMixinSchema):
     class CourseGradebookSchema(TimeStampedMixinSchema):
         id: int
         details: dict[str, dict[str, bool | float | int] | None]
@@ -71,7 +77,6 @@ class CourseEngagementSchema(TimeStampedMixinSchema):
 
     id: int
     gradebook: Annotated[CourseGradebookSchema, Field(None)]
-    active: bool
 
 
 class CourseSchema(LearningObjectMixinSchema):
@@ -81,7 +86,6 @@ class CourseSchema(LearningObjectMixinSchema):
             title: str
             thumbnail: str | None
             format: str
-            ordering: int
 
         id: int
         medias: list[LessonMediaSchema]

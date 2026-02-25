@@ -10,9 +10,7 @@ from django.core.files import File
 from django.db import IntegrityError
 from django.db.models import (
     CASCADE,
-    BooleanField,
     CharField,
-    DateTimeField,
     F,
     ForeignKey,
     JSONField,
@@ -33,8 +31,8 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.assistant.plugin.quiz import QuizMaker
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, LearningSessionStep, ScoreStatsDict, get_score_stats
+from apps.common.models import AttemptMixin, GradeFieldMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import AccessDate, AttemptModeChoices, LearningSessionStep, ScoreStatsDict, get_score_stats
 from apps.operation.models import AttachmentMixin
 from apps.quiz.trigger import attempt_retry_count
 
@@ -239,13 +237,10 @@ class Quiz(LearningObjectMixin):
 
 
 @pghistory.track()
-class Attempt(TimeStampedMixin):
+class Attempt(AttemptMixin):
     quiz = ForeignKey(Quiz, CASCADE, verbose_name=_("Quiz"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
-    started = DateTimeField(_("Attempt Start"))
     questions = ManyToManyField(Question, verbose_name=_("Questions"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta(TimeStampedMixin.Meta):
@@ -265,7 +260,7 @@ class Attempt(TimeStampedMixin):
         _prefetched_objects_cache: dict[str, QuerySet[Question]]
 
     @classmethod
-    async def start(cls, *, quiz_id: str, learner_id: str, context: str):
+    async def start(cls, *, quiz_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
         quiz = await Quiz.objects.prefetch_related("question_pool__question_set").aget(id=quiz_id)
         questions = await quiz.question_pool.select_questions()
         await aprefetch_related_objects(questions, "attachments")  # type: ignore
@@ -277,6 +272,7 @@ class Attempt(TimeStampedMixin):
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
+                mode=mode,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

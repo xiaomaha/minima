@@ -1,7 +1,7 @@
 import * as v from 'valibot'
 import type { SurveyQuestionFormatChoices, SurveyQuestionSpec, SurveySpec } from '@/api'
 import { vSurveyQuestionFormatChoices } from '@/api/valibot.gen'
-import i18next from '@/i18n'
+import { lazyT } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID } from '../-context/ContentSuggestion'
 
 export const EmptySurvey = (): SurveySpec => {
@@ -9,7 +9,7 @@ export const EmptySurvey = (): SurveySpec => {
     id: EMPTY_CONTENT_ID,
     created: '',
     modified: '',
-    title: i18next.t('New survey draft'),
+    title: lazyT('New survey draft')(),
     description: '',
     audience: '',
     thumbnail: '',
@@ -36,7 +36,7 @@ export const EmptyQuestion = (format: SurveyQuestionFormatChoices): SurveyQuesti
   const newId = -++questionSequence
   return {
     id: newId,
-    question: `${i18next.t('New question draft')} ${-newId}`,
+    question: `${lazyT('New question draft')} ${-newId}`,
     supplement: '',
     format: format,
     options: format === 'single_choice' ? ['', '', '', '', ''] : [],
@@ -48,9 +48,7 @@ export const EmptyQuestion = (format: SurveyQuestionFormatChoices): SurveyQuesti
 // not field but record
 export const questionFormats = ['single_choice', 'number_input', 'text_input'] as const
 
-const REQUIRED = i18next.t('required')
-
-v.setSpecificMessage(v.number, () => REQUIRED)
+const REQUIRED = lazyT('required')
 
 export const vSurveyEditingSpec = v.object({
   title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
@@ -81,5 +79,5 @@ export const vSurveyQuestionEditingSpec = v.pipe(
       return validOptions.length >= 2 && validOptions.length <= 5
     }
     return true
-  }, i18next.t('single_choice format requires 2-5 options with at least 1 character each')),
+  }, lazyT('single_choice format requires 2-5 options with at least 1 character each')),
 )

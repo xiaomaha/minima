@@ -1,5 +1,6 @@
 interface AccessContextSchema {
   course?: string
+  mode?: string
 }
 
 export const accessContextParam = () => {
@@ -8,8 +9,10 @@ export const accessContextParam = () => {
 
   if (search.has('course')) {
     context.course = search.get('course')!
-  } else {
-    return {}
+  }
+
+  if (search.has('mode')) {
+    context.mode = search.get('mode')!
   }
 
   return context as Record<string, string>

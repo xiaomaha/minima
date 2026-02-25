@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import type { DiscussionQuestionSpec, DiscussionSpec } from '@/api'
-import i18next from '@/i18n'
+import { lazyT } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID } from '../-context/ContentSuggestion'
 
 export const EmptyDiscussion = (): DiscussionSpec => {
@@ -8,7 +8,7 @@ export const EmptyDiscussion = (): DiscussionSpec => {
     id: EMPTY_CONTENT_ID,
     created: '',
     modified: '',
-    title: i18next.t('New discussion draft'),
+    title: lazyT('New discussion draft')(),
     description: '',
     audience: '',
     thumbnail: '',
@@ -36,7 +36,7 @@ export const EmptyQuestion = (): DiscussionQuestionSpec => {
   const newId = -++questionSequence
   return {
     id: newId,
-    directive: `${i18next.t('New discussion directive draft')} ${-newId}`,
+    directive: `${lazyT('New discussion directive draft')} ${-newId}`,
     supplement: '',
     postPoint: -1,
     replyPoint: -1,
@@ -46,10 +46,8 @@ export const EmptyQuestion = (): DiscussionQuestionSpec => {
   }
 }
 
-const REQUIRED = i18next.t('required')
-const AT_LEAST_ZERO = i18next.t('at least 0')
-
-v.setSpecificMessage(v.number, () => REQUIRED)
+const REQUIRED = lazyT('required')
+const AT_LEAST_ZERO = lazyT('at least 0')
 
 export const vDiscussionEditingSpec = v.object({
   title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
@@ -57,7 +55,7 @@ export const vDiscussionEditingSpec = v.object({
   audience: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
   featured: v.boolean(),
   verificationRequired: v.boolean(),
-  passingPoint: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO), v.maxValue(100, i18next.t('at most 100'))),
+  passingPoint: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO), v.maxValue(100, lazyT('at most 100'))),
   maxAttempts: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   gradeDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   appealDeadlineDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
@@ -76,10 +74,10 @@ export const vDiscussionQuestionEditingSpec = v.pipe(
     id: v.pipe(v.number(), v.integer()),
     directive: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
     supplement: v.string(),
-    postPoint: v.pipe(v.number(), v.integer(), v.minValue(1, i18next.t('at least 1'))),
-    replyPoint: v.pipe(v.number(), v.integer(), v.minValue(1, i18next.t('at least 1'))),
-    tutorAssessmentPoint: v.pipe(v.number(), v.integer(), v.minValue(1, i18next.t('at least 1'))),
-    postMinCharacters: v.pipe(v.number(), v.integer(), v.minValue(100, i18next.t('at least 100'))),
-    replyMinCharacters: v.pipe(v.number(), v.integer(), v.minValue(100, i18next.t('at least 100'))),
+    postPoint: v.pipe(v.number(), v.integer(), v.minValue(1, lazyT('at least 1'))),
+    replyPoint: v.pipe(v.number(), v.integer(), v.minValue(1, lazyT('at least 1'))),
+    tutorAssessmentPoint: v.pipe(v.number(), v.integer(), v.minValue(1, lazyT('at least 1'))),
+    postMinCharacters: v.pipe(v.number(), v.integer(), v.minValue(100, lazyT('at least 100'))),
+    replyMinCharacters: v.pipe(v.number(), v.integer(), v.minValue(100, lazyT('at least 100'))),
   }),
 )

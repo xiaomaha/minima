@@ -60,7 +60,6 @@ dev = [
   "boto3-stubs[s3]",
   "yt-dlp",
   "youtube-transcript-api",
-  "django-upgrade",
   "mjml-python",
   "openpyxl",
   "django-stubs",

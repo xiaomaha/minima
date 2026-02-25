@@ -46,8 +46,8 @@ from apps.account.models import OtpLog
 from apps.assignment.models import Assignment
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
-from apps.common.models import LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AccessDate, OtpTokenDict, issue_active_context, track_fields
+from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.util import AccessDate, AttemptModeChoices, OtpTokenDict, issue_active_context, track_fields
 from apps.competency.models import Certificate, CertificateAward, CertificateAwardDataDict
 from apps.content.models import Media
 from apps.course.trigger import course_create_grading_policy, lessonmedia_unifier
@@ -155,12 +155,7 @@ class Course(LearningObjectMixin):
                 Prefetch(
                     "lesson_set",
                     queryset=Lesson.objects.order_by("start_offset").prefetch_related(
-                        Prefetch(
-                            "medias",
-                            queryset=Media.objects.annotate(ordering=F("lessonmedia__ordering")).order_by(
-                                "lessonmedia__ordering"
-                            ),
-                        )
+                        Prefetch("medias", queryset=Media.objects.order_by("lessonmedia__ordering"))
                     ),
                 )
             )
@@ -310,6 +305,7 @@ class Lesson(Model):
     if TYPE_CHECKING:
         start_date: datetime
         end_date: datetime
+        lessonmedia_set: QuerySet[Media]
 
     def __str__(self):
         return self.title
@@ -356,6 +352,11 @@ class Assessment(Model):
         constraints = [
             UniqueConstraint(fields=["course", "item_type", "item_id"], name="course_assessment_co_itty_itid_uniq")
         ]
+
+    if TYPE_CHECKING:
+        item_app_label: str  # annotated
+        item_model: str  # annotated
+        item_title: str  # annotated
 
 
 class GradingCriterionDict(TypedDict):
@@ -501,11 +502,9 @@ setattr(Course._meta, "triggers", [course_create_grading_policy(Course._meta.db_
 
 
 @pghistory.track()
-class Engagement(TimeStampedMixin):
+class Engagement(AttemptMixin):
     course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"))
-    last_lesson = ForeignKey(Lesson, SET_NULL, verbose_name=_("Last Lesson"), null=True, blank=True)
-    active = BooleanField(_("Active"), default=True)
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Engagement")
@@ -526,7 +525,7 @@ class Engagement(TimeStampedMixin):
         return issue_active_context("course", self.course_id, self.pk)
 
     @classmethod
-    async def start(cls, *, course_id: str, learner_id: str):
+    async def start(cls, *, course_id: str, learner_id: str, mode: AttemptModeChoices):
         course = await Course.objects.aget(id=course_id)
 
         if course.verification_required:
@@ -534,7 +533,9 @@ class Engagement(TimeStampedMixin):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
 
         try:
-            engagement = await Engagement.objects.acreate(course_id=course_id, learner_id=learner_id, active=True)
+            engagement = await Engagement.objects.acreate(
+                course_id=course_id, learner_id=learner_id, active=True, mode=mode
+            )
         except IntegrityError:
             raise ValueError(ErrorCode.ALREADY_EXISTS)
 
@@ -565,7 +566,7 @@ class Engagement(TimeStampedMixin):
         data = CertificateAwardDataDict(
             document_title=str(_("Course Completion Certificate")),
             completion_title=engagement.course.title,
-            completion_period=f"{engagement.created.strftime('%Y-%m-%d')} ~ {gradebook.confirmed.strftime('%Y-%m-%d')}",
+            completion_period=f"{engagement.started.strftime('%Y-%m-%d')} ~ {gradebook.confirmed.strftime('%Y-%m-%d')}",
             completion_hours=_("%(hours)s hours") % {"hours": engagement.course.effort_hours},
             recipient_name=engagement.learner.name,
             recipient_birth_date=engagement.learner.birth_date.isoformat() if engagement.learner.birth_date else "",

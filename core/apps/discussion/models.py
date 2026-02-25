@@ -26,7 +26,6 @@ from django.db.models import (
     UniqueConstraint,
     aprefetch_related_objects,
 )
-from django.db.models.fields import BooleanField, DateTimeField
 from django.db.models.functions import Length
 from django.db.models.query import Prefetch
 from django.db.utils import IntegrityError
@@ -36,8 +35,16 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
+from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import (
+    AccessDate,
+    AttemptModeChoices,
+    GradingDate,
+    LearningSessionStep,
+    OtpTokenDict,
+    ScoreStatsDict,
+    get_score_stats,
+)
 from apps.discussion.trigger import attempt_retry_count
 from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
@@ -191,13 +198,10 @@ class Discussion(LearningObjectMixin, GradeWorkflowMixin):
 
 
 @pghistory.track()
-class Attempt(Model):
+class Attempt(AttemptMixin):
     discussion = ForeignKey(Discussion, CASCADE, verbose_name=_("Discussion"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     question = ForeignKey(Question, CASCADE, verbose_name=_("Question"))
-    started = DateTimeField(_("Attempt Start"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
@@ -219,7 +223,7 @@ class Attempt(Model):
         max_attempts: int  # annotated
 
     @classmethod
-    async def start(cls, *, discussion_id: str, learner_id: str, context: str):
+    async def start(cls, *, discussion_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
         discussion = await Discussion.objects.aget(id=discussion_id)
 
         if discussion.verification_required:
@@ -237,6 +241,7 @@ class Attempt(Model):
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
                 question=question,
+                mode=mode,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

@@ -29,7 +29,6 @@ from django.db.models import (
     UniqueConstraint,
     aprefetch_related_objects,
 )
-from django.db.models.fields import BooleanField, DateTimeField
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.utils.translation import gettext as t
@@ -39,8 +38,16 @@ from tika import parser
 from apps.account.models import OtpLog
 from apps.assignment.trigger import attempt_retry_count
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
+from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import (
+    AccessDate,
+    AttemptModeChoices,
+    GradingDate,
+    LearningSessionStep,
+    OtpTokenDict,
+    ScoreStatsDict,
+    get_score_stats,
+)
 from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
 User = get_user_model()
@@ -265,13 +272,10 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
 
 
 @pghistory.track()
-class Attempt(Model):
+class Attempt(AttemptMixin):
     assignment = ForeignKey(Assignment, CASCADE, verbose_name=_("Assignment"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     question = ForeignKey(Question, CASCADE, verbose_name=_("Question"))
-    started = DateTimeField(_("Attempt Start"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
@@ -295,7 +299,7 @@ class Attempt(Model):
         submission: "Submission"
 
     @classmethod
-    async def start(cls, *, assignment_id: str, learner_id: str, context: str):
+    async def start(cls, *, assignment_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
         assignment = await Assignment.objects.aget(id=assignment_id)
 
         if assignment.verification_required:
@@ -321,6 +325,7 @@ class Attempt(Model):
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
                 question=question,
+                mode=mode,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

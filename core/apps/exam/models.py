@@ -11,9 +11,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.signing import dumps
 from django.db.models import (
     CASCADE,
-    BooleanField,
     CharField,
-    DateTimeField,
     DurationField,
     F,
     ForeignKey,
@@ -39,8 +37,16 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
+from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import (
+    AccessDate,
+    AttemptModeChoices,
+    GradingDate,
+    LearningSessionStep,
+    OtpTokenDict,
+    ScoreStatsDict,
+    get_score_stats,
+)
 from apps.exam.trigger import attempt_retry_count
 from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
@@ -230,13 +236,10 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
 
 
 @pghistory.track()
-class Attempt(Model):
+class Attempt(AttemptMixin):
     exam = ForeignKey(Exam, CASCADE, verbose_name=_("Exam"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     questions = ManyToManyField(Question, verbose_name=_("Questions"))
-    started = DateTimeField(_("Attempt Start"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
@@ -263,7 +266,7 @@ class Attempt(Model):
             return self.tempanswer.answers
 
     @classmethod
-    async def start(cls, *, exam_id: str, learner_id: str, context: str):
+    async def start(cls, *, exam_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
         exam = await Exam.objects.prefetch_related("question_pool__question_set").aget(id=exam_id)
 
         if exam.verification_required:
@@ -280,6 +283,7 @@ class Attempt(Model):
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
+                mode=mode,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

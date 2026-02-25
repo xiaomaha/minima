@@ -25,7 +25,8 @@ from django.db.models import (
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.error import ErrorCode
-from apps.common.models import LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.util import AttemptModeChoices
 from apps.operation.models import AttachmentMixin
 
 User = get_user_model()
@@ -115,12 +116,10 @@ class Survey(LearningObjectMixin):
 
 
 @pghistory.track()
-class Submission(TimeStampedMixin):
+class Submission(AttemptMixin):
     survey = ForeignKey(Survey, CASCADE, verbose_name=_("Survey"))
     respondent = ForeignKey(User, SET_NULL, null=True, blank=True, related_name="+", verbose_name=_("Respondent"))
     answers = JSONField(_("Answers"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Submission")
@@ -144,6 +143,7 @@ class Submission(TimeStampedMixin):
         *,
         survey_id: str,
         answers: dict[str, str],
+        mode: AttemptModeChoices,
         respondent_id: str | None = None,
         context: str = "",
         anonymous: bool = False,
@@ -151,7 +151,7 @@ class Submission(TimeStampedMixin):
         survey = await Survey.objects.aget(id=survey_id)
 
         if survey.anonymous:
-            await Submission.objects.acreate(survey=survey, answers=answers)
+            await Submission.objects.acreate(survey=survey, answers=answers, mode=mode)
         else:
             if anonymous:
                 raise ValueError(ErrorCode.ANONYMOUS_NOT_ALLOWED)
@@ -161,5 +161,5 @@ class Submission(TimeStampedMixin):
                 survey=survey,
                 respondent_id=respondent_id,
                 context=context,
-                defaults={"answers": answers, "active": True},
+                defaults={"answers": answers, "active": True, "mode": mode},
             )

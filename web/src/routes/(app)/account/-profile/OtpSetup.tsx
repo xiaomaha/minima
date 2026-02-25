@@ -1,5 +1,4 @@
 import { IconAlertCircle, IconCheck, IconDownload, IconInfoCircle } from '@tabler/icons-solidjs'
-import type { TOptions } from 'i18next'
 import { createEffect, createResource, createSignal, For, Match, Show, Switch } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { accountV1CompleteOtpSetup, accountV1ResetOtp, accountV1SetupOtp, type OtpSetupSchema } from '@/api'
@@ -116,7 +115,7 @@ export const OtpSetup = () => {
 
             <Switch>
               <Match when={state.step === 0}>
-                <InstallAppStep onNext={() => setState('step', 1)} t={t} />
+                <InstallAppStep onNext={() => setState('step', 1)} />
               </Match>
               <Match when={state.step === 1}>
                 <ScanQrStep
@@ -125,7 +124,6 @@ export const OtpSetup = () => {
                   onPinChange={(pin) => setState('pin', pin)}
                   onComplete={completeSetup}
                   isCompleting={completeData.loading}
-                  t={t}
                 />
               </Match>
               <Match when={state.step === 2}>
@@ -141,16 +139,17 @@ export const OtpSetup = () => {
 
 interface InstallAppStepProps {
   onNext: () => void
-  t: (key: string, options?: TOptions) => string
 }
 
 const InstallAppStep = (props: InstallAppStepProps) => {
+  const { t } = useTranslation()
+
   return (
     <div class="space-y-4 pl-4">
-      <p class="text-sm">{props.t("Install an authenticator app on your mobile device if you haven't already:")}</p>
+      <p class="text-sm">{t("Install an authenticator app on your mobile device if you haven't already:")}</p>
       <ul class="space-y-2 list-disc list-inside">
         <li>
-          <span>{props.t('Google Authenticator')}</span>
+          <span>{t('Google Authenticator')}</span>
           {' - '}
 
           <a
@@ -159,7 +158,7 @@ const InstallAppStep = (props: InstallAppStepProps) => {
             class="link link-primary"
             rel="noopener"
           >
-            {props.t('Android')}
+            {t('Android')}
           </a>
           {' / '}
 
@@ -169,11 +168,11 @@ const InstallAppStep = (props: InstallAppStepProps) => {
             class="link link-primary"
             rel="noopener"
           >
-            {props.t('iOS')}
+            {t('iOS')}
           </a>
         </li>
         <li>
-          <span>{props.t('Microsoft Authenticator')}</span>
+          <span>{t('Microsoft Authenticator')}</span>
           {' - '}
 
           <a
@@ -182,7 +181,7 @@ const InstallAppStep = (props: InstallAppStepProps) => {
             class="link link-primary"
             rel="noopener"
           >
-            {props.t('Android')}
+            {t('Android')}
           </a>
           {' / '}
 
@@ -192,11 +191,11 @@ const InstallAppStep = (props: InstallAppStepProps) => {
             class="link link-primary"
             rel="noopener"
           >
-            {props.t('iOS')}
+            {t('iOS')}
           </a>
         </li>
         <li>
-          <span>{props.t('Apple Authenticator')}</span>
+          <span>{t('Apple Authenticator')}</span>
           {' - '}
 
           <a
@@ -205,13 +204,13 @@ const InstallAppStep = (props: InstallAppStepProps) => {
             class="link link-primary"
             rel="noopener"
           >
-            {props.t('iOS')}
+            {t('iOS')}
           </a>
         </li>
       </ul>
       <div class="flex justify-end mt-8">
         <button type="button" class="btn btn-primary min-w-32" onClick={props.onNext}>
-          {props.t('Next')}
+          {t('Next')}
         </button>
       </div>
     </div>
@@ -224,12 +223,13 @@ const ScanQrStep = (props: {
   onPinChange: (pin: string) => void
   onComplete: (code: string) => void
   isCompleting: boolean
-  t: (key: string, options?: TOptions) => string
 }) => {
+  const { t } = useTranslation()
+
   return (
     <div class="space-y-6 flex flex-col items-center mb-8">
       <p class="text-sm text-center">
-        {props.t('Scan the QR code below with your authenticator app, then enter the 6-digit code it generates.')}
+        {t('Scan the QR code below with your authenticator app, then enter the 6-digit code it generates.')}
       </p>
       <div class="card bg-base-200 shadow-md p-4">
         <img src={props.setupData.qrCode} alt="QR Code" class="w-52 h-52 mx-auto mb-2" />
@@ -248,6 +248,7 @@ const ScanQrStep = (props: {
 
 const BackupCodesStep = (props: { backupCodes: string[]; onDownload: () => void }) => {
   const { t } = useTranslation()
+
   return (
     <div class="space-y-6">
       <div class="alert alert-success">
@@ -255,9 +256,7 @@ const BackupCodesStep = (props: { backupCodes: string[]; onDownload: () => void 
         <span>{t('Otp Setup Completed Successfully')}</span>
       </div>
       <p class="text-sm">
-        {t(
-          'Save these codes in a secure location. Each code can be used once if you lose access to your authenticator app.',
-        )}
+        {t('Save these codes in a secure location. Each code can be used once if you lose access to your authenticator app.')}
       </p>
       <div class="grid grid-cols-2 gap-2">
         <For each={props.backupCodes}>
