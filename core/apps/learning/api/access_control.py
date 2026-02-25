@@ -1,12 +1,13 @@
 import logging
 from datetime import timedelta
 from functools import wraps
+from typing import cast
 
 from celery.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from apps.common.error import ErrorCode
-from apps.common.util import AccessDate, HttpRequest, openapi_query_param
+from apps.common.util import AccessDate, AttemptModeChoices, HttpRequest, openapi_query_param
 from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
 from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
@@ -152,6 +153,25 @@ def active_context():
                 active_context = await Course.issue_context(course_id=course_id, user_id=user_id)
 
             request.active_context = active_context
+            return await func(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def access_mode():
+    def decorator(func):
+        openapi_query_param(func=func, name="mode", schema_type="string", required=False, nullable=False)
+
+        @wraps(func)
+        async def wrapper(request: HttpRequest, *args, **kwargs):
+            mode = request.GET.get("mode", AttemptModeChoices.NORMAL)
+            if mode not in AttemptModeChoices:
+                raise ValueError(ErrorCode.INVALID_ACCESS_MODE)
+
+            request.access_mode = cast(AttemptModeChoices, mode)
+
             return await func(request, *args, **kwargs)
 
         return wrapper

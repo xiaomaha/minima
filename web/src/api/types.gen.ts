@@ -375,11 +375,6 @@ export type AppealSchema = {
  */
 export type AssignmentAttemptSchema = {
     /**
-     * Id
-     */
-    id: number;
-    question: AssignmentQuestionSchema;
-    /**
      * Started
      */
     started: string;
@@ -387,6 +382,19 @@ export type AssignmentAttemptSchema = {
      * Active
      */
     active: boolean;
+    /**
+     * Context
+     */
+    context: string;
+    /**
+     * Mode
+     */
+    mode: string;
+    /**
+     * Id
+     */
+    id: number;
+    question: AssignmentQuestionSchema;
     /**
      * Retry
      */
@@ -1649,22 +1657,26 @@ export type SearchedMediaSchema = {
  */
 export type CourseEngagementSchema = {
     /**
-     * Created
+     * Started
      */
-    created: string;
+    started: string;
     /**
-     * Modified
+     * Active
      */
-    modified: string;
+    active: boolean;
+    /**
+     * Context
+     */
+    context: string;
+    /**
+     * Mode
+     */
+    mode: string;
     /**
      * Id
      */
     id: number;
     gradebook?: CourseGradebookSchema;
-    /**
-     * Active
-     */
-    active: boolean;
 };
 
 /**
@@ -1894,10 +1906,6 @@ export type LessonMediaSchema = {
      * Format
      */
     format: string;
-    /**
-     * Ordering
-     */
-    ordering: number;
 };
 
 /**
@@ -2169,11 +2177,6 @@ export type CourseCertificateRequestSchema = {
  */
 export type DiscussionAttemptSchema = {
     /**
-     * Id
-     */
-    id: number;
-    question: DiscussionQuestionSchema;
-    /**
      * Started
      */
     started: string;
@@ -2181,6 +2184,19 @@ export type DiscussionAttemptSchema = {
      * Active
      */
     active: boolean;
+    /**
+     * Context
+     */
+    context: string;
+    /**
+     * Mode
+     */
+    mode: string;
+    /**
+     * Id
+     */
+    id: number;
+    question: DiscussionQuestionSchema;
     /**
      * Retry
      */
@@ -2563,6 +2579,22 @@ export type DiscussionOwnPostSchema = {
  */
 export type ExamAttemptSchema = {
     /**
+     * Started
+     */
+    started: string;
+    /**
+     * Active
+     */
+    active: boolean;
+    /**
+     * Context
+     */
+    context: string;
+    /**
+     * Mode
+     */
+    mode: string;
+    /**
      * Id
      */
     id: number;
@@ -2576,14 +2608,6 @@ export type ExamAttemptSchema = {
      * Questions
      */
     questions: Array<ExamQuestionSchema>;
-    /**
-     * Started
-     */
-    started: string;
-    /**
-     * Active
-     */
-    active: boolean;
     /**
      * Retry
      */
@@ -4193,14 +4217,6 @@ export type RoleChoices = 'education_manager';
  */
 export type QuizAttemptSchema = {
     /**
-     * Id
-     */
-    id: number;
-    /**
-     * Questions
-     */
-    questions: Array<QuizQuestionSchema>;
-    /**
      * Started
      */
     started: string;
@@ -4208,6 +4224,22 @@ export type QuizAttemptSchema = {
      * Active
      */
     active: boolean;
+    /**
+     * Context
+     */
+    context: string;
+    /**
+     * Mode
+     */
+    mode: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Questions
+     */
+    questions: Array<QuizQuestionSchema>;
     /**
      * Retry
      */
@@ -5642,6 +5674,265 @@ export type MediaSaveSpec = {
 };
 
 /**
+ * CourseSpec
+ */
+export type CourseSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Audience
+     */
+    audience: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string | null;
+    /**
+     * Featured
+     */
+    featured: boolean;
+    /**
+     * Format
+     */
+    format: string;
+    /**
+     * Durationseconds
+     */
+    durationSeconds: number | null;
+    /**
+     * Passingpoint
+     */
+    passingPoint: number;
+    /**
+     * Maxattempts
+     */
+    maxAttempts: number;
+    /**
+     * Verificationrequired
+     */
+    verificationRequired: boolean;
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Objective
+     */
+    objective: string;
+    /**
+     * Previewurl
+     */
+    previewUrl: string | null;
+    /**
+     * Efforthours
+     */
+    effortHours: number;
+    level: LevelChoices;
+    owner: OwnerSpec;
+    honorCode: HonorCodeSpec;
+};
+
+/**
+ * CourseSaveSpec
+ */
+export type CourseSaveSpec = {
+    /**
+     * Id
+     */
+    id?: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Audience
+     */
+    audience: string;
+    /**
+     * Featured
+     */
+    featured: boolean;
+    /**
+     * Passingpoint
+     */
+    passingPoint: number;
+    /**
+     * Maxattempts
+     */
+    maxAttempts: number;
+    /**
+     * Verificationrequired
+     */
+    verificationRequired: boolean;
+    /**
+     * Objective
+     */
+    objective: string;
+    /**
+     * Previewurl
+     */
+    previewUrl: string;
+    /**
+     * Efforthours
+     */
+    effortHours: number;
+    level: LevelChoices;
+    honorCode: HonorCodeSpec;
+};
+
+/**
+ * CourseAssessmentSpec
+ */
+export type CourseAssessmentSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Itemid
+     */
+    itemId: string;
+    /**
+     * Itemtitle
+     */
+    itemTitle: string;
+    /**
+     * Itemapplabel
+     */
+    itemAppLabel: string;
+    /**
+     * Itemmodel
+     */
+    itemModel: string;
+    /**
+     * Weight
+     */
+    weight: number;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
+};
+
+/**
+ * CourseLessonMediaSpec
+ */
+export type CourseLessonMediaSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Mediatitle
+     */
+    mediaTitle: string;
+    /**
+     * Mediaid
+     */
+    mediaId: string;
+    /**
+     * Ordering
+     */
+    ordering: number;
+};
+
+/**
+ * CourseLessonSpec
+ */
+export type CourseLessonSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Medias
+     */
+    medias: Array<CourseLessonMediaSpec>;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
+};
+
+/**
+ * CourseStructureSpec
+ */
+export type CourseStructureSpec = {
+    /**
+     * Surveys
+     */
+    surveys: Array<CourseSurveySpec>;
+    /**
+     * Lessons
+     */
+    lessons: Array<CourseLessonSpec>;
+    /**
+     * Assessments
+     */
+    assessments: Array<CourseAssessmentSpec>;
+};
+
+/**
+ * CourseSurveySpec
+ */
+export type CourseSurveySpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Surveyid
+     */
+    surveyId: string;
+    /**
+     * Surveytitle
+     */
+    surveyTitle: string;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
+};
+
+/**
  * SurveyQuestionSchema
  */
 export type SurveyQuestionSchema = {
@@ -6048,6 +6339,7 @@ export type AssignmentV1StartAttemptData = {
     };
     query?: {
         media?: string;
+        mode?: string;
         course?: string;
     };
     url: '/api/v1/assignment/{id}/attempt';
@@ -6702,6 +6994,7 @@ export type CourseV1StartEngagementData = {
     };
     query?: {
         media?: string;
+        mode?: string;
     };
     url: '/api/v1/course/{id}/engage';
 };
@@ -6791,6 +7084,7 @@ export type DiscussionV1StartAttemptData = {
     };
     query?: {
         media?: string;
+        mode?: string;
         course?: string;
     };
     url: '/api/v1/discussion/{id}/attempt';
@@ -7041,6 +7335,7 @@ export type ExamV1StartAttemptData = {
     };
     query?: {
         media?: string;
+        mode?: string;
         course?: string;
     };
     url: '/api/v1/exam/{id}/attempt';
@@ -7887,6 +8182,7 @@ export type QuizV1StartAttemptData = {
     query?: {
         media?: string;
         course?: string;
+        mode?: string;
     };
     url: '/api/v1/quiz/{id}/attempt';
 };
@@ -8838,6 +9134,77 @@ export type StudioV1CreateMediaQuizResponses = {
 
 export type StudioV1CreateMediaQuizResponse = StudioV1CreateMediaQuizResponses[keyof StudioV1CreateMediaQuizResponses];
 
+export type StudioV1GetCourseData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}';
+};
+
+export type StudioV1GetCourseResponses = {
+    /**
+     * OK
+     */
+    200: CourseSpec;
+};
+
+export type StudioV1GetCourseResponse = StudioV1GetCourseResponses[keyof StudioV1GetCourseResponses];
+
+export type StudioV1SaveCourseData = {
+    /**
+     * MultiPartBodyParams
+     */
+    body: {
+        /**
+         * Thumbnail
+         *
+         * Max size: 3MB
+         */
+        thumbnail?: Blob | File;
+        data: CourseSaveSpec;
+    };
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/course';
+};
+
+export type StudioV1SaveCourseResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: string;
+};
+
+export type StudioV1SaveCourseResponse = StudioV1SaveCourseResponses[keyof StudioV1SaveCourseResponses];
+
+export type StudioV1CourseStructureData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/structure';
+};
+
+export type StudioV1CourseStructureResponses = {
+    /**
+     * OK
+     */
+    200: CourseStructureSpec;
+};
+
+export type StudioV1CourseStructureResponse = StudioV1CourseStructureResponses[keyof StudioV1CourseStructureResponses];
+
 export type SurveyV1GetSurveyData = {
     body?: never;
     path: {
@@ -8871,6 +9238,7 @@ export type SurveyV1SubmitData = {
     };
     query?: {
         media?: string;
+        mode?: string;
         course?: string;
     };
     url: '/api/v1/survey/{id}/submit';
@@ -8941,7 +9309,9 @@ export type SurveyV1SubmitAnonymousData = {
          */
         id: string;
     };
-    query?: never;
+    query?: {
+        mode?: string;
+    };
     url: '/api/v1/survey/{id}/anonymous/submit';
 };
 

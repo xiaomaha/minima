@@ -125,7 +125,7 @@ export const Quiz = (props: Props) => {
         )}
       </DataAction>
       <Show when={preview()}>
-        <QuizDialog id={staging.id} open={preview()} onClose={() => setPreview(false)} />
+        <QuizDialog id={staging.id} open={preview()} onClose={() => setPreview(false)} mode="preview" />
       </Show>
     </>
   )

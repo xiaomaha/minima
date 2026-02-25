@@ -10,6 +10,7 @@ from apps.discussion.models import Discussion
 from apps.exam.models import Exam
 from apps.quiz.models import Quiz
 from apps.studio.api.v1.assignment import router as assignment_router
+from apps.studio.api.v1.course import router as course_router
 from apps.studio.api.v1.discussion import router as discussion_router
 from apps.studio.api.v1.exam import router as exam_router
 from apps.studio.api.v1.media import router as media_router
@@ -58,3 +59,4 @@ router.add_router("", survey_router, tags=["studio"])
 router.add_router("", discussion_router, tags=["studio"])
 router.add_router("", assignment_router, tags=["studio"])
 router.add_router("", media_router, tags=["studio"])
+router.add_router("", course_router, tags=["studio"])

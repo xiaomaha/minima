@@ -24,6 +24,7 @@ import { Route as StudioQuizIndexRouteImport } from './routes/studio/quiz/index'
 import { Route as StudioMediaIndexRouteImport } from './routes/studio/media/index'
 import { Route as StudioExamIndexRouteImport } from './routes/studio/exam/index'
 import { Route as StudioDiscussionIndexRouteImport } from './routes/studio/discussion/index'
+import { Route as StudioCourseIndexRouteImport } from './routes/studio/course/index'
 import { Route as StudioAssignmentIndexRouteImport } from './routes/studio/assignment/index'
 import { Route as appDashboardIndexRouteImport } from './routes/(app)/dashboard/index'
 import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
@@ -117,6 +118,11 @@ const StudioExamIndexRoute = StudioExamIndexRouteImport.update({
 const StudioDiscussionIndexRoute = StudioDiscussionIndexRouteImport.update({
   id: '/discussion/',
   path: '/discussion/',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioCourseIndexRoute = StudioCourseIndexRouteImport.update({
+  id: '/course/',
+  path: '/course/',
   getParentRoute: () => StudioRouteRoute,
 } as any)
 const StudioAssignmentIndexRoute = StudioAssignmentIndexRouteImport.update({
@@ -252,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/survey/$id': typeof publicSurveyIdRoute
   '/dashboard/': typeof appDashboardIndexRoute
   '/studio/assignment/': typeof StudioAssignmentIndexRoute
+  '/studio/course/': typeof StudioCourseIndexRoute
   '/studio/discussion/': typeof StudioDiscussionIndexRoute
   '/studio/exam/': typeof StudioExamIndexRoute
   '/studio/media/': typeof StudioMediaIndexRoute
@@ -287,6 +294,7 @@ export interface FileRoutesByTo {
   '/survey/$id': typeof publicSurveyIdRoute
   '/dashboard': typeof appDashboardIndexRoute
   '/studio/assignment': typeof StudioAssignmentIndexRoute
+  '/studio/course': typeof StudioCourseIndexRoute
   '/studio/discussion': typeof StudioDiscussionIndexRoute
   '/studio/exam': typeof StudioExamIndexRoute
   '/studio/media': typeof StudioMediaIndexRoute
@@ -326,6 +334,7 @@ export interface FileRoutesById {
   '/(public)/survey/$id': typeof publicSurveyIdRoute
   '/(app)/dashboard/': typeof appDashboardIndexRoute
   '/studio/assignment/': typeof StudioAssignmentIndexRoute
+  '/studio/course/': typeof StudioCourseIndexRoute
   '/studio/discussion/': typeof StudioDiscussionIndexRoute
   '/studio/exam/': typeof StudioExamIndexRoute
   '/studio/media/': typeof StudioMediaIndexRoute
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
     | '/survey/$id'
     | '/dashboard/'
     | '/studio/assignment/'
+    | '/studio/course/'
     | '/studio/discussion/'
     | '/studio/exam/'
     | '/studio/media/'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/survey/$id'
     | '/dashboard'
     | '/studio/assignment'
+    | '/studio/course'
     | '/studio/discussion'
     | '/studio/exam'
     | '/studio/media'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/(public)/survey/$id'
     | '/(app)/dashboard/'
     | '/studio/assignment/'
+    | '/studio/course/'
     | '/studio/discussion/'
     | '/studio/exam/'
     | '/studio/media/'
@@ -561,6 +573,13 @@ declare module '@tanstack/solid-router' {
       path: '/discussion'
       fullPath: '/studio/discussion/'
       preLoaderRoute: typeof StudioDiscussionIndexRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/course/': {
+      id: '/studio/course/'
+      path: '/course'
+      fullPath: '/studio/course/'
+      preLoaderRoute: typeof StudioCourseIndexRouteImport
       parentRoute: typeof StudioRouteRoute
     }
     '/studio/assignment/': {
@@ -804,6 +823,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface StudioRouteRouteChildren {
   StudioAssignmentIndexRoute: typeof StudioAssignmentIndexRoute
+  StudioCourseIndexRoute: typeof StudioCourseIndexRoute
   StudioDiscussionIndexRoute: typeof StudioDiscussionIndexRoute
   StudioExamIndexRoute: typeof StudioExamIndexRoute
   StudioMediaIndexRoute: typeof StudioMediaIndexRoute
@@ -813,6 +833,7 @@ interface StudioRouteRouteChildren {
 
 const StudioRouteRouteChildren: StudioRouteRouteChildren = {
   StudioAssignmentIndexRoute: StudioAssignmentIndexRoute,
+  StudioCourseIndexRoute: StudioCourseIndexRoute,
   StudioDiscussionIndexRoute: StudioDiscussionIndexRoute,
   StudioExamIndexRoute: StudioExamIndexRoute,
   StudioMediaIndexRoute: StudioMediaIndexRoute,

@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, redirect } from '@tanstack/solid-router'
 import { createSignal } from 'solid-js'
+import * as v from 'valibot'
 import { PLATFORM_NAME } from '@/config'
 import { accountStore } from '@/routes/(app)/account/-store'
 import { DateLocaleProvider } from '@/shared/DateLocaleProvider'
@@ -13,6 +14,9 @@ const yearText = startYear === currentYear ? `${startYear}` : `${startYear}–${
 
 const RootLayout = () => {
   const { t } = useTranslation()
+
+  // valibot patch
+  v.setSpecificMessage(v.number, () => t('required'))
 
   const [policyOpen, setPolicyOpen] = createSignal(false)
   const forceOpen = () => accountStore.user?.agreementRequired === true

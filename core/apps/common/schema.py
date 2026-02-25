@@ -43,6 +43,13 @@ class LearningObjectMixinSchema(TimeStampedMixinSchema):
     verification_required: bool
 
 
+class AttemptMixinSchema(Schema):
+    started: datetime
+    active: bool
+    context: str
+    mode: str
+
+
 class GradeWorkflowMixinSchema(Schema):
     grade_due_days: int
     appeal_deadline_days: int

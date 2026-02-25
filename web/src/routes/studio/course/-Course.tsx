@@ -1,57 +1,47 @@
 import { IconExternalLink } from '@tabler/icons-solidjs'
-import { batch, createSignal, For, Show } from 'solid-js'
+import { batch, createSignal, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
-import * as v from 'valibot'
-import { type ExamSpec, studioV1SaveExam } from '@/api'
+import type * as v from 'valibot'
+import { type CourseSpec, studioV1SaveCourse } from '@/api'
 import { initCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID } from '../-context/ContentSuggestion'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { BooleanField, NumberField, RichTextField, TextField, ThumbnailField } from '../-studio/field'
+import { BooleanField, NumberField, RichTextField, SelectField, TextField, ThumbnailField } from '../-studio/field'
 import { Paper } from '../-studio/Paper'
-import { EmptyExam, questionFormats, vExamEditingSpec } from './-data'
+import { EmptyCourse, levelOptions, vCourseEditingSpec } from './-data'
 
 interface Props {
   onSave: (id: string) => Promise<void>
 }
 
-export const Exam = (props: Props) => {
+export const Course = (props: Props) => {
   const { t } = useTranslation()
 
-  const { source, staging } = useEditing<ExamSpec>()
+  const { source, staging } = useEditing<CourseSpec>()
 
-  const schema = vExamEditingSpec.entries
+  const schema = vCourseEditingSpec.entries
 
   const [thumbnail, setThumbnail] = createSignal<File | undefined>()
 
-  const saveExam = async (validated: v.InferOutput<typeof vExamEditingSpec>) => {
-    const { data } = await studioV1SaveExam({ body: { data: { id: staging.id, ...validated }, thumbnail: thumbnail() } })
+  const saveCourse = async (validated: v.InferOutput<typeof vCourseEditingSpec>) => {
+    const { data } = await studioV1SaveCourse({ body: { data: { id: staging.id, ...validated }, thumbnail: thumbnail() } })
     setThumbnail(undefined)
-
-    // save without question set
-    const editingQuestionSet = structuredClone(unwrap(staging.questionSet))
 
     if (staging.id === EMPTY_CONTENT_ID) {
       batch(() => {
-        initCachedStore(
-          'studioV1GetExam',
-          { path: { id: data } },
-          structuredClone(unwrap({ ...staging, id: data, questionSet: [] })),
-        )
-        modifyMutable(staging, reconcile(structuredClone(EmptyExam())))
+        initCachedStore('studioV1GetCourse', { path: { id: data } }, structuredClone(unwrap({ ...staging, id: data })))
+        modifyMutable(staging, reconcile(structuredClone(EmptyCourse())))
       })
-      // after onSave
-      queueMicrotask(() => (staging.questionSet = editingQuestionSet))
     } else {
-      modifyMutable(source, reconcile(structuredClone(unwrap({ ...staging, questionSet: source.questionSet }))))
+      modifyMutable(source, reconcile(structuredClone(unwrap(staging))))
     }
-
     props.onSave(data)
   }
 
   return (
-    <DataAction rootKey={[]} excludeKeys={[['questionSet']]} label={t('Exam')} schema={vExamEditingSpec}>
+    <DataAction rootKey={[]} label={t('Course')} schema={vCourseEditingSpec}>
       {(status, actions) => (
         <div class="relative">
           <div class="flex gap-4 items-center px-4 right-full top-0 min-h-12 absolute z-1">
@@ -65,22 +55,24 @@ export const Exam = (props: Props) => {
 
             <ThumbnailField path={['thumbnail']} label={t('Thumbnail')} onFileSelect={setThumbnail} required />
 
-            <div class="flex gap-4">
-              <BooleanField path={['featured']} label={t('Featured')} schema={schema.featured} />
+            <TextField path={['objective']} label={t('Objective')} schema={schema.objective} multiline />
+            <TextField path={['previewUrl']} label={t('Preview URL')} schema={schema.previewUrl} />
+
+            <div class="grid grid-cols-3 gap-4">
+              <BooleanField path={['featured']} label={t('Featured')} schema={schema.featured} class="self-start" />
               <BooleanField
                 path={['verificationRequired']}
                 label={t('Verification required')}
                 schema={schema.verificationRequired}
+                class="self-start"
               />
+              <SelectField path={['level']} label={t('Level')} schema={schema.level} options={levelOptions} />
             </div>
 
             <div class="grid grid-cols-3 gap-4">
               <NumberField path={['passingPoint']} label={t('Passing point')} schema={schema.passingPoint} />
               <NumberField path={['maxAttempts']} label={t('Max attempts')} schema={schema.maxAttempts} />
-              <NumberField path={['durationSeconds']} label={t('Duration (seconds)')} schema={schema.durationSeconds} />
-              <NumberField path={['gradeDueDays']} label={t('Grade due days')} schema={schema.gradeDueDays} />
-              <NumberField path={['appealDeadlineDays']} label={t('Appeal deadline')} schema={schema.appealDeadlineDays} />
-              <NumberField path={['confirmDueDays']} label={t('Confirm due days')} schema={schema.confirmDueDays} />
+              <NumberField path={['effortHours']} label={t('Effort hours')} schema={schema.effortHours} />
             </div>
 
             <div class="divider" />
@@ -90,30 +82,10 @@ export const Exam = (props: Props) => {
 
             <div class="divider" />
 
-            <TextField
-              path={['questionPool', 'description']}
-              label={t('Question pool description')}
-              schema={schema.questionPool.entries.description}
-              multiline
-            />
-            <div class="grid grid-cols-4 gap-4">
-              <For each={questionFormats}>
-                {(format) => (
-                  <NumberField
-                    path={['questionPool', 'composition', format]}
-                    label={t(format)}
-                    schema={v.pipe(v.number(), v.integer(), v.minValue(0, t('at least 0')))}
-                  />
-                )}
-              </For>
-            </div>
-
-            <div class="divider" />
-
             <div class="flex gap-2 items-center justify-end">
               <Show when={source.id !== EMPTY_CONTENT_ID}>
                 <a
-                  href={`/exam/${source.id}/session?mode=preview`}
+                  href={`/course/${source.id}/session?mode=preview`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="btn btn-primary btn-sm btn-link mr-auto no-underline"
@@ -131,7 +103,7 @@ export const Exam = (props: Props) => {
               <actions.Reset />
 
               <fieldset disabled={false}>
-                <actions.Save onSave={saveExam} />
+                <actions.Save onSave={saveCourse} />
               </fieldset>
             </div>
           </Paper>

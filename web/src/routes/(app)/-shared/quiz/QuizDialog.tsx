@@ -1,6 +1,5 @@
 import { Match, Show, Switch } from 'solid-js'
 import { type LearningSessionStep, quizV1GetSession } from '@/api'
-import { accessContextParam } from '@/context'
 import { Dialog } from '@/shared/Diaglog'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -13,6 +12,8 @@ interface Props {
   open: boolean
   onClose: () => void
   inlineContext?: { media: string } //  inline quiz inside media
+  // Quiz runs in a dialog, so mode cannot be passed via location
+  mode?: string
 }
 
 const SITTING = 1 as LearningSessionStep
@@ -22,7 +23,7 @@ export const QuizDialog = (props: Props) => {
 
   const [session, { setStore }] = createCachedStore(
     'quizV1GetSession',
-    () => ({ path: { id: props.id }, query: { ...accessContextParam(), ...props.inlineContext } }),
+    () => ({ path: { id: props.id }, query: { ...props.inlineContext } }),
     async (options) => {
       const { data } = await quizV1GetSession(options)
       return data
@@ -38,7 +39,7 @@ export const QuizDialog = (props: Props) => {
           {(ss) => (
             <Switch>
               <Match when={ss().step < SITTING}>
-                <GettingStarted session={ss()} setStore={setStore} inlineContext={props.inlineContext} />
+                <GettingStarted session={ss()} setStore={setStore} inlineContext={props.inlineContext} mode={props.mode} />
               </Match>
 
               <Match when={ss().step >= SITTING}>

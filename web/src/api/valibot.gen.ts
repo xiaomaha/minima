@@ -11,8 +11,8 @@ export const vUserSchema = v.object({
     id: v.string(),
     email: v.string(),
     name: v.string(),
-    avatar: v.union([v.string(), v.null()]),
-    birthDate: v.union([v.pipe(v.string(), v.isoDate()), v.null()]),
+    avatar: v.nullable(v.string()),
+    birthDate: v.nullable(v.pipe(v.string(), v.isoDate())),
     nickname: v.string(),
     language: v.picklist([
         'en',
@@ -23,9 +23,9 @@ export const vUserSchema = v.object({
     preferences: v.optional(v.object({})),
     isActive: v.boolean(),
     hasPassword: v.boolean(),
-    otpEnabled: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    tokenExpires: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    agreementRequired: v.union([v.boolean(), v.null()]),
+    otpEnabled: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    tokenExpires: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    agreementRequired: v.nullable(v.boolean()),
     roles: v.array(v.string())
 });
 
@@ -77,7 +77,7 @@ export const vUserUpdateSchema = v.object({
     name: v.optional(v.pipe(v.string(), v.minLength(2), v.maxLength(50))),
     nickname: v.optional(v.string()),
     phone: v.optional(v.string()),
-    birthDate: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
+    birthDate: v.nullish(v.pipe(v.string(), v.isoDate())),
     language: v.optional(v.picklist([
         'en',
         'ko',
@@ -173,7 +173,7 @@ export const vAppealSchema = v.object({
     questionId: v.pipe(v.number(), v.integer()),
     explanation: v.string(),
     review: v.string(),
-    closed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    closed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     path: v.string()
 });
 
@@ -189,8 +189,8 @@ export const vAssignmentGradeSchema = v.object({
     score: v.number(),
     passed: v.boolean(),
     feedback: v.record(v.string(), v.string()),
-    completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    confirmed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.pipe(v.number(), v.integer())
 });
 
@@ -236,7 +236,7 @@ export const vOwnerSchema = v.object({
     id: v.string(),
     name: v.string(),
     email: v.string(),
-    avatar: v.union([v.string(), v.null()]),
+    avatar: v.nullable(v.string()),
     nickname: v.string()
 });
 
@@ -249,10 +249,10 @@ export const vAssignmentSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -307,7 +307,7 @@ export const vAssignmentQuestionSchema = v.object({
     supplement: v.string(),
     attachmentFileCount: v.pipe(v.number(), v.integer()),
     attachmentFileTypes: v.array(v.string()),
-    sampleAttachment: v.union([v.string(), v.null()]),
+    sampleAttachment: v.nullable(v.string()),
     plagiarismThreshold: v.pipe(v.number(), v.integer()),
     solution: vAssignmentSolutionSchema
 });
@@ -316,10 +316,12 @@ export const vAssignmentQuestionSchema = v.object({
  * AssignmentAttemptSchema
  */
 export const vAssignmentAttemptSchema = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    question: vAssignmentQuestionSchema,
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
+    context: v.string(),
+    mode: v.string(),
+    id: v.pipe(v.number(), v.integer()),
+    question: vAssignmentQuestionSchema,
     retry: v.pipe(v.number(), v.integer())
 });
 
@@ -372,7 +374,7 @@ export const vAssistantNoteSaveSchema = v.object({
 export const vChatMessageCreateSchema = v.object({
     message: v.string(),
     path: v.string(),
-    chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()]))
+    chatId: v.nullish(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -380,7 +382,7 @@ export const vChatMessageCreateSchema = v.object({
  */
 export const vChatMessageUpdateSchema = v.object({
     bookmarked: v.optional(v.boolean()),
-    rating: v.optional(v.union([v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(5)), v.null()]))
+    rating: v.nullish(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(5)))
 });
 
 /**
@@ -391,7 +393,7 @@ export const vChatSchema = v.object({
     title: v.string(),
     active: v.boolean(),
     messageCount: v.pipe(v.number(), v.integer()),
-    lastMessage: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    lastMessage: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -399,7 +401,7 @@ export const vChatSchema = v.object({
  */
 export const vChatListSchema = v.object({
     chats: v.array(vChatSchema),
-    assistantNote: v.union([v.string(), v.null()])
+    assistantNote: v.nullable(v.string())
 });
 
 /**
@@ -420,9 +422,9 @@ export const vChatMessageSchema = v.object({
     message: v.string(),
     response: v.string(),
     path: v.string(),
-    completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     bookmarked: v.boolean(),
-    rating: v.union([v.pipe(v.number(), v.integer()), v.null()])
+    rating: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -602,10 +604,10 @@ export const vQuizSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -654,7 +656,7 @@ export const vSubtitleSchema = v.object({
  */
 export const vWatchOutSchema = v.object({
     lastPosition: v.number(),
-    watchBits: v.optional(v.union([v.string(), v.null()]))
+    watchBits: v.nullish(v.string())
 });
 
 /**
@@ -736,7 +738,7 @@ export const vSearchedMediaSchema = v.object({
     owner: vOwnerSchema,
     url: v.string(),
     accessible: v.boolean(),
-    matchedLines: v.union([v.array(vMatchedLineSchema), v.null()])
+    matchedLines: v.nullable(v.array(vMatchedLineSchema))
 });
 
 /**
@@ -768,11 +770,12 @@ export const vCourseGradebookSchema = v.object({
  * CourseEngagementSchema
  */
 export const vCourseEngagementSchema = v.object({
-    created: v.pipe(v.string(), v.isoTimestamp()),
-    modified: v.pipe(v.string(), v.isoTimestamp()),
+    started: v.pipe(v.string(), v.isoTimestamp()),
+    active: v.boolean(),
+    context: v.string(),
+    mode: v.string(),
     id: v.pipe(v.number(), v.integer()),
-    gradebook: v.optional(vCourseGradebookSchema),
-    active: v.boolean()
+    gradebook: v.optional(vCourseGradebookSchema)
 });
 
 /**
@@ -796,8 +799,8 @@ export const vGradingCriterionSchema = v.object({
     weight: v.number(),
     normalizedWeight: v.number(),
     itemId: v.string(),
-    startDate: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    endDate: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    startDate: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    endDate: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -806,9 +809,8 @@ export const vGradingCriterionSchema = v.object({
 export const vLessonMediaSchema = v.object({
     id: v.string(),
     title: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
-    format: v.string(),
-    ordering: v.pipe(v.number(), v.integer())
+    thumbnail: v.nullable(v.string()),
+    format: v.string()
 });
 
 /**
@@ -842,10 +844,10 @@ export const vCourseSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -855,7 +857,7 @@ export const vCourseSchema = v.object({
     lessons: v.array(vLessonSchema),
     surveys: v.array(vCourseSurveySchema),
     objective: v.string(),
-    previewUrl: v.union([v.string(), v.null()]),
+    previewUrl: v.nullable(v.string()),
     effortHours: v.pipe(v.number(), v.integer()),
     level: vLevelChoices
 });
@@ -899,7 +901,7 @@ export const vCourseInstructorSchema = v.object({
     name: v.string(),
     about: v.string(),
     bio: v.array(v.string()),
-    avatar: v.union([v.string(), v.null()]),
+    avatar: v.nullable(v.string()),
     lead: v.boolean()
 });
 
@@ -923,7 +925,7 @@ export const vRelatedCourseSchema = v.object({
     id: v.string(),
     title: v.string(),
     description: v.string(),
-    thumbnail: v.union([v.string(), v.null()])
+    thumbnail: v.nullable(v.string())
 });
 
 /**
@@ -935,17 +937,17 @@ export const vCourseDetailSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
     id: v.string(),
     owner: vOwnerSchema,
     objective: v.string(),
-    previewUrl: v.union([v.string(), v.null()]),
+    previewUrl: v.nullable(v.string()),
     effortHours: v.pipe(v.number(), v.integer()),
     level: vLevelChoices,
     faqItems: v.array(vFaqItemSchema),
@@ -990,8 +992,8 @@ export const vDiscussionGradeSchema = v.object({
     score: v.number(),
     passed: v.boolean(),
     feedback: vDiscussionFeedbackSchema,
-    completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    confirmed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.pipe(v.number(), v.integer())
 });
 
@@ -1023,10 +1025,12 @@ export const vDiscussionQuestionSchema = v.object({
  * DiscussionAttemptSchema
  */
 export const vDiscussionAttemptSchema = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    question: vDiscussionQuestionSchema,
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
+    context: v.string(),
+    mode: v.string(),
+    id: v.pipe(v.number(), v.integer()),
+    question: vDiscussionQuestionSchema,
     retry: v.pipe(v.number(), v.integer())
 });
 
@@ -1039,10 +1043,10 @@ export const vDiscussionSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -1134,7 +1138,7 @@ export const vDiscussionOwnPostSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     title: v.string(),
     body: v.string(),
-    parentId: v.union([v.pipe(v.number(), v.integer()), v.null()])
+    parentId: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -1149,8 +1153,8 @@ export const vExamGradeSchema = v.object({
     score: v.number(),
     passed: v.boolean(),
     feedback: v.record(v.string(), v.string()),
-    completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    confirmed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.pipe(v.number(), v.integer())
 });
 
@@ -1188,11 +1192,13 @@ export const vExamQuestionSchema = v.object({
  * ExamAttemptSchema
  */
 export const vExamAttemptSchema = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    savedAnswers: v.union([v.record(v.string(), v.string()), v.null()]),
-    questions: v.array(vExamQuestionSchema),
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
+    context: v.string(),
+    mode: v.string(),
+    id: v.pipe(v.number(), v.integer()),
+    savedAnswers: v.nullable(v.record(v.string(), v.string())),
+    questions: v.array(vExamQuestionSchema),
     retry: v.pipe(v.number(), v.integer())
 });
 
@@ -1205,7 +1211,7 @@ export const vExamSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
     durationSeconds: v.pipe(v.number(), v.integer()),
@@ -1278,10 +1284,10 @@ export const vEnrollmentContentSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -1331,7 +1337,7 @@ export const vCatalogSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     name: v.string(),
     description: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     active: v.boolean(),
     public: v.boolean(),
     availableFrom: v.pipe(v.string(), v.isoTimestamp()),
@@ -1342,7 +1348,7 @@ export const vCatalogSchema = v.object({
         'personal',
         'cohort'
     ]),
-    cohortName: v.union([v.string(), v.null()])
+    cohortName: v.nullable(v.string())
 });
 
 /**
@@ -1354,10 +1360,10 @@ export const vCatalogContentSchema = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -1436,7 +1442,7 @@ export const vAnnounceSchema = v.object({
     title: v.string(),
     body: v.string(),
     pinned: v.boolean(),
-    read: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    read: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -1454,13 +1460,9 @@ export const vPagedAnnounceSchema = v.object({
  * InquiryFilterSchema
  */
 export const vInquiryFilterSchema = v.object({
-    contentId: v.optional(v.union([
-        v.string(),
-        v.pipe(v.number(), v.integer()),
-        v.null()
-    ])),
-    appLabel: v.optional(v.union([v.string(), v.null()])),
-    model: v.optional(v.union([v.string(), v.null()]))
+    contentId: v.nullish(v.union([v.string(), v.pipe(v.number(), v.integer())])),
+    appLabel: v.nullish(v.string()),
+    model: v.nullish(v.string())
 });
 
 /**
@@ -1472,7 +1474,7 @@ export const vInquiryResponseSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     writer: vOwnerSchema,
     answer: v.string(),
-    solved: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    solved: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -1553,7 +1555,7 @@ export const vMessageSchema = v.object({
     title: v.string(),
     body: v.string(),
     data: vMessageDataSchema,
-    read: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()])
+    read: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -1600,7 +1602,7 @@ export const vSitePolicyVersionSchema = v.object({
     body: v.string(),
     version: v.string(),
     effectiveDate: v.pipe(v.string(), v.isoTimestamp()),
-    accepted: v.optional(v.union([v.boolean(), v.null()]))
+    accepted: v.nullish(v.boolean())
 });
 
 /**
@@ -1636,7 +1638,7 @@ export const vThreadSchema = v.object({
     commentCount: v.pipe(v.number(), v.integer()),
     ratingCount: v.pipe(v.number(), v.integer()),
     ratingAvg: v.number(),
-    closed: v.union([v.boolean(), v.null()]),
+    closed: v.nullable(v.boolean()),
     path: v.string()
 });
 
@@ -1659,12 +1661,12 @@ export const vCommentSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
-    parentId: v.union([v.pipe(v.number(), v.integer()), v.null()]),
+    parentId: v.nullable(v.pipe(v.number(), v.integer())),
     writer: vOwnerSchema,
     comment: v.string(),
     pinned: v.boolean(),
     deleted: v.boolean(),
-    rating: v.union([v.pipe(v.number(), v.integer()), v.null()])
+    rating: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -1674,12 +1676,12 @@ export const vCommentNestedSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
-    parentId: v.union([v.pipe(v.number(), v.integer()), v.null()]),
+    parentId: v.nullable(v.pipe(v.number(), v.integer())),
     writer: vOwnerSchema,
     comment: v.string(),
     pinned: v.boolean(),
     deleted: v.boolean(),
-    rating: v.union([v.pipe(v.number(), v.integer()), v.null()]),
+    rating: v.nullable(v.pipe(v.number(), v.integer())),
     children: v.array(vCommentSchema)
 });
 
@@ -1702,10 +1704,10 @@ export const vCommentSavedSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     comment: v.string(),
-    parentId: v.union([v.pipe(v.number(), v.integer()), v.null()]),
+    parentId: v.nullable(v.pipe(v.number(), v.integer())),
     pinned: v.boolean(),
     deleted: v.boolean(),
-    rating: v.union([v.pipe(v.number(), v.integer()), v.null()])
+    rating: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -1714,8 +1716,8 @@ export const vCommentSavedSchema = v.object({
 export const vCommentSaveSchema = v.object({
     id: v.optional(v.pipe(v.number(), v.integer())),
     comment: v.optional(v.pipe(v.string(), v.minLength(5), v.maxLength(1000))),
-    rating: v.optional(v.union([v.pipe(v.number(), v.minValue(1), v.maxValue(5)), v.null()])),
-    parentId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()]))
+    rating: v.nullish(v.pipe(v.number(), v.minValue(1), v.maxValue(5))),
+    parentId: v.nullish(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -1738,11 +1740,11 @@ export const vCommentBriefSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     commentBrief: v.string(),
-    parentId: v.union([v.pipe(v.number(), v.integer()), v.null()]),
+    parentId: v.nullable(v.pipe(v.number(), v.integer())),
     thread: vCommentThreadSchema,
     pinned: v.boolean(),
     deleted: v.boolean(),
-    rating: v.union([v.pipe(v.number(), v.integer()), v.null()])
+    rating: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
@@ -1839,8 +1841,8 @@ export const vQuizGradeSchema = v.object({
     score: v.number(),
     passed: v.boolean(),
     feedback: v.record(v.string(), v.string()),
-    completed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
-    confirmed: v.union([v.pipe(v.string(), v.isoTimestamp()), v.null()]),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.pipe(v.number(), v.integer())
 });
 
@@ -1859,10 +1861,12 @@ export const vQuizQuestionSchema = v.object({
  * QuizAttemptSchema
  */
 export const vQuizAttemptSchema = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    questions: v.array(vQuizQuestionSchema),
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
+    context: v.string(),
+    mode: v.string(),
+    id: v.pipe(v.number(), v.integer()),
+    questions: v.array(vQuizQuestionSchema),
     retry: v.pipe(v.number(), v.integer())
 });
 
@@ -2000,7 +2004,7 @@ export const vExamSpec = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
     durationSeconds: v.number(),
@@ -2096,10 +2100,10 @@ export const vQuizSpec = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -2185,10 +2189,10 @@ export const vSurveySpec = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -2274,10 +2278,10 @@ export const vDiscussionSpec = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -2338,7 +2342,7 @@ export const vAssignmentQuestionSpec = v.object({
     attachmentFileCount: v.pipe(v.number(), v.integer()),
     attachmentFileTypes: v.array(v.string()),
     plagiarismThreshold: v.pipe(v.number(), v.integer()),
-    sampleAttachment: v.union([v.string(), v.null()])
+    sampleAttachment: v.nullable(v.string())
 });
 
 /**
@@ -2358,10 +2362,10 @@ export const vAssignmentSpec = v.object({
     title: v.string(),
     description: v.string(),
     audience: v.string(),
-    thumbnail: v.union([v.string(), v.null()]),
+    thumbnail: v.nullable(v.string()),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -2453,6 +2457,106 @@ export const vMediaSaveSpec = v.object({
 });
 
 /**
+ * CourseSpec
+ */
+export const vCourseSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    title: v.string(),
+    description: v.string(),
+    audience: v.string(),
+    thumbnail: v.nullable(v.string()),
+    featured: v.boolean(),
+    format: v.string(),
+    durationSeconds: v.nullable(v.number()),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    maxAttempts: v.pipe(v.number(), v.integer()),
+    verificationRequired: v.boolean(),
+    id: v.string(),
+    objective: v.string(),
+    previewUrl: v.nullable(v.string()),
+    effortHours: v.pipe(v.number(), v.integer()),
+    level: vLevelChoices,
+    owner: vOwnerSpec,
+    honorCode: vHonorCodeSpec
+});
+
+/**
+ * CourseSaveSpec
+ */
+export const vCourseSaveSpec = v.object({
+    id: v.optional(v.string()),
+    title: v.string(),
+    description: v.string(),
+    audience: v.string(),
+    featured: v.boolean(),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    maxAttempts: v.pipe(v.number(), v.integer()),
+    verificationRequired: v.boolean(),
+    objective: v.string(),
+    previewUrl: v.pipe(v.string(), v.url(), v.minLength(1), v.maxLength(2083)),
+    effortHours: v.pipe(v.number(), v.integer()),
+    level: vLevelChoices,
+    honorCode: vHonorCodeSpec
+});
+
+/**
+ * CourseAssessmentSpec
+ */
+export const vCourseAssessmentSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    itemId: v.string(),
+    itemTitle: v.string(),
+    itemAppLabel: v.string(),
+    itemModel: v.string(),
+    weight: v.pipe(v.number(), v.integer()),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * CourseLessonMediaSpec
+ */
+export const vCourseLessonMediaSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    mediaTitle: v.string(),
+    mediaId: v.string(),
+    ordering: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * CourseLessonSpec
+ */
+export const vCourseLessonSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    title: v.string(),
+    description: v.string(),
+    medias: v.array(vCourseLessonMediaSpec),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * CourseSurveySpec
+ */
+export const vCourseSurveySpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    surveyId: v.string(),
+    surveyTitle: v.string(),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * CourseStructureSpec
+ */
+export const vCourseStructureSpec = v.object({
+    surveys: v.array(vCourseSurveySpec),
+    lessons: v.array(vCourseLessonSpec),
+    assessments: v.array(vCourseAssessmentSpec)
+});
+
+/**
  * SurveyQuestionSchema
  */
 export const vSurveyQuestionSchema = v.object({
@@ -2476,7 +2580,7 @@ export const vSurveySchema = v.object({
     thumbnail: v.string(),
     featured: v.boolean(),
     format: v.string(),
-    durationSeconds: v.union([v.number(), v.null()]),
+    durationSeconds: v.nullable(v.number()),
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
@@ -2557,7 +2661,7 @@ export const vAccountV1UpdateMeResponse = vUserSchema;
 
 export const vAccountV1UploadAvatarData = v.object({
     body: v.object({
-        avatarFile: v.optional(v.union([v.string(), v.null()]))
+        avatarFile: v.nullish(v.string())
     }),
     path: v.optional(v.never()),
     query: v.optional(v.never())
@@ -2568,7 +2672,7 @@ export const vAccountV1UploadAvatarData = v.object({
  *
  * OK
  */
-export const vAccountV1UploadAvatarResponse = v.union([v.string(), v.null()]);
+export const vAccountV1UploadAvatarResponse = v.nullable(v.string());
 
 export const vAccountV1RequestEmailChangeData = v.object({
     body: vRequestEmailChangeSchema,
@@ -2657,6 +2761,7 @@ export const vAssignmentV1StartAttemptData = v.object({
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
+        mode: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -2706,7 +2811,7 @@ export const vAssistantV1ChatMessageData = v.object({
     body: v.object({
         message: v.string(),
         path: v.string(),
-        chatId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
+        chatId: v.nullish(v.pipe(v.number(), v.integer())),
         files: v.optional(v.array(v.string()))
     }),
     path: v.optional(v.never()),
@@ -2954,8 +3059,8 @@ export const vContentV1GetWatchMediasData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        start: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
-        end: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
+        start: v.nullish(v.pipe(v.string(), v.isoDate())),
+        end: v.nullish(v.pipe(v.string(), v.isoDate())),
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
     }))
@@ -3019,7 +3124,8 @@ export const vCourseV1StartEngagementData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string())
+        media: v.optional(v.string()),
+        mode: v.optional(v.string())
     }))
 });
 
@@ -3077,6 +3183,7 @@ export const vDiscussionV1StartAttemptData = v.object({
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
+        mode: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3211,6 +3318,7 @@ export const vExamV1StartAttemptData = v.object({
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
+        mode: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3350,8 +3458,8 @@ export const vLearningV1GetReportData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        start: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()])),
-        end: v.optional(v.union([v.pipe(v.string(), v.isoDate()), v.null()]))
+        start: v.nullish(v.pipe(v.string(), v.isoDate())),
+        end: v.nullish(v.pipe(v.string(), v.isoDate()))
     }))
 });
 
@@ -3386,13 +3494,9 @@ export const vOperationV1GetInquiriesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        contentId: v.optional(v.union([
-            v.string(),
-            v.pipe(v.number(), v.integer()),
-            v.null()
-        ])),
-        appLabel: v.optional(v.union([v.string(), v.null()])),
-        model: v.optional(v.union([v.string(), v.null()])),
+        contentId: v.nullish(v.union([v.string(), v.pipe(v.number(), v.integer())])),
+        appLabel: v.nullish(v.string()),
+        model: v.nullish(v.string()),
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
     }))
@@ -3483,7 +3587,7 @@ export const vOperationV1EffectivePoliciesData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
-        userId: v.optional(v.union([v.string(), v.null()]))
+        userId: v.nullish(v.string())
     }))
 });
 
@@ -3546,8 +3650,8 @@ export const vOperationV1SaveCommentData = v.object({
     body: v.object({
         id: v.optional(v.pipe(v.number(), v.integer())),
         comment: v.optional(v.pipe(v.string(), v.minLength(5), v.maxLength(1000))),
-        rating: v.optional(v.union([v.pipe(v.number(), v.minValue(1), v.maxValue(5)), v.null()])),
-        parentId: v.optional(v.union([v.pipe(v.number(), v.integer()), v.null()])),
+        rating: v.nullish(v.pipe(v.number(), v.minValue(1), v.maxValue(5))),
+        parentId: v.nullish(v.pipe(v.number(), v.integer())),
         files: v.optional(v.array(v.string()))
     }),
     path: v.object({
@@ -3660,7 +3764,8 @@ export const vQuizV1StartAttemptData = v.object({
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
-        course: v.optional(v.string())
+        course: v.optional(v.string()),
+        mode: v.optional(v.string())
     }))
 });
 
@@ -4174,6 +4279,48 @@ export const vStudioV1CreateMediaQuizData = v.object({
  */
 export const vStudioV1CreateMediaQuizResponse = v.string();
 
+export const vStudioV1GetCourseData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vStudioV1GetCourseResponse = vCourseSpec;
+
+export const vStudioV1SaveCourseData = v.object({
+    body: v.object({
+        thumbnail: v.optional(v.string()),
+        data: vCourseSaveSpec
+    }),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseResponse = v.string();
+
+export const vStudioV1CourseStructureData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vStudioV1CourseStructureResponse = vCourseStructureSpec;
+
 export const vSurveyV1GetSurveyData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -4196,6 +4343,7 @@ export const vSurveyV1SubmitData = v.object({
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
+        mode: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -4235,7 +4383,9 @@ export const vSurveyV1SubmitAnonymousData = v.object({
     path: v.object({
         id: v.string()
     }),
-    query: v.optional(v.never())
+    query: v.optional(v.object({
+        mode: v.optional(v.string())
+    }))
 });
 
 export const vSurveyV1ResultsAnonymousData = v.object({

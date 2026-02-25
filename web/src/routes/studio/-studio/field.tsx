@@ -192,6 +192,7 @@ interface SelectFieldProps extends FieldProps {
 }
 
 export const SelectField = (props: SelectFieldProps) => {
+  const { t } = useTranslation()
   const { source, staging, fieldState } = useEditing()
 
   const value = () => getNestedValue(staging, props.path) as string | undefined
@@ -234,7 +235,9 @@ export const SelectField = (props: SelectFieldProps) => {
         <option value="" disabled selected>
           {props.label}
         </option>
-        <For each={Object.keys(props.options)}>{(option) => <option value={option}>{props.options[option]}</option>}</For>
+        <For each={Object.keys(props.options)}>
+          {(option) => <option value={option}>{t(props.options[option] ?? '')}</option>}
+        </For>
       </select>
       <Show when={hasError()}>
         <div class="bg-transparent text-xs ml-3 mt-0.5 text-base-content/40 flex items-center gap-2">

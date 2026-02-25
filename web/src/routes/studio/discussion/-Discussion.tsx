@@ -101,7 +101,7 @@ export const Discussion = (props: Props) => {
             <div class="flex gap-2 items-center justify-end">
               <Show when={source.id !== EMPTY_CONTENT_ID}>
                 <a
-                  href={`/discussion/${source.id}/session`}
+                  href={`/discussion/${source.id}/session?mode=preview`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="btn btn-primary btn-sm btn-link mr-auto no-underline"

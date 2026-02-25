@@ -1,7 +1,7 @@
 import * as v from 'valibot'
 import type { ExamQuestionFormatChoices, ExamQuestionSpec, ExamSpec } from '@/api'
 import { vExamQuestionFormatChoices } from '@/api/valibot.gen'
-import i18next from '@/i18n'
+import { lazyT } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID } from '../-context/ContentSuggestion'
 
 export const EmptyExam = (): ExamSpec => {
@@ -9,7 +9,7 @@ export const EmptyExam = (): ExamSpec => {
     id: EMPTY_CONTENT_ID,
     created: '',
     modified: '',
-    title: i18next.t('New exam draft'),
+    title: lazyT('New exam draft')(),
     description: '',
     audience: '',
     thumbnail: '',
@@ -38,7 +38,7 @@ export const EmptyQuestion = (format: ExamQuestionFormatChoices): ExamQuestionSp
   const newId = -++questionSequence
   return {
     id: newId,
-    question: `${i18next.t('New question draft')} ${-newId}`,
+    question: `${lazyT('New question draft')} ${-newId}`,
     supplement: '',
     format: format,
     options: format === 'single_choice' ? ['', '', '', '', ''] : [],
@@ -54,10 +54,8 @@ export const EmptyQuestion = (format: ExamQuestionFormatChoices): ExamQuestionSp
 // not field but record
 export const questionFormats = ['single_choice', 'number_input', 'text_input', 'essay'] as const
 
-const REQUIRED = i18next.t('required')
-const AT_LEAST_ZERO = i18next.t('at least 0')
-
-v.setSpecificMessage(v.number, () => REQUIRED)
+const REQUIRED = lazyT('required')
+const AT_LEAST_ZERO = lazyT('at least 0')
 
 export const vExamEditingSpec = v.object({
   title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
@@ -68,15 +66,10 @@ export const vExamEditingSpec = v.object({
   durationSeconds: v.pipe(
     v.number(),
     v.integer(),
-    v.minValue(60, i18next.t('at least 60 seconds')),
-    v.maxValue(60 * 60 * 24, i18next.t('at most {{max}} seconds', { max: 60 * 60 * 24 })),
+    v.minValue(60, lazyT('at least 60 seconds')),
+    v.maxValue(60 * 60 * 24, lazyT('at most {{max}} seconds', { max: 60 * 60 * 24 })),
   ),
-  passingPoint: v.pipe(
-    v.number(),
-    v.integer(),
-    v.minValue(0, AT_LEAST_ZERO),
-    v.maxValue(100, i18next.t('at most 100')),
-  ),
+  passingPoint: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO), v.maxValue(100, lazyT('at most 100'))),
   maxAttempts: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   gradeDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   appealDeadlineDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
@@ -98,7 +91,7 @@ export const vExamQuestionEditingSpec = v.pipe(
     question: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
     supplement: v.string(),
     options: v.array(v.string()),
-    point: v.pipe(v.number(), v.integer(), v.minValue(1, i18next.t('at least 1'))),
+    point: v.pipe(v.number(), v.integer(), v.minValue(1, lazyT('at least 1'))),
     solution: v.object({
       correctAnswers: v.array(v.pipe(v.string(), v.nonEmpty(REQUIRED))),
       correctCriteria: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
@@ -111,13 +104,13 @@ export const vExamQuestionEditingSpec = v.pipe(
       return validOptions.length >= 2 && validOptions.length <= 5
     }
     return true
-  }, i18next.t('single_choice format requires 2-5 options with at least 1 character each')),
+  }, lazyT('single_choice format requires 2-5 options with at least 1 character each')),
   v.check((data) => {
     if (['single_choice', 'number_input'].includes(data.format)) {
       return data.solution.correctAnswers.filter((s) => s).length >= 1
     }
     return true
-  }, i18next.t('single_choice and number_input format requires at least 1 correct answer')),
+  }, lazyT('single_choice and number_input format requires at least 1 correct answer')),
   v.check((data) => {
     if (data.format === 'single_choice') {
       return data.solution.correctAnswers.every((ans) => {
@@ -128,5 +121,5 @@ export const vExamQuestionEditingSpec = v.pipe(
       })
     }
     return true
-  }, i18next.t('Correct answers must be valid option indices')),
+  }, lazyT('Correct answers must be valid option indices')),
 )

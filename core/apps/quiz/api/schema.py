@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Annotated
 
 from pydantic.fields import Field
@@ -7,6 +6,7 @@ from pydantic.root_model import RootModel
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import (
     AccessDateSchema,
+    AttemptMixinSchema,
     GradeFieldMixinSchema,
     LearningObjectMixinSchema,
     Schema,
@@ -44,11 +44,9 @@ class QuizQuestionSchema(Schema):
         return obj.cleaned_supplement
 
 
-class QuizAttemptSchema(Schema):
+class QuizAttemptSchema(AttemptMixinSchema):
     id: int
     questions: list[QuizQuestionSchema]
-    started: datetime
-    active: bool
     retry: int
 
 

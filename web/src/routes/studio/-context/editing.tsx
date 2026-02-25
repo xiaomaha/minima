@@ -1,12 +1,12 @@
 import { createContext, type JSX, useContext } from 'solid-js'
 import type { createMutable } from 'solid-js/store'
-import type { AssignmentSpec, DiscussionSpec, ExamSpec, MediaSpec, QuizSpec, SurveySpec } from '@/api'
+import type { AssignmentSpec, CourseSpec, DiscussionSpec, ExamSpec, MediaSpec, QuizSpec, SurveySpec } from '@/api'
 
 export type State = { error: string; dirty: boolean }
 
 export type FieldState<T> = T extends (infer _)[] ? State : T extends object ? { [K in keyof T]: FieldState<T[K]> } : State
 
-export type ContentType = ExamSpec | QuizSpec | SurveySpec | DiscussionSpec | AssignmentSpec | MediaSpec
+export type ContentType = ExamSpec | QuizSpec | SurveySpec | DiscussionSpec | AssignmentSpec | MediaSpec | CourseSpec
 
 type EditingContextType<T extends object = ContentType> = {
   source: ReturnType<typeof createMutable<T>>

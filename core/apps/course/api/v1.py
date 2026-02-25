@@ -10,7 +10,7 @@ from apps.course.api.schema import (
     CourseSessionSchema,
 )
 from apps.course.models import Course, Engagement
-from apps.learning.api.access_control import access_date
+from apps.learning.api.access_control import access_date, access_mode
 
 router = Router(by_alias=True)
 
@@ -22,9 +22,10 @@ async def get_session(request: HttpRequest, id: str):
 
 
 @router.post("/{id}/engage", response=CourseEngagementSchema)
+@access_mode()
 @access_date("course", "course")
 async def start_engagement(request: HttpRequest, id: str):
-    return await Engagement.start(course_id=id, learner_id=request.auth)
+    return await Engagement.start(course_id=id, learner_id=request.auth, mode=request.access_mode)
 
 
 @router.get("/{id}/detail", response=CourseDetailSchema)

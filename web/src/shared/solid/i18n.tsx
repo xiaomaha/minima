@@ -28,6 +28,10 @@ export const useTranslation = () => {
   return context
 }
 
+export const lazyT = (key: string, params: Record<string, string | number> = {}) => {
+  return () => i18next.t(key, params)
+}
+
 interface TransProps {
   components?: Component<{ children: string }>[]
   children: JSX.Element

@@ -12,10 +12,11 @@ from django.conf import settings
 from django.contrib.postgres.forms import SimpleArrayField
 from django.core.exceptions import ImproperlyConfigured
 from django.db import connection
-from django.db.models import Avg, Count, FloatField, Max, Min, Model, Value
+from django.db.models import Avg, Count, FloatField, Max, Min, Model, TextChoices, Value
 from django.db.models.functions import Coalesce
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest as DjangoHttpRequest
+from django.utils.translation import gettext_lazy as _
 from ninja.pagination import AsyncPaginationBase
 from ninja.params import functions
 
@@ -95,11 +96,18 @@ class GradingDate(TypedDict):
     confirm_due: datetime
 
 
+class AttemptModeChoices(TextChoices):
+    NORMAL = "", ""
+    PREVIEW = "preview", _("Preview")
+    AUDIT = "audit", _("Audit")
+
+
 class HttpRequest(DjangoHttpRequest):
     auth: str  # from auth middleware
     roles: list[str]  # from auth middleware
     access_date: "AccessDate"  # set by access_date decorator
     active_context: str  # set by active_context decorator
+    access_mode: AttemptModeChoices  # set by access_mode decorator
 
 
 class OtpTokenDict(TypedDict):

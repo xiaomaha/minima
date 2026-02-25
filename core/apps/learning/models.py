@@ -290,7 +290,7 @@ class Enrollment(TimeStampedMixin):
                     AS quiz_attempt_count,
 
                 (SELECT COUNT(*) FROM {SurveySubmission._meta.db_table}
-                 WHERE respondent_id = %(user_id)s AND active = true {date_filter("created")})
+                 WHERE respondent_id = %(user_id)s AND active = true {date_filter("started")})
                     AS survey_submission_count,
 
                 (SELECT COUNT(*) FROM {Watch._meta.db_table}
