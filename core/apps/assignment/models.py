@@ -41,9 +41,9 @@ from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import (
     AccessDate,
-    AttemptModeChoices,
     GradingDate,
     LearningSessionStep,
+    ModeChoices,
     OtpTokenDict,
     ScoreStatsDict,
     get_score_stats,
@@ -88,13 +88,13 @@ class QuestionPool(Model):
         constraints = [UniqueConstraint(fields=["title", "owner"], name="assignment_questionpool_ti_ow_uniq")]
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
     def __str__(self):
         return self.title
 
     async def select_question(self):
-        question = await self.question_set.order_by("?").afirst()
+        question = await self.questions.order_by("?").afirst()
         if not question:
             raise ValueError(ErrorCode.QUESTION_POOL_EMPTY)
 
@@ -103,7 +103,7 @@ class QuestionPool(Model):
 
 @pghistory.track()
 class Question(AttachmentMixin):
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     attachment_file_count = PositiveSmallIntegerField(_("Attachment File Count"), default=1)
@@ -150,7 +150,7 @@ class Solution(Model):
         criteria_dict: dict[int, RubricCriterionDataDict] = {}
         max_points_by_criterion: dict[int, dict[str, int]] = {}
 
-        async for criterion in self.rubric.rubriccriterion_set.all():
+        async for criterion in self.rubric.rubric_criteria.all():
             criterion_id = criterion.pk
             criteria_dict[criterion_id] = {
                 "id": criterion_id,
@@ -160,7 +160,7 @@ class Solution(Model):
             }
             max_points_by_criterion[criterion_id] = {"max_point": 0}
 
-            async for level in criterion.performancelevel_set.all():
+            async for level in criterion.performance_levels.all():
                 max_points_by_criterion[criterion_id]["max_point"] = max(
                     max_points_by_criterion[criterion_id]["max_point"], level.point
                 )
@@ -213,7 +213,7 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
             await Attempt.objects
             .filter(assignment_id=assignment_id, learner_id=learner_id, context=context, active=True)
             .select_related("assignment", "submission", "grade", "question__solution__rubric")
-            .prefetch_related("question__solution__rubric__rubriccriterion_set__performancelevel_set")
+            .prefetch_related("question__solution__rubric__rubric_criteria__performance_levels")
             .prefetch_related("question__attachments")
             .alast()
         )
@@ -299,7 +299,7 @@ class Attempt(AttemptMixin):
         submission: "Submission"
 
     @classmethod
-    async def start(cls, *, assignment_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
+    async def start(cls, *, assignment_id: str, learner_id: str, context: str, mode: ModeChoices):
         assignment = await Assignment.objects.aget(id=assignment_id)
 
         if assignment.verification_required:
@@ -311,7 +311,7 @@ class Attempt(AttemptMixin):
             [question],
             "attachments",
             Prefetch(
-                "solution__rubric__rubriccriterion_set__performancelevel_set",
+                "solution__rubric__rubric_criteria__performance_levels",
                 queryset=PerformanceLevel.objects.order_by("point"),
             ),
         )
@@ -344,7 +344,7 @@ class Attempt(AttemptMixin):
         await aprefetch_related_objects(
             [attempt],
             Prefetch(
-                "question__solution__rubric__rubriccriterion_set__performancelevel_set",
+                "question__solution__rubric__rubric_criteria__performance_levels",
                 queryset=PerformanceLevel.objects.order_by("point"),
             ),
         )
@@ -537,7 +537,7 @@ class Rubric(Model):
 
     if TYPE_CHECKING:
         pk: int
-        rubriccriterion_set: "QuerySet[RubricCriterion]"
+        rubric_criteria: "QuerySet[RubricCriterion]"
 
     def __str__(self):
         return self.name
@@ -545,7 +545,7 @@ class Rubric(Model):
 
 @pghistory.track()
 class RubricCriterion(Model):
-    rubric = ForeignKey(Rubric, CASCADE, verbose_name=_("Rubric"))
+    rubric = ForeignKey(Rubric, CASCADE, related_name="rubric_criteria", verbose_name=_("Rubric"))
     name = CharField(_("Name"), max_length=255)
     description = TextField(_("Description"))
 
@@ -556,7 +556,7 @@ class RubricCriterion(Model):
 
     if TYPE_CHECKING:
         pk: int
-        performancelevel_set: "QuerySet[PerformanceLevel]"
+        performance_levels: "QuerySet[PerformanceLevel]"
 
     def __str__(self):
         return self.name
@@ -564,7 +564,7 @@ class RubricCriterion(Model):
 
 @pghistory.track()
 class PerformanceLevel(Model):
-    criterion = ForeignKey(RubricCriterion, CASCADE, verbose_name=_("Criterion"))
+    criterion = ForeignKey(RubricCriterion, CASCADE, related_name="performance_levels", verbose_name=_("Criterion"))
     name = CharField(_("Name"), max_length=255)
     description = TextField(_("Description"))
     point = PositiveSmallIntegerField(_("Point"))

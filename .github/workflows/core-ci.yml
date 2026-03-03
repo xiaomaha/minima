@@ -62,7 +62,8 @@ jobs:
                    python manage.py opensearch index create --force --ignore-error && \
                    python manage.py create_platform_partner && \
                    python manage.py create_base_policies && \
-                   python manage.py load_ncs_data"
+                   python manage.py load_ncs_data && \
+                   python manage.py loaddata ncs_category_en.json"
           docker compose exec -T minima sh -c "$commands"
           docker compose restart minima worker
 

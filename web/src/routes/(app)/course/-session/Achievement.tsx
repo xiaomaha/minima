@@ -63,10 +63,10 @@ export const Achievement = () => {
                         </div>
                       </div>
 
-                      <Show when={cert.certificateskillSet.length > 0}>
+                      <Show when={cert.certificateSkills.length > 0}>
                         <div class="space-y-4">
                           <div class="text-sm font-semibold divider divider-start after:h-px">{t('Skills')}</div>
-                          <For each={cert.certificateskillSet}>
+                          <For each={cert.certificateSkills}>
                             {(certSkill) => (
                               <div>
                                 <div class="breadcrumbs py-0">
@@ -89,11 +89,11 @@ export const Achievement = () => {
                         </div>
                       </Show>
 
-                      <Show when={cert.certificateendorsementSet.length > 0}>
+                      <Show when={cert.certificateEndorsements.length > 0}>
                         <div class="space-y-2">
                           <div class="text-sm font-semibold divider divider-start after:h-px">{t('Endorsements')}</div>
                           <div class="grid grid-cols-2 gap-4">
-                            <For each={cert.certificateendorsementSet}>
+                            <For each={cert.certificateEndorsements}>
                               {(certEndorsement) => (
                                 <div class="flex gap-3">
                                   <div class="flex flex-col gap-1">

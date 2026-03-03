@@ -41,6 +41,7 @@ class LearningObjectMixinSchema(TimeStampedMixinSchema):
     passing_point: int
     max_attempts: int
     verification_required: bool
+    published: datetime | None
 
 
 class AttemptMixinSchema(Schema):

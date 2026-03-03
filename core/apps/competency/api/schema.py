@@ -30,8 +30,8 @@ class CertificateSchema(Schema):
     description: str
     thumbnail: str
     issuer: PartnerSchema
-    certificateskill_set: list[CertificateSkillSchema]
-    certificateendorsement_set: list[CertificateEndorsementSchema]
+    certificate_skills: list[CertificateSkillSchema]
+    certificate_endorsements: list[CertificateEndorsementSchema]
 
 
 class CertificateSkillSchema(Schema):
@@ -55,7 +55,7 @@ class CertificateAwardSchema(Schema):
 
 
 class CertificateFilterSchema(FilterSchema, Schema):
-    course_id: Annotated[str, FilterLookup(q="course__id")]
+    course_id: Annotated[str, FilterLookup(q="course_certificates__course")]
 
 
 class ClassificationTreeNodeSchema(Schema):
@@ -68,7 +68,7 @@ class SkillDataSchema(Schema):
     id: int
     name: str
     level: int
-    factor_set: list[FactoryDataSchema]
+    factors: list[FactoryDataSchema]
 
 
 class FactoryDataSchema(Schema):

@@ -50,7 +50,9 @@ export const Discussion = () => {
                   count: question.replyMinCharacters,
                 })}
               </span>
-              <div class="ml-2 badge badge-sm badge-outline">{t('{{count}} point', { count: question.replyPoint })}</div>
+              <div class="ml-2 badge badge-sm badge-outline">
+                {t('{{count}} point', { count: question.replyPoint })}
+              </div>
             </li>
             <li>
               <span>{t('Tutor Assessment')}</span>

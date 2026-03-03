@@ -256,7 +256,9 @@ const BackupCodesStep = (props: { backupCodes: string[]; onDownload: () => void 
         <span>{t('Otp Setup Completed Successfully')}</span>
       </div>
       <p class="text-sm">
-        {t('Save these codes in a secure location. Each code can be used once if you lose access to your authenticator app.')}
+        {t(
+          'Save these codes in a secure location. Each code can be used once if you lose access to your authenticator app.',
+        )}
       </p>
       <div class="grid grid-cols-2 gap-2">
         <For each={props.backupCodes}>

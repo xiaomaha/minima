@@ -543,6 +543,10 @@ export type AssignmentSchema = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
@@ -1001,13 +1005,13 @@ export type CertificateSchema = {
     thumbnail: string;
     issuer: PartnerSchema;
     /**
-     * Certificateskillset
+     * Certificateskills
      */
-    certificateskillSet: Array<CertificateSkillSchema>;
+    certificateSkills: Array<CertificateSkillSchema>;
     /**
-     * Certificateendorsementset
+     * Certificateendorsements
      */
-    certificateendorsementSet: Array<CertificateEndorsementSchema>;
+    certificateEndorsements: Array<CertificateEndorsementSchema>;
 };
 
 /**
@@ -1244,9 +1248,9 @@ export type SkillDataSchema = {
      */
     level: number;
     /**
-     * Factorset
+     * Factors
      */
-    factorSet: Array<FactoryDataSchema>;
+    factors: Array<FactoryDataSchema>;
 };
 
 /**
@@ -1303,6 +1307,10 @@ export type MediaSchema = {
      * Verificationrequired
      */
     verificationRequired: boolean;
+    /**
+     * Published
+     */
+    published: string | null;
     /**
      * Id
      */
@@ -1386,6 +1394,10 @@ export type QuizSchema = {
      * Verificationrequired
      */
     verificationRequired: boolean;
+    /**
+     * Published
+     */
+    published: string | null;
     /**
      * Id
      */
@@ -1634,6 +1646,10 @@ export type SearchedMediaSchema = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
@@ -1774,22 +1790,13 @@ export type CourseSchema = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
-    honorCode: HonorCodeSchema;
-    /**
-     * Gradingcriteria
-     */
-    gradingCriteria: Array<GradingCriterionSchema>;
-    /**
-     * Lessons
-     */
-    lessons: Array<LessonSchema>;
-    /**
-     * Surveys
-     */
-    surveys: Array<CourseSurveySchema>;
     /**
      * Objective
      */
@@ -1803,6 +1810,19 @@ export type CourseSchema = {
      */
     effortHours: number;
     level: LevelChoices;
+    honorCode: HonorCodeSchema;
+    /**
+     * Gradingcriteria
+     */
+    gradingCriteria: Array<GradingCriterionSchema>;
+    /**
+     * Lessons
+     */
+    lessons: Array<LessonSchema>;
+    /**
+     * Coursesurveys
+     */
+    courseSurveys: Array<CourseSurveySchema>;
 };
 
 /**
@@ -1823,17 +1843,31 @@ export type CourseSessionSchema = {
 };
 
 /**
+ * CourseSurveyItemSchema
+ */
+export type CourseSurveyItemSchema = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string | null;
+};
+
+/**
  * CourseSurveySchema
  */
 export type CourseSurveySchema = {
     /**
-     * Surveyid
+     * Id
      */
-    surveyId: string;
+    id: number;
     /**
-     * Title
+     * Label
      */
-    title: string;
+    label: string;
     /**
      * Startdate
      */
@@ -1842,6 +1876,7 @@ export type CourseSurveySchema = {
      * Enddate
      */
     endDate: string;
+    survey: CourseSurveyItemSchema;
 };
 
 /**
@@ -1849,9 +1884,9 @@ export type CourseSurveySchema = {
  */
 export type GradingCriterionSchema = {
     /**
-     * Title
+     * Label
      */
-    title: string;
+    label: string;
     /**
      * Applabel
      */
@@ -1887,17 +1922,13 @@ export type GradingCriterionSchema = {
 };
 
 /**
- * LessonMediaSchema
+ * LessonMediaItemSchema
  */
-export type LessonMediaSchema = {
+export type LessonMediaItemSchema = {
     /**
      * Id
      */
     id: string;
-    /**
-     * Title
-     */
-    title: string;
     /**
      * Thumbnail
      */
@@ -1909,6 +1940,13 @@ export type LessonMediaSchema = {
 };
 
 /**
+ * LessonMediaSchema
+ */
+export type LessonMediaSchema = {
+    media: LessonMediaItemSchema;
+};
+
+/**
  * LessonSchema
  */
 export type LessonSchema = {
@@ -1917,9 +1955,9 @@ export type LessonSchema = {
      */
     id: number;
     /**
-     * Medias
+     * Label
      */
-    medias: Array<LessonMediaSchema>;
+    label: string;
     /**
      * Startdate
      */
@@ -1929,13 +1967,9 @@ export type LessonSchema = {
      */
     endDate: string;
     /**
-     * Title
+     * Lessonmedias
      */
-    title: string;
-    /**
-     * Description
-     */
-    description: string;
+    lessonMedias: Array<LessonMediaSchema>;
 };
 
 /**
@@ -1952,13 +1986,28 @@ export type CourseCategorySchema = {
      */
     id: number;
     /**
-     * Name
+     * Label
      */
-    name: string;
+    label: string;
+};
+
+/**
+ * CourseCertificateItemSchema
+ */
+export type CourseCertificateItemSchema = {
     /**
-     * Ancestors
+     * Id
      */
-    ancestors: Array<string>;
+    id: number;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string;
+    /**
+     * Description
+     */
+    description: string;
+    issuer: PartnerSchema;
 };
 
 /**
@@ -1970,18 +2019,10 @@ export type CourseCertificateSchema = {
      */
     id: number;
     /**
-     * Name
+     * Label
      */
-    name: string;
-    /**
-     * Thumbnail
-     */
-    thumbnail: string;
-    /**
-     * Description
-     */
-    description: string;
-    issuer: PartnerSchema;
+    label: string;
+    certificate: CourseCertificateItemSchema;
 };
 
 /**
@@ -2037,6 +2078,10 @@ export type CourseDetailSchema = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
@@ -2054,40 +2099,33 @@ export type CourseDetailSchema = {
      */
     effortHours: number;
     level: LevelChoices;
+    faq: FaqSchema;
     /**
-     * Faqitems
+     * Coursecategories
      */
-    faqItems: Array<FaqItemSchema>;
+    courseCategories: Array<CourseCategorySchema>;
     /**
-     * Categories
+     * Coursecertificates
      */
-    categories: Array<CourseCategorySchema>;
+    courseCertificates: Array<CourseCertificateSchema>;
     /**
-     * Certificates
+     * Courseinstructors
      */
-    certificates: Array<CourseCertificateSchema>;
+    courseInstructors: Array<CourseInstructorSchema>;
     /**
-     * Instructors
+     * Courserelations
      */
-    instructors: Array<CourseInstructorSchema>;
-    /**
-     * Relatedcourses
-     */
-    relatedCourses: Array<RelatedCourseSchema>;
+    courseRelations: Array<CourseRelationSchema>;
 };
 
 /**
- * CourseInstructorSchema
+ * CourseInstructorItemSchema
  */
-export type CourseInstructorSchema = {
+export type CourseInstructorItemSchema = {
     /**
-     * Id
+     * Email
      */
-    id: number;
-    /**
-     * Name
-     */
-    name: string;
+    email: string;
     /**
      * About
      */
@@ -2099,11 +2137,59 @@ export type CourseInstructorSchema = {
     /**
      * Avatar
      */
-    avatar: string | null;
+    avatar: string;
+};
+
+/**
+ * CourseInstructorSchema
+ */
+export type CourseInstructorSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
     /**
      * Lead
      */
     lead: boolean;
+    instructor: CourseInstructorItemSchema;
+};
+
+/**
+ * CourseRelationItemSchema
+ */
+export type CourseRelationItemSchema = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string | null;
+};
+
+/**
+ * CourseRelationSchema
+ */
+export type CourseRelationSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    relatedCourse: CourseRelationItemSchema;
 };
 
 /**
@@ -2119,14 +2205,6 @@ export type FaqItemSchema = {
      */
     modified: string;
     /**
-     * Id
-     */
-    id: number;
-    /**
-     * Ordering
-     */
-    ordering: number;
-    /**
      * Question
      */
     question: string;
@@ -2134,32 +2212,28 @@ export type FaqItemSchema = {
      * Answer
      */
     answer: string;
-    /**
-     * Active
-     */
-    active: boolean;
 };
 
 /**
- * RelatedCourseSchema
+ * FAQSchema
  */
-export type RelatedCourseSchema = {
+export type FaqSchema = {
     /**
      * Id
      */
-    id: string;
+    id: number;
     /**
-     * Title
+     * Name
      */
-    title: string;
+    name: string;
     /**
      * Description
      */
     description: string;
     /**
-     * Thumbnail
+     * Items
      */
-    thumbnail: string | null;
+    items: Array<FaqItemSchema>;
 };
 
 /**
@@ -2387,6 +2461,10 @@ export type DiscussionSchema = {
      * Verificationrequired
      */
     verificationRequired: boolean;
+    /**
+     * Published
+     */
+    published: string | null;
     /**
      * Id
      */
@@ -2769,6 +2847,10 @@ export type ExamSchema = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
@@ -2934,6 +3016,10 @@ export type EnrollmentContentSchema = {
      * Verificationrequired
      */
     verificationRequired: boolean;
+    /**
+     * Published
+     */
+    published: string | null;
     /**
      * Id
      */
@@ -3130,6 +3216,10 @@ export type CatalogContentSchema = {
      * Verificationrequired
      */
     verificationRequired: boolean;
+    /**
+     * Published
+     */
+    published: string | null;
     /**
      * Id
      */
@@ -3549,7 +3639,7 @@ export type MessageDataSchema = {
      * Path
      */
     path: string;
-    [key: string]: unknown | string | number | string;
+    [key: string]: unknown;
 };
 
 /**
@@ -4441,6 +4531,74 @@ export type SsoAccountSchema = {
 };
 
 /**
+ * PaginatedResponse[StudioContentSpec]
+ */
+export type PaginatedResponseStudioContentSpec = {
+    /**
+     * Items
+     */
+    items: Array<StudioContentSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * StudioContentSpec
+ */
+export type StudioContentSpec = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string;
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Edited
+     */
+    edited: string | null;
+    /**
+     * Published
+     */
+    published: string | null;
+    /**
+     * Applabel
+     */
+    appLabel: string;
+    /**
+     * Model
+     */
+    model: 'exam' | 'survey' | 'quiz' | 'assignment' | 'discussion' | 'media' | 'course';
+};
+
+/**
  * ContentSuggestionSpec
  */
 export type ContentSuggestionSpec = {
@@ -4452,10 +4610,95 @@ export type ContentSuggestionSpec = {
      * Title
      */
     title: string;
+};
+
+/**
+ * AssessmentSuggestion
+ */
+export type AssessmentSuggestion = {
     /**
-     * Modified
+     * Id
      */
-    modified: string;
+    id: string;
+    /**
+     * Title
+     */
+    title: string;
+    itemType: ContentTypeSchema;
+};
+
+/**
+ * CertificateSuggestionSpec
+ */
+export type CertificateSuggestionSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+};
+
+/**
+ * CategorySuggestionSpec
+ */
+export type CategorySuggestionSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Fullpath
+     */
+    fullPath: string;
+};
+
+/**
+ * InstructorSuggestionSpec
+ */
+export type InstructorSuggestionSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+};
+
+/**
+ * FAQSuggestionSpec
+ */
+export type FaqSuggestionSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+};
+
+/**
+ * FAQItemCopySpec
+ */
+export type FaqItemCopySpec = {
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Answer
+     */
+    answer: string;
+    /**
+     * Active
+     */
+    active: boolean;
 };
 
 /**
@@ -4473,11 +4716,6 @@ export type ExamQuestionPoolSpec = {
         [key in ExamQuestionFormatChoices]?: number;
     };
 };
-
-/**
- * ExamQuestionSetSpec
- */
-export type ExamQuestionSetSpec = Array<ExamQuestionSpec>;
 
 /**
  * ExamQuestionSolutionSpec
@@ -4524,6 +4762,11 @@ export type ExamQuestionSpec = {
     point: number;
     solution: ExamQuestionSolutionSpec;
 };
+
+/**
+ * ExamQuestionsSpec
+ */
+export type ExamQuestionsSpec = Array<ExamQuestionSpec>;
 
 /**
  * ExamSpec
@@ -4590,13 +4833,16 @@ export type ExamSpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
-    owner: OwnerSpec;
     honorCode: HonorCodeSpec;
     questionPool: ExamQuestionPoolSpec;
-    questionSet: ExamQuestionSetSpec;
+    questions: ExamQuestionsSpec;
 };
 
 /**
@@ -4611,20 +4857,6 @@ export type HonorCodeSpec = {
      * Code
      */
     code: string;
-};
-
-/**
- * OwnerSpec
- */
-export type OwnerSpec = {
-    /**
-     * Email
-     */
-    email: string;
-    /**
-     * Name
-     */
-    name: string;
 };
 
 /**
@@ -4712,9 +4944,9 @@ export type ExamQuestionSaveSpec = {
 };
 
 /**
- * ExamQuestionSetSaveSpec
+ * ExamQuestionsSaveSpec
  */
-export type ExamQuestionSetSaveSpec = {
+export type ExamQuestionsSaveSpec = {
     /**
      * Data
      */
@@ -4734,11 +4966,6 @@ export type QuizQuestionPoolSpec = {
      */
     selectCount: number;
 };
-
-/**
- * QuizQuestionSetSpec
- */
-export type QuizQuestionSetSpec = Array<QuizQuestionSpec>;
 
 /**
  * QuizQuestionSolutionSpec
@@ -4780,6 +5007,11 @@ export type QuizQuestionSpec = {
     point: number;
     solution: QuizQuestionSolutionSpec;
 };
+
+/**
+ * QuizQuestionsSpec
+ */
+export type QuizQuestionsSpec = Array<QuizQuestionSpec>;
 
 /**
  * QuizSpec
@@ -4834,12 +5066,15 @@ export type QuizSpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
-    owner: OwnerSpec;
     questionPool: QuizQuestionPoolSpec;
-    questionSet: QuizQuestionSetSpec;
+    questions: QuizQuestionsSpec;
 };
 
 /**
@@ -4905,9 +5140,9 @@ export type QuizQuestionSaveSpec = {
 };
 
 /**
- * QuizQuestionSetSaveSpec
+ * QuizQuestionsSaveSpec
  */
-export type QuizQuestionSetSaveSpec = {
+export type QuizQuestionsSaveSpec = {
     /**
      * Data
      */
@@ -4928,11 +5163,6 @@ export type SurveyQuestionPoolSpec = {
      */
     description: string;
 };
-
-/**
- * SurveyQuestionSetSpec
- */
-export type SurveyQuestionSetSpec = Array<SurveyQuestionSpec>;
 
 /**
  * SurveyQuestionSpec
@@ -4964,6 +5194,11 @@ export type SurveyQuestionSpec = {
      */
     ordering: number;
 };
+
+/**
+ * SurveyQuestionsSpec
+ */
+export type SurveyQuestionsSpec = Array<SurveyQuestionSpec>;
 
 /**
  * SurveySpec
@@ -5018,12 +5253,15 @@ export type SurveySpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
-    owner: OwnerSpec;
     questionPool: SurveyQuestionPoolSpec;
-    questionSet: SurveyQuestionSetSpec;
+    questions: SurveyQuestionsSpec;
     /**
      * Completemessage
      */
@@ -5109,9 +5347,9 @@ export type SurveyQuestionSaveSpec = {
 };
 
 /**
- * SurveyQuestionSetSaveSpec
+ * SurveyQuestionsSaveSpec
  */
-export type SurveyQuestionSetSaveSpec = {
+export type SurveyQuestionsSaveSpec = {
     /**
      * Data
      */
@@ -5127,11 +5365,6 @@ export type DiscussionQuestionPoolSpec = {
      */
     description: string;
 };
-
-/**
- * DiscussionQuestionSetSpec
- */
-export type DiscussionQuestionSetSpec = Array<DiscussionQuestionSpec>;
 
 /**
  * DiscussionQuestionSpec
@@ -5170,6 +5403,11 @@ export type DiscussionQuestionSpec = {
      */
     replyMinCharacters: number;
 };
+
+/**
+ * DiscussionQuestionsSpec
+ */
+export type DiscussionQuestionsSpec = Array<DiscussionQuestionSpec>;
 
 /**
  * DiscussionSpec
@@ -5236,13 +5474,16 @@ export type DiscussionSpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
-    owner: OwnerSpec;
     honorCode: HonorCodeSpec;
     questionPool: DiscussionQuestionPoolSpec;
-    questionSet: DiscussionQuestionSetSpec;
+    questions: DiscussionQuestionsSpec;
 };
 
 /**
@@ -5346,11 +5587,6 @@ export type AssignmentQuestionPoolSpec = {
 };
 
 /**
- * AssignmentQuestionSetSpec
- */
-export type AssignmentQuestionSetSpec = Array<AssignmentQuestionSpec>;
-
-/**
  * AssignmentQuestionSpec
  */
 export type AssignmentQuestionSpec = {
@@ -5383,6 +5619,11 @@ export type AssignmentQuestionSpec = {
      */
     sampleAttachment: string | null;
 };
+
+/**
+ * AssignmentQuestionsSpec
+ */
+export type AssignmentQuestionsSpec = Array<AssignmentQuestionSpec>;
 
 /**
  * AssignmentSpec
@@ -5449,13 +5690,16 @@ export type AssignmentSpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
-    owner: OwnerSpec;
     honorCode: HonorCodeSpec;
     questionPool: AssignmentQuestionPoolSpec;
-    questionSet: AssignmentQuestionSetSpec;
+    questions: AssignmentQuestionsSpec;
 };
 
 /**
@@ -5590,6 +5834,10 @@ export type MediaSpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
@@ -5605,15 +5853,14 @@ export type MediaSpec = {
      * Url
      */
     url: string;
-    owner: OwnerSpec;
     /**
      * Quizzes
      */
     quizzes: Array<string>;
     /**
-     * Subtitleset
+     * Subtitles
      */
-    subtitleSet: Array<SubtitleSpec>;
+    subtitles: Array<SubtitleSpec>;
 };
 
 /**
@@ -5674,6 +5921,151 @@ export type MediaSaveSpec = {
 };
 
 /**
+ * AssessmentSpec
+ */
+export type AssessmentSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Itemid
+     */
+    itemId: string;
+    itemType: ContentTypeSchema;
+    /**
+     * Weight
+     */
+    weight: number;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
+};
+
+/**
+ * CourseAssetsSpec
+ */
+export type CourseAssetsSpec = {
+    /**
+     * Lessons
+     */
+    lessons: Array<LessonSpec>;
+    /**
+     * Assessments
+     */
+    assessments: Array<AssessmentSpec>;
+    /**
+     * Courserelations
+     */
+    courseRelations: Array<CourseRelationSpec>;
+    /**
+     * Coursesurveys
+     */
+    courseSurveys: Array<CourseSurveySpec>;
+    /**
+     * Coursecertificates
+     */
+    courseCertificates: Array<CourseCertificateSpec>;
+    /**
+     * Coursecategories
+     */
+    courseCategories: Array<CourseCategorySpec>;
+    /**
+     * Courseinstructors
+     */
+    courseInstructors: Array<CourseInstructorSpec>;
+    /**
+     * Faqitems
+     */
+    faqItems: Array<FaqItemSpec>;
+};
+
+/**
+ * CourseCategorySpec
+ */
+export type CourseCategorySpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Categoryid
+     */
+    categoryId: number;
+};
+
+/**
+ * CourseCertificateSpec
+ */
+export type CourseCertificateSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Certificateid
+     */
+    certificateId: number;
+};
+
+/**
+ * CourseInstructorSpec
+ */
+export type CourseInstructorSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Instructorid
+     */
+    instructorId: number;
+    /**
+     * Lead
+     */
+    lead: boolean;
+};
+
+/**
+ * CourseRelationSpec
+ */
+export type CourseRelationSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Relatedcourseid
+     */
+    relatedCourseId: string;
+};
+
+/**
  * CourseSpec
  */
 export type CourseSpec = {
@@ -5726,6 +6118,10 @@ export type CourseSpec = {
      */
     verificationRequired: boolean;
     /**
+     * Published
+     */
+    published: string | null;
+    /**
      * Id
      */
     id: string;
@@ -5742,8 +6138,116 @@ export type CourseSpec = {
      */
     effortHours: number;
     level: LevelChoices;
-    owner: OwnerSpec;
     honorCode: HonorCodeSpec;
+    faq: FaqSpec;
+    gradingPolicy: GradingPolicySpec;
+    assets: CourseAssetsSpec;
+};
+
+/**
+ * CourseSurveySpec
+ */
+export type CourseSurveySpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Surveyid
+     */
+    surveyId: string;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
+};
+
+/**
+ * FAQItemSpec
+ */
+export type FaqItemSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Answer
+     */
+    answer: string;
+    /**
+     * Active
+     */
+    active: boolean;
+};
+
+/**
+ * FAQSpec
+ */
+export type FaqSpec = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description: string;
+};
+
+/**
+ * GradingPolicySpec
+ */
+export type GradingPolicySpec = {
+    /**
+     * Assessmentweight
+     */
+    assessmentWeight: number;
+    /**
+     * Completionweight
+     */
+    completionWeight: number;
+    /**
+     * Completionpassingpoint
+     */
+    completionPassingPoint: number;
+};
+
+/**
+ * LessonSpec
+ */
+export type LessonSpec = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Mediaids
+     */
+    mediaIds: Array<string>;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
 };
 
 /**
@@ -5796,32 +6300,58 @@ export type CourseSaveSpec = {
     effortHours: number;
     level: LevelChoices;
     honorCode: HonorCodeSpec;
+    faq: FaqSpec;
+    gradingPolicy: GradingPolicySpec;
 };
 
 /**
- * CourseAssessmentSpec
+ * CourseSurveySaveSpec
  */
-export type CourseAssessmentSpec = {
+export type CourseSurveySaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Surveyid
+     */
+    surveyId: string;
+    /**
+     * Startoffset
+     */
+    startOffset: number;
+    /**
+     * Endoffset
+     */
+    endOffset: number | null;
+};
+
+/**
+ * RootModel[list[CourseSurveySaveSpec]]
+ */
+export type RootModelListCourseSurveySaveSpec = Array<CourseSurveySaveSpec>;
+
+/**
+ * AssessmentSaveSpec
+ */
+export type AssessmentSaveSpec = {
+    /**
+     * Id
+     */
+    id?: number;
+    /**
+     * Label
+     */
+    label: string;
     /**
      * Itemid
      */
     itemId: string;
-    /**
-     * Itemtitle
-     */
-    itemTitle: string;
-    /**
-     * Itemapplabel
-     */
-    itemAppLabel: string;
-    /**
-     * Itemmodel
-     */
-    itemModel: string;
+    itemType: ContentTypeSchema;
     /**
      * Weight
      */
@@ -5837,47 +6367,26 @@ export type CourseAssessmentSpec = {
 };
 
 /**
- * CourseLessonMediaSpec
+ * RootModel[list[AssessmentSaveSpec]]
  */
-export type CourseLessonMediaSpec = {
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Mediatitle
-     */
-    mediaTitle: string;
-    /**
-     * Mediaid
-     */
-    mediaId: string;
-    /**
-     * Ordering
-     */
-    ordering: number;
-};
+export type RootModelListAssessmentSaveSpec = Array<AssessmentSaveSpec>;
 
 /**
- * CourseLessonSpec
+ * LessonSaveSpec
  */
-export type CourseLessonSpec = {
+export type LessonSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     /**
-     * Title
+     * Label
      */
-    title: string;
+    label: string;
     /**
-     * Description
+     * Mediaids
      */
-    description: string;
-    /**
-     * Medias
-     */
-    medias: Array<CourseLessonMediaSpec>;
+    mediaIds: Array<string>;
     /**
      * Startoffset
      */
@@ -5889,48 +6398,132 @@ export type CourseLessonSpec = {
 };
 
 /**
- * CourseStructureSpec
+ * RootModel[list[LessonSaveSpec]]
  */
-export type CourseStructureSpec = {
-    /**
-     * Surveys
-     */
-    surveys: Array<CourseSurveySpec>;
-    /**
-     * Lessons
-     */
-    lessons: Array<CourseLessonSpec>;
-    /**
-     * Assessments
-     */
-    assessments: Array<CourseAssessmentSpec>;
-};
+export type RootModelListLessonSaveSpec = Array<LessonSaveSpec>;
 
 /**
- * CourseSurveySpec
+ * CourseCertificateSaveSpec
  */
-export type CourseSurveySpec = {
+export type CourseCertificateSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     /**
-     * Surveyid
+     * Label
      */
-    surveyId: string;
+    label: string;
     /**
-     * Surveytitle
+     * Certificateid
      */
-    surveyTitle: string;
-    /**
-     * Startoffset
-     */
-    startOffset: number;
-    /**
-     * Endoffset
-     */
-    endOffset: number | null;
+    certificateId: number;
 };
+
+/**
+ * RootModel[list[CourseCertificateSaveSpec]]
+ */
+export type RootModelListCourseCertificateSaveSpec = Array<CourseCertificateSaveSpec>;
+
+/**
+ * CourseRelationSaveSpec
+ */
+export type CourseRelationSaveSpec = {
+    /**
+     * Id
+     */
+    id?: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Relatedcourseid
+     */
+    relatedCourseId: string;
+};
+
+/**
+ * RootModel[list[CourseRelationSaveSpec]]
+ */
+export type RootModelListCourseRelationSaveSpec = Array<CourseRelationSaveSpec>;
+
+/**
+ * CourseCategorySaveSpec
+ */
+export type CourseCategorySaveSpec = {
+    /**
+     * Id
+     */
+    id?: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Categoryid
+     */
+    categoryId: number;
+};
+
+/**
+ * RootModel[list[CourseCategorySaveSpec]]
+ */
+export type RootModelListCourseCategorySaveSpec = Array<CourseCategorySaveSpec>;
+
+/**
+ * CourseInstructorSaveSpec
+ */
+export type CourseInstructorSaveSpec = {
+    /**
+     * Id
+     */
+    id?: number;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Instructorid
+     */
+    instructorId: number;
+    /**
+     * Lead
+     */
+    lead: boolean;
+};
+
+/**
+ * RootModel[list[CourseInstructorSaveSpec]]
+ */
+export type RootModelListCourseInstructorSaveSpec = Array<CourseInstructorSaveSpec>;
+
+/**
+ * FAQItemSaveSpec
+ */
+export type FaqItemSaveSpec = {
+    /**
+     * Id
+     */
+    id?: number;
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Answer
+     */
+    answer: string;
+    /**
+     * Active
+     */
+    active: boolean;
+};
+
+/**
+ * RootModel[list[FAQItemSaveSpec]]
+ */
+export type RootModelListFaqItemSaveSpec = Array<FaqItemSaveSpec>;
 
 /**
  * SurveyQuestionSchema
@@ -6011,6 +6604,10 @@ export type SurveySchema = {
      * Verificationrequired
      */
     verificationRequired: boolean;
+    /**
+     * Published
+     */
+    published: string | null;
     /**
      * Id
      */
@@ -6794,6 +7391,7 @@ export type ContentV1UpdateMediaWatchData = {
     };
     query?: {
         media?: string;
+        mode?: string;
         course?: string;
     };
     url: '/api/v1/content/media/{id}/watch';
@@ -7233,15 +7831,15 @@ export type DiscussionV1DeletePostData = {
          */
         id: string;
         /**
-         * Postid
+         * Post Id
          */
-        postId: number;
+        post_id: number;
     };
     query?: {
         media?: string;
         course?: string;
     };
-    url: '/api/v1/discussion/{id}/post/{postId}';
+    url: '/api/v1/discussion/{id}/post/{post_id}';
 };
 
 export type DiscussionV1DeletePostResponses = {
@@ -7281,15 +7879,15 @@ export type DiscussionV1UpdatePostData = {
          */
         id: string;
         /**
-         * Postid
+         * Post Id
          */
-        postId: number;
+        post_id: number;
     };
     query?: {
         media?: string;
         course?: string;
     };
-    url: '/api/v1/discussion/{id}/post/{postId}';
+    url: '/api/v1/discussion/{id}/post/{post_id}';
 };
 
 export type DiscussionV1UpdatePostResponses = {
@@ -7891,20 +8489,20 @@ export type OperationV1GetThreadData = {
     body?: never;
     path: {
         /**
-         * Applabel
+         * App Label
          */
-        appLabel: string;
+        app_label: string;
         /**
          * Model
          */
         model: string;
         /**
-         * Subjectid
+         * Subject Id
          */
-        subjectId: string;
+        subject_id: string;
     };
     query?: never;
-    url: '/api/v1/operation/thread/{appLabel}/{model}/subject/{subjectId}';
+    url: '/api/v1/operation/thread/{app_label}/{model}/subject/{subject_id}';
 };
 
 export type OperationV1GetThreadResponses = {
@@ -8017,12 +8615,12 @@ export type OperationV1DeleteCommentData = {
          */
         id: number;
         /**
-         * Commentid
+         * Comment Id
          */
-        commentId: number;
+        comment_id: number;
     };
     query?: never;
-    url: '/api/v1/operation/thread/{id}/comment/{commentId}';
+    url: '/api/v1/operation/thread/{id}/comment/{comment_id}';
 };
 
 export type OperationV1DeleteCommentResponses = {
@@ -8349,6 +8947,39 @@ export type SsoV1DeleteAccountResponses = {
     200: unknown;
 };
 
+export type StudioV1ContentData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+        /**
+         * Kind
+         */
+        kind?: 'exam' | 'survey' | 'quiz' | 'assignment' | 'discussion' | 'media' | 'course';
+        /**
+         * Search
+         */
+        search?: string | null;
+    };
+    url: '/api/v1/studio/content';
+};
+
+export type StudioV1ContentResponses = {
+    /**
+     * OK
+     */
+    200: PaginatedResponseStudioContentSpec;
+};
+
+export type StudioV1ContentResponse = StudioV1ContentResponses[keyof StudioV1ContentResponses];
+
 export type StudioV1ContentSuggestionsData = {
     body?: never;
     path?: never;
@@ -8371,6 +9002,119 @@ export type StudioV1ContentSuggestionsResponses = {
 };
 
 export type StudioV1ContentSuggestionsResponse = StudioV1ContentSuggestionsResponses[keyof StudioV1ContentSuggestionsResponses];
+
+export type StudioV1AssessmentSuggestionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/suggestion/assessment';
+};
+
+export type StudioV1AssessmentSuggestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<AssessmentSuggestion>;
+};
+
+export type StudioV1AssessmentSuggestionsResponse = StudioV1AssessmentSuggestionsResponses[keyof StudioV1AssessmentSuggestionsResponses];
+
+export type StudioV1CertificateSuggestionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/suggestion/certificate';
+};
+
+export type StudioV1CertificateSuggestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<CertificateSuggestionSpec>;
+};
+
+export type StudioV1CertificateSuggestionsResponse = StudioV1CertificateSuggestionsResponses[keyof StudioV1CertificateSuggestionsResponses];
+
+export type StudioV1CategorySuggestionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/suggestion/category';
+};
+
+export type StudioV1CategorySuggestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<CategorySuggestionSpec>;
+};
+
+export type StudioV1CategorySuggestionsResponse = StudioV1CategorySuggestionsResponses[keyof StudioV1CategorySuggestionsResponses];
+
+export type StudioV1InstructorSuggestionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/suggestion/instructor';
+};
+
+export type StudioV1InstructorSuggestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<InstructorSuggestionSpec>;
+};
+
+export type StudioV1InstructorSuggestionsResponse = StudioV1InstructorSuggestionsResponses[keyof StudioV1InstructorSuggestionsResponses];
+
+export type StudioV1FaqSuggestionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/suggestion/faq';
+};
+
+export type StudioV1FaqSuggestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<FaqSuggestionSpec>;
+};
+
+export type StudioV1FaqSuggestionsResponse = StudioV1FaqSuggestionsResponses[keyof StudioV1FaqSuggestionsResponses];
+
+export type StudioV1GetFaqItemsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/faq/{id}/item';
+};
+
+export type StudioV1GetFaqItemsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<FaqItemCopySpec>;
+};
+
+export type StudioV1GetFaqItemsResponse = StudioV1GetFaqItemsResponses[keyof StudioV1GetFaqItemsResponses];
 
 export type StudioV1GetExamData = {
     body?: never;
@@ -8422,63 +9166,6 @@ export type StudioV1SaveExamResponses = {
 
 export type StudioV1SaveExamResponse = StudioV1SaveExamResponses[keyof StudioV1SaveExamResponses];
 
-export type StudioV1SaveExamQuestionData = {
-    /**
-     * MultiPartBodyParams
-     */
-    body: {
-        /**
-         * Files
-         *
-         * Max size: 3MB
-         */
-        files?: Array<Blob | File>;
-        data: ExamQuestionSaveSpec;
-    };
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/api/v1/studio/exam/{id}/question';
-};
-
-export type StudioV1SaveExamQuestionResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: number;
-};
-
-export type StudioV1SaveExamQuestionResponse = StudioV1SaveExamQuestionResponses[keyof StudioV1SaveExamQuestionResponses];
-
-export type StudioV1DeleteExamQuesionData = {
-    body?: never;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-        /**
-         * Q
-         */
-        q: number;
-    };
-    query?: never;
-    url: '/api/v1/studio/exam/{id}/question/{q}';
-};
-
-export type StudioV1DeleteExamQuesionResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
 export type StudioV1SaveExamQuestionsData = {
     /**
      * MultiPartBodyParams
@@ -8490,7 +9177,7 @@ export type StudioV1SaveExamQuestionsData = {
          * Max size: 3MB
          */
         files?: Array<Blob | File>;
-        data: ExamQuestionSetSaveSpec;
+        data: ExamQuestionsSaveSpec;
     };
     path: {
         /**
@@ -8499,7 +9186,7 @@ export type StudioV1SaveExamQuestionsData = {
         id: string;
     };
     query?: never;
-    url: '/api/v1/studio/exam/{id}/questionset';
+    url: '/api/v1/studio/exam/{id}/question';
 };
 
 export type StudioV1SaveExamQuestionsResponses = {
@@ -8512,6 +9199,29 @@ export type StudioV1SaveExamQuestionsResponses = {
 };
 
 export type StudioV1SaveExamQuestionsResponse = StudioV1SaveExamQuestionsResponses[keyof StudioV1SaveExamQuestionsResponses];
+
+export type StudioV1DeleteExamQuesionData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Question Id
+         */
+        question_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/exam/{id}/question/{question_id}';
+};
+
+export type StudioV1DeleteExamQuesionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type StudioV1GetQuizData = {
     body?: never;
@@ -8563,63 +9273,6 @@ export type StudioV1SaveQuizResponses = {
 
 export type StudioV1SaveQuizResponse = StudioV1SaveQuizResponses[keyof StudioV1SaveQuizResponses];
 
-export type StudioV1SaveQuizQuestionData = {
-    /**
-     * MultiPartBodyParams
-     */
-    body: {
-        /**
-         * Files
-         *
-         * Max size: 3MB
-         */
-        files?: Array<Blob | File>;
-        data: QuizQuestionSaveSpec;
-    };
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/api/v1/studio/quiz/{id}/question';
-};
-
-export type StudioV1SaveQuizQuestionResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: number;
-};
-
-export type StudioV1SaveQuizQuestionResponse = StudioV1SaveQuizQuestionResponses[keyof StudioV1SaveQuizQuestionResponses];
-
-export type StudioV1DeleteQuizQuesionData = {
-    body?: never;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-        /**
-         * Q
-         */
-        q: number;
-    };
-    query?: never;
-    url: '/api/v1/studio/quiz/{id}/question/{q}';
-};
-
-export type StudioV1DeleteQuizQuesionResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
 export type StudioV1SaveQuizQuestionsData = {
     /**
      * MultiPartBodyParams
@@ -8631,7 +9284,7 @@ export type StudioV1SaveQuizQuestionsData = {
          * Max size: 3MB
          */
         files?: Array<Blob | File>;
-        data: QuizQuestionSetSaveSpec;
+        data: QuizQuestionsSaveSpec;
     };
     path: {
         /**
@@ -8640,7 +9293,7 @@ export type StudioV1SaveQuizQuestionsData = {
         id: string;
     };
     query?: never;
-    url: '/api/v1/studio/quiz/{id}/questionset';
+    url: '/api/v1/studio/quiz/{id}/question';
 };
 
 export type StudioV1SaveQuizQuestionsResponses = {
@@ -8653,6 +9306,29 @@ export type StudioV1SaveQuizQuestionsResponses = {
 };
 
 export type StudioV1SaveQuizQuestionsResponse = StudioV1SaveQuizQuestionsResponses[keyof StudioV1SaveQuizQuestionsResponses];
+
+export type StudioV1DeleteQuizQuesionData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Question Id
+         */
+        question_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/quiz/{id}/question/{question_id}';
+};
+
+export type StudioV1DeleteQuizQuesionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type StudioV1GetSurveyData = {
     body?: never;
@@ -8704,63 +9380,6 @@ export type StudioV1SaveSurveyResponses = {
 
 export type StudioV1SaveSurveyResponse = StudioV1SaveSurveyResponses[keyof StudioV1SaveSurveyResponses];
 
-export type StudioV1SaveSurveyQuestionData = {
-    /**
-     * MultiPartBodyParams
-     */
-    body: {
-        /**
-         * Files
-         *
-         * Max size: 3MB
-         */
-        files?: Array<Blob | File>;
-        data: SurveyQuestionSaveSpec;
-    };
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/api/v1/studio/survey/{id}/question';
-};
-
-export type StudioV1SaveSurveyQuestionResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: number;
-};
-
-export type StudioV1SaveSurveyQuestionResponse = StudioV1SaveSurveyQuestionResponses[keyof StudioV1SaveSurveyQuestionResponses];
-
-export type StudioV1DeleteSurveyQuesionData = {
-    body?: never;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-        /**
-         * Q
-         */
-        q: number;
-    };
-    query?: never;
-    url: '/api/v1/studio/survey/{id}/question/{q}';
-};
-
-export type StudioV1DeleteSurveyQuesionResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
 export type StudioV1SaveSurveyQuestionsData = {
     /**
      * MultiPartBodyParams
@@ -8772,7 +9391,7 @@ export type StudioV1SaveSurveyQuestionsData = {
          * Max size: 3MB
          */
         files?: Array<Blob | File>;
-        data: SurveyQuestionSetSaveSpec;
+        data: SurveyQuestionsSaveSpec;
     };
     path: {
         /**
@@ -8781,7 +9400,7 @@ export type StudioV1SaveSurveyQuestionsData = {
         id: string;
     };
     query?: never;
-    url: '/api/v1/studio/survey/{id}/questionset';
+    url: '/api/v1/studio/survey/{id}/question';
 };
 
 export type StudioV1SaveSurveyQuestionsResponses = {
@@ -8794,6 +9413,29 @@ export type StudioV1SaveSurveyQuestionsResponses = {
 };
 
 export type StudioV1SaveSurveyQuestionsResponse = StudioV1SaveSurveyQuestionsResponses[keyof StudioV1SaveSurveyQuestionsResponses];
+
+export type StudioV1DeleteSurveyQuesionData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Question Id
+         */
+        question_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/survey/{id}/question/{question_id}';
+};
+
+export type StudioV1DeleteSurveyQuesionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type StudioV1GetDiscussionData = {
     body?: never;
@@ -8887,12 +9529,12 @@ export type StudioV1DeleteDiscussionQuesionData = {
          */
         id: string;
         /**
-         * Q
+         * Question Id
          */
-        q: number;
+        question_id: number;
     };
     query?: never;
-    url: '/api/v1/studio/discussion/{id}/question/{q}';
+    url: '/api/v1/studio/discussion/{id}/question/{question_id}';
 };
 
 export type StudioV1DeleteDiscussionQuesionResponses = {
@@ -9000,12 +9642,12 @@ export type StudioV1DeleteAssignmentQuesionData = {
          */
         id: string;
         /**
-         * Q
+         * Question Id
          */
-        q: number;
+        question_id: number;
     };
     query?: never;
-    url: '/api/v1/studio/assignment/{id}/question/{q}';
+    url: '/api/v1/studio/assignment/{id}/question/{question_id}';
 };
 
 export type StudioV1DeleteAssignmentQuesionResponses = {
@@ -9184,8 +9826,8 @@ export type StudioV1SaveCourseResponses = {
 
 export type StudioV1SaveCourseResponse = StudioV1SaveCourseResponses[keyof StudioV1SaveCourseResponses];
 
-export type StudioV1CourseStructureData = {
-    body?: never;
+export type StudioV1SaveCourseSurveysData = {
+    body: RootModelListCourseSurveySaveSpec;
     path: {
         /**
          * Id
@@ -9193,17 +9835,364 @@ export type StudioV1CourseStructureData = {
         id: string;
     };
     query?: never;
-    url: '/api/v1/studio/course/{id}/structure';
+    url: '/api/v1/studio/course/{id}/survey';
 };
 
-export type StudioV1CourseStructureResponses = {
+export type StudioV1SaveCourseSurveysResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseSurveysResponse = StudioV1SaveCourseSurveysResponses[keyof StudioV1SaveCourseSurveysResponses];
+
+export type StudioV1RemoveCourseSurveyData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Course Survey Id
+         */
+        course_survey_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/survey/{course_survey_id}';
+};
+
+export type StudioV1RemoveCourseSurveyResponses = {
     /**
      * OK
      */
-    200: CourseStructureSpec;
+    200: unknown;
 };
 
-export type StudioV1CourseStructureResponse = StudioV1CourseStructureResponses[keyof StudioV1CourseStructureResponses];
+export type StudioV1SaveCourseAssessmentsData = {
+    body: RootModelListAssessmentSaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/assessment';
+};
+
+export type StudioV1SaveCourseAssessmentsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseAssessmentsResponse = StudioV1SaveCourseAssessmentsResponses[keyof StudioV1SaveCourseAssessmentsResponses];
+
+export type StudioV1RemoveCourseAssessmentData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Assessment Id
+         */
+        assessment_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/assessment/{assessment_id}';
+};
+
+export type StudioV1RemoveCourseAssessmentResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1SaveCourseLessonsData = {
+    body: RootModelListLessonSaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/lesson';
+};
+
+export type StudioV1SaveCourseLessonsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseLessonsResponse = StudioV1SaveCourseLessonsResponses[keyof StudioV1SaveCourseLessonsResponses];
+
+export type StudioV1RemoveCourseLessonData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Lesson Id
+         */
+        lesson_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/lesson/{lesson_id}';
+};
+
+export type StudioV1RemoveCourseLessonResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1SaveCourseCertificatesData = {
+    body: RootModelListCourseCertificateSaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/certificate';
+};
+
+export type StudioV1SaveCourseCertificatesResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseCertificatesResponse = StudioV1SaveCourseCertificatesResponses[keyof StudioV1SaveCourseCertificatesResponses];
+
+export type StudioV1RemoveCourseCertificateData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Course Certificate Id
+         */
+        course_certificate_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/certificate/{course_certificate_id}';
+};
+
+export type StudioV1RemoveCourseCertificateResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1SaveCourseRelationsData = {
+    body: RootModelListCourseRelationSaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/relation';
+};
+
+export type StudioV1SaveCourseRelationsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseRelationsResponse = StudioV1SaveCourseRelationsResponses[keyof StudioV1SaveCourseRelationsResponses];
+
+export type StudioV1RemoveCourseRelationData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Course Relation Id
+         */
+        course_relation_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/relation/{course_relation_id}';
+};
+
+export type StudioV1RemoveCourseRelationResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1SaveCourseCategoriesData = {
+    body: RootModelListCourseCategorySaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/category';
+};
+
+export type StudioV1SaveCourseCategoriesResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseCategoriesResponse = StudioV1SaveCourseCategoriesResponses[keyof StudioV1SaveCourseCategoriesResponses];
+
+export type StudioV1RemoveCourseCategoryData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Course Category Id
+         */
+        course_category_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/category/{course_category_id}';
+};
+
+export type StudioV1RemoveCourseCategoryResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1SaveCourseInstructorsData = {
+    body: RootModelListCourseInstructorSaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/instructor';
+};
+
+export type StudioV1SaveCourseInstructorsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseInstructorsResponse = StudioV1SaveCourseInstructorsResponses[keyof StudioV1SaveCourseInstructorsResponses];
+
+export type StudioV1RemoveCourseInstructorData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Course Instructor Id
+         */
+        course_instructor_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/instructor/{course_instructor_id}';
+};
+
+export type StudioV1RemoveCourseInstructorResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1SaveCourseFaqItemsData = {
+    body: RootModelListFaqItemSaveSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/faqitem';
+};
+
+export type StudioV1SaveCourseFaqItemsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<number>;
+};
+
+export type StudioV1SaveCourseFaqItemsResponse = StudioV1SaveCourseFaqItemsResponses[keyof StudioV1SaveCourseFaqItemsResponses];
+
+export type StudioV1RemoveCourseFaqItemData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Faq Item Id
+         */
+        faq_item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}/faqitem/{faq_item_id}';
+};
+
+export type StudioV1RemoveCourseFaqItemResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type SurveyV1GetSurveyData = {
     body?: never;

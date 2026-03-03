@@ -66,7 +66,7 @@ class Product(TimeStampedMixin, TaggableMixin):
 
     if TYPE_CHECKING:
         pk: int
-        productitem_set: "QuerySet[ProductItem]"
+        product_items: "QuerySet[ProductItem]"
 
     def __str__(self):
         return self.name
@@ -74,7 +74,7 @@ class Product(TimeStampedMixin, TaggableMixin):
 
 @pghistory.track()
 class ProductItem(TimeStampedMixin, OrderableMixin):
-    product = ForeignKey(Product, CASCADE, verbose_name=_("Product"))
+    product = ForeignKey(Product, CASCADE, related_name="product_items", verbose_name=_("Product"))
     validity_days = PositiveSmallIntegerField(_("Validity Days"), default=60)
     item_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Item Type"))
     item_id = CharField(_("Item ID"), max_length=36)
@@ -115,8 +115,7 @@ class Coupon(TimeStampedMixin):
         verbose_name_plural = _("Coupons")
 
     if TYPE_CHECKING:
-        ordercoupon_set: "QuerySet[OrderCoupon]"
-        ordercoupon_count: int
+        order_coupon_count: int
 
     def is_applicable_to_product(self, product: "Product"):
         if self.excluded_products.filter(id=product.pk).exists():
@@ -155,7 +154,7 @@ class Cart(TimeStampedMixin):
         constraints = [UniqueConstraint(fields=["user"], condition=Q(active=True), name="unique_active_cart_per_user")]
 
     if TYPE_CHECKING:
-        cartproduct_set: "QuerySet[CartProduct]"
+        cart_products: "QuerySet[CartProduct]"
 
     def deactivate(self):
         self.active = False
@@ -164,7 +163,7 @@ class Cart(TimeStampedMixin):
 
 @pghistory.track()
 class CartProduct(TimeStampedMixin):
-    cart = ForeignKey(Cart, CASCADE, verbose_name=_("Cart"))
+    cart = ForeignKey(Cart, CASCADE, related_name="cart_products", verbose_name=_("Cart"))
     product = ForeignKey(Product, CASCADE, verbose_name=_("Product"))
 
     class Meta(TimeStampedMixin.Meta):
@@ -198,7 +197,7 @@ class Order(TimeStampedMixin):
         indexes = [Index(fields=["status"]), Index(fields=["customer_name"]), Index(fields=["customer_email"])]
 
     if TYPE_CHECKING:
-        orderproduct_set: "QuerySet[OrderProduct]"
+        order_products: "QuerySet[OrderProduct]"
         _prefetched_objects_cache: dict[str, Sequence[OrderProduct]]
 
     @classmethod
@@ -228,7 +227,7 @@ class Order(TimeStampedMixin):
                 price=cp.product.price,
                 discount_amount=ZERO,
             )
-            for cp in cart.cartproduct_set.select_related("product").filter(
+            for cp in cart.cart_products.select_related("product").filter(
                 product__status=Product.StatusChoices.PUBLISHED
             )
         ]
@@ -236,7 +235,7 @@ class Order(TimeStampedMixin):
         if not dry_run:
             order_products = OrderProduct.objects.bulk_create(order_products)
 
-        order._prefetched_objects_cache = {"orderproduct_set": order_products}
+        order._prefetched_objects_cache = {"order_products": order_products}
 
         if coupon_codes:
             order.apply_coupons(coupon_codes, dry_run=dry_run)
@@ -254,12 +253,12 @@ class Order(TimeStampedMixin):
             return
 
         # _prefetched_objects_cache
-        order_products = self.orderproduct_set.all()
+        order_products = self.order_products.all()
         original_subtotal = sum((op.price for op in order_products), ZERO)
 
         valid_coupons = (
             Coupon.objects
-            .annotate(ordercoupon_count=Count("ordercoupon"))
+            .annotate(order_coupon_count=Count("ordercoupon"))
             .filter(
                 Q(valid_until__isnull=True) | Q(valid_until__gte=timezone.now()),
                 code__in=coupon_codes,
@@ -277,7 +276,7 @@ class Order(TimeStampedMixin):
                     % {"coupon_code": coupon.code, "min_order_price": coupon.min_order_price}
                 )
 
-            if coupon.usage_limit > 0 and coupon.ordercoupon_count >= coupon.usage_limit:
+            if coupon.usage_limit > 0 and coupon.order_coupon_count >= coupon.usage_limit:
                 raise ValidationError(
                     _("%(coupon_code)s has reached its usage limit %(usage_limit)s.")
                     % {"coupon_code": coupon.code, "usage_limit": coupon.usage_limit}
@@ -301,7 +300,7 @@ class Order(TimeStampedMixin):
             OrderProduct.objects.bulk_update(order_products, fields=["discount_amount"])
 
     def calculate_totals(self):
-        products = self.orderproduct_set.all()
+        products = self.order_products.all()
         self.subtotal = sum((op.price for op in products), ZERO)
         self.total_discount = sum((op.discount_amount for op in products), ZERO)
         self.total_amount = max(self.subtotal - self.total_discount, ZERO)
@@ -309,7 +308,7 @@ class Order(TimeStampedMixin):
 
 @pghistory.track()
 class OrderProduct(TimeStampedMixin):
-    order = ForeignKey(Order, CASCADE, verbose_name=_("Order"))
+    order = ForeignKey(Order, CASCADE, related_name="order_products", verbose_name=_("Order"))
     product = ForeignKey(Product, CASCADE, verbose_name=_("Product"))
 
     # snapshot
@@ -327,7 +326,7 @@ class OrderProduct(TimeStampedMixin):
 
 @pghistory.track()
 class OrderCoupon(OrderableMixin):
-    order = ForeignKey(Order, CASCADE, verbose_name=_("Order"))
+    order = ForeignKey(Order, CASCADE, related_name="order_coupons", verbose_name=_("Order"))
     coupon = ForeignKey(Coupon, CASCADE, verbose_name=_("Coupon"))
 
     ordering_group = ("order",)

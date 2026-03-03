@@ -32,7 +32,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.assistant.plugin.quiz import QuizMaker
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, AttemptModeChoices, LearningSessionStep, ScoreStatsDict, get_score_stats
+from apps.common.util import AccessDate, LearningSessionStep, ModeChoices, ScoreStatsDict, get_score_stats
 from apps.operation.models import AttachmentMixin
 from apps.quiz.trigger import attempt_retry_count
 
@@ -80,10 +80,10 @@ class QuestionPool(Model):
         constraints = [UniqueConstraint(fields=["title", "owner"], name="quiz_questionpool_ti_ow_uniq")]
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
     async def select_questions(self):
-        all_question_ids = [q async for q in self.question_set.values_list("id", flat=True)]
+        all_question_ids = [q async for q in self.questions.values_list("id", flat=True)]
         random.shuffle(all_question_ids)
         question_ids = all_question_ids[: self.select_count]
         return Question.objects.filter(id__in=question_ids)
@@ -91,7 +91,7 @@ class QuestionPool(Model):
 
 @pghistory.track()
 class Question(AttachmentMixin):
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     options = ArrayField(TextField(), verbose_name=_("Options"))
@@ -173,7 +173,7 @@ class Quiz(LearningObjectMixin):
         return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
 
     @classmethod
-    async def create_quiz_set(
+    async def create_quiz(
         cls,
         *,
         title: str,
@@ -260,8 +260,8 @@ class Attempt(AttemptMixin):
         _prefetched_objects_cache: dict[str, QuerySet[Question]]
 
     @classmethod
-    async def start(cls, *, quiz_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
-        quiz = await Quiz.objects.prefetch_related("question_pool__question_set").aget(id=quiz_id)
+    async def start(cls, *, quiz_id: str, learner_id: str, context: str, mode: ModeChoices):
+        quiz = await Quiz.objects.prefetch_related("question_pool__questions").aget(id=quiz_id)
         questions = await quiz.question_pool.select_questions()
         await aprefetch_related_objects(questions, "attachments")  # type: ignore
 

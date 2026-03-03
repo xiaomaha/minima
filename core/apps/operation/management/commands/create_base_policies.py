@@ -25,7 +25,7 @@ class Command(BaseCommand):
             )
 
             if created:
-                policy.policyversion_set.create(
+                policy.policy_versions.create(
                     body=f"Write your {label} policy here",
                     data_category={},
                     version="1.0",

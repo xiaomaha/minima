@@ -25,8 +25,8 @@ def test_studio_assignment_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "get assignment"
 
     data = res.json()
-    question_set = data["questionSet"][:3]
-    del data["questionSet"]
+    questions = data["questions"][:3]
+    del data["questions"]
 
     # save assignment
     res = client.post("/api/v1/studio/assignment", data={"data": json.dumps(data)}, format="multipart")
@@ -39,7 +39,7 @@ def test_studio_assignment_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/assignment", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new assignment"
 
-    question = question_set[0]
+    question = questions[0]
     question["id"] = 0
 
     # save assignment question

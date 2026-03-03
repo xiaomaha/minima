@@ -71,7 +71,7 @@ export const FormTextEditor = (props: Props) => {
           : []),
       ],
       content: props.value ?? '',
-      editorProps: { attributes: { class: 'prose outline-0 break-all h-full px-3 py-2' } },
+      editorProps: { attributes: { class: 'prose max-w-none outline-0 break-all h-full px-3 py-2' } },
 
       onUpdate: ({ editor }) => {
         const html = editor.isEmpty ? '' : editor.getHTML()

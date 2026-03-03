@@ -14,7 +14,7 @@ function RouteComponent() {
   const { t } = useTranslation()
 
   const [members] = createCachedStore(
-    'partnerV1GetMemberInfo',
+    'partnerV1MemberInfos',
     () => ({}),
     async () => {
       const { data } = await partnerV1MemberInfos()
@@ -130,7 +130,7 @@ function RouteComponent() {
                           </div>
                           <div class="label text-sm">{cohort.description}</div>
 
-                          <div class="space-y-4 mt-4 px-4">
+                          <div class="space-y-6 mt-4 px-4">
                             <div class="label mb-2 text-xs">{t('Staffs')}</div>
                             <For each={cohort.staffs}>
                               {(staff) => (

@@ -40,7 +40,7 @@ class PartnerGroupMemberSchema(Schema):
     @staticmethod
     def resolve_cohorts(obj: Member):
         cohorts = []
-        for c in obj.cohortmember_set.all():
+        for c in obj.cohort_members.all():
             c.cohort.member_count = c.member_count
             cohorts.append(c.cohort)
         return cohorts
@@ -54,7 +54,7 @@ class CohortSchema(Schema):
 
     @staticmethod
     def resolve_staffs(obj: Cohort):
-        return obj.cohortstaff_set.all()
+        return obj.cohort_staffs.all()
 
 
 class CohortStaffSchema(Schema):

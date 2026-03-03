@@ -42,7 +42,11 @@ function RouteComponent() {
           <>
             <div
               class="fixed inset-0 bg-base-300 bg-no-repeat bg-cover"
-              style={{ 'background-image': `url(${s().thumbnail})`, 'background-position': 'center', 'background-size': 'cover' }}
+              style={{
+                'background-image': `url(${s().thumbnail})`,
+                'background-position': 'center',
+                'background-size': 'cover',
+              }}
             >
               <div class="fixed inset-0 glass" style={{ '--glass-opacity': '10%', '--glass-reflect-opacity': '0%' }} />
             </div>

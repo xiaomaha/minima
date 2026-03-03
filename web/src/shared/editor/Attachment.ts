@@ -102,7 +102,9 @@ export const Attachment = Extension.create<AttachmentOptions>({
           const currentFileCount = currentFileNames(state).size
 
           if (files.length + currentFileCount > this.options.maxFiles) {
-            this.options.onValidationError?.(i18next.t('Maximum {{count}} file allowed', { count: this.options.maxFiles }))
+            this.options.onValidationError?.(
+              i18next.t('Maximum {{count}} file allowed', { count: this.options.maxFiles }),
+            )
             return false
           }
 

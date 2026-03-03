@@ -55,7 +55,7 @@ function RouteComponent() {
 
       <Show when={enrollments.end && enrollments.count === 0}>
         <NoContent message={t('No content enrolled yet.')} class="my-16">
-          <div class="text-base-content/70 space-y-2 mt-2">
+          <div class="text-base-content/70 space-y-6 mt-2">
             <div class="flex items-center justify-center">
               <Trans>
                 You can enroll content from the catalogs in{' '}

@@ -28,7 +28,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         if not create:
             return
 
-        if self.question_set.exists():
+        if self.questions.exists():
             return
 
         QuestionFactory.reset_sequence()
@@ -94,7 +94,7 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
     @lazy_attribute
     def answers(self: Submission):
         answer_dict = {}
-        for q in self.survey.question_pool.question_set.all():
+        for q in self.survey.question_pool.questions.all():
             if q.format == Question.SurveyQuestionFormatChoices.SINGLE_CHOICE.value:
                 answer = generic.random.randint(1, len(q.options))
             elif q.format == Question.SurveyQuestionFormatChoices.TEXT_INPUT.value:

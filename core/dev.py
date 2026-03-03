@@ -19,8 +19,13 @@ def up():
     subprocess.run(["docker", "compose", "up", "-d"])
 
 
+LANG = os.environ.get("LANGUAGE_CODE", "en-us")
+
+
 @app.command()
 def bootstrap():
+    category_fixture = "ncs_category_ko.json" if LANG.lower() == "ko-kr" else "ncs_category_en.json"
+
     commands = [
         "python manage.py migrate",
         "python manage.py collectstatic --noinput",
@@ -30,6 +35,7 @@ def bootstrap():
         "python manage.py create_platform_partner",
         "python manage.py create_base_policies",
         "python manage.py load_ncs_data",
+        f"python manage.py loaddata {category_fixture}",
     ]
 
     subprocess.run(["docker", "compose", "exec", "minima", "sh", "-c", " && ".join(commands)])

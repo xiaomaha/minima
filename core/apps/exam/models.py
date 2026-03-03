@@ -40,9 +40,9 @@ from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import (
     AccessDate,
-    AttemptModeChoices,
     GradingDate,
     LearningSessionStep,
+    ModeChoices,
     OtpTokenDict,
     ScoreStatsDict,
     get_score_stats,
@@ -87,10 +87,10 @@ class QuestionPool(Model):
         return self.title
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
     async def compose_questions(self):
-        all_questions = [q async for q in self.question_set.values_list("id", "format")]
+        all_questions = [q async for q in self.questions.values_list("id", "format")]
         question_ids = []
         for format, count in self.composition.items():
             ids = [id for id, f in all_questions if f == format]
@@ -107,7 +107,7 @@ class Question(AttachmentMixin):
         NUMBER_INPUT = "number_input", _("Number Input")
         ESSAY = "essay", _("Essay")
 
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
     format = CharField(_("Format"), max_length=20, choices=ExamQuestionFormatChoices.choices)
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
@@ -266,8 +266,8 @@ class Attempt(AttemptMixin):
             return self.tempanswer.answers
 
     @classmethod
-    async def start(cls, *, exam_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
-        exam = await Exam.objects.prefetch_related("question_pool__question_set").aget(id=exam_id)
+    async def start(cls, *, exam_id: str, learner_id: str, context: str, mode: ModeChoices):
+        exam = await Exam.objects.prefetch_related("question_pool__questions").aget(id=exam_id)
 
         if exam.verification_required:
             if not await OtpLog.check_otp_verification(user_id=learner_id, consumer=exam):

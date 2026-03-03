@@ -336,9 +336,10 @@ OTP_TOTP_THROTTLE_FACTOR = 1
 
 # tasks
 CELERY_BEAT_SCHEDULE = {
-    "sync-hot-events": {"task": "tracking.tasks.sync_hot_event", "schedule": 300.0},
-    "cleanup-hot-events": {"task": "tracking.tasks.cleanup_hot_event", "schedule": crontab(hour=2, minute=0)},
+    "sync-hot-events": {"task": "apps.tracking.tasks.sync_hot_event", "schedule": 300.0},
+    "cleanup-hot-events": {"task": "apps.tracking.tasks.cleanup_hot_event", "schedule": crontab(hour=2, minute=0)},
     "collect-daily-data": {"task": "apps.warehouse.tasks.collect_daily_data", "schedule": crontab(hour=1, minute=5)},
+    "cleanup-preview-data": {"task": "apps.studio.tasks.cleanup_preview_data", "schedule": crontab(hour=1, minute=10)},
 }
 
 # assistant

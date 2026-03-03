@@ -1,9 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
-from asgiref.sync import sync_to_async
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db import IntegrityError
 from django.db.models import Q
@@ -15,9 +13,7 @@ from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
 from apps.common.util import HttpRequest
 from apps.content.models import Media, Subtitle
-from apps.studio.api.v1.schema import OwnerSpec
 from apps.studio.decorator import editor_required, track_draft
-from apps.studio.models import Draft
 
 
 class SubtitleSpec(Schema):
@@ -33,17 +29,16 @@ class MediaSpec(LearningObjectMixinSchema):
     channel: str
     duration_seconds: float
     url: str
-    owner: OwnerSpec
     quizzes: list[str]
-    subtitleSet: list[SubtitleSpec]
+    subtitles: list[SubtitleSpec]
 
     @staticmethod
     def resolve_quizzes(obj: Media):
         return [q.pk for q in obj.quizzes.all()]
 
     @staticmethod
-    def resolve_subtitleSet(obj: Media):
-        return [s for s in obj.subtitle_set.all()]
+    def resolve_subtitles(obj: Media):
+        return [s for s in obj.subtitles.all()]
 
 
 class MediaSaveSpec(Schema):
@@ -65,16 +60,12 @@ router = Router(by_alias=True)
 @router.get("/media/{id}", response=MediaSpec)
 @editor_required()
 async def get_media(request: HttpRequest, id: str):
-    return (
-        await Media.objects
-        .select_related("owner")
-        .prefetch_related("subtitle_set", "quizzes")
-        .aget(id=id, owner_id=request.auth)
-    )
+    return await Media.objects.prefetch_related("subtitles", "quizzes").aget(id=id, owner_id=request.auth)
 
 
 @router.post("/media", response=str)
 @editor_required()
+@track_draft(Media)
 async def save_media(
     request: HttpRequest,
     data: MediaSaveSpec,
@@ -114,11 +105,6 @@ async def save_media(
             await media.quizzes.aset(quiz_ids)
         except IntegrityError:
             raise ValueError(ErrorCode.QUIZ_NOT_FOUND)
-
-    content_type = await sync_to_async(ContentType.objects.get_for_model)(Media)
-    await Draft.objects.aupdate_or_create(
-        content_type=content_type, content_id=media.id, defaults={"author_id": request.auth}
-    )
 
     return media.id
 

@@ -13,36 +13,47 @@ from apps.common.schema import (
 )
 from apps.competency.api.schema import CertificateAwardSchema
 from apps.course.models import Course
-from apps.operation.api.schema import FAQItemSchema, HonorCodeSchema
+from apps.operation.api.schema import FAQSchema, HonorCodeSchema
 from apps.partner.api.schema import PartnerSchema
 
 
 class CourseDetailSchema(LearningObjectMixinSchema):
     class CourseCategorySchema(Schema):
         id: int
-        name: str
-        ancestors: list[str]
+        label: str
 
     class CourseCertificateSchema(Schema):
+        class CourseCertificateItemSchema(Schema):
+            id: int
+            thumbnail: str
+            description: str
+            issuer: PartnerSchema
+
         id: int
-        name: str
-        thumbnail: str
-        description: str
-        issuer: PartnerSchema
+        label: str
+        certificate: CourseCertificateItemSchema
 
     class CourseInstructorSchema(Schema):
-        id: int
-        name: str
-        about: str
-        bio: list[str]
-        avatar: str | None
-        lead: bool
+        class CourseInstructorItemSchema(Schema):
+            email: str
+            about: str
+            bio: list[str]
+            avatar: str
 
-    class RelatedCourseSchema(Schema):
-        id: str
-        title: str
-        description: str
-        thumbnail: str | None
+        id: int
+        label: str
+        lead: bool
+        instructor: CourseInstructorItemSchema
+
+    class CourseRelationSchema(Schema):
+        class CourseRelationItemSchema(Schema):
+            id: str
+            description: str
+            thumbnail: str | None
+
+        id: int
+        label: str
+        related_course: CourseRelationItemSchema
 
     id: str
     owner: OwnerSchema
@@ -51,19 +62,11 @@ class CourseDetailSchema(LearningObjectMixinSchema):
     effort_hours: int
     level: Course.LevelChoices
 
-    faq_items: list[FAQItemSchema]
-    categories: list[CourseCategorySchema]
-    certificates: list[CourseCertificateSchema]
-    instructors: list[CourseInstructorSchema]
-    related_courses: list[RelatedCourseSchema]
-
-    @staticmethod
-    def resolve_faq_items(obj: Course):
-        return obj.faq.faqitem_set.all() if obj.faq else []
-
-    @staticmethod
-    def resolve_lessons(obj: Course):
-        return obj.lesson_set.all()
+    faq: FAQSchema
+    course_categories: list[CourseCategorySchema]
+    course_certificates: list[CourseCertificateSchema]
+    course_instructors: list[CourseInstructorSchema]
+    course_relations: list[CourseRelationSchema]
 
 
 class CourseEngagementSchema(AttemptMixinSchema):
@@ -82,26 +85,32 @@ class CourseEngagementSchema(AttemptMixinSchema):
 class CourseSchema(LearningObjectMixinSchema):
     class LessonSchema(Schema):
         class LessonMediaSchema(Schema):
-            id: str
-            title: str
-            thumbnail: str | None
-            format: str
+            class LessonMediaItemSchema(Schema):
+                id: str
+                thumbnail: str | None
+                format: str
+
+            media: LessonMediaItemSchema
 
         id: int
-        medias: list[LessonMediaSchema]
+        label: str
         start_date: datetime
         end_date: datetime
-        title: str
-        description: str
+        lesson_medias: list[LessonMediaSchema]
 
     class CourseSurveySchema(Schema):
-        survey_id: str
-        title: str
+        class CourseSurveyItemSchema(Schema):
+            id: str
+            thumbnail: str | None
+
+        id: int
+        label: str
         start_date: datetime
         end_date: datetime
+        survey: CourseSurveyItemSchema
 
     class GradingCriterionSchema(Schema):
-        title: str
+        label: str
         app_label: str
         model: str
         passing_point: int
@@ -112,22 +121,14 @@ class CourseSchema(LearningObjectMixinSchema):
         end_date: datetime | None
 
     id: str
-    honor_code: HonorCodeSchema
-    grading_criteria: list[GradingCriterionSchema]
-    lessons: list[LessonSchema]
-    surveys: list[CourseSurveySchema]
     objective: str
     preview_url: str | None
     effort_hours: int
     level: Course.LevelChoices
-
-    @staticmethod
-    def resolve_lessons(obj: Course):
-        return obj.lesson_set.all()
-
-    @staticmethod
-    def resolve_surveys(obj: Course):
-        return obj.coursesurvey_set.all()
+    honor_code: HonorCodeSchema
+    grading_criteria: list[GradingCriterionSchema]
+    lessons: list[LessonSchema]
+    course_surveys: list[CourseSurveySchema]
 
 
 class CourseSessionSchema(Schema):

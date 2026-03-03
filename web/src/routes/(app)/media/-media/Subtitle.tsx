@@ -224,7 +224,12 @@ export const Subtitle = (props: Props) => {
             </label>
           </Show>
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="toggle toggle-xs" checked={!!subtitleEnabled()} onChange={toggleSubtitleEnabled} />
+            <input
+              type="checkbox"
+              class="toggle toggle-xs"
+              checked={!!subtitleEnabled()}
+              onChange={toggleSubtitleEnabled}
+            />
             <span class="text-sm">{t('Subtitle Enabled')}</span>
           </label>
         </div>

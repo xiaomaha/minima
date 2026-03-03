@@ -7,7 +7,7 @@ import * as v from 'valibot'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { forceDownload } from '@/shared/utils'
-import { type ContentType, type FieldState, useEditing } from '../-context/editing'
+import { type ContentType, useEditing } from '../-context/editing'
 import { checkTree, getNestedState, getNestedValue, type Paths, setNestedState } from './helper'
 
 interface Props<TSchema extends GenericSchema = GenericSchema> {
@@ -25,7 +25,13 @@ interface Props<TSchema extends GenericSchema = GenericSchema> {
       Export: ({ label }: { label?: string }) => JSX.Element
       Import: ({ label }: { label?: string }) => JSX.Element
       Reset: ({ label }: { label?: string }) => JSX.Element
-      Save: ({ label, onSave }: { label?: string; onSave: (data: InferOutput<TSchema>) => Promise<void> }) => JSX.Element
+      Save: ({
+        label,
+        onSave,
+      }: {
+        label?: string
+        onSave: (data: InferOutput<TSchema>) => Promise<void>
+      }) => JSX.Element
       Remove: ({ onRemove }: { onRemove: () => Promise<number | undefined> }) => JSX.Element
     },
   ) => JSX.Element
@@ -49,10 +55,30 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
 
   const updateFieldState = () => {
     const result = buildFieldState(source, staging, props.schema, props.excludeKeys, props.rootKey)
+
+    const applyDirtyOnly = (fieldStateNode: unknown, resultNode: unknown): void => {
+      if (!resultNode || typeof resultNode !== 'object') return
+      if ('dirty' in (resultNode as object)) {
+        const leaf = fieldStateNode as { dirty: boolean; error: string } | undefined
+        if (leaf && typeof leaf === 'object' && 'dirty' in leaf) {
+          leaf.dirty = (resultNode as { dirty: boolean }).dirty
+          leaf.error = (resultNode as { error: string }).error
+        }
+        return
+      }
+      if (Array.isArray(fieldStateNode) && Array.isArray(resultNode)) {
+        fieldStateNode.splice(resultNode.length)
+      }
+      for (const key of Object.keys(resultNode as object)) {
+        applyDirtyOnly((fieldStateNode as Record<string, unknown>)?.[key], (resultNode as Record<string, unknown>)[key])
+      }
+    }
+
     if (!props.rootKey || props.rootKey.length === 0) {
-      modifyMutable(fieldState, reconcile(result as FieldState<ContentType>))
+      applyDirtyOnly(fieldState, result)
     } else {
-      setNestedState(fieldState, props.rootKey, result)
+      const current = getNestedState(fieldState, props.rootKey)
+      applyDirtyOnly(current, result)
     }
   }
 
@@ -134,7 +160,9 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
   }
 
   const exportCSV = async () => {
-    const csv = Papa.unparse(flattenBySchema(getNestedValue(staging, props.rootKey as Paths<ContentType>), props.schema))
+    const csv = Papa.unparse(
+      flattenBySchema(getNestedValue(staging, props.rootKey as Paths<ContentType>), props.schema),
+    )
     forceDownload(csv, 'text/csv', `${props.label}-${new Date().toISOString()}.csv`)
   }
 
@@ -178,7 +206,8 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
         const target = getNestedValue(staging, rootKey as Paths<ContentType>)
 
         if (Array.isArray(target)) {
-          target.push(...(result.output as []))
+          const existing = new Set(target.map((item) => JSON.stringify(item)))
+          target.push(...(result.output as []).filter((item) => !existing.has(JSON.stringify(item))))
         } else {
           const merged = smartMerge(target, result.output as Partial<typeof target>, props.schema)
           modifyMutable(target, reconcile(merged))
@@ -342,6 +371,14 @@ const flattenBySchema = <TSchema extends GenericSchema>(data: unknown, schema: T
   return [result as FlattenResult<TSchema>]
 }
 
+const unwrapSchema = (schema: GenericSchema): GenericSchema => {
+  const wrappable = ['nullable', 'nullish', 'optional']
+  if (wrappable.includes(schema.type)) {
+    return (schema as { wrapped?: GenericSchema }).wrapped ?? schema
+  }
+  return schema
+}
+
 const unflattenBySchema = <TSchema extends GenericSchema>(csvData: unknown, schema: TSchema): InferOutput<TSchema> => {
   const unflattenObject = (flatObj: Record<string, unknown>, s: GenericSchema): Record<string, unknown> => {
     const result: Record<string, unknown> = {}
@@ -352,7 +389,9 @@ const unflattenBySchema = <TSchema extends GenericSchema>(csvData: unknown, sche
 
     const entries = (s as unknown as { entries: Record<string, GenericSchema> }).entries
 
-    for (const [key, valueSchema] of Object.entries(entries)) {
+    for (const [key, rawSchema] of Object.entries(entries)) {
+      const valueSchema = unwrapSchema(rawSchema)
+
       if (valueSchema.type === 'object' && (valueSchema as { entries?: unknown }).entries) {
         const nestedFlat: Record<string, unknown> = {}
         const prefix = `${key}.`

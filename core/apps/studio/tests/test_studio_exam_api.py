@@ -3,6 +3,7 @@ import json
 import pytest
 from django.test.client import Client
 
+from apps.exam.models import Attempt
 from apps.exam.tests.factories import ExamFactory
 from conftest import AdminUser
 
@@ -12,7 +13,8 @@ from conftest import AdminUser
 def test_studio_exam_flow(client: Client, admin_user: AdminUser):
     admin_user.login()
 
-    ExamFactory(owner=admin_user.get_user())
+    exam = ExamFactory(owner=admin_user.get_user())
+    Attempt.objects.filter(exam=exam).delete()
 
     # get content suggestions
     res = client.get("/api/v1/studio/suggestion/content?kind=exam")
@@ -25,8 +27,8 @@ def test_studio_exam_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "get exam"
 
     data = res.json()
-    question_set = data["questionSet"][:3]
-    del data["questionSet"]
+    questions = data["questions"][:3]
+    del data["questions"]
 
     # save exam
     res = client.post("/api/v1/studio/exam", data={"data": json.dumps(data)}, format="multipart")
@@ -39,26 +41,15 @@ def test_studio_exam_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/exam", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new exam"
 
-    question = question_set[0]
-    question["id"] = 0
-
-    # save exam question
-    res = client.post(
-        f"/api/v1/studio/exam/{exam_id}/question", data={"data": json.dumps(question)}, format="multipart"
-    )
-    assert res.status_code == 200, "save exam question"
-
-    # delete exam question
-    res = client.delete(f"/api/v1/studio/exam/{exam_id}/question/{res.json()}")
-    assert res.status_code == 200, "delete exam question"
-
-    for question in question_set:
+    for question in questions:
         question["question"] += "1"
 
     # save exam questions
     res = client.post(
-        f"/api/v1/studio/exam/{exam_id}/questionset",
-        data={"data": json.dumps({"data": question_set})},
-        format="multipart",
+        f"/api/v1/studio/exam/{exam_id}/question", data={"data": json.dumps({"data": questions})}, format="multipart"
     )
     assert res.status_code == 200, "save exam questions"
+
+    # delete exam question
+    res = client.delete(f"/api/v1/studio/exam/{exam_id}/question/{res.json()[0]}")
+    assert res.status_code == 200, "delete exam question"

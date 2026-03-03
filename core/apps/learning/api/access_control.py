@@ -7,7 +7,7 @@ from celery.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from apps.common.error import ErrorCode
-from apps.common.util import AccessDate, AttemptModeChoices, HttpRequest, openapi_query_param
+from apps.common.util import AccessDate, HttpRequest, ModeChoices, openapi_query_param
 from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
 from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
@@ -22,7 +22,7 @@ def access_date(app_label, model, *, id_field: str = "id"):
         openapi_query_param(func=func, name="media", schema_type="string", required=False, nullable=False)
 
         # currently only quiz is allowed to be inlined
-        if app_label == Quiz._meta.app_label and model == Quiz._meta.model.__name__.lower():
+        if app_label == Quiz._meta.app_label and model == Quiz._meta.model_name:
             openapi_query_param(func=func, name="course", schema_type="string", required=False, nullable=False)
 
         @wraps(func)
@@ -39,9 +39,9 @@ def access_date(app_label, model, *, id_field: str = "id"):
             # step 1: check enrollment
 
             if course_id:
-                candidate = (course_id, Course._meta.app_label, Course._meta.model.__name__.lower())
+                candidate = (course_id, Course._meta.app_label, Course._meta.model_name)
             elif media_id:
-                candidate = (media_id, Media._meta.app_label, Media._meta.model.__name__.lower())
+                candidate = (media_id, Media._meta.app_label, Media._meta.model_name)
             else:
                 candidate = (content_id, app_label, model)
 
@@ -54,7 +54,7 @@ def access_date(app_label, model, *, id_field: str = "id"):
             ).afirst()  # unique
 
             public_access = None
-            if app_label == Media._meta.app_label and model == Media._meta.model.__name__.lower():
+            if app_label == Media._meta.app_label and model == Media._meta.model_name:
                 public_access = await PublicAccessMedia.get_access_date(media_id=content_id)
             elif media_id:
                 public_access = await PublicAccessMedia.get_access_date(media_id=media_id)
@@ -166,11 +166,11 @@ def access_mode():
 
         @wraps(func)
         async def wrapper(request: HttpRequest, *args, **kwargs):
-            mode = request.GET.get("mode", AttemptModeChoices.NORMAL)
-            if mode not in AttemptModeChoices:
+            mode = request.GET.get("mode", ModeChoices.NORMAL)
+            if mode not in ModeChoices:
                 raise ValueError(ErrorCode.INVALID_ACCESS_MODE)
 
-            request.access_mode = cast(AttemptModeChoices, mode)
+            request.access_mode = cast(ModeChoices, mode)
 
             return await func(request, *args, **kwargs)
 

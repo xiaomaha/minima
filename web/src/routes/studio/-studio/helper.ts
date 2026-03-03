@@ -30,7 +30,11 @@ export const getNestedState = (fieldState: object, path: readonly (string | numb
   return path.reduce((cur, key) => (cur as Record<string | number, unknown> | undefined)?.[key], fieldState as unknown)
 }
 
-export const setNestedValue = <T extends object, P extends readonly [...Paths<T>]>(obj: T, path: P, value: NestedValue<T, P>) => {
+export const setNestedValue = <T extends object, P extends readonly [...Paths<T>]>(
+  obj: T,
+  path: P,
+  value: NestedValue<T, P>,
+) => {
   const target = path.slice(0, -1).reduce((cur, key, i) => {
     const record = cur as Record<string | number, unknown>
     if (record[key] === undefined || record[key] === null) {

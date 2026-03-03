@@ -15,15 +15,6 @@ svg.tabler-icon {
   border-top: 3px solid var(--color-blue-500);
 }
 
-/* tiptap placeholder */
-.tiptap .is-empty::before {
-  content: attr(data-placeholder);
-  @apply text-base-content/40;
-  float: left;
-  height: 0;
-  pointer-events: none;
-}
-
 .modal-box {
   max-height: calc(100svh - 2rem);
 }
@@ -51,15 +42,40 @@ fieldset:disabled .tiptap a {
   cursor: pointer;
 }
 
+/* tiptap placeholder */
+.tiptap .is-empty::before {
+  content: attr(data-placeholder);
+  @apply text-base-content/40;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 .tiptap {
   p {
     @apply my-3 first:mt-0 last:mb-0;
   }
-  h1 { @apply mt-8 mb-3 first:mt-0 last:mb-0; }
-  h2 { @apply mt-6 mb-3 first:mt-0 last:mb-0; }
-  h3 { @apply mt-4 mb-2 first:mt-0 last:mb-0; }
-  ul, ol { @apply my-3 first:mt-0 last:mb-0; }
-  blockquote { @apply my-4 first:mt-0 last:mb-0; }
+
+  h1 {
+    @apply mt-8 mb-3 first:mt-0 last:mb-0;
+  }
+
+  h2 {
+    @apply mt-6 mb-3 first:mt-0 last:mb-0;
+  }
+
+  h3 {
+    @apply mt-4 mb-2 first:mt-0 last:mb-0;
+  }
+
+  ul,
+  ol {
+    @apply my-3 first:mt-0 last:mb-0;
+  }
+
+  blockquote {
+    @apply my-4 first:mt-0 last:mb-0;
+  }
 
   img {
     margin-top: 0 !important;

@@ -16,7 +16,7 @@ function RouteComponent() {
   const { t } = useTranslation()
 
   const [devices, { setStore }] = createCachedStore(
-    'operationV1GetNotificationDevices',
+    'operationV1GetDevices',
     () => ({}),
     async () => {
       const { data } = await operationV1GetDevices()

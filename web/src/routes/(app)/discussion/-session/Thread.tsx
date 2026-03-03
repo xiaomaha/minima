@@ -3,7 +3,12 @@ import { formatDistanceToNow } from 'date-fns'
 import { createSignal, For, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import type * as v from 'valibot'
-import { type DiscussionPostNestedSchema, discussionV1CreatePost, discussionV1GetPosts, discussionV1UpdatePost } from '@/api'
+import {
+  type DiscussionPostNestedSchema,
+  discussionV1CreatePost,
+  discussionV1GetPosts,
+  discussionV1UpdatePost,
+} from '@/api'
 import { vDiscussionPostSaveSchema } from '@/api/valibot.gen'
 import { accessContextParam } from '@/context'
 import { accountStore } from '@/routes/(app)/account/-store'
@@ -68,7 +73,9 @@ export const Thread = () => {
               <span>{t('{{count}} reply', { count: s().postCount!.validReply })}</span>
               <div
                 class="tooltip"
-                data-tip={t('Only the number of posts that meet the evaluation criteria is included in the total count.')}
+                data-tip={t(
+                  'Only the number of posts that meet the evaluation criteria is included in the total count.',
+                )}
               >
                 <IconHelpCircleFilled class="text-info" />
               </div>
@@ -175,7 +182,9 @@ const PostThread = (props: PostThreadProps) => {
           <Avatar user={post.learner} size="lg" />
           <div>
             <div class="font-semibold text-base">{displayName(post.learner)}</div>
-            <div class="text-sm text-base-content/50">{formatDistanceToNow(props.post.modified, { addSuffix: true })}</div>
+            <div class="text-sm text-base-content/50">
+              {formatDistanceToNow(props.post.modified, { addSuffix: true })}
+            </div>
           </div>
           <Show when={post.learner.id === accountStore.user?.id}>
             <div class="badge badge-sm badge-primary badge-soft">{t('Me')}</div>
@@ -241,7 +250,9 @@ const PostThread = (props: PostThreadProps) => {
                     <Avatar user={reply.learner} size="md" />
                     <div>
                       <div class="font-medium text-sm">{displayName(reply.learner)}</div>
-                      <div class="text-xs text-base-content/50">{formatDistanceToNow(reply.modified, { addSuffix: true })}</div>
+                      <div class="text-xs text-base-content/50">
+                        {formatDistanceToNow(reply.modified, { addSuffix: true })}
+                      </div>
                     </div>
                     <Show when={reply.learner.id === accountStore.user?.id}>
                       <div class="badge badge-xs badge-primary badge-soft">{t('Me')}</div>
@@ -331,7 +342,7 @@ const ContentEditor = (props: ContentEditorProps) => {
       }
     } else {
       const { data } = await discussionV1UpdatePost({
-        path: { id: props.discussionId, postId: props.postId },
+        path: { id: props.discussionId, post_id: props.postId },
         body: { ...values, files: files() },
       })
       if (!props.parentId) {

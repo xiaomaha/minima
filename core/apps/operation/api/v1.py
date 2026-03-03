@@ -65,7 +65,7 @@ async def get_inquiries(request: HttpRequest, filter: Query[InquiryFilterSchema]
     qs = (
         Inquiry.objects
         .select_related("content_type")
-        .prefetch_related("inquiryresponse_set__writer", "attachments")
+        .prefetch_related("inquiry_responses__writer", "attachments")
         .filter(writer_id=request.auth)
         .order_by("-created")
     )
@@ -133,13 +133,8 @@ async def agree_policies(request: HttpRequest, data: PolicyVersionAgreementSchem
     return await PolicyAgreement.agree_policies(user_id=request.auth, agreements=data.model_dump())
 
 
-@router.get("/thread/{appLabel}/{model}/subject/{subjectId}", response=ThreadSchema)
-async def get_thread(
-    request: HttpRequest,
-    app_label: Annotated[str, functions.Path(alias="appLabel")],
-    model: str,
-    subject_id: Annotated[str, functions.Path(alias="subjectId")],
-):
+@router.get("/thread/{app_label}/{model}/subject/{subject_id}", response=ThreadSchema)
+async def get_thread(request: HttpRequest, app_label: str, model: str, subject_id: str):
     return await aget_object_or_404(
         Thread, subject_id=subject_id, subject_type__app_label=app_label, subject_type__model=model
     )
@@ -182,8 +177,8 @@ async def save_comment(
     )
 
 
-@router.delete("/thread/{id}/comment/{commentId}")
-async def delete_comment(request: HttpRequest, id: int, comment_id: Annotated[int, functions.Path(alias="commentId")]):
+@router.delete("/thread/{id}/comment/{comment_id}")
+async def delete_comment(request: HttpRequest, id: int, comment_id: int):
     comment = await aget_object_or_404(Comment, id=comment_id, thread_id=id, writer_id=request.auth)
     comment.deleted = True
     await comment.asave()

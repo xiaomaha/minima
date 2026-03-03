@@ -31,7 +31,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         if not create:
             return
 
-        if self.question_set.exists():
+        if self.questions.exists():
             return
 
         QuestionFactory.reset_sequence()

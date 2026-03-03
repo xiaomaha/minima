@@ -25,12 +25,15 @@ class HonorCodeSchema(TimeStampedMixinSchema):
     code: str
 
 
-class FAQItemSchema(TimeStampedMixinSchema):
+class FAQSchema(Schema):
+    class FAQItemSchema(TimeStampedMixinSchema):
+        question: str
+        answer: str
+
     id: int
-    ordering: int
-    question: str
-    answer: str
-    active: bool
+    name: str
+    description: str
+    items: list[FAQItemSchema]
 
 
 class InquirySchema(TimeStampedMixinSchema):

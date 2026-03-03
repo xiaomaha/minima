@@ -8,7 +8,6 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { filenameFromUrl } from '@/shared/utils'
 import type { ContentType, State } from '../-context/editing'
 import { useEditing } from '../-context/editing'
-import { REQUIRED } from '../quiz/-data'
 import { getNestedState, getNestedValue, type Paths, setNestedState, setNestedValue } from './helper'
 
 const STUDIO_FIELD_STYLE =
@@ -21,6 +20,7 @@ interface FieldProps {
   label: string
   schema: GenericSchema
   class?: string
+  readonly?: boolean
 }
 
 interface TextFieldProps extends FieldProps {
@@ -30,7 +30,7 @@ interface TextFieldProps extends FieldProps {
 export const TextField = (props: TextFieldProps) => {
   const { source, staging, fieldState } = useEditing()
 
-  const value = () => getNestedValue(staging, props.path) as string | undefined
+  const value = () => (getNestedValue(staging, props.path) as string | undefined) ?? ''
   const state = () => getNestedState(fieldState, props.path) as State | undefined
 
   const isDirty = () => state()?.dirty ?? false
@@ -44,7 +44,7 @@ export const TextField = (props: TextFieldProps) => {
     const val = draft()
     const result = v.safeParse(props.schema, val)
     setNestedState(fieldState, props.path, {
-      dirty: val !== getNestedValue(source, props.path),
+      dirty: val !== (getNestedValue(source, props.path) ?? ''),
       error: result.success ? '' : result.issues[0].message,
     })
   })
@@ -55,7 +55,7 @@ export const TextField = (props: TextFieldProps) => {
       <Switch>
         <Match when={!props.multiline}>
           <input
-            name={props.label}
+            name={props.path.join('.')}
             placeholder={props.label}
             value={draft()}
             onInput={(e) => {
@@ -64,11 +64,12 @@ export const TextField = (props: TextFieldProps) => {
             }}
             class={`input ${STUDIO_FIELD_STYLE} ${props.class ?? ''}`}
             classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
+            readonly={props.readonly}
           />
         </Match>
         <Match when={props.multiline}>
           <textarea
-            name={props.label}
+            name={props.path.join('.')}
             placeholder={props.label}
             value={draft()}
             onInput={(e) => {
@@ -77,6 +78,7 @@ export const TextField = (props: TextFieldProps) => {
             }}
             class={`textarea min-h-14 field-sizing-content ${STUDIO_FIELD_STYLE} ${props.class ?? ''}`}
             classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
+            readonly={props.readonly}
           />
         </Match>
       </Switch>
@@ -121,7 +123,7 @@ export const BooleanField = (props: BooleanFieldProps) => {
       classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
     >
       <input
-        name={props.label}
+        name={props.path.join('.')}
         type="checkbox"
         checked={draft()}
         onInput={(e) => {
@@ -129,6 +131,7 @@ export const BooleanField = (props: BooleanFieldProps) => {
           setNestedValue(staging, props.path, e.currentTarget.checked)
         }}
         class="checkbox checkbox-sm outline-0"
+        readonly={props.readonly}
       />
       <span>{props.label}</span>
     </label>
@@ -163,19 +166,18 @@ export const NumberField = (props: NumberFieldProps) => {
     <label class="floating-label">
       <span class="bg-transparent">{props.label}</span>
       <input
-        name={props.label}
+        name={props.path.join('.')}
         type="number"
         placeholder={props.label}
         value={(draft() ?? 0) < 0 ? '' : draft()}
         onInput={(e) => {
           const val = e.currentTarget.valueAsNumber
-          setDraft((Number.isNaN(val) ? '' : val) as number)
-          if (!Number.isNaN(val)) {
-            setNestedValue(staging, props.path, val)
-          }
+          setDraft((Number.isNaN(val) ? null : val) as number)
+          setNestedValue(staging, props.path, Number.isNaN(val) ? null : val)
         }}
         class={`input ${STUDIO_FIELD_STYLE} ${props.class ?? ''}`}
         classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
+        readonly={props.readonly}
       />
       <Show when={hasError()}>
         <div class="bg-transparent text-xs ml-3 mt-0.5 text-base-content/40 flex items-center gap-2">
@@ -217,9 +219,9 @@ export const SelectField = (props: SelectFieldProps) => {
   return (
     <label class="floating-label flex-1">
       <span class="bg-transparent">{props.label}</span>
-      <input name={props.label} placeholder={props.label} value={draft() ?? ''} class="hidden" hidden />
+      <input name={`$props.path.join('.')}-label`} placeholder={props.label} value={draft() ?? ''} class="hidden" />
       <select
-        name={props.label}
+        name={props.path.join('.')}
         value={draft()}
         onChange={(e) => {
           setDraft(e.currentTarget.value)
@@ -230,7 +232,10 @@ export const SelectField = (props: SelectFieldProps) => {
           '[&:has(option:disabled:checked)]:text-base-content/40 [&::picker(select)]:text-base-content ' +
           `${STUDIO_FIELD_STYLE} ${props.class ?? ''}`
         }
-        classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
+        classList={{
+          [DIRTY_FIELD_STYLE]: isDirty(),
+          'pointer-events-none': props.readonly,
+        }}
       >
         <option value="" disabled selected>
           {props.label}
@@ -297,7 +302,7 @@ export const CommaSeparatedField = (props: CommaSeparatedFieldProps) => {
     <label class="floating-label flex-1">
       <span class="bg-transparent">{props.label}</span>
       <input
-        name={props.label}
+        name={props.path.join('.')}
         placeholder={props.label}
         value={draft()}
         onInput={(e) => {
@@ -313,6 +318,7 @@ export const CommaSeparatedField = (props: CommaSeparatedFieldProps) => {
         }}
         class={`input ${STUDIO_FIELD_STYLE} ${props.class ?? ''}`}
         classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
+        readonly={props.readonly}
       />
       <Show when={hasError()}>
         <div class="bg-transparent text-xs ml-3 mt-0.5 text-base-content/40 flex items-center gap-2">
@@ -333,6 +339,7 @@ interface ThumbnailFieldProps {
   class?: string
   required?: boolean
   onFileSelect: (file: File) => void
+  readonly?: boolean
 }
 
 const THUMBNAIL_MAX_FILE_SIZE = 1024 * 1024
@@ -355,7 +362,7 @@ export const ThumbnailField = (props: ThumbnailFieldProps) => {
   createEffect(() => {
     setNestedState(fieldState, props.path, {
       dirty: value() !== getNestedValue(source, props.path),
-      error: !value() && props.required ? REQUIRED : '',
+      error: !value() && props.required ? t('required') : '',
     })
   })
 
@@ -401,7 +408,12 @@ export const ThumbnailField = (props: ThumbnailFieldProps) => {
 
   return (
     <>
-      <ImageCropDialog file={cropFile()} aspectRatio={16 / 9} onClose={() => setCropFile(undefined)} onCrop={handleCrop} />
+      <ImageCropDialog
+        file={cropFile()}
+        aspectRatio={16 / 9}
+        onClose={() => setCropFile(undefined)}
+        onCrop={handleCrop}
+      />
 
       <div>
         <label
@@ -421,7 +433,14 @@ export const ThumbnailField = (props: ThumbnailFieldProps) => {
               </span>
             </span>
           )}
-          <input name={props.label} type="file" accept="image/*" class="hidden" onInput={handleFile} />
+          <input
+            name={`${props.path.join('.')}-label`}
+            type="file"
+            accept="image/*"
+            class="hidden"
+            onInput={handleFile}
+            readonly={props.readonly}
+          />
           <Show when={isDirty()}>
             <button
               type="button"
@@ -469,7 +488,7 @@ export const AttachmentField = (props: AttachmentFieldProps) => {
   createEffect(() => {
     setNestedState(fieldState, props.path, {
       dirty: value() !== getNestedValue(source, props.path),
-      error: !value() && props.required ? REQUIRED : '',
+      error: !value() && props.required ? t('required') : '',
     })
   })
 
@@ -526,7 +545,7 @@ export const AttachmentField = (props: AttachmentFieldProps) => {
       <span class="bg-transparent">{placeholder()}</span>
       <div class="flex items-center gap-2">
         <input
-          name={props.label}
+          name={props.path.join('.')}
           placeholder={placeholder()}
           value={filename() || (value() ? filenameFromUrl(value()!) : '')}
           class={`input cursor-pointer ${STUDIO_FIELD_STYLE}`}
@@ -536,11 +555,12 @@ export const AttachmentField = (props: AttachmentFieldProps) => {
         />
         <input
           ref={fileRef}
-          name={props.label}
+          name={props.path.join('.')}
           type="file"
           accept={props.allowedTypes?.map((t) => `.${t}`).join(',') ?? '*'}
           class="hidden"
           onInput={handleFile}
+          readonly={props.readonly}
         />
         <Show when={isDirty()}>
           <button
@@ -567,6 +587,120 @@ export const AttachmentField = (props: AttachmentFieldProps) => {
             <IconDownload size={16} />
           </a>
         </Show>
+      </div>
+      <Show when={hasError()}>
+        <div class="bg-transparent text-xs ml-3 mt-0.5 text-base-content/40 flex items-center gap-2">
+          <div class="status status-error" />
+          {hasError()}
+        </div>
+      </Show>
+    </label>
+  )
+}
+
+interface TagFieldProps extends CommaSeparatedFieldProps {
+  badgeClass?: string
+}
+
+export const TagField = (props: TagFieldProps) => {
+  const { source, staging, fieldState } = useEditing()
+
+  const value = () => (getNestedValue(staging, props.path) as string[] | undefined) || []
+  const state = () => getNestedState(fieldState, props.path) as State | undefined
+
+  const isDirty = () => state()?.dirty ?? false
+  const hasError = () => state()?.error ?? ''
+
+  const [inputDraft, setInputDraft] = createSignal('')
+
+  const checkDirty = () => {
+    const sourceArray = getNestedValue(source, props.path) as string[] | undefined
+    const stagingArray = getNestedValue(staging, props.path) as string[] | undefined
+
+    if (!stagingArray && !sourceArray) return false
+    if (!stagingArray || !sourceArray) return true
+    if (stagingArray.length !== sourceArray.length) return true
+    for (let i = 0; i < stagingArray.length; i++) {
+      if (stagingArray[i] !== sourceArray[i]) return true
+    }
+    return false
+  }
+
+  createEffect(() => {
+    const val = value().join(', ')
+    const result = v.safeParse(props.schema, val)
+    setNestedState(fieldState, props.path, {
+      dirty: checkDirty(),
+      error: result.success ? '' : result.issues[0].message,
+    })
+  })
+
+  const addTag = (tag: string) => {
+    const trimmed = tag.trim()
+    if (!trimmed || value().includes(trimmed)) return
+    setNestedValue(staging, props.path, [...value(), trimmed])
+    setInputDraft('')
+  }
+
+  const removeTag = (index: number) => {
+    setNestedValue(
+      staging,
+      props.path,
+      value().filter((_, i) => i !== index),
+    )
+  }
+
+  let inputRef: HTMLInputElement | undefined
+
+  return (
+    <label class="floating-label flex-1" onclick={(e) => e.preventDefault()}>
+      <span class="bg-transparent">{props.label}</span>
+      <div
+        class={`input flex flex-wrap gap-1 items-center h-auto min-h-10 cursor-text ${STUDIO_FIELD_STYLE} ${props.class ?? ''}`}
+        classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
+        onclick={() => inputRef?.focus()}
+      >
+        <For each={value()}>
+          {(tag, i) => (
+            <span class={`badge gap-1 ${props.badgeClass ?? ''}`}>
+              {tag}
+              <button
+                type="button"
+                class="cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  removeTag(i())
+                }}
+                onMouseDown={(e) => e.preventDefault()}
+                tabIndex={-1}
+              >
+                <IconX size={12} />
+              </button>
+            </span>
+          )}
+        </For>
+        <input
+          name={props.path.join('.')}
+          ref={inputRef}
+          value={inputDraft() || (value().length ? ' ' : '')} // trick to float label
+          onInput={(e) => setInputDraft(e.currentTarget.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+              e.preventDefault()
+              addTag(inputDraft())
+            }
+            if (e.key === 'Backspace' && !inputDraft() && value().length) {
+              removeTag(value().length - 1)
+            }
+          }}
+          onBlur={() => {
+            if (inputDraft()) addTag(inputDraft())
+          }}
+          class="bg-transparent flex-1 min-w-20 h-6 text-sm placeholder:text-base-content/40"
+          placeholder={props.label}
+          readonly={props.readonly}
+        />
       </div>
       <Show when={hasError()}>
         <div class="bg-transparent text-xs ml-3 mt-0.5 text-base-content/40 flex items-center gap-2">

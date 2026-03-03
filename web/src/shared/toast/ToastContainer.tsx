@@ -12,7 +12,7 @@ export const ToastContainer = () => {
         <For each={toasts()}>
           {(toast) => (
             <div
-              class={'alert w-full shadow-2xl relative'}
+              class={'alert w-full shadow-2xl relative opacity-80'}
               classList={{
                 'alert-info': toast.type === 'info',
                 'alert-success': toast.type === 'success',

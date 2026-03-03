@@ -256,6 +256,7 @@ export const vAssignmentSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     honorCode: vHonorCodeSchema
@@ -507,8 +508,8 @@ export const vCertificateSchema = v.object({
     description: v.string(),
     thumbnail: v.string(),
     issuer: vPartnerSchema,
-    certificateskillSet: v.array(vCertificateSkillSchema),
-    certificateendorsementSet: v.array(vCertificateEndorsementSchema)
+    certificateSkills: v.array(vCertificateSkillSchema),
+    certificateEndorsements: v.array(vCertificateEndorsementSchema)
 });
 
 /**
@@ -580,7 +581,7 @@ export const vSkillDataSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     name: v.string(),
     level: v.pipe(v.number(), v.integer()),
-    factorSet: v.array(vFactoryDataSchema)
+    factors: v.array(vFactoryDataSchema)
 });
 
 /**
@@ -611,6 +612,7 @@ export const vQuizSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     questionCount: v.pipe(v.number(), v.integer())
@@ -632,6 +634,7 @@ export const vMediaSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     license: v.string(),
     channel: v.string(),
@@ -734,6 +737,7 @@ export const vSearchedMediaSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     url: v.string(),
@@ -779,20 +783,29 @@ export const vCourseEngagementSchema = v.object({
 });
 
 /**
+ * CourseSurveyItemSchema
+ */
+export const vCourseSurveyItemSchema = v.object({
+    id: v.string(),
+    thumbnail: v.nullable(v.string())
+});
+
+/**
  * CourseSurveySchema
  */
 export const vCourseSurveySchema = v.object({
-    surveyId: v.string(),
-    title: v.string(),
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
     startDate: v.pipe(v.string(), v.isoTimestamp()),
-    endDate: v.pipe(v.string(), v.isoTimestamp())
+    endDate: v.pipe(v.string(), v.isoTimestamp()),
+    survey: vCourseSurveyItemSchema
 });
 
 /**
  * GradingCriterionSchema
  */
 export const vGradingCriterionSchema = v.object({
-    title: v.string(),
+    label: v.string(),
     appLabel: v.string(),
     model: v.string(),
     passingPoint: v.pipe(v.number(), v.integer()),
@@ -804,13 +817,19 @@ export const vGradingCriterionSchema = v.object({
 });
 
 /**
+ * LessonMediaItemSchema
+ */
+export const vLessonMediaItemSchema = v.object({
+    id: v.string(),
+    thumbnail: v.nullable(v.string()),
+    format: v.string()
+});
+
+/**
  * LessonMediaSchema
  */
 export const vLessonMediaSchema = v.object({
-    id: v.string(),
-    title: v.string(),
-    thumbnail: v.nullable(v.string()),
-    format: v.string()
+    media: vLessonMediaItemSchema
 });
 
 /**
@@ -818,11 +837,10 @@ export const vLessonMediaSchema = v.object({
  */
 export const vLessonSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
-    medias: v.array(vLessonMediaSchema),
+    label: v.string(),
     startDate: v.pipe(v.string(), v.isoTimestamp()),
     endDate: v.pipe(v.string(), v.isoTimestamp()),
-    title: v.string(),
-    description: v.string()
+    lessonMedias: v.array(vLessonMediaSchema)
 });
 
 /**
@@ -851,15 +869,16 @@ export const vCourseSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
-    honorCode: vHonorCodeSchema,
-    gradingCriteria: v.array(vGradingCriterionSchema),
-    lessons: v.array(vLessonSchema),
-    surveys: v.array(vCourseSurveySchema),
     objective: v.string(),
     previewUrl: v.nullable(v.string()),
     effortHours: v.pipe(v.number(), v.integer()),
-    level: vLevelChoices
+    level: vLevelChoices,
+    honorCode: vHonorCodeSchema,
+    gradingCriteria: v.array(vGradingCriterionSchema),
+    lessons: v.array(vLessonSchema),
+    courseSurveys: v.array(vCourseSurveySchema)
 });
 
 /**
@@ -878,8 +897,17 @@ export const vCourseSessionSchema = v.object({
  */
 export const vCourseCategorySchema = v.object({
     id: v.pipe(v.number(), v.integer()),
-    name: v.string(),
-    ancestors: v.array(v.string())
+    label: v.string()
+});
+
+/**
+ * CourseCertificateItemSchema
+ */
+export const vCourseCertificateItemSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    thumbnail: v.string(),
+    description: v.string(),
+    issuer: vPartnerSchema
 });
 
 /**
@@ -887,10 +915,18 @@ export const vCourseCategorySchema = v.object({
  */
 export const vCourseCertificateSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
-    name: v.string(),
-    thumbnail: v.string(),
-    description: v.string(),
-    issuer: vPartnerSchema
+    label: v.string(),
+    certificate: vCourseCertificateItemSchema
+});
+
+/**
+ * CourseInstructorItemSchema
+ */
+export const vCourseInstructorItemSchema = v.object({
+    email: v.string(),
+    about: v.string(),
+    bio: v.array(v.string()),
+    avatar: v.string()
 });
 
 /**
@@ -898,11 +934,27 @@ export const vCourseCertificateSchema = v.object({
  */
 export const vCourseInstructorSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
-    name: v.string(),
-    about: v.string(),
-    bio: v.array(v.string()),
-    avatar: v.nullable(v.string()),
-    lead: v.boolean()
+    label: v.string(),
+    lead: v.boolean(),
+    instructor: vCourseInstructorItemSchema
+});
+
+/**
+ * CourseRelationItemSchema
+ */
+export const vCourseRelationItemSchema = v.object({
+    id: v.string(),
+    description: v.string(),
+    thumbnail: v.nullable(v.string())
+});
+
+/**
+ * CourseRelationSchema
+ */
+export const vCourseRelationSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    relatedCourse: vCourseRelationItemSchema
 });
 
 /**
@@ -911,21 +963,18 @@ export const vCourseInstructorSchema = v.object({
 export const vFaqItemSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
-    id: v.pipe(v.number(), v.integer()),
-    ordering: v.pipe(v.number(), v.integer()),
     question: v.string(),
-    answer: v.string(),
-    active: v.boolean()
+    answer: v.string()
 });
 
 /**
- * RelatedCourseSchema
+ * FAQSchema
  */
-export const vRelatedCourseSchema = v.object({
-    id: v.string(),
-    title: v.string(),
+export const vFaqSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string(),
     description: v.string(),
-    thumbnail: v.nullable(v.string())
+    items: v.array(vFaqItemSchema)
 });
 
 /**
@@ -944,17 +993,18 @@ export const vCourseDetailSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     objective: v.string(),
     previewUrl: v.nullable(v.string()),
     effortHours: v.pipe(v.number(), v.integer()),
     level: vLevelChoices,
-    faqItems: v.array(vFaqItemSchema),
-    categories: v.array(vCourseCategorySchema),
-    certificates: v.array(vCourseCertificateSchema),
-    instructors: v.array(vCourseInstructorSchema),
-    relatedCourses: v.array(vRelatedCourseSchema)
+    faq: vFaqSchema,
+    courseCategories: v.array(vCourseCategorySchema),
+    courseCertificates: v.array(vCourseCertificateSchema),
+    courseInstructors: v.array(vCourseInstructorSchema),
+    courseRelations: v.array(vCourseRelationSchema)
 });
 
 /**
@@ -1050,6 +1100,7 @@ export const vDiscussionSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     honorCode: vHonorCodeSchema
@@ -1218,6 +1269,7 @@ export const vExamSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     honorCode: vHonorCodeSchema,
@@ -1291,6 +1343,7 @@ export const vEnrollmentContentSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema
 });
@@ -1367,6 +1420,7 @@ export const vCatalogContentSchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema
 });
@@ -1933,12 +1987,95 @@ export const vSsoAccountSchema = v.object({
 });
 
 /**
+ * StudioContentSpec
+ */
+export const vStudioContentSpec = v.object({
+    id: v.string(),
+    title: v.string(),
+    thumbnail: v.string(),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    edited: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    appLabel: v.string(),
+    model: v.picklist([
+        'exam',
+        'survey',
+        'quiz',
+        'assignment',
+        'discussion',
+        'media',
+        'course'
+    ])
+});
+
+/**
+ * PaginatedResponse[StudioContentSpec]
+ */
+export const vPaginatedResponseStudioContentSpec = v.object({
+    items: v.array(vStudioContentSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
  * ContentSuggestionSpec
  */
 export const vContentSuggestionSpec = v.object({
     id: v.string(),
+    title: v.string()
+});
+
+/**
+ * AssessmentSuggestion
+ */
+export const vAssessmentSuggestion = v.object({
+    id: v.string(),
     title: v.string(),
-    modified: v.pipe(v.string(), v.isoTimestamp())
+    itemType: vContentTypeSchema
+});
+
+/**
+ * CertificateSuggestionSpec
+ */
+export const vCertificateSuggestionSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string()
+});
+
+/**
+ * CategorySuggestionSpec
+ */
+export const vCategorySuggestionSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    fullPath: v.string()
+});
+
+/**
+ * InstructorSuggestionSpec
+ */
+export const vInstructorSuggestionSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string()
+});
+
+/**
+ * FAQSuggestionSpec
+ */
+export const vFaqSuggestionSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string()
+});
+
+/**
+ * FAQItemCopySpec
+ */
+export const vFaqItemCopySpec = v.object({
+    question: v.string(),
+    answer: v.string(),
+    active: v.boolean()
 });
 
 /**
@@ -1972,9 +2109,9 @@ export const vExamQuestionSpec = v.object({
 });
 
 /**
- * ExamQuestionSetSpec
+ * ExamQuestionsSpec
  */
-export const vExamQuestionSetSpec = v.array(vExamQuestionSpec);
+export const vExamQuestionsSpec = v.array(vExamQuestionSpec);
 
 /**
  * HonorCodeSpec
@@ -1982,14 +2119,6 @@ export const vExamQuestionSetSpec = v.array(vExamQuestionSpec);
 export const vHonorCodeSpec = v.object({
     title: v.string(),
     code: v.string()
-});
-
-/**
- * OwnerSpec
- */
-export const vOwnerSpec = v.object({
-    email: v.string(),
-    name: v.string()
 });
 
 /**
@@ -2011,11 +2140,11 @@ export const vExamSpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
-    owner: vOwnerSpec,
     honorCode: vHonorCodeSpec,
     questionPool: vExamQuestionPoolSpec,
-    questionSet: vExamQuestionSetSpec
+    questions: vExamQuestionsSpec
 });
 
 /**
@@ -2052,9 +2181,9 @@ export const vExamQuestionSaveSpec = v.object({
 });
 
 /**
- * ExamQuestionSetSaveSpec
+ * ExamQuestionsSaveSpec
  */
-export const vExamQuestionSetSaveSpec = v.object({
+export const vExamQuestionsSaveSpec = v.object({
     data: v.array(vExamQuestionSaveSpec)
 });
 
@@ -2087,9 +2216,9 @@ export const vQuizQuestionSpec = v.object({
 });
 
 /**
- * QuizQuestionSetSpec
+ * QuizQuestionsSpec
  */
-export const vQuizQuestionSetSpec = v.array(vQuizQuestionSpec);
+export const vQuizQuestionsSpec = v.array(vQuizQuestionSpec);
 
 /**
  * QuizSpec
@@ -2107,10 +2236,10 @@ export const vQuizSpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
-    owner: vOwnerSpec,
     questionPool: vQuizQuestionPoolSpec,
-    questionSet: vQuizQuestionSetSpec
+    questions: vQuizQuestionsSpec
 });
 
 /**
@@ -2140,9 +2269,9 @@ export const vQuizQuestionSaveSpec = v.object({
 });
 
 /**
- * QuizQuestionSetSaveSpec
+ * QuizQuestionsSaveSpec
  */
-export const vQuizQuestionSetSaveSpec = v.object({
+export const vQuizQuestionsSaveSpec = v.object({
     data: v.array(vQuizQuestionSaveSpec)
 });
 
@@ -2176,9 +2305,9 @@ export const vSurveyQuestionSpec = v.object({
 });
 
 /**
- * SurveyQuestionSetSpec
+ * SurveyQuestionsSpec
  */
-export const vSurveyQuestionSetSpec = v.array(vSurveyQuestionSpec);
+export const vSurveyQuestionsSpec = v.array(vSurveyQuestionSpec);
 
 /**
  * SurveySpec
@@ -2196,10 +2325,10 @@ export const vSurveySpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
-    owner: vOwnerSpec,
     questionPool: vSurveyQuestionPoolSpec,
-    questionSet: vSurveyQuestionSetSpec,
+    questions: vSurveyQuestionsSpec,
     completeMessage: v.string(),
     anonymous: v.boolean(),
     showResults: v.boolean()
@@ -2234,9 +2363,9 @@ export const vSurveyQuestionSaveSpec = v.object({
 });
 
 /**
- * SurveyQuestionSetSaveSpec
+ * SurveyQuestionsSaveSpec
  */
-export const vSurveyQuestionSetSaveSpec = v.object({
+export const vSurveyQuestionsSaveSpec = v.object({
     data: v.array(vSurveyQuestionSaveSpec)
 });
 
@@ -2262,9 +2391,9 @@ export const vDiscussionQuestionSpec = v.object({
 });
 
 /**
- * DiscussionQuestionSetSpec
+ * DiscussionQuestionsSpec
  */
-export const vDiscussionQuestionSetSpec = v.array(vDiscussionQuestionSpec);
+export const vDiscussionQuestionsSpec = v.array(vDiscussionQuestionSpec);
 
 /**
  * DiscussionSpec
@@ -2285,11 +2414,11 @@ export const vDiscussionSpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
-    owner: vOwnerSpec,
     honorCode: vHonorCodeSpec,
     questionPool: vDiscussionQuestionPoolSpec,
-    questionSet: vDiscussionQuestionSetSpec
+    questions: vDiscussionQuestionsSpec
 });
 
 /**
@@ -2346,9 +2475,9 @@ export const vAssignmentQuestionSpec = v.object({
 });
 
 /**
- * AssignmentQuestionSetSpec
+ * AssignmentQuestionsSpec
  */
-export const vAssignmentQuestionSetSpec = v.array(vAssignmentQuestionSpec);
+export const vAssignmentQuestionsSpec = v.array(vAssignmentQuestionSpec);
 
 /**
  * AssignmentSpec
@@ -2369,11 +2498,11 @@ export const vAssignmentSpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
-    owner: vOwnerSpec,
     honorCode: vHonorCodeSpec,
     questionPool: vAssignmentQuestionPoolSpec,
-    questionSet: vAssignmentQuestionSetSpec
+    questions: vAssignmentQuestionsSpec
 });
 
 /**
@@ -2431,13 +2560,13 @@ export const vMediaSpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     license: v.string(),
     channel: v.string(),
     url: v.string(),
-    owner: vOwnerSpec,
     quizzes: v.array(v.string()),
-    subtitleSet: v.array(vSubtitleSpec)
+    subtitles: v.array(vSubtitleSpec)
 });
 
 /**
@@ -2457,6 +2586,119 @@ export const vMediaSaveSpec = v.object({
 });
 
 /**
+ * AssessmentSpec
+ */
+export const vAssessmentSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    itemId: v.string(),
+    itemType: vContentTypeSchema,
+    weight: v.pipe(v.number(), v.integer()),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * CourseCategorySpec
+ */
+export const vCourseCategorySpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    categoryId: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * CourseCertificateSpec
+ */
+export const vCourseCertificateSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    certificateId: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * CourseInstructorSpec
+ */
+export const vCourseInstructorSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    instructorId: v.pipe(v.number(), v.integer()),
+    lead: v.boolean()
+});
+
+/**
+ * CourseRelationSpec
+ */
+export const vCourseRelationSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    relatedCourseId: v.string()
+});
+
+/**
+ * CourseSurveySpec
+ */
+export const vCourseSurveySpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    surveyId: v.string(),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * FAQItemSpec
+ */
+export const vFaqItemSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    question: v.string(),
+    answer: v.string(),
+    active: v.boolean()
+});
+
+/**
+ * FAQSpec
+ */
+export const vFaqSpec = v.object({
+    name: v.string(),
+    description: v.string()
+});
+
+/**
+ * GradingPolicySpec
+ */
+export const vGradingPolicySpec = v.object({
+    assessmentWeight: v.pipe(v.number(), v.integer()),
+    completionWeight: v.pipe(v.number(), v.integer()),
+    completionPassingPoint: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * LessonSpec
+ */
+export const vLessonSpec = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    label: v.string(),
+    mediaIds: v.array(v.string()),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * CourseAssetsSpec
+ */
+export const vCourseAssetsSpec = v.object({
+    lessons: v.array(vLessonSpec),
+    assessments: v.array(vAssessmentSpec),
+    courseRelations: v.array(vCourseRelationSpec),
+    courseSurveys: v.array(vCourseSurveySpec),
+    courseCertificates: v.array(vCourseCertificateSpec),
+    courseCategories: v.array(vCourseCategorySpec),
+    courseInstructors: v.array(vCourseInstructorSpec),
+    faqItems: v.array(vFaqItemSpec)
+});
+
+/**
  * CourseSpec
  */
 export const vCourseSpec = v.object({
@@ -2472,13 +2714,16 @@ export const vCourseSpec = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     objective: v.string(),
     previewUrl: v.nullable(v.string()),
     effortHours: v.pipe(v.number(), v.integer()),
     level: vLevelChoices,
-    owner: vOwnerSpec,
-    honorCode: vHonorCodeSpec
+    honorCode: vHonorCodeSpec,
+    faq: vFaqSpec,
+    gradingPolicy: vGradingPolicySpec,
+    assets: vCourseAssetsSpec
 });
 
 /**
@@ -2497,64 +2742,132 @@ export const vCourseSaveSpec = v.object({
     previewUrl: v.pipe(v.string(), v.url(), v.minLength(1), v.maxLength(2083)),
     effortHours: v.pipe(v.number(), v.integer()),
     level: vLevelChoices,
-    honorCode: vHonorCodeSpec
+    honorCode: vHonorCodeSpec,
+    faq: vFaqSpec,
+    gradingPolicy: vGradingPolicySpec
 });
 
 /**
- * CourseAssessmentSpec
+ * CourseSurveySaveSpec
  */
-export const vCourseAssessmentSpec = v.object({
-    id: v.pipe(v.number(), v.integer()),
+export const vCourseSurveySaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
+    surveyId: v.string(),
+    startOffset: v.pipe(v.number(), v.integer()),
+    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * RootModel[list[CourseSurveySaveSpec]]
+ */
+export const vRootModelListCourseSurveySaveSpec = v.array(vCourseSurveySaveSpec);
+
+/**
+ * AssessmentSaveSpec
+ */
+export const vAssessmentSaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
     itemId: v.string(),
-    itemTitle: v.string(),
-    itemAppLabel: v.string(),
-    itemModel: v.string(),
+    itemType: vContentTypeSchema,
     weight: v.pipe(v.number(), v.integer()),
     startOffset: v.pipe(v.number(), v.integer()),
     endOffset: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
- * CourseLessonMediaSpec
+ * RootModel[list[AssessmentSaveSpec]]
  */
-export const vCourseLessonMediaSpec = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    mediaTitle: v.string(),
-    mediaId: v.string(),
-    ordering: v.pipe(v.number(), v.integer())
-});
+export const vRootModelListAssessmentSaveSpec = v.array(vAssessmentSaveSpec);
 
 /**
- * CourseLessonSpec
+ * LessonSaveSpec
  */
-export const vCourseLessonSpec = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    title: v.string(),
-    description: v.string(),
-    medias: v.array(vCourseLessonMediaSpec),
+export const vLessonSaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
+    mediaIds: v.array(v.string()),
     startOffset: v.pipe(v.number(), v.integer()),
     endOffset: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
- * CourseSurveySpec
+ * RootModel[list[LessonSaveSpec]]
  */
-export const vCourseSurveySpec = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    surveyId: v.string(),
-    surveyTitle: v.string(),
-    startOffset: v.pipe(v.number(), v.integer()),
-    endOffset: v.nullable(v.pipe(v.number(), v.integer()))
+export const vRootModelListLessonSaveSpec = v.array(vLessonSaveSpec);
+
+/**
+ * CourseCertificateSaveSpec
+ */
+export const vCourseCertificateSaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
+    certificateId: v.pipe(v.number(), v.integer())
 });
 
 /**
- * CourseStructureSpec
+ * RootModel[list[CourseCertificateSaveSpec]]
  */
-export const vCourseStructureSpec = v.object({
-    surveys: v.array(vCourseSurveySpec),
-    lessons: v.array(vCourseLessonSpec),
-    assessments: v.array(vCourseAssessmentSpec)
+export const vRootModelListCourseCertificateSaveSpec = v.array(vCourseCertificateSaveSpec);
+
+/**
+ * CourseRelationSaveSpec
+ */
+export const vCourseRelationSaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
+    relatedCourseId: v.string()
 });
+
+/**
+ * RootModel[list[CourseRelationSaveSpec]]
+ */
+export const vRootModelListCourseRelationSaveSpec = v.array(vCourseRelationSaveSpec);
+
+/**
+ * CourseCategorySaveSpec
+ */
+export const vCourseCategorySaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
+    categoryId: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * RootModel[list[CourseCategorySaveSpec]]
+ */
+export const vRootModelListCourseCategorySaveSpec = v.array(vCourseCategorySaveSpec);
+
+/**
+ * CourseInstructorSaveSpec
+ */
+export const vCourseInstructorSaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    label: v.string(),
+    instructorId: v.pipe(v.number(), v.integer()),
+    lead: v.boolean()
+});
+
+/**
+ * RootModel[list[CourseInstructorSaveSpec]]
+ */
+export const vRootModelListCourseInstructorSaveSpec = v.array(vCourseInstructorSaveSpec);
+
+/**
+ * FAQItemSaveSpec
+ */
+export const vFaqItemSaveSpec = v.object({
+    id: v.optional(v.pipe(v.number(), v.integer())),
+    question: v.string(),
+    answer: v.string(),
+    active: v.boolean()
+});
+
+/**
+ * RootModel[list[FAQItemSaveSpec]]
+ */
+export const vRootModelListFaqItemSaveSpec = v.array(vFaqItemSaveSpec);
 
 /**
  * SurveyQuestionSchema
@@ -2584,6 +2897,7 @@ export const vSurveySchema = v.object({
     passingPoint: v.pipe(v.number(), v.integer()),
     maxAttempts: v.pipe(v.number(), v.integer()),
     verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     owner: vOwnerSchema,
     completeMessage: v.string(),
@@ -3016,6 +3330,7 @@ export const vContentV1UpdateMediaWatchData = v.object({
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
+        mode: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3265,7 +3580,7 @@ export const vDiscussionV1DeletePostData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.string(),
-        postId: v.pipe(v.number(), v.integer())
+        post_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
@@ -3282,7 +3597,7 @@ export const vDiscussionV1UpdatePostData = v.object({
     }),
     path: v.object({
         id: v.string(),
-        postId: v.pipe(v.number(), v.integer())
+        post_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
         media: v.optional(v.string()),
@@ -3607,9 +3922,9 @@ export const vOperationV1AgreePoliciesData = v.object({
 export const vOperationV1GetThreadData = v.object({
     body: v.optional(v.never()),
     path: v.object({
-        appLabel: v.string(),
+        app_label: v.string(),
         model: v.string(),
-        subjectId: v.string()
+        subject_id: v.string()
     }),
     query: v.optional(v.never())
 });
@@ -3669,7 +3984,7 @@ export const vOperationV1DeleteCommentData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.pipe(v.number(), v.integer()),
-        commentId: v.pipe(v.number(), v.integer())
+        comment_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.never())
 });
@@ -3859,6 +4174,30 @@ export const vSsoV1DeleteAccountData = v.object({
     query: v.optional(v.never())
 });
 
+export const vStudioV1ContentData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24),
+        kind: v.optional(v.picklist([
+            'exam',
+            'survey',
+            'quiz',
+            'assignment',
+            'discussion',
+            'media',
+            'course'
+        ])),
+        search: v.nullish(v.string())
+    }))
+});
+
+/**
+ * OK
+ */
+export const vStudioV1ContentResponse = vPaginatedResponseStudioContentSpec;
+
 export const vStudioV1ContentSuggestionsData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
@@ -3881,6 +4220,86 @@ export const vStudioV1ContentSuggestionsData = v.object({
  * OK
  */
 export const vStudioV1ContentSuggestionsResponse = v.array(vContentSuggestionSpec);
+
+export const vStudioV1AssessmentSuggestionsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1AssessmentSuggestionsResponse = v.array(vAssessmentSuggestion);
+
+export const vStudioV1CertificateSuggestionsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1CertificateSuggestionsResponse = v.array(vCertificateSuggestionSpec);
+
+export const vStudioV1CategorySuggestionsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1CategorySuggestionsResponse = v.array(vCategorySuggestionSpec);
+
+export const vStudioV1InstructorSuggestionsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1InstructorSuggestionsResponse = v.array(vInstructorSuggestionSpec);
+
+export const vStudioV1FaqSuggestionsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1FaqSuggestionsResponse = v.array(vFaqSuggestionSpec);
+
+export const vStudioV1GetFaqItemsData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1GetFaqItemsResponse = v.array(vFaqItemCopySpec);
 
 export const vStudioV1GetExamData = v.object({
     body: v.optional(v.never()),
@@ -3911,37 +4330,10 @@ export const vStudioV1SaveExamData = v.object({
  */
 export const vStudioV1SaveExamResponse = v.string();
 
-export const vStudioV1SaveExamQuestionData = v.object({
-    body: v.object({
-        files: v.optional(v.array(v.string())),
-        data: vExamQuestionSaveSpec
-    }),
-    path: v.object({
-        id: v.string()
-    }),
-    query: v.optional(v.never())
-});
-
-/**
- * Response
- *
- * OK
- */
-export const vStudioV1SaveExamQuestionResponse = v.pipe(v.number(), v.integer());
-
-export const vStudioV1DeleteExamQuesionData = v.object({
-    body: v.optional(v.never()),
-    path: v.object({
-        id: v.string(),
-        q: v.pipe(v.number(), v.integer())
-    }),
-    query: v.optional(v.never())
-});
-
 export const vStudioV1SaveExamQuestionsData = v.object({
     body: v.object({
         files: v.optional(v.array(v.string())),
-        data: vExamQuestionSetSaveSpec
+        data: vExamQuestionsSaveSpec
     }),
     path: v.object({
         id: v.string()
@@ -3955,6 +4347,15 @@ export const vStudioV1SaveExamQuestionsData = v.object({
  * OK
  */
 export const vStudioV1SaveExamQuestionsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1DeleteExamQuesionData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
 
 export const vStudioV1GetQuizData = v.object({
     body: v.optional(v.never()),
@@ -3985,37 +4386,10 @@ export const vStudioV1SaveQuizData = v.object({
  */
 export const vStudioV1SaveQuizResponse = v.string();
 
-export const vStudioV1SaveQuizQuestionData = v.object({
-    body: v.object({
-        files: v.optional(v.array(v.string())),
-        data: vQuizQuestionSaveSpec
-    }),
-    path: v.object({
-        id: v.string()
-    }),
-    query: v.optional(v.never())
-});
-
-/**
- * Response
- *
- * OK
- */
-export const vStudioV1SaveQuizQuestionResponse = v.pipe(v.number(), v.integer());
-
-export const vStudioV1DeleteQuizQuesionData = v.object({
-    body: v.optional(v.never()),
-    path: v.object({
-        id: v.string(),
-        q: v.pipe(v.number(), v.integer())
-    }),
-    query: v.optional(v.never())
-});
-
 export const vStudioV1SaveQuizQuestionsData = v.object({
     body: v.object({
         files: v.optional(v.array(v.string())),
-        data: vQuizQuestionSetSaveSpec
+        data: vQuizQuestionsSaveSpec
     }),
     path: v.object({
         id: v.string()
@@ -4029,6 +4403,15 @@ export const vStudioV1SaveQuizQuestionsData = v.object({
  * OK
  */
 export const vStudioV1SaveQuizQuestionsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1DeleteQuizQuesionData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
 
 export const vStudioV1GetSurveyData = v.object({
     body: v.optional(v.never()),
@@ -4059,37 +4442,10 @@ export const vStudioV1SaveSurveyData = v.object({
  */
 export const vStudioV1SaveSurveyResponse = v.string();
 
-export const vStudioV1SaveSurveyQuestionData = v.object({
-    body: v.object({
-        files: v.optional(v.array(v.string())),
-        data: vSurveyQuestionSaveSpec
-    }),
-    path: v.object({
-        id: v.string()
-    }),
-    query: v.optional(v.never())
-});
-
-/**
- * Response
- *
- * OK
- */
-export const vStudioV1SaveSurveyQuestionResponse = v.pipe(v.number(), v.integer());
-
-export const vStudioV1DeleteSurveyQuesionData = v.object({
-    body: v.optional(v.never()),
-    path: v.object({
-        id: v.string(),
-        q: v.pipe(v.number(), v.integer())
-    }),
-    query: v.optional(v.never())
-});
-
 export const vStudioV1SaveSurveyQuestionsData = v.object({
     body: v.object({
         files: v.optional(v.array(v.string())),
-        data: vSurveyQuestionSetSaveSpec
+        data: vSurveyQuestionsSaveSpec
     }),
     path: v.object({
         id: v.string()
@@ -4103,6 +4459,15 @@ export const vStudioV1SaveSurveyQuestionsData = v.object({
  * OK
  */
 export const vStudioV1SaveSurveyQuestionsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1DeleteSurveyQuesionData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
 
 export const vStudioV1GetDiscussionData = v.object({
     body: v.optional(v.never()),
@@ -4155,7 +4520,7 @@ export const vStudioV1DeleteDiscussionQuesionData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.string(),
-        q: v.pipe(v.number(), v.integer())
+        question_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.never())
 });
@@ -4212,7 +4577,7 @@ export const vStudioV1DeleteAssignmentQuesionData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.string(),
-        q: v.pipe(v.number(), v.integer())
+        question_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.never())
 });
@@ -4308,8 +4673,8 @@ export const vStudioV1SaveCourseData = v.object({
  */
 export const vStudioV1SaveCourseResponse = v.string();
 
-export const vStudioV1CourseStructureData = v.object({
-    body: v.optional(v.never()),
+export const vStudioV1SaveCourseSurveysData = v.object({
+    body: vRootModelListCourseSurveySaveSpec,
     path: v.object({
         id: v.string()
     }),
@@ -4317,9 +4682,188 @@ export const vStudioV1CourseStructureData = v.object({
 });
 
 /**
+ * Response
+ *
  * OK
  */
-export const vStudioV1CourseStructureResponse = vCourseStructureSpec;
+export const vStudioV1SaveCourseSurveysResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseSurveyData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        course_survey_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseAssessmentsData = v.object({
+    body: vRootModelListAssessmentSaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseAssessmentsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseAssessmentData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        assessment_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseLessonsData = v.object({
+    body: vRootModelListLessonSaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseLessonsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseLessonData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        lesson_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseCertificatesData = v.object({
+    body: vRootModelListCourseCertificateSaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseCertificatesResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseCertificateData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        course_certificate_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseRelationsData = v.object({
+    body: vRootModelListCourseRelationSaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseRelationsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseRelationData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        course_relation_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseCategoriesData = v.object({
+    body: vRootModelListCourseCategorySaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseCategoriesResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseCategoryData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        course_category_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseInstructorsData = v.object({
+    body: vRootModelListCourseInstructorSaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseInstructorsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseInstructorData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        course_instructor_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1SaveCourseFaqItemsData = v.object({
+    body: vRootModelListFaqItemSaveSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1SaveCourseFaqItemsResponse = v.array(v.pipe(v.number(), v.integer()));
+
+export const vStudioV1RemoveCourseFaqItemData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        faq_item_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
 
 export const vSurveyV1GetSurveyData = v.object({
     body: v.optional(v.never()),

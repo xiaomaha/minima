@@ -164,7 +164,7 @@ class GradeAdmin(ModelAdmin[Grade]):
         prefetch_related_objects(
             [grade.attempt],
             Prefetch(
-                "question__solution__rubric__rubriccriterion_set__performancelevel_set",
+                "question__solution__rubric__rubric_criteria__performance_levels",
                 queryset=PerformanceLevel.objects.order_by("point"),
             ),
         )

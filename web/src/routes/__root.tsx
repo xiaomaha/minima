@@ -1,5 +1,6 @@
+import { IconHelpCircle } from '@tabler/icons-solidjs'
 import { createRootRoute, Outlet, redirect } from '@tanstack/solid-router'
-import { createSignal } from 'solid-js'
+import { createSignal, Show } from 'solid-js'
 import * as v from 'valibot'
 import { PLATFORM_NAME } from '@/config'
 import { accountStore } from '@/routes/(app)/account/-store'
@@ -42,7 +43,12 @@ const RootLayout = () => {
   )
 }
 
+const searchSchema = v.object({
+  mode: v.optional(v.picklist(['preview', 'audit'])),
+})
+
 export const Route = createRootRoute({
+  validateSearch: searchSchema,
   beforeLoad: async (context) => {
     if (accountStore.user?.agreementRequired === true) {
       if (context.location.pathname !== '/dashboard/learning') {
@@ -50,11 +56,36 @@ export const Route = createRootRoute({
       }
     }
   },
-  component: () => (
-    <I18nProvider>
-      <DateLocaleProvider>
-        <RootLayout />
-      </DateLocaleProvider>
-    </I18nProvider>
-  ),
+  component: () => {
+    const search = Route.useSearch()
+
+    return (
+      <I18nProvider>
+        <DateLocaleProvider>
+          <RootLayout />
+        </DateLocaleProvider>
+        <PreviewBanner mode={search().mode} />
+      </I18nProvider>
+    )
+  },
 })
+
+const PreviewBanner = (props: { mode: 'preview' | 'audit' | undefined; class?: string }) => {
+  const { t } = useTranslation()
+
+  return (
+    <Show when={props.mode === 'preview'}>
+      <div role="alert" class={`alert alert-warning bg-warning/60 fixed bottom-8 left-8 z-1000 ${props.class}`}>
+        <span class="font-semibold">{t('Preview mode')}</span>
+        <span class="tooltip">
+          <div class="tooltip-content text-left">
+            <span class="text-left">
+              {t('You can use all features without any restrictions. Data will be deleted in about an hour.')}
+            </span>
+          </div>
+          <IconHelpCircle size={20} />
+        </span>
+      </div>
+    </Show>
+  )
+}

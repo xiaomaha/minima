@@ -18,7 +18,7 @@ export const Thread = (props: ThreadContextValue['context']) => {
 
   const threadStore = createCachedStore(
     'operationV1GetThread',
-    () => ({ path: { appLabel, model, subjectId } }),
+    () => ({ path: { app_label: appLabel, model, subject_id: subjectId } }),
     async (options) => {
       const { data } = await operationV1GetThread(options)
       return data
