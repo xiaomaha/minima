@@ -4,7 +4,13 @@ import type { AssignmentSpec, CourseSpec, DiscussionSpec, ExamSpec, MediaSpec, Q
 
 export type State = { error: string; dirty: boolean }
 
-export type FieldState<T> = T extends (infer _)[] ? State : T extends object ? { [K in keyof T]: FieldState<T[K]> } : State
+export type FieldState<T> = T extends (infer U)[]
+  ? U extends object
+    ? { [K in keyof U]: FieldState<U[K]> }[]
+    : State
+  : T extends object
+    ? { [K in keyof T]: FieldState<T[K]> }
+    : State
 
 export type ContentType = ExamSpec | QuizSpec | SurveySpec | DiscussionSpec | AssignmentSpec | MediaSpec | CourseSpec
 
@@ -16,7 +22,10 @@ type EditingContextType<T extends object = ContentType> = {
 
 const EditingContext = createContext<EditingContextType>()
 
-export const EditingProvider = <T extends ContentType>(props: { value: EditingContextType<T>; children: JSX.Element }) => {
+export const EditingProvider = <T extends ContentType>(props: {
+  value: EditingContextType<T>
+  children: JSX.Element
+}) => {
   return <EditingContext.Provider value={props.value}>{props.children}</EditingContext.Provider>
 }
 
@@ -25,3 +34,5 @@ export const useEditing = <T extends ContentType = ContentType>() => {
   if (!ctx) throw new Error('useEditing must be used within Provider')
   return ctx as EditingContextType<T>
 }
+
+export const EMPTY_CONTENT_ID = 'new'

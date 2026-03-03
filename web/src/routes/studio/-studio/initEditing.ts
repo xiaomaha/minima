@@ -1,31 +1,28 @@
-import { batch, createEffect, onCleanup, onMount } from 'solid-js'
+import { useNavigate, useParams } from '@tanstack/solid-router'
+import { batch, createEffect, onCleanup } from 'solid-js'
 import { createMutable, modifyMutable, reconcile, unwrap } from 'solid-js/store'
-import type { StudioV1ContentSuggestionsData } from '@/api'
 import { createCachedStore, initCachedStore } from '@/shared/solid/cached-store'
-import { EMPTY_CONTENT_ID, useContentSuggestion } from '../-context/ContentSuggestion'
-import type { ContentType, FieldState } from '../-context/editing'
+import { useTranslation } from '@/shared/solid/i18n'
+import { type ContentType, EMPTY_CONTENT_ID, type FieldState } from '../-context/editing'
 
 export type ContentEntry<T extends ContentType> = {
   source: T
   staging: T
 }
 
-type Kind = StudioV1ContentSuggestionsData['query']['kind']
-
 interface Config<T extends ContentType> {
   restorableRegistry: Record<string, ContentEntry<T>>
-  kind: Kind
+  id: string
   cacheKey: string
   emptyFactory: () => T
   fetchFn: (options: { path: { id: string } }) => Promise<{ data: T }>
 }
 
 export const initEditing = <T extends ContentType>(config: Config<T>) => {
-  const { setKind, select, setSelect, setSuggestions } = useContentSuggestion()
-  const { restorableRegistry } = config
-
-  // autocomplete
-  onMount(() => setKind(config.kind))
+  const { t } = useTranslation()
+  const { restorableRegistry, id } = config
+  const params = useParams({ from: '/studio/$app/$id' })
+  const navigate = useNavigate()
 
   // pre-populate new empty cache to avoid useless fetch
   initCachedStore(config.cacheKey, { path: { id: EMPTY_CONTENT_ID } }, config.emptyFactory())
@@ -33,7 +30,7 @@ export const initEditing = <T extends ContentType>(config: Config<T>) => {
   // server state
   const [rawSourceData] = createCachedStore(
     config.cacheKey,
-    () => ({ path: { id: select[config.kind] } }),
+    () => ({ path: { id } }),
     async (options) => (await config.fetchFn(options)).data,
   )
 
@@ -43,33 +40,60 @@ export const initEditing = <T extends ContentType>(config: Config<T>) => {
   const fieldState = createMutable({} as FieldState<T>)
 
   createEffect(() => {
-    const cur = rawSourceData.data?.id
+    if (!rawSourceData.data) return
+
+    const cur = rawSourceData.data.id
     if (cur === undefined) return
 
-    if (!restorableRegistry[cur]) {
-      restorableRegistry[cur] = {
-        source: structuredClone(unwrap(rawSourceData.data!)),
-        staging: structuredClone(unwrap(rawSourceData.data!)),
+    let curRegistry = restorableRegistry[cur]
+
+    if (!curRegistry) {
+      curRegistry = restorableRegistry[cur] = {
+        source: structuredClone(unwrap(rawSourceData.data)),
+        staging: structuredClone(unwrap(rawSourceData.data)),
       }
     }
 
     batch(() => {
-      modifyMutable(source, reconcile(restorableRegistry[cur]!.source))
-      modifyMutable(staging, reconcile(restorableRegistry[cur]!.staging))
+      modifyMutable(source, reconcile(curRegistry.source))
+      modifyMutable(staging, reconcile(curRegistry.staging))
       modifyMutable(fieldState, reconcile({} as FieldState<T>))
     })
 
     onCleanup(() => {
-      restorableRegistry[cur]!.source = structuredClone(unwrap(source))
-      restorableRegistry[cur]!.staging = structuredClone(unwrap(staging))
+      curRegistry.source = structuredClone(unwrap(source))
+      curRegistry.staging = structuredClone(unwrap(staging))
     })
   })
 
   const onSave = async (id: string) => {
-    setSelect(config.kind, id)
-    const suggestion = { id, title: (staging as { title: string }).title, modified: new Date().toISOString() }
-    setSuggestions('data', (prev) => [suggestion, ...(prev?.filter((e) => e.id !== id) ?? [])])
+    // TODO
+    // const suggestion = { id, title: staging.title, modified: new Date().toISOString() }
+    // setSuggestions('data', (prev) => [suggestion, ...(prev?.filter((e) => e.id !== id) ?? [])])
+
+    if (staging.id === EMPTY_CONTENT_ID) {
+      batch(() => {
+        initCachedStore(config.cacheKey, { path: { id } }, structuredClone(unwrap({ ...staging, id })))
+        modifyMutable(staging, reconcile(structuredClone(config.emptyFactory())))
+      })
+    }
   }
 
-  return { source, staging, fieldState, onSave }
+  const onCopy = async () => {
+    if (staging.id === EMPTY_CONTENT_ID) return
+    restorableRegistry[EMPTY_CONTENT_ID] = {
+      source: structuredClone(unwrap(config.emptyFactory())),
+      staging: structuredClone(
+        unwrap({
+          ...staging,
+          id: EMPTY_CONTENT_ID,
+          title: t('Copy of {{title}}', { title: staging.title }),
+          thumbnail: undefined,
+        }),
+      ),
+    }
+    navigate({ to: '/studio/$app/$id', params: { ...params(), id: EMPTY_CONTENT_ID } })
+  }
+
+  return { source, staging, fieldState, onSave, onCopy, loading: () => rawSourceData.loading }
 }

@@ -69,7 +69,7 @@ export const GoalForm = (props: Props) => {
 
   const handleSkillClick = (skill: SkillDataSchema) => {
     const current = (getFactorIds() || []) as number[]
-    const skillFactorIds = skill.factorSet.map((f) => f.id)
+    const skillFactorIds = skill.factors.map((f) => f.id)
     const allSelected = skillFactorIds.every((id) => current.includes(id))
     const newValue = allSelected
       ? current.filter((id) => !skillFactorIds.includes(id)).sort((a, b) => a - b)
@@ -99,7 +99,7 @@ export const GoalForm = (props: Props) => {
                   </button>
                 </li>
 
-                <For each={item.factorSet}>
+                <For each={item.factors}>
                   {(item) => (
                     <li class="list-row">
                       <label class="label">

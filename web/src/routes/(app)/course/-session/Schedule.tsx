@@ -64,7 +64,7 @@ export const Schedule = () => {
       if (isValid(startDate) && isValid(endDate)) {
         list.push({
           id: `policy-${index}`,
-          title: policy.title,
+          title: policy.label,
           type: 'assessment',
           startDate,
           endDate,

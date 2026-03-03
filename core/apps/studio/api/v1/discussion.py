@@ -2,7 +2,6 @@ from typing import Annotated
 
 from asgiref.sync import sync_to_async
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError, transaction
 from django.db.models import Prefetch
 from django.shortcuts import aget_object_or_404
@@ -21,9 +20,8 @@ from apps.common.schema import (
 from apps.common.util import HttpRequest
 from apps.discussion.models import Attempt, Discussion, Question, QuestionPool
 from apps.operation.models import HonorCode
-from apps.studio.api.v1.schema import HonorCodeSpec, OwnerSpec
+from apps.studio.api.v1.schema import HonorCodeSpec
 from apps.studio.decorator import editor_required, track_draft
-from apps.studio.models import Draft
 
 
 class DiscussionQuestionSaveSpec(Schema):
@@ -43,11 +41,11 @@ class DiscussionQuestionSpec(DiscussionQuestionSaveSpec):
         return obj.cleaned_supplement
 
 
-class DiscussionQuestionSetSaveSpec(RootModel[list[DiscussionQuestionSaveSpec]]):
+class DiscussionQuestionsSaveSpec(RootModel[list[DiscussionQuestionSaveSpec]]):
     pass
 
 
-class DiscussionQuestionSetSpec(RootModel[list[DiscussionQuestionSpec]]):
+class DiscussionQuestionsSpec(RootModel[list[DiscussionQuestionSpec]]):
     pass
 
 
@@ -57,14 +55,13 @@ class DiscussionSpec(LearningObjectMixinSchema, GradeWorkflowMixinSchema):
 
     id: str
 
-    owner: OwnerSpec
     honor_code: HonorCodeSpec
     question_pool: DiscussionQuestionPoolSpec
-    question_set: DiscussionQuestionSetSpec
+    questions: DiscussionQuestionsSpec
 
     @staticmethod
-    def resolve_question_set(obj: Discussion):
-        return obj.question_pool.question_set.all()
+    def resolve_questions(obj: Discussion):
+        return obj.question_pool.questions.all()
 
 
 class DiscussionSaveSpec(Schema):
@@ -91,9 +88,9 @@ router = Router(by_alias=True)
 async def get_discussion(request: HttpRequest, id: str):
     return (
         await Discussion.objects
-        .select_related("owner", "honor_code", "question_pool")
+        .select_related("honor_code", "question_pool")
         .prefetch_related(
-            Prefetch("question_pool__question_set", queryset=Question.objects.prefetch_related("attachments"))
+            Prefetch("question_pool__questions", queryset=Question.objects.prefetch_related("attachments"))
         )
         .aget(id=id, owner_id=request.auth)
     )
@@ -101,6 +98,7 @@ async def get_discussion(request: HttpRequest, id: str):
 
 @router.post("/discussion", response=str)
 @editor_required()
+@track_draft(Discussion)
 async def save_discussion(
     request: HttpRequest,
     data: DiscussionSaveSpec,
@@ -143,11 +141,6 @@ async def save_discussion(
 
         discussion = await create_new()
 
-    content_type = await sync_to_async(ContentType.objects.get_for_model)(Discussion)
-    await Draft.objects.aupdate_or_create(
-        content_type=content_type, content_id=discussion.id, defaults={"author_id": request.auth}
-    )
-
     return discussion.id
 
 
@@ -165,7 +158,7 @@ async def save_discussion_question(
 ):
     discussion = await aget_object_or_404(Discussion, id=id, owner_id=request.auth)
     question, _ = await Question.objects.aupdate_or_create(
-        id=None if data.id <= 0 else data.id,
+        id=None if not data.id else data.id,
         pool_id=discussion.question_pool_id,
         defaults={
             "directive": data.directive,
@@ -181,13 +174,15 @@ async def save_discussion_question(
     return question.pk
 
 
-@router.delete("/discussion/{id}/question/{q}")
+@router.delete("/discussion/{id}/question/{question_id}")
 @editor_required()
 @track_draft(Discussion, id_field="id")
-async def delete_discussion_quesion(request: HttpRequest, id: str, q: int):
-    if await Attempt.objects.filter(discussion_id=id, question_id=q).aexists():
+async def delete_discussion_quesion(request: HttpRequest, id: str, question_id: int):
+    if await Attempt.objects.filter(
+        discussion_id=id, question_id=question_id, discussion__owner_id=request.auth
+    ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
-    count, _ = await Question.objects.filter(id=q, pool__discussion__id=id).adelete()
+    count, _ = await Question.objects.filter(id=question_id, pool__discussion__id=id).adelete()
     if count < 1:
         raise ValueError(ErrorCode.NOT_FOUND)

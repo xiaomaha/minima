@@ -26,7 +26,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AttemptModeChoices
+from apps.common.util import ModeChoices
 from apps.operation.models import AttachmentMixin
 
 User = get_user_model()
@@ -44,7 +44,7 @@ class QuestionPool(Model):
         constraints = [UniqueConstraint(fields=["title", "owner"], name="survey_questionpool_ti_ow_uniq")]
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
 
 @pghistory.track()
@@ -54,7 +54,7 @@ class Question(OrderableMixin, AttachmentMixin):
         TEXT_INPUT = "text_input", _("Text Input")
         NUMBER_INPUT = "number_input", _("Number Input")
 
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
     format = CharField(_("Format"), max_length=20, choices=SurveyQuestionFormatChoices.choices)
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
@@ -86,14 +86,13 @@ class Survey(LearningObjectMixin):
         verbose_name_plural = _("Surveys")
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
         question_ids: list[int]  # annotated
 
     @classmethod
     async def get_survey(cls, id: str, anonymous: bool = False):
         qs = cls.objects.select_related("owner", "question_pool").prefetch_related(
             Prefetch(
-                "question_pool__question_set", queryset=Question.objects.prefetch_related("attachments").order_by("id")
+                "question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id")
             )
         )
         if anonymous:
@@ -143,7 +142,7 @@ class Submission(AttemptMixin):
         *,
         survey_id: str,
         answers: dict[str, str],
-        mode: AttemptModeChoices,
+        mode: ModeChoices,
         respondent_id: str | None = None,
         context: str = "",
         anonymous: bool = False,

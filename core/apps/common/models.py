@@ -20,7 +20,7 @@ from django.db.models import (
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.common.util import AccessDate, AttemptModeChoices, GradingDate, track_fields, tuid
+from apps.common.util import AccessDate, GradingDate, ModeChoices, track_fields, tuid
 
 log = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ class LearningObjectMixin(TuidMixin, TimeStampedMixin):
     passing_point = PositiveSmallIntegerField(_("Passing Point"), default=60)
     max_attempts = PositiveSmallIntegerField(_("Max Attempts"), default=0)  # zero means unlimited
     verification_required = BooleanField(_("Verification Required"), default=False)
-    published = BooleanField(_("Published"), default=False)
+    published = DateTimeField(_("Published"), null=True, blank=True)
 
     class Meta(TuidMixin.Meta, TimeStampedMixin.Meta):
         abstract = True
@@ -152,7 +152,7 @@ class AttemptMixin(Model):
     started = DateTimeField(_("Start Time"), default=timezone.now)
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
-    mode = CharField(_("Mode"), max_length=30, choices=AttemptModeChoices.choices, default=AttemptModeChoices.NORMAL)
+    mode = CharField(_("Mode"), max_length=30, choices=ModeChoices.choices, default=ModeChoices.NORMAL, db_index=True)
 
     class Meta:
         abstract = True

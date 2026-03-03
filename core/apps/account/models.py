@@ -41,7 +41,6 @@ from django.db.models import (
     Value,
 )
 from django.db.models.expressions import OuterRef, Subquery
-from django.db.models.query import QuerySet
 from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
 from django.template.loader import get_template
@@ -139,7 +138,6 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
 
     if TYPE_CHECKING:
         pgh_event_model: type[Model]
-        totpdevice_set: QuerySet[TOTPDevice]
         otp_enabled: "datetime | None"  # annotated
         token_expires: "datetime | None"  # annotated
         pk: str

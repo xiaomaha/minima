@@ -21,7 +21,7 @@ from apps.content.tests.factories import MediaFactory
 from apps.learning.models import CatalogItem
 from apps.learning.tests.factories import CatalogFactory, CohortCatalogFactory, UserCatalogFactory
 from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory, PolicyFactory
-from apps.partner.models import Group
+from apps.partner.models import CohortMember, Group
 from apps.partner.tests.factories import CohortFactory, MemberFactory, PartnerFactory
 from apps.quiz.models import Quiz
 
@@ -70,7 +70,7 @@ class Command(BaseCommand):
 
         member = MemberFactory.create(group=group, email=test_user.email, user=test_user)
         cohort = CohortFactory.create()
-        cohort.members.add(member)
+        CohortMember.objects.create(cohort=cohort, member=member)
 
         CohortCatalogFactory.create(cohort=cohort, catalog=cohort_catalog)
 
@@ -104,7 +104,7 @@ class Command(BaseCommand):
             quiz_data_cycle = itertools.cycle(json.load(f))
 
             media_quiz = []
-            for media in Media.objects.filter(quizzes__isnull=True):
+            for i, media in enumerate(Media.objects.filter(quizzes__isnull=True)):
                 quiz_data = next(quiz_data_cycle)
 
                 thumbnail = None
@@ -112,8 +112,8 @@ class Command(BaseCommand):
                     thumbnail = ContentFile(media.thumbnail.read())
                     thumbnail.name = media.thumbnail.name
 
-                quiz = async_to_sync(Quiz.create_quiz_set)(
-                    title=f"{media.title} - {get_language_info('en')['name_local']}",
+                quiz = async_to_sync(Quiz.create_quiz)(
+                    title=f"{media.title} {i + 1} - {get_language_info('en')['name_local']}",
                     description=media.description,
                     audience=media.audience,
                     thumbnail=media.thumbnail,

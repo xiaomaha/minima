@@ -25,7 +25,6 @@ from django.db.models import (
     ForeignKey,
     Index,
     JSONField,
-    ManyToManyField,
     Model,
     OneToOneField,
     PositiveSmallIntegerField,
@@ -47,10 +46,10 @@ from apps.assignment.models import Assignment
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AccessDate, AttemptModeChoices, OtpTokenDict, issue_active_context, track_fields
+from apps.common.util import AccessDate, ModeChoices, OtpTokenDict, issue_active_context, track_fields
 from apps.competency.models import Certificate, CertificateAward, CertificateAwardDataDict
 from apps.content.models import Media
-from apps.course.trigger import course_create_grading_policy, lessonmedia_unifier
+from apps.course.trigger import course_create_grading_policy, lesson_media_unifier
 from apps.discussion.models import Discussion
 from apps.discussion.models import Grade as DiscussionGrade
 from apps.exam.models import Exam
@@ -65,7 +64,7 @@ if TYPE_CHECKING:
 
 
 ASSESSIBLE_MODELS = [Exam, Assignment, Discussion]
-ASSESSIBLE_MODEL_MAP = {(M._meta.app_label, M._meta.model.__name__.lower()): M for M in ASSESSIBLE_MODELS}
+ASSESSIBLE_MODEL_MAP = {(M._meta.app_label, M._meta.model_name): M for M in ASSESSIBLE_MODELS}
 ASSESSIBLE_GRADE_MODELS = {Exam: ExamGrade, Assignment: AssignmentGrade, Discussion: DiscussionGrade}
 
 TEMPLATE_SCHEDULES = {
@@ -84,7 +83,6 @@ class SessionDict(TypedDict):
     engagement: NotRequired[Engagement]
     otp_token: NotRequired[str]
     certificate_awards: NotRequired[list[CertificateAward]]
-    # stats: NotRequired["ScoreStatsDict"]
 
 
 @pghistory.track()
@@ -119,16 +117,12 @@ class Course(LearningObjectMixin):
     preview_url = URLField(_("Preview URL"), blank=True, null=True)
     effort_hours = PositiveSmallIntegerField(_("Effort Hours"))
     level = CharField(_("Level"), max_length=20, choices=LevelChoices.choices)
-    faq = ForeignKey(FAQ, SET_NULL, null=True, blank=True, verbose_name=_("FAQ"))
+
+    faq = ForeignKey(FAQ, CASCADE, verbose_name=_("FAQ"))
     honor_code = ForeignKey(HonorCode, CASCADE, verbose_name=_("Honor Code"))
-    message_preset = ForeignKey(MessagePreset, SET_NULL, null=True, blank=True, verbose_name=_("Message Preset"))
+    message_preset = ForeignKey(MessagePreset, SET_NULL, verbose_name=_("Message Preset"), null=True, blank=True)
 
-    instructors = ManyToManyField(Instructor, through="CourseInstructor", blank=True, verbose_name=_("Instructors"))
-    surveys = ManyToManyField(Survey, through="CourseSurvey", blank=True, verbose_name=_("Surveys"))
-
-    categories = ManyToManyField(Category, blank=True, verbose_name=_("Categories"))
-    related_courses = ManyToManyField("self", blank=True, symmetrical=False, verbose_name=_("Related Courses"))
-    certificates = ManyToManyField(Certificate, blank=True, verbose_name=_("Certificates"))
+    grading_criteria: list[GradingCriterionDict] | None = None
 
     class Meta(LearningObjectMixin.Meta):
         verbose_name = _("Course")
@@ -136,12 +130,15 @@ class Course(LearningObjectMixin):
         constraints = [UniqueConstraint(fields=["owner", "title"], name="course_course_ow_ti_uniq")]
 
     if TYPE_CHECKING:
-        lesson_set: "QuerySet[Lesson]"
-        assessment_set: "QuerySet[Assessment]"
-        gradingpolicy: "GradingPolicy"
-        grading_criteria: list[GradingCriterionDict]
         pk: str
-        coursesurvey_set: "QuerySet[CourseSurvey]"
+        grading_policy: GradingPolicy
+        lessons: QuerySet[Lesson]
+        course_surveys: QuerySet[CourseSurvey]
+        assessments: QuerySet[Assessment]
+        course_relations: QuerySet[CourseRelation]
+        course_categories: QuerySet[CourseCategory]
+        course_certificates: QuerySet[CourseCertificate]
+        course_instructors: QuerySet[CourseInstructor]
 
     def __str__(self):
         return f"{self.title} ({self.pk})"
@@ -150,27 +147,30 @@ class Course(LearningObjectMixin):
     async def get_session(cls, *, course_id: str, learner_id: str, access_date: AccessDate):
         course = (
             await cls.objects
-            .select_related("owner", "gradingpolicy", "honor_code")
+            .select_related("owner", "grading_policy", "honor_code")
             .prefetch_related(
                 Prefetch(
-                    "lesson_set",
-                    queryset=Lesson.objects.order_by("start_offset").prefetch_related(
-                        Prefetch("medias", queryset=Media.objects.order_by("lessonmedia__ordering"))
+                    "lessons",
+                    queryset=Lesson.objects.order_by("start_offset", "ordering").prefetch_related(
+                        Prefetch(
+                            "lesson_medias", queryset=LessonMedia.objects.select_related("media").order_by("ordering")
+                        )
                     ),
                 )
             )
             .prefetch_related(
                 Prefetch(
-                    "coursesurvey_set",
-                    queryset=CourseSurvey.objects.annotate(title=F("survey__title")).order_by("start_offset"),
+                    "course_surveys",
+                    queryset=CourseSurvey.objects.select_related("survey").order_by("start_offset", "ordering"),
                 )
             )
             .aget(id=course_id)
         )
-        course.grading_criteria = await course.gradingpolicy.grading_criteria(access_date)
+
+        course.grading_criteria = await course.grading_policy.grading_criteria(access_date)
         session = SessionDict(access_date=access_date, course=course)
 
-        for unit in [*course.lesson_set.all(), *course.coursesurvey_set.all()]:
+        for unit in [*course.lessons.all(), *course.course_surveys.all()]:
             unit.start_date = access_date["start"] + timedelta(days=unit.start_offset)
             unit.end_date = (
                 unit.start_date + timedelta(days=unit.end_offset) if unit.end_offset is not None else access_date["end"]
@@ -191,7 +191,8 @@ class Course(LearningObjectMixin):
 
         session["engagement"] = engagement
 
-        if hasattr(engagement, "gradebook") and engagement.gradebook.certificate_eligible:
+        gradebook: Gradebook | None = getattr(engagement, "gradebook", None)
+        if gradebook and gradebook.certificate_eligible:
             session["certificate_awards"] = [
                 c
                 async for c in CertificateAward.objects
@@ -212,21 +213,39 @@ class Course(LearningObjectMixin):
         return (
             await cls.objects
             .select_related("owner")
-            .prefetch_related(  # type: ignore
-                Prefetch("faq__faqitem_set", FAQItem.objects.filter(active=True).order_by("ordering")),
-                Prefetch("categories", Category.objects.order_by("id")),
+            .prefetch_related(
                 Prefetch(
-                    "certificates",
-                    Certificate.objects.select_related("issuer").filter(active=True).order_by("-created"),
-                ),
+                    "faq",
+                    FAQ.objects.prefetch_related(
+                        Prefetch("items", FAQItem.objects.filter(active=True).order_by("ordering"))
+                    ),
+                )
+            )
+            .prefetch_related(
+                Prefetch("course_categories", CourseCategory.objects.select_related("category").order_by("ordering"))
+            )
+            .prefetch_related(
                 Prefetch(
-                    "instructors",
-                    Instructor.objects
-                    .annotate(lead=F("courseinstructor__lead"))
-                    .filter(active=True)
-                    .order_by("courseinstructor__ordering"),
-                ),
-                Prefetch("related_courses", Course.objects.order_by("-modified")),
+                    "course_certificates",
+                    CourseCertificate.objects
+                    .select_related("certificate__issuer")
+                    .filter(certificate__active=True)
+                    .order_by("ordering"),
+                )
+            )
+            .prefetch_related(
+                Prefetch(
+                    "course_relations", CourseRelation.objects.select_related("related_course").order_by("ordering")
+                )
+            )
+            .prefetch_related(
+                Prefetch(
+                    "course_instructors",
+                    CourseInstructor.objects
+                    .select_related("instructor")
+                    .filter(instructor__active=True)
+                    .order_by("ordering"),
+                )
             )
             .aget(id=id)
         )
@@ -239,10 +258,10 @@ class Course(LearningObjectMixin):
             accessible = await Assessment.objects.aget(
                 course_id=course_id, item_id=content_id, item_type__app_label=app_label, item_type__model=model
             )
-        elif app_label == Media._meta.app_label and model == Media._meta.model.__name__.lower():
+        elif app_label == Media._meta.app_label and model == Media._meta.model_name:
             # unique by lessonmedia trigger
             accessible = await Lesson.objects.aget(course_id=course_id, lessonmedia__media_id=content_id)
-        elif app_label == Survey._meta.app_label and model == Survey._meta.model.__name__.lower():
+        elif app_label == Survey._meta.app_label and model == Survey._meta.model_name:
             accessible = await CourseSurvey.objects.aget(course_id=course_id, survey_id=content_id)
         else:
             raise ValueError(ErrorCode.UNKNOWN_COURSE_CONTENT)
@@ -258,9 +277,52 @@ class Course(LearningObjectMixin):
 
 
 @pghistory.track()
+class CourseCategory(OrderableMixin):
+    course = ForeignKey(Course, CASCADE, related_name="course_categories", verbose_name=_("Course"))
+    category = ForeignKey(Category, CASCADE, verbose_name=_("Category"))
+    label = CharField(_("Label"), max_length=255)
+
+    ordering_group = ("course",)
+
+    class Meta(OrderableMixin.Meta):
+        verbose_name = _("Course Category")
+        verbose_name_plural = _("Course Categories")
+        constraints = [UniqueConstraint(fields=["course", "category"], name="course_coursecategory_co_ca_uniq")]
+
+
+@pghistory.track()
+class CourseRelation(OrderableMixin):
+    course = ForeignKey(Course, CASCADE, related_name="course_relations", verbose_name=_("Course"))
+    related_course = ForeignKey(Course, CASCADE, related_name="+", verbose_name=_("Related Course"))
+    label = CharField(_("Label"), max_length=255)
+
+    ordering_group = ("course",)
+
+    class Meta(OrderableMixin.Meta):
+        verbose_name = _("Related Course")
+        verbose_name_plural = _("Related Courses")
+        constraints = [UniqueConstraint(fields=["course", "related_course"], name="course_courserelation_co_re_uniq")]
+
+
+@pghistory.track()
+class CourseCertificate(OrderableMixin):
+    course = ForeignKey(Course, CASCADE, related_name="course_certificates", verbose_name=_("Course"))
+    certificate = ForeignKey(Certificate, CASCADE, related_name="course_certificates", verbose_name=_("Certificate"))
+    label = CharField(_("Label"), max_length=255)
+
+    ordering_group = ("course",)
+
+    class Meta(OrderableMixin.Meta):
+        verbose_name = _("Course Certificate")
+        verbose_name_plural = _("Course Certificates")
+        constraints = [UniqueConstraint(fields=["course", "certificate"], name="course_coursecertificate_co_ce_uniq")]
+
+
+@pghistory.track()
 class CourseInstructor(OrderableMixin):
-    course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
+    course = ForeignKey(Course, CASCADE, related_name="course_instructors", verbose_name=_("Course"))
     instructor = ForeignKey(Instructor, CASCADE, verbose_name=_("Instructor"))
+    label = CharField(_("Label"), max_length=255)
     lead = BooleanField(_("Lead"), default=False)
 
     ordering_group = ("course",)
@@ -272,11 +334,14 @@ class CourseInstructor(OrderableMixin):
 
 
 @pghistory.track()
-class CourseSurvey(Model):
-    course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
+class CourseSurvey(OrderableMixin):
+    course = ForeignKey(Course, CASCADE, related_name="course_surveys", verbose_name=_("Course"))
     survey = ForeignKey(Survey, CASCADE, verbose_name=_("Survey"))
+    label = CharField(_("Label"), max_length=255)
     start_offset = PositiveSmallIntegerField(_("Start Offset (Days)"))
-    end_offset = PositiveSmallIntegerField(_("End Offset (Days) from Start Offset"), null=True, blank=True)
+    end_offset = PositiveSmallIntegerField(_("End Offset (Days)"), null=True, blank=True)
+
+    ordering_group = ("course", "start_offset")
 
     class Meta:
         verbose_name = _("Course Survey")
@@ -289,31 +354,29 @@ class CourseSurvey(Model):
 
 
 @pghistory.track()
-class Lesson(Model):
-    course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
-    title = CharField(_("Title"), max_length=255)
-    description = TextField(_("Description"), blank=True, default="")
-    medias = ManyToManyField(Media, through="LessonMedia", verbose_name=_("Medias"))
+class Lesson(OrderableMixin):
+    course = ForeignKey(Course, CASCADE, related_name="lessons", verbose_name=_("Course"))
+    label = CharField(_("Label"), max_length=255)
     start_offset = PositiveSmallIntegerField(_("Start Offset (Days)"))
-    end_offset = PositiveSmallIntegerField(_("End Offset (Days) from Start Offset"), null=True, blank=True)
+    end_offset = PositiveSmallIntegerField(_("End Offset (Days)"), null=True, blank=True)
+
+    ordering_group = ("course", "start_offset")
 
     class Meta:
         verbose_name = _("Lesson")
         verbose_name_plural = _("Lessons")
-        constraints = [UniqueConstraint(fields=["course", "title"], name="course_lesson_co_ti_uniq")]
 
     if TYPE_CHECKING:
         start_date: datetime
         end_date: datetime
-        lessonmedia_set: QuerySet[Media]
 
     def __str__(self):
-        return self.title
+        return self.label
 
 
 @pghistory.track()
 class LessonMedia(OrderableMixin):
-    lesson = ForeignKey(Lesson, CASCADE, verbose_name=_("Lesson"))
+    lesson = ForeignKey(Lesson, CASCADE, related_name="lesson_medias", verbose_name=_("Lesson"))
     media = ForeignKey(Media, CASCADE, verbose_name=_("Media"))
 
     ordering_group = ("lesson",)
@@ -322,28 +385,32 @@ class LessonMedia(OrderableMixin):
         verbose_name = _("Lesson Media")
         verbose_name_plural = _("Lesson Medias")
         constraints = [UniqueConstraint(fields=["lesson", "media"], name="course_lessonmedia_le_me_uniq")]
+        # [media, course] are also unique in the database
 
     if TYPE_CHECKING:
         media_id = str()
 
 
-setattr(LessonMedia._meta, "triggers", [lessonmedia_unifier(LessonMedia._meta.db_table, Lesson._meta.db_table)])
+setattr(LessonMedia._meta, "triggers", [lesson_media_unifier(LessonMedia._meta.db_table, Lesson._meta.db_table)])
 
 
 @pghistory.track()
-class Assessment(Model):
-    course = ForeignKey(Course, CASCADE, verbose_name=_("Course"))
+class Assessment(OrderableMixin):
+    course = ForeignKey(Course, CASCADE, related_name="assessments", verbose_name=_("Course"))
     weight = PositiveSmallIntegerField(_("Weight"))
+    label = CharField(_("Label"), max_length=255)
     start_offset = PositiveSmallIntegerField(_("Start Offset (Days)"))
-    end_offset = PositiveSmallIntegerField(_("End Offset (Days) from Start Offset"), null=True, blank=True)
+    end_offset = PositiveSmallIntegerField(_("End Offset (Days)"), null=True, blank=True)
     item_type = ForeignKey(
         ContentType,
         CASCADE,
         verbose_name=_("Item Type"),
-        limit_choices_to={"model__in": [m.__name__.lower() for m in ASSESSIBLE_MODELS]},
+        limit_choices_to={"model__in": [m._meta.model_name for m in ASSESSIBLE_MODELS]},
     )
     item_id = CharField(_("Item ID"), max_length=36)
     item = GenericForeignKey("item_type", "item_id")
+
+    ordering_group = ("course", "start_offset")
 
     class Meta:
         verbose_name = _("Assessment")
@@ -354,13 +421,11 @@ class Assessment(Model):
         ]
 
     if TYPE_CHECKING:
-        item_app_label: str  # annotated
-        item_model: str  # annotated
-        item_title: str  # annotated
+        _item: dict[str, str]  # item dict
 
 
 class GradingCriterionDict(TypedDict):
-    title: str
+    label: str
     app_label: str
     model: str
     weight: int
@@ -373,7 +438,7 @@ class GradingCriterionDict(TypedDict):
 
 @pghistory.track()
 class GradingPolicy(Model):
-    course = OneToOneField(Course, CASCADE, verbose_name=_("Course"))
+    course = OneToOneField(Course, CASCADE, related_name="grading_policy", verbose_name=_("Course"))
     assessment_weight = PositiveSmallIntegerField(_("Assessment Weight"), default=100)
     completion_weight = PositiveSmallIntegerField(_("Completion Weight"), default=0)
     completion_passing_point = PositiveSmallIntegerField(_("Completion Passing Point"), default=80)
@@ -395,9 +460,9 @@ class GradingPolicy(Model):
         if self.completion_weight or self.completion_passing_point:
             criteria.append(
                 GradingCriterionDict(
-                    title="Completion",
+                    label="Completion",
                     app_label="",
-                    model="completion",
+                    model="completion",  # fake model name
                     weight=self.completion_weight,
                     passing_point=self.completion_passing_point,
                     normalized_weight=float(self.completion_weight * 100 / total_weight) if total_weight else 0.0,
@@ -407,11 +472,10 @@ class GradingPolicy(Model):
                 )
             )
 
-        assessments = [
+        course: Course = self.course
+        assessments: list[Assessment] = [
             assessment
-            async for assessment in self.course.assessment_set.select_related("item_type").order_by(
-                "start_offset", "end_offset"
-            )
+            async for assessment in course.assessments.select_related("item_type").order_by("start_offset", "ordering")
         ]
 
         if not assessments:
@@ -426,7 +490,7 @@ class GradingPolicy(Model):
         qs_list = []
         for (app_label, model_name), ids in type_to_ids.items():
             model_class = apps.get_model(app_label, model_name)
-            qs = model_class.objects.filter(id__in=ids).values("id", "title", "passing_point")
+            qs = model_class.objects.filter(id__in=ids).values("id", "passing_point")
             qs_list.append(qs)
 
         items_qs = qs_list[0].union(*qs_list[1:]) if len(qs_list) > 1 else qs_list[0]
@@ -450,7 +514,7 @@ class GradingPolicy(Model):
 
             criteria.append(
                 GradingCriterionDict(
-                    title=item["title"],
+                    label=assessment.label,
                     app_label=assessment.item_type.app_label,
                     model=assessment.item_type.model,
                     weight=assessment.weight,
@@ -520,12 +584,13 @@ class Engagement(AttemptMixin):
         certificate_ids: list[int]  # annotated
         course_id: str
         learner_id: str
+        gradebook: Gradebook | None
 
     def issue_context(self):
         return issue_active_context("course", self.course_id, self.pk)
 
     @classmethod
-    async def start(cls, *, course_id: str, learner_id: str, mode: AttemptModeChoices):
+    async def start(cls, *, course_id: str, learner_id: str, mode: ModeChoices):
         course = await Course.objects.aget(id=course_id)
 
         if course.verification_required:
@@ -539,7 +604,7 @@ class Engagement(AttemptMixin):
         except IntegrityError:
             raise ValueError(ErrorCode.ALREADY_EXISTS)
 
-        engagement._state.fields_cache["gradebook"] = None  # type: ignore
+        engagement._state.fields_cache["gradebook"] = None  # pyrefly: ignore
 
         return engagement
 
@@ -550,7 +615,9 @@ class Engagement(AttemptMixin):
             .select_related("course", "learner", "gradebook")
             .annotate(
                 certificate_ids=ArrayAgg(
-                    "course__certificates__pk", filter=Q(course__certificates__active=True), distinct=True
+                    "course__course_certificates__certificate_id",
+                    filter=Q(course__course_certificates__certificate__active=True),
+                    distinct=True,
                 )
             )
             .aget(course_id=course_id, learner_id=user_id, active=True)
@@ -559,14 +626,14 @@ class Engagement(AttemptMixin):
         if certificate_id not in engagement.certificate_ids:
             raise ValueError(ErrorCode.CERTIFICATE_NOT_IN_COURSE)
 
-        gradebook = getattr(engagement, "gradebook", None)
+        gradebook: Gradebook | None = getattr(engagement, "gradebook", None)
         if not (gradebook and gradebook.certificate_eligible):
             raise ValueError(ErrorCode.NOT_QUALIFIED_FOR_CERTIFICATE)
 
         data = CertificateAwardDataDict(
             document_title=str(_("Course Completion Certificate")),
             completion_title=engagement.course.title,
-            completion_period=f"{engagement.started.strftime('%Y-%m-%d')} ~ {gradebook.confirmed.strftime('%Y-%m-%d')}",
+            completion_period=f"{engagement.started.strftime('%Y-%m-%d')} ~ {gradebook.confirmed.strftime('%Y-%m-%d')}",  # pyrefly: ignore confiremd already checked
             completion_hours=_("%(hours)s hours") % {"hours": engagement.course.effort_hours},
             recipient_name=engagement.learner.name,
             recipient_birth_date=engagement.learner.birth_date.isoformat() if engagement.learner.birth_date else "",
@@ -583,10 +650,10 @@ class Engagement(AttemptMixin):
 
     @classmethod
     async def grade(cls, *, course_id: str, learner_id: str, grader: "User | None" = None):
-        engagement = await Engagement.objects.select_related("course__gradingpolicy").aget(
+        engagement = await Engagement.objects.select_related("course__grading_policy").aget(
             course_id=course_id, learner_id=learner_id, active=True
         )
-        criteria = await engagement.course.gradingpolicy.grading_criteria()
+        criteria = await engagement.course.grading_policy.grading_criteria()
 
         context = engagement.issue_context()
 
@@ -598,13 +665,13 @@ class Engagement(AttemptMixin):
                 await Lesson.objects
                 .filter(course_id=completion_criterion["item_id"])
                 .annotate(
-                    media_count=Count("lessonmedia"),
+                    media_count=Count("lesson_medias"),
                     passed_count=Count(
-                        "lessonmedia",
+                        "lesson_medias",
                         filter=Q(
-                            lessonmedia__media__watch__user_id=learner_id,
-                            lessonmedia__media__watch__context=context,
-                            lessonmedia__media__watch__passed=True,
+                            lesson_medias__media__watch__user_id=learner_id,
+                            lesson_medias__media__watch__context=context,
+                            lesson_medias__media__watch__passed=True,
                         ),
                     ),
                 )
@@ -708,7 +775,7 @@ class Gradebook(TimeStampedMixin):
     passed = BooleanField(_("Passed"))
     confirmed = DateTimeField(_("Confirmed"), null=True, blank=True)
     note = TextField(_("Note"), blank=True, default="")
-    grader = ForeignKey(User, CASCADE, null=True, blank=True, verbose_name=_("Grader"), related_name="+")
+    grader = ForeignKey(User, CASCADE, related_name="+", null=True, blank=True, verbose_name=_("Grader"))
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Gradebook")

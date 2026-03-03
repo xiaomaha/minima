@@ -12,8 +12,6 @@ interface Props {
   open: boolean
   onClose: () => void
   inlineContext?: { media: string } //  inline quiz inside media
-  // Quiz runs in a dialog, so mode cannot be passed via location
-  mode?: string
 }
 
 const SITTING = 1 as LearningSessionStep
@@ -39,7 +37,7 @@ export const QuizDialog = (props: Props) => {
           {(ss) => (
             <Switch>
               <Match when={ss().step < SITTING}>
-                <GettingStarted session={ss()} setStore={setStore} inlineContext={props.inlineContext} mode={props.mode} />
+                <GettingStarted session={ss()} setStore={setStore} inlineContext={props.inlineContext} />
               </Match>
 
               <Match when={ss().step >= SITTING}>

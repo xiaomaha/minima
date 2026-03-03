@@ -13,7 +13,6 @@ from django.db.models import (
     EmailField,
     ForeignKey,
     ImageField,
-    ManyToManyField,
     Prefetch,
     QuerySet,
     TextField,
@@ -55,7 +54,7 @@ class Partner(TimeStampedMixin):
         indexes = [Index(fields=["email"])]
 
     if TYPE_CHECKING:
-        group_set: "QuerySet[Group]"
+        groups: "QuerySet[Group]"
 
     def __str__(self):
         return self.name
@@ -63,7 +62,7 @@ class Partner(TimeStampedMixin):
 
 @pghistory.track()
 class Group(TimeStampedMixin):
-    partner = ForeignKey(Partner, CASCADE, verbose_name=_("Partner"))
+    partner = ForeignKey(Partner, CASCADE, related_name="groups", verbose_name=_("Partner"))
     name = CharField(_("Name"), max_length=50)
     description = TextField(_("Description"), blank=True, default="")
     business_number = CharField(_("Business Number"), max_length=50, unique=True)
@@ -74,7 +73,7 @@ class Group(TimeStampedMixin):
         constraints = [UniqueConstraint(fields=["partner", "name"], name="partner_group_pa_na_uniq")]
 
     if TYPE_CHECKING:
-        member_set: "QuerySet[Member]"
+        members: "QuerySet[Member]"
 
     def __str__(self):
         return self.name
@@ -83,7 +82,7 @@ class Group(TimeStampedMixin):
 @track_fields("user_id")
 @pghistory.track()
 class Member(TimeStampedMixin):
-    group = ForeignKey(Group, CASCADE, verbose_name=_("Group"))
+    group = ForeignKey(Group, CASCADE, related_name="members", verbose_name=_("Group"))
     name = CharField(_("Name"), max_length=50)
     email = EmailField(_("Email"))
     birth_date = DateField(_("Birth Date"), null=True, blank=True)
@@ -104,7 +103,7 @@ class Member(TimeStampedMixin):
 
     if TYPE_CHECKING:
         pgh_event_model: type[Model]
-        cohortmember_set: "QuerySet[CohortMember]"
+        cohort_members: "QuerySet[CohortMember]"
         user_id: str
 
     @classmethod
@@ -139,16 +138,16 @@ class Member(TimeStampedMixin):
             .select_related("group__partner")
             .prefetch_related(
                 Prefetch(
-                    "cohortmember_set",
+                    "cohort_members",
                     queryset=CohortMember.objects
                     .select_related("cohort")
-                    .annotate(member_count=Count("cohort__members"))
+                    .annotate(member_count=Count("cohort__cohort_members"))
                     .prefetch_related(
-                        Prefetch("cohort__cohortstaff_set", queryset=CohortStaff.objects.select_related("staff"))
+                        Prefetch("cohort__cohort_staffs", queryset=CohortStaff.objects.select_related("staff"))
                     ),
                 )
             )
-            .annotate(member_count=Count("group__member", distinct=True))
+            .annotate(member_count=Count("group__members", distinct=True))
             .filter(user=user_id)
         ]
 
@@ -176,8 +175,6 @@ class Member(TimeStampedMixin):
 class Cohort(TimeStampedMixin):
     name = CharField(_("Name"), max_length=50, unique=True)
     description = TextField(_("Description"), blank=True, default="")
-    members = ManyToManyField(Member, through="CohortMember", verbose_name=_("Members"))
-    staffs = ManyToManyField(User, through="CohortStaff", blank=True, verbose_name=_("Staffs"))
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Cohort")
@@ -188,13 +185,13 @@ class Cohort(TimeStampedMixin):
 
     if TYPE_CHECKING:
         member_count: int  # annotated
-        cohortstaff_set: "QuerySet[CohortStaff]"
+        cohort_staffs: QuerySet[CohortStaff]
 
 
 @pghistory.track()
 class CohortMember(TimeStampedMixin):
-    cohort = ForeignKey(Cohort, CASCADE, verbose_name=_("Cohort"))
-    member = ForeignKey(Member, CASCADE, verbose_name=_("Member"))
+    cohort = ForeignKey(Cohort, CASCADE, related_name="cohort_members", verbose_name=_("Cohort"))
+    member = ForeignKey(Member, CASCADE, related_name="cohort_members", verbose_name=_("Member"))
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Cohort Member")
@@ -210,7 +207,7 @@ class CohortStaff(Model):
     class RoleChoices(TextChoices):
         EDUCATION_MANAGER = "education_manager", _("Education Manager")
 
-    cohort = ForeignKey(Cohort, CASCADE, verbose_name=_("Cohort"))
+    cohort = ForeignKey(Cohort, CASCADE, related_name="cohort_staffs", verbose_name=_("Cohort"))
     staff = ForeignKey(User, CASCADE, verbose_name=_("User"))
     role = CharField(_("Role"), max_length=30, choices=RoleChoices)
 

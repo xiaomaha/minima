@@ -22,7 +22,7 @@ from apps.content.api.schema import (
 )
 from apps.content.documents import get_search_suggestion
 from apps.content.models import Media, Note, Subtitle, Watch
-from apps.learning.api.access_control import access_date, active_context
+from apps.learning.api.access_control import access_date, access_mode, active_context
 
 router = Router(by_alias=True)
 
@@ -57,12 +57,14 @@ async def delete_media_watch(request: HttpRequest, id: str):
 
 @router.post("/media/{id}/watch")
 @active_context()
+@access_mode()
 @access_date("content", "media")
 async def update_media_watch(request: HttpRequest, id: str, data: WatchInSchema):
     await Watch.update_media_watch(
         media_id=id,
         user_id=request.auth,
         context=request.active_context,
+        mode=request.access_mode,
         last_position=data.last_position,
         watch_bits=data.watch_bits,
     )

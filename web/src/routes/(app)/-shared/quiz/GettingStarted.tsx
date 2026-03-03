@@ -10,7 +10,6 @@ interface Props {
   session: QuizSessionSchema
   setStore: SetStoreFunction<{ data: QuizSessionSchema | undefined }>
   inlineContext?: { media: string } //  inline quiz inside media
-  mode?: string
 }
 
 export const GettingStarted = (props: Props) => {
@@ -22,7 +21,7 @@ export const GettingStarted = (props: Props) => {
     setLoading(true)
     const { data } = await quizV1StartAttempt({
       path: { id: session.quiz.id },
-      query: { ...props.inlineContext, mode: props.mode },
+      query: { ...props.inlineContext },
     })
     props.setStore('data', (prev) => prev && { ...prev, step: SITTING, attempt: data })
     setLoading(false)

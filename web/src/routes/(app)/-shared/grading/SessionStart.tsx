@@ -77,7 +77,7 @@ export const SessionStart = (props: Props) => {
 
           <ContentViewer
             content={props.code}
-            class="h-24 p-3 border border-gray-300 rounded resize overflow-auto leading-normal"
+            class="text-sm h-24 p-3 border border-gray-300 rounded resize overflow-auto leading-normal"
           />
 
           <label class="label mt-4 text-sm">

@@ -23,6 +23,7 @@ RUN pip install --no-cache-dir --no-index --find-links /tmp/wheels ua-parser && 
   rm -rf /root/.cache
 
 # runtime
+# tests will be ignored by .dockerignore
 FROM python:3.14-alpine AS prod
 ENV PYTHONUNBUFFERED=1 \
   PYTHONDONTWRITEBYTECODE=1 \

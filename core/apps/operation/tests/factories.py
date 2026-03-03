@@ -129,7 +129,7 @@ class InquiryFactory(DjangoModelFactory[Inquiry]):
         if not create:
             return
 
-        if self.inquiryresponse_set.exists():
+        if self.inquiry_responses.exists():
             return
 
         for i in range(generic.random.randint(0, 2)):

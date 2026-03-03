@@ -65,14 +65,12 @@ function RouteComponent() {
   return (
     <div class="max-w-5xl mx-auto space-y-8 flex flex-col">
       <div class="flex gap-2 items-center label text-sm relative">
-        <Show when={!medias.loading}>
-          <div>{t('{{count}} result found', { count: medias.count })}</div>
-        </Show>
+        <div>{t('{{count}} result found', { count: medias.count })}</div>
         <select
           onChange={(e) => setFilter(e.target.value as 'public' | 'all')}
           value={filter()}
           name="filter"
-          class="select select-ghost w-auto absolute right-0 select-xs select-primary text-sm min-w-24 bg-base-100"
+          class="select select-ghost w-auto absolute right-0 top-0 select-sm select-primary text-sm min-w-24 bg-base-100"
         >
           <option value="public">{t('Public')}</option>
           <option value="all">{t('All')}</option>

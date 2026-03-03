@@ -38,9 +38,9 @@ from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
 from apps.common.util import (
     AccessDate,
-    AttemptModeChoices,
     GradingDate,
     LearningSessionStep,
+    ModeChoices,
     OtpTokenDict,
     ScoreStatsDict,
     get_score_stats,
@@ -86,13 +86,13 @@ class QuestionPool(Model):
         constraints = [UniqueConstraint(fields=["title", "owner"], name="discussion_questionpool_ti_ow_uniq")]
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
     def __str__(self):
         return self.title
 
     async def select_question(self):
-        question = await self.question_set.order_by("?").afirst()
+        question = await self.questions.order_by("?").afirst()
         if not question:
             raise ImproperlyConfigured("QuestionPool is empty")
 
@@ -101,7 +101,7 @@ class QuestionPool(Model):
 
 @pghistory.track()
 class Question(AttachmentMixin):
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
     directive = TextField(_("Directive"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     post_point = PositiveSmallIntegerField(_("Post Point"), default=1)
@@ -219,11 +219,11 @@ class Attempt(AttemptMixin):
     if TYPE_CHECKING:
         learner_id: str
         question_id: int
-        post_set: "QuerySet[Post]"
+        posts: "QuerySet[Post]"
         max_attempts: int  # annotated
 
     @classmethod
-    async def start(cls, *, discussion_id: str, learner_id: str, context: str, mode: AttemptModeChoices):
+    async def start(cls, *, discussion_id: str, learner_id: str, context: str, mode: ModeChoices):
         discussion = await Discussion.objects.aget(id=discussion_id)
 
         if discussion.verification_required:
@@ -302,7 +302,7 @@ class Attempt(AttemptMixin):
 
     async def post_count(self):
         q = self.question
-        counts = await self.post_set.annotate(body_len=Length("body")).aaggregate(
+        counts = await self.posts.annotate(body_len=Length("body")).aaggregate(
             post=Count("pk", filter=Q(parent__isnull=True)),
             reply=Count("pk", filter=Q(parent__isnull=False)),
             valid_post=Count("pk", filter=Q(parent__isnull=True, body_len__gte=q.post_min_characters)),
@@ -320,7 +320,7 @@ setattr(Attempt._meta, "triggers", [attempt_retry_count(Attempt._meta.db_table)]
 
 @pghistory.track()
 class Post(TimeStampedMixin, AttachmentMixin):
-    attempt = ForeignKey(Attempt, CASCADE, verbose_name=_("Attempt"))
+    attempt = ForeignKey(Attempt, CASCADE, related_name="posts", verbose_name=_("Attempt"))
     parent = ForeignKey("self", CASCADE, null=True, blank=True, related_name="children", verbose_name=_("Parent"))
     title = CharField(_("Title"), max_length=255)
     body = TextField(_("Body"))

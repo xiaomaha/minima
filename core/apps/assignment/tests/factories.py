@@ -45,7 +45,7 @@ class RubricFactory(DjangoModelFactory[Rubric]):
         if not create:
             return
 
-        if self.rubriccriterion_set.exists():
+        if self.rubric_criteria.exists():
             return
 
         RubricCriterionFactory.create_batch(generic.random.randint(3, 5), rubric=self)
@@ -66,7 +66,7 @@ class RubricCriterionFactory(DjangoModelFactory[RubricCriterion]):
         if not create:
             return
 
-        if self.performancelevel_set.exists():
+        if self.performance_levels.exists():
             return
 
         for i in range(generic.random.randint(4, 6)):
@@ -100,7 +100,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         if not create:
             return
 
-        if self.question_set.exists():
+        if self.questions.exists():
             return
 
         QuestionFactory.reset_sequence()
@@ -218,7 +218,7 @@ class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):
             prefetch_related_objects(
                 [attempt],
                 Prefetch(
-                    "question__solution__rubric__rubriccriterion_set__performancelevel_set",
+                    "question__solution__rubric__rubric_criteria__performance_levels",
                     queryset=PerformanceLevel.objects.order_by("point"),
                 ),
             )

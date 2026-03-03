@@ -169,7 +169,7 @@ export default (props: Props) => {
           classList={{ 'hover:bg-base-200 has-focus-within:bg-base-200': !isDirty() }}
         >
           <Toolbar editor={() => editor} class="bg-base-100" enableAttachment={!!props.setFiles} />
-          <div ref={editorWrapperEl} class="flex-1 overflow-y-auto inset-shadow-xs" />
+          <div ref={editorWrapperEl} class="max-h-100 flex-1 overflow-y-auto inset-shadow-xs" />
         </div>
       </div>
       <Show when={hasError()}>

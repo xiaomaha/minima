@@ -96,7 +96,7 @@ class GradingDate(TypedDict):
     confirm_due: datetime
 
 
-class AttemptModeChoices(TextChoices):
+class ModeChoices(TextChoices):
     NORMAL = "", ""
     PREVIEW = "preview", _("Preview")
     AUDIT = "audit", _("Audit")
@@ -107,7 +107,7 @@ class HttpRequest(DjangoHttpRequest):
     roles: list[str]  # from auth middleware
     access_date: "AccessDate"  # set by access_date decorator
     active_context: str  # set by active_context decorator
-    access_mode: AttemptModeChoices  # set by access_mode decorator
+    access_mode: ModeChoices  # set by access_mode decorator
 
 
 class OtpTokenDict(TypedDict):

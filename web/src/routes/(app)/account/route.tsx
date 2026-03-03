@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/solid-router'
+import { createFileRoute, Outlet, useLocation } from '@tanstack/solid-router'
 import { SSO_PROVIDERS } from '@/config'
 import { MainMenu } from '@/shared/MainMenu'
 import { useTranslation } from '@/shared/solid/i18n'
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/(app)/account')({
 
 function RouteComponent() {
   const { t } = useTranslation()
+  const location = useLocation()
 
   const tabs = () => {
     const result = [
@@ -27,7 +28,7 @@ function RouteComponent() {
   return (
     <div class="mx-auto max-w-lg py-4">
       <div class="flex items-center gap-4 justify-center mb-8">
-        <MainMenu menu={tabs()} />
+        <MainMenu menu={tabs()} active={(path) => location().pathname.startsWith(path)} />
       </div>
       <Outlet />
     </div>

@@ -147,7 +147,7 @@ export const CategorySelect = (props: Props) => {
             onCommit={handleAutoCompleteCommit}
             dropdownClass="bg-base-200! max-h-64 overflow-y-auto flex-nowrap"
             inputClass="w-full"
-            enterFirstSelect
+            selectFirstOnCommit
             suggestionCount={20}
           />
         </div>

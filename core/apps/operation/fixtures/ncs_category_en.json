@@ -1,0 +1,5141 @@
+[
+  {
+    "model": "operation.Category",
+    "pk": 1,
+    "fields": {
+      "path": "0001",
+      "depth": 1,
+      "numchild": 1,
+      "name": "Business Management",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 2,
+    "fields": {
+      "path": "0002",
+      "depth": 1,
+      "numchild": 4,
+      "name": "Management·Accounting·Administration",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 3,
+    "fields": {
+      "path": "0003",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Finance·Insurance",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 4,
+    "fields": {
+      "path": "0004",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Education·Natural·Social Science",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 5,
+    "fields": {
+      "path": "0005",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Law·Police·Fire·Corrections·Defense",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 6,
+    "fields": {
+      "path": "0006",
+      "depth": 1,
+      "numchild": 1,
+      "name": "Health·Medical",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 7,
+    "fields": {
+      "path": "0007",
+      "depth": 1,
+      "numchild": 3,
+      "name": "Social Welfare·Religion",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 8,
+    "fields": {
+      "path": "0008",
+      "depth": 1,
+      "numchild": 3,
+      "name": "Culture·Arts·Design·Broadcasting",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 9,
+    "fields": {
+      "path": "0009",
+      "depth": 1,
+      "numchild": 4,
+      "name": "Driving·Transportation",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 10,
+    "fields": {
+      "path": "000A",
+      "depth": 1,
+      "numchild": 3,
+      "name": "Sales·Marketing",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 11,
+    "fields": {
+      "path": "000B",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Security·Cleaning",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 12,
+    "fields": {
+      "path": "000C",
+      "depth": 1,
+      "numchild": 4,
+      "name": "Beauty·Accommodation·Travel·Leisure·Sports",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 13,
+    "fields": {
+      "path": "000D",
+      "depth": 1,
+      "numchild": 1,
+      "name": "Food Service",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 14,
+    "fields": {
+      "path": "000E",
+      "depth": 1,
+      "numchild": 8,
+      "name": "Construction",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 15,
+    "fields": {
+      "path": "000F",
+      "depth": 1,
+      "numchild": 11,
+      "name": "Machinery",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 16,
+    "fields": {
+      "path": "000G",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Materials",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 17,
+    "fields": {
+      "path": "000H",
+      "depth": 1,
+      "numchild": 5,
+      "name": "Chemistry·Bio",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 18,
+    "fields": {
+      "path": "000I",
+      "depth": 1,
+      "numchild": 3,
+      "name": "Textile·Clothing",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 19,
+    "fields": {
+      "path": "000J",
+      "depth": 1,
+      "numchild": 3,
+      "name": "Electrical·Electronics",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 20,
+    "fields": {
+      "path": "000K",
+      "depth": 1,
+      "numchild": 3,
+      "name": "Information·Communication",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 21,
+    "fields": {
+      "path": "000L",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Food Processing",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 22,
+    "fields": {
+      "path": "000M",
+      "depth": 1,
+      "numchild": 2,
+      "name": "Printing·Wood·Furniture·Crafts",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 23,
+    "fields": {
+      "path": "000N",
+      "depth": 1,
+      "numchild": 6,
+      "name": "Environment·Energy·Safety",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 24,
+    "fields": {
+      "path": "000O",
+      "depth": 1,
+      "numchild": 4,
+      "name": "Agriculture·Forestry·Fishery",
+      "ancestors": []
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 25,
+    "fields": {
+      "path": "00010001",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Business Management",
+      "ancestors": [
+        "Business Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 26,
+    "fields": {
+      "path": "00020001",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Planning Administration",
+      "ancestors": [
+        "Management·Accounting·Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 27,
+    "fields": {
+      "path": "00020002",
+      "depth": 2,
+      "numchild": 3,
+      "name": "General Affairs·HR",
+      "ancestors": [
+        "Management·Accounting·Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 28,
+    "fields": {
+      "path": "00020003",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Finance·Accounting",
+      "ancestors": [
+        "Management·Accounting·Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 29,
+    "fields": {
+      "path": "00020004",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Production·Quality Management",
+      "ancestors": [
+        "Management·Accounting·Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 30,
+    "fields": {
+      "path": "00030001",
+      "depth": 2,
+      "numchild": 6,
+      "name": "Finance",
+      "ancestors": [
+        "Finance·Insurance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 31,
+    "fields": {
+      "path": "00030002",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Insurance",
+      "ancestors": [
+        "Finance·Insurance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 32,
+    "fields": {
+      "path": "00040001",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Lifelong Education",
+      "ancestors": [
+        "Education·Natural·Social Science"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 33,
+    "fields": {
+      "path": "00040002",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Vocational Education",
+      "ancestors": [
+        "Education·Natural·Social Science"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 34,
+    "fields": {
+      "path": "00050001",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Law",
+      "ancestors": [
+        "Law·Police·Fire·Corrections·Defense"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 35,
+    "fields": {
+      "path": "00050002",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Fire & Disaster Prevention",
+      "ancestors": [
+        "Law·Police·Fire·Corrections·Defense"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 36,
+    "fields": {
+      "path": "00060001",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Health",
+      "ancestors": [
+        "Health·Medical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 37,
+    "fields": {
+      "path": "00070001",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Social Welfare",
+      "ancestors": [
+        "Social Welfare·Religion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 38,
+    "fields": {
+      "path": "00070002",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Counseling",
+      "ancestors": [
+        "Social Welfare·Religion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 39,
+    "fields": {
+      "path": "00070003",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Childcare",
+      "ancestors": [
+        "Social Welfare·Religion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 40,
+    "fields": {
+      "path": "00080001",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Culture·Arts",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 41,
+    "fields": {
+      "path": "00080002",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Design",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 42,
+    "fields": {
+      "path": "00080003",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Cultural Content",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 43,
+    "fields": {
+      "path": "00090001",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Automobile Driving·Transport",
+      "ancestors": [
+        "Driving·Transportation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 44,
+    "fields": {
+      "path": "00090002",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Railway Driving·Transport",
+      "ancestors": [
+        "Driving·Transportation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 45,
+    "fields": {
+      "path": "00090003",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Marine Driving·Transport",
+      "ancestors": [
+        "Driving·Transportation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 46,
+    "fields": {
+      "path": "00090004",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Aviation Driving·Transport",
+      "ancestors": [
+        "Driving·Transportation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 47,
+    "fields": {
+      "path": "000A0001",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Sales",
+      "ancestors": [
+        "Sales·Marketing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 48,
+    "fields": {
+      "path": "000A0002",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Real Estate",
+      "ancestors": [
+        "Sales·Marketing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 49,
+    "fields": {
+      "path": "000A0003",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Retail",
+      "ancestors": [
+        "Sales·Marketing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 50,
+    "fields": {
+      "path": "000B0001",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Security",
+      "ancestors": [
+        "Security·Cleaning"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 51,
+    "fields": {
+      "path": "000B0002",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Cleaning",
+      "ancestors": [
+        "Security·Cleaning"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 52,
+    "fields": {
+      "path": "000C0001",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Hair & Beauty",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 53,
+    "fields": {
+      "path": "000C0002",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Wedding & Funeral",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 54,
+    "fields": {
+      "path": "000C0003",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Tourism & Leisure",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 55,
+    "fields": {
+      "path": "000C0004",
+      "depth": 2,
+      "numchild": 5,
+      "name": "Sports",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 56,
+    "fields": {
+      "path": "000D0001",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Food & Beverage Service",
+      "ancestors": [
+        "Food Service"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 57,
+    "fields": {
+      "path": "000E0001",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Construction Project Management",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 58,
+    "fields": {
+      "path": "000E0002",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Civil Engineering",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 59,
+    "fields": {
+      "path": "000E0003",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Architecture",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 60,
+    "fields": {
+      "path": "000E0004",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Plant Engineering",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 61,
+    "fields": {
+      "path": "000E0005",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Landscape Architecture",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 62,
+    "fields": {
+      "path": "000E0006",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Urban & Traffic",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 63,
+    "fields": {
+      "path": "000E0007",
+      "depth": 2,
+      "numchild": 6,
+      "name": "Construction Equipment Operation & Maintenance",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 64,
+    "fields": {
+      "path": "000E0008",
+      "depth": 2,
+      "numchild": 5,
+      "name": "Marine Resources",
+      "ancestors": [
+        "Construction"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 65,
+    "fields": {
+      "path": "000F0001",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Mechanical Design",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 66,
+    "fields": {
+      "path": "000F0002",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Machining",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 67,
+    "fields": {
+      "path": "000F0003",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Machine Assembly & Management",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 68,
+    "fields": {
+      "path": "000F0004",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Machine Quality Management",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 69,
+    "fields": {
+      "path": "000F0005",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Machine Equipment Installation",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 70,
+    "fields": {
+      "path": "000F0006",
+      "depth": 2,
+      "numchild": 5,
+      "name": "Automobile",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 71,
+    "fields": {
+      "path": "000F0007",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Railway Vehicle Manufacturing",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 72,
+    "fields": {
+      "path": "000F0008",
+      "depth": 2,
+      "numchild": 8,
+      "name": "Shipbuilding",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 73,
+    "fields": {
+      "path": "000F0009",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Aircraft Manufacturing",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 74,
+    "fields": {
+      "path": "000F000A",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Mold",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 75,
+    "fields": {
+      "path": "000F000B",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Smart Factory",
+      "ancestors": [
+        "Machinery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 76,
+    "fields": {
+      "path": "000G0001",
+      "depth": 2,
+      "numchild": 6,
+      "name": "Metal Materials",
+      "ancestors": [
+        "Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 77,
+    "fields": {
+      "path": "000G0002",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Ceramic Materials",
+      "ancestors": [
+        "Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 78,
+    "fields": {
+      "path": "000H0001",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Chemistry & Bio Common",
+      "ancestors": [
+        "Chemistry·Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 79,
+    "fields": {
+      "path": "000H0002",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Petroleum & Basic Chemicals",
+      "ancestors": [
+        "Chemistry·Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 80,
+    "fields": {
+      "path": "000H0003",
+      "depth": 2,
+      "numchild": 5,
+      "name": "Fine Chemistry",
+      "ancestors": [
+        "Chemistry·Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 81,
+    "fields": {
+      "path": "000H0004",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Plastics & Rubber",
+      "ancestors": [
+        "Chemistry·Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 82,
+    "fields": {
+      "path": "000H0005",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Bio",
+      "ancestors": [
+        "Chemistry·Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 83,
+    "fields": {
+      "path": "000I0001",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Textile Manufacturing",
+      "ancestors": [
+        "Textile·Clothing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 84,
+    "fields": {
+      "path": "000I0002",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Fashion",
+      "ancestors": [
+        "Textile·Clothing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 85,
+    "fields": {
+      "path": "000I0003",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Clothing Management",
+      "ancestors": [
+        "Textile·Clothing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 86,
+    "fields": {
+      "path": "000J0001",
+      "depth": 2,
+      "numchild": 14,
+      "name": "Electrical",
+      "ancestors": [
+        "Electrical·Electronics"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 87,
+    "fields": {
+      "path": "000J0002",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Electronic Devices General",
+      "ancestors": [
+        "Electrical·Electronics"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 88,
+    "fields": {
+      "path": "000J0003",
+      "depth": 2,
+      "numchild": 19,
+      "name": "Electronic Device Development",
+      "ancestors": [
+        "Electrical·Electronics"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 89,
+    "fields": {
+      "path": "000K0001",
+      "depth": 2,
+      "numchild": 11,
+      "name": "Information Technology",
+      "ancestors": [
+        "Information·Communication"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 90,
+    "fields": {
+      "path": "000K0002",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Telecommunications",
+      "ancestors": [
+        "Information·Communication"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 91,
+    "fields": {
+      "path": "000K0003",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Broadcasting Technology",
+      "ancestors": [
+        "Information·Communication"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 92,
+    "fields": {
+      "path": "000L0001",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Food Processing",
+      "ancestors": [
+        "Food Processing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 93,
+    "fields": {
+      "path": "000L0002",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Confectionery & Bakery",
+      "ancestors": [
+        "Food Processing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 94,
+    "fields": {
+      "path": "000M0001",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Printing & Publishing",
+      "ancestors": [
+        "Printing·Wood·Furniture·Crafts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 95,
+    "fields": {
+      "path": "000M0002",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Crafts",
+      "ancestors": [
+        "Printing·Wood·Furniture·Crafts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 96,
+    "fields": {
+      "path": "000N0001",
+      "depth": 2,
+      "numchild": 5,
+      "name": "Industrial Environment",
+      "ancestors": [
+        "Environment·Energy·Safety"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 97,
+    "fields": {
+      "path": "000N0002",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Environmental Health",
+      "ancestors": [
+        "Environment·Energy·Safety"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 98,
+    "fields": {
+      "path": "000N0003",
+      "depth": 2,
+      "numchild": 1,
+      "name": "Natural Environment",
+      "ancestors": [
+        "Environment·Energy·Safety"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 99,
+    "fields": {
+      "path": "000N0004",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Environmental Services",
+      "ancestors": [
+        "Environment·Energy·Safety"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 100,
+    "fields": {
+      "path": "000N0005",
+      "depth": 2,
+      "numchild": 7,
+      "name": "Energy & Resources",
+      "ancestors": [
+        "Environment·Energy·Safety"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 101,
+    "fields": {
+      "path": "000N0006",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Industrial Safety & Health",
+      "ancestors": [
+        "Environment·Energy·Safety"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 102,
+    "fields": {
+      "path": "000O0001",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Agriculture",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 103,
+    "fields": {
+      "path": "000O0002",
+      "depth": 2,
+      "numchild": 2,
+      "name": "Livestock",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 104,
+    "fields": {
+      "path": "000O0003",
+      "depth": 2,
+      "numchild": 3,
+      "name": "Forestry",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 105,
+    "fields": {
+      "path": "000O0004",
+      "depth": 2,
+      "numchild": 4,
+      "name": "Fishery",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 106,
+    "fields": {
+      "path": "000100010001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Project Management",
+      "ancestors": [
+        "Business Management",
+        "Business Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 107,
+    "fields": {
+      "path": "000100010002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Overseas Management",
+      "ancestors": [
+        "Business Management",
+        "Business Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 108,
+    "fields": {
+      "path": "000200010001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Business Planning",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Planning Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 109,
+    "fields": {
+      "path": "000200010002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "PR & Advertising",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Planning Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 110,
+    "fields": {
+      "path": "000200010003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Marketing",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Planning Administration"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 111,
+    "fields": {
+      "path": "000200020001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "General Affairs",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "General Affairs·HR"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 112,
+    "fields": {
+      "path": "000200020002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "HR & Organization",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "General Affairs·HR"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 113,
+    "fields": {
+      "path": "000200020003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "General Office Work",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "General Affairs·HR"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 114,
+    "fields": {
+      "path": "000200030001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Financial Management",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Finance·Accounting"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 115,
+    "fields": {
+      "path": "000200030002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Accounting",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Finance·Accounting"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 116,
+    "fields": {
+      "path": "000200040001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Production Management",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Production·Quality Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 117,
+    "fields": {
+      "path": "000200040002",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Quality Management",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Production·Quality Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 118,
+    "fields": {
+      "path": "000200040003",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Logistics & Trade Management",
+      "ancestors": [
+        "Management·Accounting·Administration",
+        "Production·Quality Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 119,
+    "fields": {
+      "path": "000300010001",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Financial Sales",
+      "ancestors": [
+        "Finance·Insurance",
+        "Finance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 120,
+    "fields": {
+      "path": "000300010002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Financial Product Development",
+      "ancestors": [
+        "Finance·Insurance",
+        "Finance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 121,
+    "fields": {
+      "path": "000300010003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Credit Analysis",
+      "ancestors": [
+        "Finance·Insurance",
+        "Finance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 122,
+    "fields": {
+      "path": "000300010004",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Asset Management",
+      "ancestors": [
+        "Finance·Insurance",
+        "Finance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 123,
+    "fields": {
+      "path": "000300010005",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Financial Sales Support",
+      "ancestors": [
+        "Finance·Insurance",
+        "Finance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 124,
+    "fields": {
+      "path": "000300010006",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Securities & Foreign Exchange",
+      "ancestors": [
+        "Finance·Insurance",
+        "Finance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 125,
+    "fields": {
+      "path": "000300020001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Insurance Product Development",
+      "ancestors": [
+        "Finance·Insurance",
+        "Insurance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 126,
+    "fields": {
+      "path": "000300020002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Insurance Sales & Contracts",
+      "ancestors": [
+        "Finance·Insurance",
+        "Insurance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 127,
+    "fields": {
+      "path": "000300020003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Loss Assessment",
+      "ancestors": [
+        "Finance·Insurance",
+        "Insurance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 128,
+    "fields": {
+      "path": "000400010001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Lifelong Education Operations",
+      "ancestors": [
+        "Education·Natural·Social Science",
+        "Lifelong Education"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 129,
+    "fields": {
+      "path": "000400020001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Vocational Training",
+      "ancestors": [
+        "Education·Natural·Social Science",
+        "Vocational Education"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 130,
+    "fields": {
+      "path": "000400020002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "E-Learning",
+      "ancestors": [
+        "Education·Natural·Social Science",
+        "Vocational Education"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 131,
+    "fields": {
+      "path": "000500010001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Intellectual Property Management",
+      "ancestors": [
+        "Law·Police·Fire·Corrections·Defense",
+        "Law"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 132,
+    "fields": {
+      "path": "000500020001",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Firefighting",
+      "ancestors": [
+        "Law·Police·Fire·Corrections·Defense",
+        "Fire & Disaster Prevention"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 133,
+    "fields": {
+      "path": "000500020002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Disaster Prevention",
+      "ancestors": [
+        "Law·Police·Fire·Corrections·Defense",
+        "Fire & Disaster Prevention"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 134,
+    "fields": {
+      "path": "000500020003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Smart Disaster Management",
+      "ancestors": [
+        "Law·Police·Fire·Corrections·Defense",
+        "Fire & Disaster Prevention"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 135,
+    "fields": {
+      "path": "000600010001",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Medical Technical Support",
+      "ancestors": [
+        "Health·Medical",
+        "Health"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 136,
+    "fields": {
+      "path": "000600010002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Health Support",
+      "ancestors": [
+        "Health·Medical",
+        "Health"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 137,
+    "fields": {
+      "path": "000700010001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Social Welfare Policy",
+      "ancestors": [
+        "Social Welfare·Religion",
+        "Social Welfare"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 138,
+    "fields": {
+      "path": "000700010002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Social Welfare Services",
+      "ancestors": [
+        "Social Welfare·Religion",
+        "Social Welfare"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 139,
+    "fields": {
+      "path": "000700020001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Vocational Counseling",
+      "ancestors": [
+        "Social Welfare·Religion",
+        "Counseling"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 140,
+    "fields": {
+      "path": "000700020002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Youth Guidance",
+      "ancestors": [
+        "Social Welfare·Religion",
+        "Counseling"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 141,
+    "fields": {
+      "path": "000700020003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Psychological Counseling",
+      "ancestors": [
+        "Social Welfare·Religion",
+        "Counseling"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 142,
+    "fields": {
+      "path": "000700030001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Childcare",
+      "ancestors": [
+        "Social Welfare·Religion",
+        "Childcare"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 143,
+    "fields": {
+      "path": "000800010001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Arts & Culture Management",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Culture·Arts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 144,
+    "fields": {
+      "path": "000800010002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Applied Arts",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Culture·Arts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 145,
+    "fields": {
+      "path": "000800010003",
+      "depth": 3,
+      "numchild": 11,
+      "name": "Performing Arts",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Culture·Arts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 146,
+    "fields": {
+      "path": "000800010004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Cultural Heritage Management",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Culture·Arts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 147,
+    "fields": {
+      "path": "000800020001",
+      "depth": 3,
+      "numchild": 12,
+      "name": "Design",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Design"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 148,
+    "fields": {
+      "path": "000800030001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Cultural Content Planning",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Cultural Content"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 149,
+    "fields": {
+      "path": "000800030002",
+      "depth": 3,
+      "numchild": 12,
+      "name": "Cultural Content Production",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Cultural Content"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 150,
+    "fields": {
+      "path": "000800030003",
+      "depth": 3,
+      "numchild": 9,
+      "name": "Cultural Content Distribution & Services",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Cultural Content"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 151,
+    "fields": {
+      "path": "000800030004",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Video Production",
+      "ancestors": [
+        "Culture·Arts·Design·Broadcasting",
+        "Cultural Content"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 152,
+    "fields": {
+      "path": "000900010001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Automobile Driving & Transport",
+      "ancestors": [
+        "Driving·Transportation",
+        "Automobile Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 153,
+    "fields": {
+      "path": "000900020001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Railway Operations",
+      "ancestors": [
+        "Driving·Transportation",
+        "Railway Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 154,
+    "fields": {
+      "path": "000900020002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Railway Facility Maintenance",
+      "ancestors": [
+        "Driving·Transportation",
+        "Railway Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 155,
+    "fields": {
+      "path": "000900030001",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Ship Navigation",
+      "ancestors": [
+        "Driving·Transportation",
+        "Marine Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 156,
+    "fields": {
+      "path": "000900030002",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Inspection & Measurement",
+      "ancestors": [
+        "Driving·Transportation",
+        "Marine Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 157,
+    "fields": {
+      "path": "000900040001",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Aircraft Piloting & Transport",
+      "ancestors": [
+        "Driving·Transportation",
+        "Aviation Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 158,
+    "fields": {
+      "path": "000900040002",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Aviation Operations",
+      "ancestors": [
+        "Driving·Transportation",
+        "Aviation Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 159,
+    "fields": {
+      "path": "000900040003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Air Navigation Facilities",
+      "ancestors": [
+        "Driving·Transportation",
+        "Aviation Driving·Transport"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 160,
+    "fields": {
+      "path": "000A00010001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "General & Overseas Sales",
+      "ancestors": [
+        "Sales·Marketing",
+        "Sales"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 161,
+    "fields": {
+      "path": "000A00020001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Real Estate Consulting",
+      "ancestors": [
+        "Sales·Marketing",
+        "Real Estate"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 162,
+    "fields": {
+      "path": "000A00020002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Real Estate Management",
+      "ancestors": [
+        "Sales·Marketing",
+        "Real Estate"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 163,
+    "fields": {
+      "path": "000A00020003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Real Estate Brokerage",
+      "ancestors": [
+        "Sales·Marketing",
+        "Real Estate"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 164,
+    "fields": {
+      "path": "000A00020004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Property Appraisal",
+      "ancestors": [
+        "Sales·Marketing",
+        "Real Estate"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 165,
+    "fields": {
+      "path": "000A00030001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "E-Business",
+      "ancestors": [
+        "Sales·Marketing",
+        "Retail"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 166,
+    "fields": {
+      "path": "000A00030002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "General Retail",
+      "ancestors": [
+        "Sales·Marketing",
+        "Retail"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 167,
+    "fields": {
+      "path": "000A00030003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Commodity Brokerage & Auction",
+      "ancestors": [
+        "Sales·Marketing",
+        "Retail"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 168,
+    "fields": {
+      "path": "000B00010001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Security & Bodyguard",
+      "ancestors": [
+        "Security·Cleaning",
+        "Security"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 169,
+    "fields": {
+      "path": "000B00020001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Cleaning",
+      "ancestors": [
+        "Security·Cleaning",
+        "Cleaning"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 170,
+    "fields": {
+      "path": "000C00010001",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Hair & Beauty Services",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Hair & Beauty"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 171,
+    "fields": {
+      "path": "000C00020001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Wedding Services",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Wedding & Funeral"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 172,
+    "fields": {
+      "path": "000C00020002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Funeral Services",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Wedding & Funeral"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 173,
+    "fields": {
+      "path": "000C00030001",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Travel Services",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Tourism & Leisure"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 174,
+    "fields": {
+      "path": "000C00030002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Accommodation Services",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Tourism & Leisure"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 175,
+    "fields": {
+      "path": "000C00030003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Convention",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Tourism & Leisure"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 176,
+    "fields": {
+      "path": "000C00030004",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Tourism & Leisure Services",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Tourism & Leisure"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 177,
+    "fields": {
+      "path": "000C00040001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Sports Equipment",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 178,
+    "fields": {
+      "path": "000C00040002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Sports Facilities",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 179,
+    "fields": {
+      "path": "000C00040003",
+      "depth": 3,
+      "numchild": 9,
+      "name": "Sports Competition & Coaching",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 180,
+    "fields": {
+      "path": "000C00040004",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Sports Marketing",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 181,
+    "fields": {
+      "path": "000C00040005",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Recreation",
+      "ancestors": [
+        "Beauty·Accommodation·Travel·Leisure·Sports",
+        "Sports"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 182,
+    "fields": {
+      "path": "000D00010001",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Food Cooking",
+      "ancestors": [
+        "Food Service",
+        "Food & Beverage Service"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 183,
+    "fields": {
+      "path": "000D00010002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "F&B Services",
+      "ancestors": [
+        "Food Service",
+        "Food & Beverage Service"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 184,
+    "fields": {
+      "path": "000D00010003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Restaurant Management",
+      "ancestors": [
+        "Food Service",
+        "Food & Beverage Service"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 185,
+    "fields": {
+      "path": "000E00010001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Pre-Construction Management",
+      "ancestors": [
+        "Construction",
+        "Construction Project Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 186,
+    "fields": {
+      "path": "000E00010002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Construction Site Management",
+      "ancestors": [
+        "Construction",
+        "Construction Project Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 187,
+    "fields": {
+      "path": "000E00010003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Post-Construction Management",
+      "ancestors": [
+        "Construction",
+        "Construction Project Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 188,
+    "fields": {
+      "path": "000E00010004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Smart Construction Management",
+      "ancestors": [
+        "Construction",
+        "Construction Project Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 189,
+    "fields": {
+      "path": "000E00020001",
+      "depth": 3,
+      "numchild": 12,
+      "name": "Civil Engineering Design & Supervision",
+      "ancestors": [
+        "Construction",
+        "Civil Engineering"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 190,
+    "fields": {
+      "path": "000E00020002",
+      "depth": 3,
+      "numchild": 11,
+      "name": "Civil Engineering Construction",
+      "ancestors": [
+        "Construction",
+        "Civil Engineering"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 191,
+    "fields": {
+      "path": "000E00020003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Surveying & GIS Development",
+      "ancestors": [
+        "Construction",
+        "Civil Engineering"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 192,
+    "fields": {
+      "path": "000E00030001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Architectural Design & Supervision",
+      "ancestors": [
+        "Construction",
+        "Architecture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 193,
+    "fields": {
+      "path": "000E00030002",
+      "depth": 3,
+      "numchild": 17,
+      "name": "Architectural Construction",
+      "ancestors": [
+        "Construction",
+        "Architecture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 194,
+    "fields": {
+      "path": "000E00030003",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Building Facility Design & Construction",
+      "ancestors": [
+        "Construction",
+        "Architecture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 195,
+    "fields": {
+      "path": "000E00040001",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Plant Design & Supervision",
+      "ancestors": [
+        "Construction",
+        "Plant Engineering"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 196,
+    "fields": {
+      "path": "000E00040002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Plant Construction",
+      "ancestors": [
+        "Construction",
+        "Plant Engineering"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 197,
+    "fields": {
+      "path": "000E00040003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Plant Project Management",
+      "ancestors": [
+        "Construction",
+        "Plant Engineering"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 198,
+    "fields": {
+      "path": "000E00050001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Landscape Architecture",
+      "ancestors": [
+        "Construction",
+        "Landscape Architecture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 199,
+    "fields": {
+      "path": "000E00060001",
+      "depth": 3,
+      "numchild": 6,
+      "name": "National & Urban Planning",
+      "ancestors": [
+        "Construction",
+        "Urban & Traffic"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 200,
+    "fields": {
+      "path": "000E00060002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Traffic Planning & Design",
+      "ancestors": [
+        "Construction",
+        "Urban & Traffic"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 201,
+    "fields": {
+      "path": "000E00060003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Residential Services",
+      "ancestors": [
+        "Construction",
+        "Urban & Traffic"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 202,
+    "fields": {
+      "path": "000E00060004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Intelligent Transportation",
+      "ancestors": [
+        "Construction",
+        "Urban & Traffic"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 203,
+    "fields": {
+      "path": "000E00070001",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Earthwork Equipment Operation",
+      "ancestors": [
+        "Construction",
+        "Construction Equipment Operation & Maintenance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 204,
+    "fields": {
+      "path": "000E00070002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Foundation Construction Equipment Operation",
+      "ancestors": [
+        "Construction",
+        "Construction Equipment Operation & Maintenance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 205,
+    "fields": {
+      "path": "000E00070003",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Concrete Equipment Operation",
+      "ancestors": [
+        "Construction",
+        "Construction Equipment Operation & Maintenance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 206,
+    "fields": {
+      "path": "000E00070004",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Loading Equipment Operation",
+      "ancestors": [
+        "Construction",
+        "Construction Equipment Operation & Maintenance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 207,
+    "fields": {
+      "path": "000E00070005",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Lifting Equipment Operation",
+      "ancestors": [
+        "Construction",
+        "Construction Equipment Operation & Maintenance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 208,
+    "fields": {
+      "path": "000E00070006",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Construction Equipment Maintenance",
+      "ancestors": [
+        "Construction",
+        "Construction Equipment Operation & Maintenance"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 209,
+    "fields": {
+      "path": "000E00080001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Marine Environment Survey",
+      "ancestors": [
+        "Construction",
+        "Marine Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 210,
+    "fields": {
+      "path": "000E00080002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Marine Environment Management",
+      "ancestors": [
+        "Construction",
+        "Marine Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 211,
+    "fields": {
+      "path": "000E00080003",
+      "depth": 3,
+      "numchild": 12,
+      "name": "Offshore Plant Design, Installation & Operation",
+      "ancestors": [
+        "Construction",
+        "Marine Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 212,
+    "fields": {
+      "path": "000E00080004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Marine Resource Development & Management",
+      "ancestors": [
+        "Construction",
+        "Marine Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 213,
+    "fields": {
+      "path": "000E00080005",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Diving",
+      "ancestors": [
+        "Construction",
+        "Marine Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 214,
+    "fields": {
+      "path": "000F00010001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Design Planning",
+      "ancestors": [
+        "Machinery",
+        "Mechanical Design"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 215,
+    "fields": {
+      "path": "000F00010002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Mechanical Design",
+      "ancestors": [
+        "Machinery",
+        "Mechanical Design"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 216,
+    "fields": {
+      "path": "000F00020001",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Cutting & Machining",
+      "ancestors": [
+        "Machinery",
+        "Machining"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 217,
+    "fields": {
+      "path": "000F00020002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Special Machining",
+      "ancestors": [
+        "Machinery",
+        "Machining"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 218,
+    "fields": {
+      "path": "000F00030001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Machine Assembly",
+      "ancestors": [
+        "Machinery",
+        "Machine Assembly & Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 219,
+    "fields": {
+      "path": "000F00030002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Machine Production Management",
+      "ancestors": [
+        "Machinery",
+        "Machine Assembly & Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 220,
+    "fields": {
+      "path": "000F00040001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Machine Quality Management",
+      "ancestors": [
+        "Machinery",
+        "Machine Quality Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 221,
+    "fields": {
+      "path": "000F00050001",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Machine Equipment Installation & Maintenance",
+      "ancestors": [
+        "Machinery",
+        "Machine Equipment Installation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 222,
+    "fields": {
+      "path": "000F00050002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Refrigeration & HVAC",
+      "ancestors": [
+        "Machinery",
+        "Machine Equipment Installation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 223,
+    "fields": {
+      "path": "000F00050003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Motorcycle Maintenance",
+      "ancestors": [
+        "Machinery",
+        "Machine Equipment Installation"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 224,
+    "fields": {
+      "path": "000F00060001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Automobile Design",
+      "ancestors": [
+        "Machinery",
+        "Automobile"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 225,
+    "fields": {
+      "path": "000F00060002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Automobile Manufacturing",
+      "ancestors": [
+        "Machinery",
+        "Automobile"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 226,
+    "fields": {
+      "path": "000F00060003",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Automobile Maintenance",
+      "ancestors": [
+        "Machinery",
+        "Automobile"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 227,
+    "fields": {
+      "path": "000F00060004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Automobile Maintenance Management",
+      "ancestors": [
+        "Machinery",
+        "Automobile"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 228,
+    "fields": {
+      "path": "000F00060005",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Automobile Management",
+      "ancestors": [
+        "Machinery",
+        "Automobile"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 229,
+    "fields": {
+      "path": "000F00070001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Railway Vehicle Design & Manufacturing",
+      "ancestors": [
+        "Machinery",
+        "Railway Vehicle Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 230,
+    "fields": {
+      "path": "000F00070002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Railway Vehicle Maintenance",
+      "ancestors": [
+        "Machinery",
+        "Railway Vehicle Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 231,
+    "fields": {
+      "path": "000F00080001",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Ship Design",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 232,
+    "fields": {
+      "path": "000F00080002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Hull Construction",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 233,
+    "fields": {
+      "path": "000F00080003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Ship Outfitting Production",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 234,
+    "fields": {
+      "path": "000F00080004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Ship Quality Management",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 235,
+    "fields": {
+      "path": "000F00080005",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Ship Production Management",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 236,
+    "fields": {
+      "path": "000F00080006",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Sea Trial",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 237,
+    "fields": {
+      "path": "000F00080007",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Ship Maintenance",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 238,
+    "fields": {
+      "path": "000F00080008",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Leisure Boats",
+      "ancestors": [
+        "Machinery",
+        "Shipbuilding"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 239,
+    "fields": {
+      "path": "000F00090001",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Aircraft Design",
+      "ancestors": [
+        "Machinery",
+        "Aircraft Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 240,
+    "fields": {
+      "path": "000F00090002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Aircraft Manufacturing",
+      "ancestors": [
+        "Machinery",
+        "Aircraft Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 241,
+    "fields": {
+      "path": "000F00090003",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Aircraft Maintenance",
+      "ancestors": [
+        "Machinery",
+        "Aircraft Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 242,
+    "fields": {
+      "path": "000F00090004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Aviation Equipment Management",
+      "ancestors": [
+        "Machinery",
+        "Aircraft Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 243,
+    "fields": {
+      "path": "000F000A0001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Mold (Common)",
+      "ancestors": [
+        "Machinery",
+        "Mold"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 244,
+    "fields": {
+      "path": "000F000A0002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Injection Mold",
+      "ancestors": [
+        "Machinery",
+        "Mold"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 245,
+    "fields": {
+      "path": "000F000A0003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Press Mold",
+      "ancestors": [
+        "Machinery",
+        "Mold"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 246,
+    "fields": {
+      "path": "000F000A0004",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Die Casting Mold",
+      "ancestors": [
+        "Machinery",
+        "Mold"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 247,
+    "fields": {
+      "path": "000F000B0001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Smart Factory Design",
+      "ancestors": [
+        "Machinery",
+        "Smart Factory"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 248,
+    "fields": {
+      "path": "000F000B0002",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Smart Factory Installation",
+      "ancestors": [
+        "Machinery",
+        "Smart Factory"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 249,
+    "fields": {
+      "path": "000F000B0003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Smart Factory Operations Management",
+      "ancestors": [
+        "Machinery",
+        "Smart Factory"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 250,
+    "fields": {
+      "path": "000G00010001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Metal Engineering",
+      "ancestors": [
+        "Materials",
+        "Metal Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 251,
+    "fields": {
+      "path": "000G00010002",
+      "depth": 3,
+      "numchild": 9,
+      "name": "Metal Materials Manufacturing",
+      "ancestors": [
+        "Materials",
+        "Metal Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 252,
+    "fields": {
+      "path": "000G00010003",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Metal Processing",
+      "ancestors": [
+        "Materials",
+        "Metal Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 253,
+    "fields": {
+      "path": "000G00010004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Surface Treatment",
+      "ancestors": [
+        "Materials",
+        "Metal Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 254,
+    "fields": {
+      "path": "000G00010005",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Welding",
+      "ancestors": [
+        "Materials",
+        "Metal Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 255,
+    "fields": {
+      "path": "000G00010006",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Non-Ferrous Metal Manufacturing",
+      "ancestors": [
+        "Materials",
+        "Metal Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 256,
+    "fields": {
+      "path": "000G00020001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Ceramic Materials (Common)",
+      "ancestors": [
+        "Materials",
+        "Ceramic Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 257,
+    "fields": {
+      "path": "000G00020002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Sintered Ceramic Manufacturing",
+      "ancestors": [
+        "Materials",
+        "Ceramic Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 258,
+    "fields": {
+      "path": "000G00020003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Fused Ceramic Manufacturing",
+      "ancestors": [
+        "Materials",
+        "Ceramic Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 259,
+    "fields": {
+      "path": "000G00020004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Carbon Material Manufacturing",
+      "ancestors": [
+        "Materials",
+        "Ceramic Materials"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 260,
+    "fields": {
+      "path": "000H00010001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Chemical Substance & Quality Management",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Chemistry & Bio Common"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 261,
+    "fields": {
+      "path": "000H00010002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Chemical Process Management",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Chemistry & Bio Common"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 262,
+    "fields": {
+      "path": "000H00010003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Chemical Product R&D",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Chemistry & Bio Common"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 263,
+    "fields": {
+      "path": "000H00020001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Petrochemical (Common)",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Petroleum & Basic Chemicals"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 264,
+    "fields": {
+      "path": "000H00020002",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Petroleum & Natural Gas",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Petroleum & Basic Chemicals"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 265,
+    "fields": {
+      "path": "000H00020003",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Basic Organic Chemicals",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Petroleum & Basic Chemicals"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 266,
+    "fields": {
+      "path": "000H00020004",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Basic Inorganic Chemicals",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Petroleum & Basic Chemicals"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 267,
+    "fields": {
+      "path": "000H00030001",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Fine Chemistry (Common)",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Fine Chemistry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 268,
+    "fields": {
+      "path": "000H00030002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Fertilizers & Pesticides",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Fine Chemistry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 269,
+    "fields": {
+      "path": "000H00030003",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Functional Fine Chemicals",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Fine Chemistry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 270,
+    "fields": {
+      "path": "000H00030004",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Pharmaceuticals",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Fine Chemistry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 271,
+    "fields": {
+      "path": "000H00030005",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Cosmetics",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Fine Chemistry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 272,
+    "fields": {
+      "path": "000H00040001",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Plastics",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Plastics & Rubber"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 273,
+    "fields": {
+      "path": "000H00040002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Rubber",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Plastics & Rubber"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 274,
+    "fields": {
+      "path": "000H00050001",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Biopharmaceuticals",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 275,
+    "fields": {
+      "path": "000H00050002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Biochemistry",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 276,
+    "fields": {
+      "path": "000H00050003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Biotechnology",
+      "ancestors": [
+        "Chemistry·Bio",
+        "Bio"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 277,
+    "fields": {
+      "path": "000I00010001",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Textile Production",
+      "ancestors": [
+        "Textile·Clothing",
+        "Textile Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 278,
+    "fields": {
+      "path": "000I00010002",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Textile Processing",
+      "ancestors": [
+        "Textile·Clothing",
+        "Textile Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 279,
+    "fields": {
+      "path": "000I00010003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Textile Production Management",
+      "ancestors": [
+        "Textile·Clothing",
+        "Textile Manufacturing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 280,
+    "fields": {
+      "path": "000I00020001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Fashion Product Planning",
+      "ancestors": [
+        "Textile·Clothing",
+        "Fashion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 281,
+    "fields": {
+      "path": "000I00020002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Fashion Product Production",
+      "ancestors": [
+        "Textile·Clothing",
+        "Fashion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 282,
+    "fields": {
+      "path": "000I00020003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Fashion Product Distribution",
+      "ancestors": [
+        "Textile·Clothing",
+        "Fashion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 283,
+    "fields": {
+      "path": "000I00020004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Footwear Development & Production",
+      "ancestors": [
+        "Textile·Clothing",
+        "Fashion"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 284,
+    "fields": {
+      "path": "000I00030001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Laundry & Alterations",
+      "ancestors": [
+        "Textile·Clothing",
+        "Clothing Management"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 285,
+    "fields": {
+      "path": "000J00010001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Power Generation Facility Design",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 286,
+    "fields": {
+      "path": "000J00010002",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Power Generation Facility Operations",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 287,
+    "fields": {
+      "path": "000J00010003",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Transmission & Distribution Facilities",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 288,
+    "fields": {
+      "path": "000J00010004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Smart Grid Facilities",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 289,
+    "fields": {
+      "path": "000J00010005",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Electrical Equipment Manufacturing",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 290,
+    "fields": {
+      "path": "000J00010006",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Electrical Facility Design & Supervision",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 291,
+    "fields": {
+      "path": "000J00010007",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Electrical Construction",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 292,
+    "fields": {
+      "path": "000J00010008",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Electrical Automation",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 293,
+    "fields": {
+      "path": "000J00010009",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Electric Railway",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 294,
+    "fields": {
+      "path": "000J0001000A",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Railway Signal Control",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 295,
+    "fields": {
+      "path": "000J0001000B",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Supercritical CO2 Power Generation",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 296,
+    "fields": {
+      "path": "000J0001000C",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Energy Storage Systems",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 297,
+    "fields": {
+      "path": "000J0001000D",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Future Electrical Systems",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 298,
+    "fields": {
+      "path": "000J0001000E",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Batteries",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electrical"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 299,
+    "fields": {
+      "path": "000J00020001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Electronics Product Planning & Production",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Devices General"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 300,
+    "fields": {
+      "path": "000J00020002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Electronic Components Planning & Production",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Devices General"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 301,
+    "fields": {
+      "path": "000J00020003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Electronics Customer Support",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Devices General"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 302,
+    "fields": {
+      "path": "000J00030001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Home Appliance Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 303,
+    "fields": {
+      "path": "000J00030002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Industrial Electronics Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 304,
+    "fields": {
+      "path": "000J00030003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "IT Device Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 305,
+    "fields": {
+      "path": "000J00030004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Electronic Application Device Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 306,
+    "fields": {
+      "path": "000J00030005",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Electronic Component Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 307,
+    "fields": {
+      "path": "000J00030006",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Semiconductor Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 308,
+    "fields": {
+      "path": "000J00030007",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Display Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 309,
+    "fields": {
+      "path": "000J00030008",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Robot Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 310,
+    "fields": {
+      "path": "000J00030009",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Medical Equipment Manufacturing",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 311,
+    "fields": {
+      "path": "000J0003000A",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Optical Technology Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 312,
+    "fields": {
+      "path": "000J0003000B",
+      "depth": 3,
+      "numchild": 3,
+      "name": "3D Printer Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 313,
+    "fields": {
+      "path": "000J0003000C",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Virtual Training System Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 314,
+    "fields": {
+      "path": "000J0003000D",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Wearable Smart Devices",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 315,
+    "fields": {
+      "path": "000J0003000E",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Flexible Display Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 316,
+    "fields": {
+      "path": "000J0003000F",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Smart Farm Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 317,
+    "fields": {
+      "path": "000J0003000G",
+      "depth": 3,
+      "numchild": 1,
+      "name": "OLED Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 318,
+    "fields": {
+      "path": "000J0003000H",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Connected Car Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 319,
+    "fields": {
+      "path": "000J0003000I",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Autonomous Driving Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 320,
+    "fields": {
+      "path": "000J0003000J",
+      "depth": 3,
+      "numchild": 1,
+      "name": "Remote System Development",
+      "ancestors": [
+        "Electrical·Electronics",
+        "Electronic Device Development"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 321,
+    "fields": {
+      "path": "000K00010001",
+      "depth": 3,
+      "numchild": 8,
+      "name": "IT Strategy & Planning",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 322,
+    "fields": {
+      "path": "000K00010002",
+      "depth": 3,
+      "numchild": 16,
+      "name": "IT Development",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 323,
+    "fields": {
+      "path": "000K00010003",
+      "depth": 3,
+      "numchild": 6,
+      "name": "IT Operations",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 324,
+    "fields": {
+      "path": "000K00010004",
+      "depth": 3,
+      "numchild": 4,
+      "name": "IT Management",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 325,
+    "fields": {
+      "path": "000K00010005",
+      "depth": 3,
+      "numchild": 2,
+      "name": "IT Sales",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 326,
+    "fields": {
+      "path": "000K00010006",
+      "depth": 3,
+      "numchild": 13,
+      "name": "Information Security",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 327,
+    "fields": {
+      "path": "000K00010007",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Artificial Intelligence",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 328,
+    "fields": {
+      "path": "000K00010008",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Blockchain",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 329,
+    "fields": {
+      "path": "000K00010009",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Smart Logistics",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 330,
+    "fields": {
+      "path": "000K0001000A",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Digital Twin",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 331,
+    "fields": {
+      "path": "000K0001000B",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Personal Data Protection",
+      "ancestors": [
+        "Information·Communication",
+        "Information Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 332,
+    "fields": {
+      "path": "000K00020001",
+      "depth": 3,
+      "numchild": 10,
+      "name": "Wired Network Infrastructure",
+      "ancestors": [
+        "Information·Communication",
+        "Telecommunications"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 333,
+    "fields": {
+      "path": "000K00020002",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Wireless Network Infrastructure",
+      "ancestors": [
+        "Information·Communication",
+        "Telecommunications"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 334,
+    "fields": {
+      "path": "000K00020003",
+      "depth": 3,
+      "numchild": 19,
+      "name": "Telecom Services",
+      "ancestors": [
+        "Information·Communication",
+        "Telecommunications"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 335,
+    "fields": {
+      "path": "000K00020004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Immersive Content Production",
+      "ancestors": [
+        "Information·Communication",
+        "Telecommunications"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 336,
+    "fields": {
+      "path": "000K00030001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Broadcast Production Technology",
+      "ancestors": [
+        "Information·Communication",
+        "Broadcasting Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 337,
+    "fields": {
+      "path": "000K00030002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Broadcast Platform Technology",
+      "ancestors": [
+        "Information·Communication",
+        "Broadcasting Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 338,
+    "fields": {
+      "path": "000K00030003",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Broadcasting Services",
+      "ancestors": [
+        "Information·Communication",
+        "Broadcasting Technology"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 339,
+    "fields": {
+      "path": "000L00010001",
+      "depth": 3,
+      "numchild": 11,
+      "name": "Food Processing",
+      "ancestors": [
+        "Food Processing",
+        "Food Processing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 340,
+    "fields": {
+      "path": "000L00010002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Food Storage",
+      "ancestors": [
+        "Food Processing",
+        "Food Processing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 341,
+    "fields": {
+      "path": "000L00010003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Food Distribution",
+      "ancestors": [
+        "Food Processing",
+        "Food Processing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 342,
+    "fields": {
+      "path": "000L00020001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Confectionery, Bakery & Rice Cake Manufacturing",
+      "ancestors": [
+        "Food Processing",
+        "Confectionery & Bakery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 343,
+    "fields": {
+      "path": "000M00010001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Publishing",
+      "ancestors": [
+        "Printing·Wood·Furniture·Crafts",
+        "Printing & Publishing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 344,
+    "fields": {
+      "path": "000M00010002",
+      "depth": 3,
+      "numchild": 5,
+      "name": "Printing",
+      "ancestors": [
+        "Printing·Wood·Furniture·Crafts",
+        "Printing & Publishing"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 345,
+    "fields": {
+      "path": "000M00020001",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Crafts",
+      "ancestors": [
+        "Printing·Wood·Furniture·Crafts",
+        "Crafts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 346,
+    "fields": {
+      "path": "000M00020002",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Precious Metals & Gemstones",
+      "ancestors": [
+        "Printing·Wood·Furniture·Crafts",
+        "Crafts"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 347,
+    "fields": {
+      "path": "000N00010001",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Water Quality Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Environment"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 348,
+    "fields": {
+      "path": "000N00010002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Air Quality Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Environment"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 349,
+    "fields": {
+      "path": "000N00010003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Waste Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Environment"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 350,
+    "fields": {
+      "path": "000N00010004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Noise & Vibration Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Environment"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 351,
+    "fields": {
+      "path": "000N00010005",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Soil & Groundwater Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Environment"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 352,
+    "fields": {
+      "path": "000N00020001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Environmental Health Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Environmental Health"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 353,
+    "fields": {
+      "path": "000N00030001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Ecological Restoration & Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Natural Environment"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 354,
+    "fields": {
+      "path": "000N00040001",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Environmental Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Environmental Services"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 355,
+    "fields": {
+      "path": "000N00040002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Environmental Assessment",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Environmental Services"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 356,
+    "fields": {
+      "path": "000N00050001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Mining Survey & Exploration",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 357,
+    "fields": {
+      "path": "000N00050002",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Mineral & Petroleum Resource Development",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 358,
+    "fields": {
+      "path": "000N00050003",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Mine Environmental Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 359,
+    "fields": {
+      "path": "000N00050004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Mine Security",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 360,
+    "fields": {
+      "path": "000N00050005",
+      "depth": 3,
+      "numchild": 7,
+      "name": "Renewable Energy",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 361,
+    "fields": {
+      "path": "000N00050006",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Energy Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 362,
+    "fields": {
+      "path": "000N00050007",
+      "depth": 3,
+      "numchild": 3,
+      "name": "New Energy",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Energy & Resources"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 363,
+    "fields": {
+      "path": "000N00060001",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Industrial Safety Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Safety & Health"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 364,
+    "fields": {
+      "path": "000N00060002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Industrial Health Management",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Safety & Health"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 365,
+    "fields": {
+      "path": "000N00060003",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Non-Destructive Testing",
+      "ancestors": [
+        "Environment·Energy·Safety",
+        "Industrial Safety & Health"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 366,
+    "fields": {
+      "path": "000O00010001",
+      "depth": 3,
+      "numchild": 9,
+      "name": "Crop Cultivation",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Agriculture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 367,
+    "fields": {
+      "path": "000O00010002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Seed Production & Distribution",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Agriculture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 368,
+    "fields": {
+      "path": "000O00010003",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Rural Development",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Agriculture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 369,
+    "fields": {
+      "path": "000O00010004",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Floral Design",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Agriculture"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 370,
+    "fields": {
+      "path": "000O00020001",
+      "depth": 3,
+      "numchild": 8,
+      "name": "Livestock Resource Development",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Livestock"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 371,
+    "fields": {
+      "path": "000O00020002",
+      "depth": 3,
+      "numchild": 6,
+      "name": "Animal Husbandry Management",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Livestock"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 372,
+    "fields": {
+      "path": "000O00030001",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Forest Resource Development",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Forestry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 373,
+    "fields": {
+      "path": "000O00030002",
+      "depth": 3,
+      "numchild": 2,
+      "name": "Forest Management",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Forestry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 374,
+    "fields": {
+      "path": "000O00030003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Forest Products Production & Processing",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Forestry"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 375,
+    "fields": {
+      "path": "000O00040001",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Fishing",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 376,
+    "fields": {
+      "path": "000O00040002",
+      "depth": 3,
+      "numchild": 4,
+      "name": "Aquaculture",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 377,
+    "fields": {
+      "path": "000O00040003",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Fishery Resource Management",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Fishery"
+      ]
+    }
+  },
+  {
+    "model": "operation.Category",
+    "pk": 378,
+    "fields": {
+      "path": "000O00040004",
+      "depth": 3,
+      "numchild": 3,
+      "name": "Fishing Village Development",
+      "ancestors": [
+        "Agriculture·Forestry·Fishery",
+        "Fishery"
+      ]
+    }
+  }
+]

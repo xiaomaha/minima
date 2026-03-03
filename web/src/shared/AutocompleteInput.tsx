@@ -1,7 +1,7 @@
 import { debounce } from '@solid-primitives/scheduled'
 import { IconSearch } from '@tabler/icons-solidjs'
 import { getRegExp } from 'korean-regexp'
-import { createEffect, createMemo, createSignal, For, type JSX, onCleanup, onMount, Show } from 'solid-js'
+import { createEffect, createMemo, createSignal, For, type JSX, onCleanup, onMount, Show, untrack } from 'solid-js'
 
 const OVERSCAN = 5
 const DEFAULT_ITEM_HEIGHT = 32
@@ -16,9 +16,12 @@ interface Props {
   inputClass?: string
   dropdownClass?: string
   debounce?: number
-  enterFirstSelect?: boolean
+  selectFirstOnCommit?: boolean
+  clearInputOnCommit?: boolean
   autofocus?: boolean
   icon?: JSX.Element
+  tabIndex?: number
+  onFocus?: () => void
 }
 
 export const AutocompleteInput = (props: Props) => {
@@ -70,11 +73,20 @@ export const AutocompleteInput = (props: Props) => {
   }
 
   const handleFocus = () => {
-    if (props.suggestions.length > 0 && suggestions().length < 1) {
+    props.onFocus?.()
+    // if (props.suggestions.length > 0 && suggestions().length < 1) {
+    if (props.suggestions.length > 0) {
       dropdownRef?.classList.remove('dropdown-close')
       setSuggestions(props.suggestions)
     }
   }
+
+  createEffect(() => {
+    // for lazy loading
+    if (props.suggestions.length) {
+      untrack(() => handleFocus())
+    }
+  })
 
   createEffect(() => {
     const query = input()
@@ -96,13 +108,19 @@ export const AutocompleteInput = (props: Props) => {
     if (filtered?.length) setSuggestions(filtered.slice(0, props.suggestionCount ?? 10))
   })
 
+  let listRef: HTMLUListElement | undefined
+
   const commit = (item?: string) => {
     dropdownRef?.classList.add('dropdown-close')
+
+    // reset scroll
+    setScrollTop(0)
+    if (listRef) listRef.scrollTop = 0
 
     let query: string
     if (item) {
       query = item
-    } else if (props.enterFirstSelect && suggestions().length > 0) {
+    } else if (props.selectFirstOnCommit && suggestions().length > 0) {
       query = suggestions()[0] ?? ''
     } else {
       query = input()
@@ -111,6 +129,10 @@ export const AutocompleteInput = (props: Props) => {
     const cleaned = query.replace(/<[^>]*>/g, '').trim()
     inputRef!.value = cleaned
     props.onCommit(cleaned)
+    if (props.clearInputOnCommit) {
+      inputRef!.value = ''
+      setInput('')
+    }
     setSuggestions([])
   }
 
@@ -123,14 +145,14 @@ export const AutocompleteInput = (props: Props) => {
   return (
     <div ref={dropdownRef} class={`dropdown w-full ${props.class ?? ''}`}>
       <label class={`w-full input ${props.inputClass ?? ''}`}>
-        <Show when={props.icon} fallback={<IconSearch />}>
+        <Show when={props.icon} fallback={<IconSearch class="cursor-pointer" />}>
           {props.icon}
         </Show>
         <input
           ref={inputRef}
           name="content-search"
           autocomplete="off"
-          tabindex="0"
+          tabindex={props.tabIndex ?? 0}
           type="search"
           class="w-full ml-2"
           placeholder={props.placeholder}
@@ -147,6 +169,7 @@ export const AutocompleteInput = (props: Props) => {
       <Show when={suggestions().length}>
         <ul
           ref={(el) => {
+            listRef = el
             const observer = new ResizeObserver(([entry]) => {
               if (entry) setRootHeight(entry.contentRect.height)
             })

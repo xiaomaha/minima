@@ -16,7 +16,6 @@ import { Chat } from './-shared/aichat/Chat'
 import { Notification } from './-shared/Notification'
 
 const searchSchema = v.object({
-  // program: v.optional(v.pipe(v.string())),
   course: v.optional(v.pipe(v.string())),
 })
 

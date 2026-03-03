@@ -111,16 +111,16 @@ class TaggedItem(CommonGenericTaggedItemBase, TaggedItemBase):
 
 
 class TaggableMixin(Model):
-    tag_set = TaggableManager(through=TaggedItem, blank=True)
+    tags = TaggableManager(through=TaggedItem, blank=True)
 
     class Meta:
         abstract = True
 
     def set_tags(self, tag_names: list[str] | None):
         if tag_names:
-            self.tag_set.set(tag_names)
+            self.tags.set(tag_names)
         else:
-            self.tag_set.clear()
+            self.tags.clear()
 
 
 @pghistory.track()
@@ -129,7 +129,6 @@ class Announcement(TimeStampedMixin):
     body = TextField(_("Body"))
     public = BooleanField(_("Public"), default=True)
     pinned = BooleanField(_("Pinned"), default=False)
-    reads = ManyToManyField(User, blank=True, through="AnnouncementRead", verbose_name=_("Reads"))
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Announcement")
@@ -210,16 +209,16 @@ class FAQ(Model):
         verbose_name = _("FAQ")
         verbose_name_plural = _("FAQs")
 
-    if TYPE_CHECKING:
-        faqitem_set: "QuerySet[FAQItem]"
-
     def __str__(self):
         return self.name
+
+    if TYPE_CHECKING:
+        items: QuerySet[FAQItem]
 
 
 @pghistory.track()
 class FAQItem(OrderableMixin, TimeStampedMixin):
-    faq = ForeignKey(FAQ, CASCADE, verbose_name=_("FAQ"))
+    faq = ForeignKey(FAQ, CASCADE, related_name="items", verbose_name=_("FAQ"))
     question = CharField(_("Question"), max_length=255)
     answer = TextField(_("Answer"))
     active = BooleanField(_("Active"), default=True)
@@ -376,13 +375,13 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
 
     if TYPE_CHECKING:
         solved: datetime  # annotated
-        inquiryresponse_set: "QuerySet[InquiryResponse]"
+        inquiry_responses: "QuerySet[InquiryResponse]"
         response_count: int  # annotated
         writer_id: str
 
     @property
     def responses(self):
-        return self.inquiryresponse_set.all()
+        return self.inquiry_responses.all()
 
     @property
     def cleaned_question(self):
@@ -434,7 +433,7 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
 
 @pghistory.track()
 class InquiryResponse(TimeStampedMixin):
-    inquiry = ForeignKey(Inquiry, CASCADE, verbose_name=_("Inquiry"))
+    inquiry = ForeignKey(Inquiry, CASCADE, related_name="inquiry_responses", verbose_name=_("Inquiry"))
     answer = TextField(_("Answer"))
     writer = ForeignKey(User, CASCADE, verbose_name=_("Writer"))
     solved = DateTimeField(_("Solved"), null=True, blank=True)
@@ -632,7 +631,7 @@ class Policy(TimeStampedMixin):
         verbose_name_plural = _("Policies")
 
     if TYPE_CHECKING:
-        policyversion_set: QuerySet[PolicyVersion]
+        policy_versions: QuerySet[PolicyVersion]
         effective_version: PolicyVersion
 
     def __str__(self):
@@ -664,15 +663,15 @@ class Policy(TimeStampedMixin):
         policies = [
             policy
             async for policy in cls.objects
-            .filter(active=True, policyversion__id__in=Subquery(latest_versions_qs.values("id")))
-            .prefetch_related(Prefetch("policyversion_set", queryset=latest_versions_qs))
+            .filter(active=True, policy_versions__id__in=Subquery(latest_versions_qs.values("id")))
+            .prefetch_related(Prefetch("policy_versions", queryset=latest_versions_qs))
             .order_by("priority")
             .distinct()
         ]
 
         effectives = []
         for policy in policies:
-            effective_versions = policy.policyversion_set.all()
+            effective_versions = policy.policy_versions.all()
             if effective_versions:
                 policy.effective_version = effective_versions[0]
                 effectives.append(policy)
@@ -682,7 +681,7 @@ class Policy(TimeStampedMixin):
 
 @pghistory.track()
 class PolicyVersion(TimeStampedMixin):
-    policy = ForeignKey(Policy, CASCADE, verbose_name=_("Policy"))
+    policy = ForeignKey(Policy, CASCADE, related_name="policy_versions", verbose_name=_("Policy"))
     body = TextField(_("Body"))
     data_category = JSONField(_("Data Category"), blank=True, default=dict)
     version = CharField(_("Version"), max_length=20)

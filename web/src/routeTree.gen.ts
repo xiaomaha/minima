@@ -13,20 +13,15 @@ import { Route as StudioRouteRouteImport } from './routes/studio/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudioIndexRouteImport } from './routes/studio/index'
 import { Route as authPasswordChangeRouteImport } from './routes/(auth)/password-change'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authJoinRouteImport } from './routes/(auth)/join'
 import { Route as authActivateRouteImport } from './routes/(auth)/activate'
 import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
 import { Route as appAccountRouteRouteImport } from './routes/(app)/account/route'
-import { Route as StudioSurveyIndexRouteImport } from './routes/studio/survey/index'
-import { Route as StudioQuizIndexRouteImport } from './routes/studio/quiz/index'
-import { Route as StudioMediaIndexRouteImport } from './routes/studio/media/index'
-import { Route as StudioExamIndexRouteImport } from './routes/studio/exam/index'
-import { Route as StudioDiscussionIndexRouteImport } from './routes/studio/discussion/index'
-import { Route as StudioCourseIndexRouteImport } from './routes/studio/course/index'
-import { Route as StudioAssignmentIndexRouteImport } from './routes/studio/assignment/index'
 import { Route as appDashboardIndexRouteImport } from './routes/(app)/dashboard/index'
+import { Route as StudioAppIdRouteImport } from './routes/studio/$app.$id'
 import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
 import { Route as appMediaIdRouteImport } from './routes/(app)/media/$id'
 import { Route as appDashboardSearchRouteImport } from './routes/(app)/dashboard/search'
@@ -65,6 +60,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudioIndexRoute = StudioIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
 const authPasswordChangeRoute = authPasswordChangeRouteImport.update({
   id: '/password-change',
   path: '/password-change',
@@ -95,45 +95,15 @@ const appAccountRouteRoute = appAccountRouteRouteImport.update({
   path: '/account',
   getParentRoute: () => appRouteRoute,
 } as any)
-const StudioSurveyIndexRoute = StudioSurveyIndexRouteImport.update({
-  id: '/survey/',
-  path: '/survey/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
-const StudioQuizIndexRoute = StudioQuizIndexRouteImport.update({
-  id: '/quiz/',
-  path: '/quiz/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
-const StudioMediaIndexRoute = StudioMediaIndexRouteImport.update({
-  id: '/media/',
-  path: '/media/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
-const StudioExamIndexRoute = StudioExamIndexRouteImport.update({
-  id: '/exam/',
-  path: '/exam/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
-const StudioDiscussionIndexRoute = StudioDiscussionIndexRouteImport.update({
-  id: '/discussion/',
-  path: '/discussion/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
-const StudioCourseIndexRoute = StudioCourseIndexRouteImport.update({
-  id: '/course/',
-  path: '/course/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
-const StudioAssignmentIndexRoute = StudioAssignmentIndexRouteImport.update({
-  id: '/assignment/',
-  path: '/assignment/',
-  getParentRoute: () => StudioRouteRoute,
-} as any)
 const appDashboardIndexRoute = appDashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appDashboardRouteRoute,
+} as any)
+const StudioAppIdRoute = StudioAppIdRouteImport.update({
+  id: '/$app/$id',
+  path: '/$app/$id',
+  getParentRoute: () => StudioRouteRoute,
 } as any)
 const publicSurveyIdRoute = publicSurveyIdRouteImport.update({
   id: '/(public)/survey/$id',
@@ -241,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
+  '/studio/': typeof StudioIndexRoute
   '/account/device': typeof appAccountDeviceRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
   '/account/group': typeof appAccountGroupRoute
@@ -256,14 +227,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/search': typeof appDashboardSearchRoute
   '/media/$id': typeof appMediaIdRoute
   '/survey/$id': typeof publicSurveyIdRoute
+  '/studio/$app/$id': typeof StudioAppIdRoute
   '/dashboard/': typeof appDashboardIndexRoute
-  '/studio/assignment/': typeof StudioAssignmentIndexRoute
-  '/studio/course/': typeof StudioCourseIndexRoute
-  '/studio/discussion/': typeof StudioDiscussionIndexRoute
-  '/studio/exam/': typeof StudioExamIndexRoute
-  '/studio/media/': typeof StudioMediaIndexRoute
-  '/studio/quiz/': typeof StudioQuizIndexRoute
-  '/studio/survey/': typeof StudioSurveyIndexRoute
   '/assignment/$id/session': typeof appAssignmentIdSessionRoute
   '/course/$id/session': typeof appCourseIdSessionRoute
   '/discussion/$id/session': typeof appDiscussionIdSessionRoute
@@ -271,12 +236,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/studio': typeof StudioRouteRouteWithChildren
   '/account': typeof appAccountRouteRouteWithChildren
   '/activate': typeof authActivateRoute
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
+  '/studio': typeof StudioIndexRoute
   '/account/device': typeof appAccountDeviceRoute
   '/account/email-change': typeof appAccountEmailChangeRoute
   '/account/group': typeof appAccountGroupRoute
@@ -292,14 +257,8 @@ export interface FileRoutesByTo {
   '/dashboard/search': typeof appDashboardSearchRoute
   '/media/$id': typeof appMediaIdRoute
   '/survey/$id': typeof publicSurveyIdRoute
+  '/studio/$app/$id': typeof StudioAppIdRoute
   '/dashboard': typeof appDashboardIndexRoute
-  '/studio/assignment': typeof StudioAssignmentIndexRoute
-  '/studio/course': typeof StudioCourseIndexRoute
-  '/studio/discussion': typeof StudioDiscussionIndexRoute
-  '/studio/exam': typeof StudioExamIndexRoute
-  '/studio/media': typeof StudioMediaIndexRoute
-  '/studio/quiz': typeof StudioQuizIndexRoute
-  '/studio/survey': typeof StudioSurveyIndexRoute
   '/assignment/$id/session': typeof appAssignmentIdSessionRoute
   '/course/$id/session': typeof appCourseIdSessionRoute
   '/discussion/$id/session': typeof appDiscussionIdSessionRoute
@@ -317,6 +276,7 @@ export interface FileRoutesById {
   '/(auth)/join': typeof authJoinRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/password-change': typeof authPasswordChangeRoute
+  '/studio/': typeof StudioIndexRoute
   '/(app)/account/device': typeof appAccountDeviceRoute
   '/(app)/account/email-change': typeof appAccountEmailChangeRoute
   '/(app)/account/group': typeof appAccountGroupRoute
@@ -332,14 +292,8 @@ export interface FileRoutesById {
   '/(app)/dashboard/search': typeof appDashboardSearchRoute
   '/(app)/media/$id': typeof appMediaIdRoute
   '/(public)/survey/$id': typeof publicSurveyIdRoute
+  '/studio/$app/$id': typeof StudioAppIdRoute
   '/(app)/dashboard/': typeof appDashboardIndexRoute
-  '/studio/assignment/': typeof StudioAssignmentIndexRoute
-  '/studio/course/': typeof StudioCourseIndexRoute
-  '/studio/discussion/': typeof StudioDiscussionIndexRoute
-  '/studio/exam/': typeof StudioExamIndexRoute
-  '/studio/media/': typeof StudioMediaIndexRoute
-  '/studio/quiz/': typeof StudioQuizIndexRoute
-  '/studio/survey/': typeof StudioSurveyIndexRoute
   '/(app)/assignment/$id/session': typeof appAssignmentIdSessionRoute
   '/(app)/course/$id/session': typeof appCourseIdSessionRoute
   '/(app)/discussion/$id/session': typeof appDiscussionIdSessionRoute
@@ -356,6 +310,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/login'
     | '/password-change'
+    | '/studio/'
     | '/account/device'
     | '/account/email-change'
     | '/account/group'
@@ -371,14 +326,8 @@ export interface FileRouteTypes {
     | '/dashboard/search'
     | '/media/$id'
     | '/survey/$id'
+    | '/studio/$app/$id'
     | '/dashboard/'
-    | '/studio/assignment/'
-    | '/studio/course/'
-    | '/studio/discussion/'
-    | '/studio/exam/'
-    | '/studio/media/'
-    | '/studio/quiz/'
-    | '/studio/survey/'
     | '/assignment/$id/session'
     | '/course/$id/session'
     | '/discussion/$id/session'
@@ -386,12 +335,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/studio'
     | '/account'
     | '/activate'
     | '/join'
     | '/login'
     | '/password-change'
+    | '/studio'
     | '/account/device'
     | '/account/email-change'
     | '/account/group'
@@ -407,14 +356,8 @@ export interface FileRouteTypes {
     | '/dashboard/search'
     | '/media/$id'
     | '/survey/$id'
+    | '/studio/$app/$id'
     | '/dashboard'
-    | '/studio/assignment'
-    | '/studio/course'
-    | '/studio/discussion'
-    | '/studio/exam'
-    | '/studio/media'
-    | '/studio/quiz'
-    | '/studio/survey'
     | '/assignment/$id/session'
     | '/course/$id/session'
     | '/discussion/$id/session'
@@ -431,6 +374,7 @@ export interface FileRouteTypes {
     | '/(auth)/join'
     | '/(auth)/login'
     | '/(auth)/password-change'
+    | '/studio/'
     | '/(app)/account/device'
     | '/(app)/account/email-change'
     | '/(app)/account/group'
@@ -446,14 +390,8 @@ export interface FileRouteTypes {
     | '/(app)/dashboard/search'
     | '/(app)/media/$id'
     | '/(public)/survey/$id'
+    | '/studio/$app/$id'
     | '/(app)/dashboard/'
-    | '/studio/assignment/'
-    | '/studio/course/'
-    | '/studio/discussion/'
-    | '/studio/exam/'
-    | '/studio/media/'
-    | '/studio/quiz/'
-    | '/studio/survey/'
     | '/(app)/assignment/$id/session'
     | '/(app)/course/$id/session'
     | '/(app)/discussion/$id/session'
@@ -498,6 +436,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/studio/': {
+      id: '/studio/'
+      path: '/'
+      fullPath: '/studio/'
+      preLoaderRoute: typeof StudioIndexRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
     '/(auth)/password-change': {
       id: '/(auth)/password-change'
       path: '/password-change'
@@ -540,61 +485,19 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof appAccountRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/studio/survey/': {
-      id: '/studio/survey/'
-      path: '/survey'
-      fullPath: '/studio/survey/'
-      preLoaderRoute: typeof StudioSurveyIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
-    '/studio/quiz/': {
-      id: '/studio/quiz/'
-      path: '/quiz'
-      fullPath: '/studio/quiz/'
-      preLoaderRoute: typeof StudioQuizIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
-    '/studio/media/': {
-      id: '/studio/media/'
-      path: '/media'
-      fullPath: '/studio/media/'
-      preLoaderRoute: typeof StudioMediaIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
-    '/studio/exam/': {
-      id: '/studio/exam/'
-      path: '/exam'
-      fullPath: '/studio/exam/'
-      preLoaderRoute: typeof StudioExamIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
-    '/studio/discussion/': {
-      id: '/studio/discussion/'
-      path: '/discussion'
-      fullPath: '/studio/discussion/'
-      preLoaderRoute: typeof StudioDiscussionIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
-    '/studio/course/': {
-      id: '/studio/course/'
-      path: '/course'
-      fullPath: '/studio/course/'
-      preLoaderRoute: typeof StudioCourseIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
-    '/studio/assignment/': {
-      id: '/studio/assignment/'
-      path: '/assignment'
-      fullPath: '/studio/assignment/'
-      preLoaderRoute: typeof StudioAssignmentIndexRouteImport
-      parentRoute: typeof StudioRouteRoute
-    }
     '/(app)/dashboard/': {
       id: '/(app)/dashboard/'
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof appDashboardIndexRouteImport
       parentRoute: typeof appDashboardRouteRoute
+    }
+    '/studio/$app/$id': {
+      id: '/studio/$app/$id'
+      path: '/$app/$id'
+      fullPath: '/studio/$app/$id'
+      preLoaderRoute: typeof StudioAppIdRouteImport
+      parentRoute: typeof StudioRouteRoute
     }
     '/(public)/survey/$id': {
       id: '/(public)/survey/$id'
@@ -822,23 +725,13 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface StudioRouteRouteChildren {
-  StudioAssignmentIndexRoute: typeof StudioAssignmentIndexRoute
-  StudioCourseIndexRoute: typeof StudioCourseIndexRoute
-  StudioDiscussionIndexRoute: typeof StudioDiscussionIndexRoute
-  StudioExamIndexRoute: typeof StudioExamIndexRoute
-  StudioMediaIndexRoute: typeof StudioMediaIndexRoute
-  StudioQuizIndexRoute: typeof StudioQuizIndexRoute
-  StudioSurveyIndexRoute: typeof StudioSurveyIndexRoute
+  StudioIndexRoute: typeof StudioIndexRoute
+  StudioAppIdRoute: typeof StudioAppIdRoute
 }
 
 const StudioRouteRouteChildren: StudioRouteRouteChildren = {
-  StudioAssignmentIndexRoute: StudioAssignmentIndexRoute,
-  StudioCourseIndexRoute: StudioCourseIndexRoute,
-  StudioDiscussionIndexRoute: StudioDiscussionIndexRoute,
-  StudioExamIndexRoute: StudioExamIndexRoute,
-  StudioMediaIndexRoute: StudioMediaIndexRoute,
-  StudioQuizIndexRoute: StudioQuizIndexRoute,
-  StudioSurveyIndexRoute: StudioSurveyIndexRoute,
+  StudioIndexRoute: StudioIndexRoute,
+  StudioAppIdRoute: StudioAppIdRoute,
 }
 
 const StudioRouteRouteWithChildren = StudioRouteRoute._addFileChildren(

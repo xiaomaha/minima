@@ -1,4 +1,4 @@
-import { IconHelpCircle, IconSquareCheck } from '@tabler/icons-solidjs'
+import { IconChartAreaLineFilled, IconHelpCircle } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
 import { For, Show } from 'solid-js'
 import { useTranslation } from '@/shared/solid/i18n'
@@ -25,7 +25,7 @@ export const Outline = () => {
       number: ++lessonNumber,
       ...lesson,
     })),
-    ...s().course.surveys.map((survey) => ({
+    ...s().course.courseSurveys.map((survey) => ({
       type: 'survey' as const,
       ...survey,
     })),
@@ -60,7 +60,7 @@ export const Outline = () => {
       </div>
 
       <div class="max-w-lg mx-auto">
-        <p class="font-bold text-sm">{t('Course Progress')}</p>
+        <p class="font-bold text-sm mb-2">{t('Course Progress')}</p>
         <CourseProgressBar accessDate={s().accessDate} />
       </div>
 
@@ -102,9 +102,9 @@ export const Outline = () => {
 
                 return (
                   <tr>
-                    <td>{i() + 1}</td>
+                    <td class="text-center w-12">{i() + 1}</td>
                     <td class="whitespace-nowrap">{t(capitalize(policy.model))}</td>
-                    <td>{policy.model === 'completion' ? t('Progress Rate') : policy.title}</td>
+                    <td>{policy.model === 'completion' ? t('Progress Rate') : policy.label}</td>
                     <td>{policy.passingPoint}</td>
                     <td>{policy.normalizedWeight.toFixed(1)}</td>
                     <td class="whitespace-nowrap">
@@ -162,8 +162,10 @@ export const Outline = () => {
 
                 return (
                   <tr>
-                    <td>{item.type === 'lesson' ? item.number : <IconSquareCheck size={16} />}</td>
-                    <td>{item.title}</td>
+                    <td class="text-center w-12">
+                      {item.type === 'lesson' ? item.number : <IconChartAreaLineFilled size={16} />}
+                    </td>
+                    <td>{item.label}</td>
                     <td class="whitespace-nowrap">
                       {toYYYYMMDD(startDate)} - {toYYYYMMDD(endDate)}
                     </td>
@@ -173,10 +175,10 @@ export const Outline = () => {
                         value={
                           item.type === 'lesson'
                             ? getAverageProgress(
-                                item.medias.map((m) => m.id),
+                                item.lessonMedias.map((m) => m.media.id),
                                 `course=${s().course.id}`,
                               )
-                            : getProgress(item.surveyId, `course=${s().course.id}`)
+                            : getProgress(item.survey.id, `course=${s().course.id}`)
                         }
                         max={100}
                       />
@@ -185,16 +187,16 @@ export const Outline = () => {
                       <td class="py-0.5">
                         {item.type === 'lesson' ? (
                           <div class="flex flex-col gap-1">
-                            {item.medias.map((media) => (
+                            {item.lessonMedias.map((media) => (
                               <button
                                 type="button"
                                 disabled={notOpen}
                                 class="btn btn-primary btn-sm whitespace-nowrap w-full"
                                 onClick={() =>
-                                  navigate({ to: `/media/${media.id}`, search: { course: s().course.id } })
+                                  navigate({ to: `/media/${media.media.id}`, search: { course: s().course.id } })
                                 }
                               >
-                                {t(capitalize(media.format))}
+                                {t(capitalize(media.media.format))}
                               </button>
                             ))}
                           </div>
@@ -204,7 +206,7 @@ export const Outline = () => {
                             disabled={notOpen}
                             class="btn btn-secondary btn-sm whitespace-nowrap w-full"
                             onClick={() =>
-                              navigate({ to: `/survey/${item.surveyId}`, search: { course: s().course.id } })
+                              navigate({ to: `/survey/${item.survey.id}`, search: { course: s().course.id } })
                             }
                           >
                             {t('Survey')}
@@ -245,7 +247,7 @@ export const CourseProgressBar = (props: CourseProgressBarProps) => {
   const isOpen = !isNotOpen && !isClosed
 
   return (
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-2">
       <progress
         class="progress"
         classList={{

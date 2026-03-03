@@ -2,7 +2,6 @@ from typing import Annotated
 
 from asgiref.sync import sync_to_async
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError
 from django.db.models import Prefetch
 from django.shortcuts import aget_object_or_404
@@ -14,9 +13,7 @@ from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
 from apps.common.util import HttpRequest
 from apps.quiz.models import Attempt, Question, QuestionPool, Quiz, Solution
-from apps.studio.api.v1.schema import OwnerSpec
 from apps.studio.decorator import editor_required, track_draft
-from apps.studio.models import Draft
 
 
 class QuizQuestionSaveSpec(Schema):
@@ -39,11 +36,11 @@ class QuizQuestionSpec(QuizQuestionSaveSpec):
 
 
 # RootModel not working with multipart
-class QuizQuestionSetSaveSpec(Schema):
+class QuizQuestionsSaveSpec(Schema):
     data: list[QuizQuestionSaveSpec]
 
 
-class QuizQuestionSetSpec(RootModel[list[QuizQuestionSpec]]):
+class QuizQuestionsSpec(RootModel[list[QuizQuestionSpec]]):
     pass
 
 
@@ -54,13 +51,12 @@ class QuizSpec(LearningObjectMixinSchema):
 
     id: str
 
-    owner: OwnerSpec
     question_pool: QuizQuestionPoolSpec
-    question_set: QuizQuestionSetSpec
+    questions: QuizQuestionsSpec
 
     @staticmethod
-    def resolve_question_set(obj: Quiz):
-        return obj.question_pool.question_set.all()
+    def resolve_questions(obj: Quiz):
+        return obj.question_pool.questions.all()
 
 
 class QuizSaveSpec(Schema):
@@ -82,10 +78,10 @@ router = Router(by_alias=True)
 async def get_quiz(request: HttpRequest, id: str):
     return (
         await Quiz.objects
-        .select_related("owner", "question_pool")
+        .select_related("question_pool")
         .prefetch_related(
             Prefetch(
-                "question_pool__question_set",
+                "question_pool__questions",
                 queryset=Question.objects.prefetch_related("attachments").select_related("solution"),
             )
         )
@@ -95,6 +91,7 @@ async def get_quiz(request: HttpRequest, id: str):
 
 @router.post("/quiz", response=str)
 @editor_required()
+@track_draft(Quiz)
 async def save_quiz(
     request: HttpRequest,
     data: QuizSaveSpec,
@@ -130,67 +127,16 @@ async def save_quiz(
 
         quiz = await create_new()
 
-    content_type = await sync_to_async(ContentType.objects.get_for_model)(Quiz)
-    await Draft.objects.aupdate_or_create(
-        content_type=content_type, content_id=quiz.id, defaults={"author_id": request.auth}
-    )
-
     return quiz.id
 
 
-@router.post("/quiz/{id}/question", response=int)
-@editor_required()
-@track_draft(Quiz, id_field="id")
-async def save_quiz_question(
-    request: HttpRequest,
-    id: str,
-    data: QuizQuestionSaveSpec,
-    files: Annotated[
-        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
-        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
-    ],
-):
-    quiz = await aget_object_or_404(Quiz, id=id, owner_id=request.auth)
-    question, _ = await Question.objects.aupdate_or_create(
-        id=None if data.id <= 0 else data.id,
-        pool_id=quiz.question_pool_id,
-        defaults={
-            "question": data.question,
-            "supplement": data.supplement,
-            "options": data.options,
-            "point": data.point,
-        },
-    )
-    await Solution.objects.aupdate_or_create(
-        question=question,
-        defaults={
-            "correct_answers": [x for x in data.solution.correct_answers if x.strip()],
-            "explanation": data.solution.explanation,
-        },
-    )
-    await question.update_attachments(files=files, owner_id=request.auth, content=question.supplement)
-    return question.pk
-
-
-@router.delete("/quiz/{id}/question/{q}")
-@editor_required()
-@track_draft(Quiz, id_field="id")
-async def delete_quiz_quesion(request: HttpRequest, id: str, q: int):
-    if await Attempt.objects.filter(quiz_id=id, questions=q).aexists():
-        raise ValueError(ErrorCode.IN_USE)
-
-    count, _ = await Question.objects.filter(id=q, pool__quiz__id=id).adelete()
-    if count < 1:
-        raise ValueError(ErrorCode.NOT_FOUND)
-
-
-@router.post("/quiz/{id}/questionset", response=list[int])
+@router.post("/quiz/{id}/question", response=list[int])
 @editor_required()
 @track_draft(Quiz, id_field="id")
 async def save_quiz_questions(
     request: HttpRequest,
     id: str,
-    data: QuizQuestionSetSaveSpec,
+    data: QuizQuestionsSaveSpec,
     files: Annotated[
         list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
         functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
@@ -200,10 +146,12 @@ async def save_quiz_questions(
     questions, solutions = [], []
 
     for question_data in data.model_dump()["data"]:
-        if question_data["id"] <= 0:
+        if not question_data["id"]:
             question_data["id"] = None
 
         solution_data = question_data.pop("solution")
+        solution_data["correct_answers"] = [x for x in solution_data["correct_answers"] if x.strip()]
+
         question = Question(pool_id=quiz.question_pool_id, **question_data)
         questions.append(question)
         solutions.append(Solution(question=question, **solution_data))
@@ -226,3 +174,15 @@ async def save_quiz_questions(
         await question.update_attachments(files=files, owner_id=request.auth, content=question.supplement)
 
     return [q.id for q in questions]
+
+
+@router.delete("/quiz/{id}/question/{question_id}")
+@editor_required()
+@track_draft(Quiz, id_field="id")
+async def delete_quiz_quesion(request: HttpRequest, id: str, question_id: int):
+    if await Attempt.objects.filter(quiz_id=id, questions=question_id, quiz__owner_id=request.auth).aexists():
+        raise ValueError(ErrorCode.IN_USE)
+
+    count, _ = await Question.objects.filter(id=question_id, pool__quiz__id=id).adelete()
+    if count < 1:
+        raise ValueError(ErrorCode.NOT_FOUND)

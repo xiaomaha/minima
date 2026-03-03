@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AccountV1ActivateData, AccountV1ActivateResponses, AccountV1ApplyEmailChangeData, AccountV1ApplyEmailChangeResponses, AccountV1ApplyPasswordChangeData, AccountV1ApplyPasswordChangeResponses, AccountV1CompleteOtpSetupData, AccountV1CompleteOtpSetupResponses, AccountV1GetMeData, AccountV1GetMeResponses, AccountV1JoinData, AccountV1JoinResponses, AccountV1LoginData, AccountV1LoginResponses, AccountV1LogoutData, AccountV1LogoutResponses, AccountV1RequestActivationData, AccountV1RequestActivationResponses, AccountV1RequestEmailChangeData, AccountV1RequestEmailChangeResponses, AccountV1RequestPasswordChangeData, AccountV1RequestPasswordChangeResponses, AccountV1ResetOtpData, AccountV1ResetOtpResponses, AccountV1SetupOtpData, AccountV1SetupOtpResponses, AccountV1UpdateMeData, AccountV1UpdateMeResponses, AccountV1UploadAvatarData, AccountV1UploadAvatarResponses, AccountV1VerifyOtpData, AccountV1VerifyOtpResponses, AssignmentV1DeactivateAttemptData, AssignmentV1DeactivateAttemptResponses, AssignmentV1GetSessionData, AssignmentV1GetSessionResponses, AssignmentV1StartAttemptData, AssignmentV1StartAttemptResponses, AssignmentV1SubmitAttemptData, AssignmentV1SubmitAttemptResponses, AssistantV1ChatMessageData, AssistantV1ChatMessageResponses, AssistantV1DeleteChatData, AssistantV1DeleteChatResponses, AssistantV1GetChatMessagesData, AssistantV1GetChatMessagesResponses, AssistantV1GetChatsData, AssistantV1GetChatsResponses, AssistantV1SaveAssistantNoteData, AssistantV1SaveAssistantNoteResponses, AssistantV1UpdateChatMessageData, AssistantV1UpdateChatMessageResponses, CompetencyV1DeleteCompetencyGoalData, CompetencyV1DeleteCompetencyGoalResponses, CompetencyV1GetCertificateAwardsData, CompetencyV1GetCertificateAwardsResponses, CompetencyV1GetCertificatesData, CompetencyV1GetCertificatesResponses, CompetencyV1GetClassificationSkillsDataData, CompetencyV1GetClassificationSkillsDataResponses, CompetencyV1GetClassificationTreeData, CompetencyV1GetClassificationTreeResponses, CompetencyV1GetCompetencyGoalsData, CompetencyV1GetCompetencyGoalsResponses, CompetencyV1SaveCompetencyGoalData, CompetencyV1SaveCompetencyGoalResponses, ContentV1DeleteMediaWatchData, ContentV1DeleteMediaWatchResponses, ContentV1GetMediaData, ContentV1GetMediaNoteData, ContentV1GetMediaNoteResponses, ContentV1GetMediaResponses, ContentV1GetMediaWatchData, ContentV1GetMediaWatchResponses, ContentV1GetSubtitlesData, ContentV1GetSubtitlesResponses, ContentV1GetWatchMediasData, ContentV1GetWatchMediasResponses, ContentV1SaveMediaNoteData, ContentV1SaveMediaNoteResponses, ContentV1SearchData, ContentV1SearchResponses, ContentV1SearchSuggestionData, ContentV1SearchSuggestionResponses, ContentV1UpdateMediaWatchData, ContentV1UpdateMediaWatchResponses, CourseV1GetDetailData, CourseV1GetDetailResponses, CourseV1GetSessionData, CourseV1GetSessionResponses, CourseV1RequestCertificateData, CourseV1RequestCertificateResponses, CourseV1StartEngagementData, CourseV1StartEngagementResponses, DiscussionV1CreatePostData, DiscussionV1CreatePostResponses, DiscussionV1DeactivateAttemptData, DiscussionV1DeactivateAttemptResponses, DiscussionV1DeletePostData, DiscussionV1DeletePostResponses, DiscussionV1GetOwnPostsData, DiscussionV1GetOwnPostsResponses, DiscussionV1GetPostsData, DiscussionV1GetPostsResponses, DiscussionV1GetSessionData, DiscussionV1GetSessionResponses, DiscussionV1StartAttemptData, DiscussionV1StartAttemptResponses, DiscussionV1UpdatePostData, DiscussionV1UpdatePostResponses, ExamV1DeactivateAttemptData, ExamV1DeactivateAttemptResponses, ExamV1GetSessionData, ExamV1GetSessionResponses, ExamV1GetTimestampData, ExamV1GetTimestampResponses, ExamV1SaveAnswersData, ExamV1SaveAnswersResponses, ExamV1StartAttemptData, ExamV1StartAttemptResponses, ExamV1SubmitAttemptData, ExamV1SubmitAttemptResponses, LearningV1EnrollCatalogItemData, LearningV1EnrollCatalogItemResponses, LearningV1GetCatalogItemsData, LearningV1GetCatalogItemsResponses, LearningV1GetCatalogsData, LearningV1GetCatalogsResponses, LearningV1GetEnrolledData, LearningV1GetEnrolledResponses, LearningV1GetRecordsData, LearningV1GetRecordsResponses, LearningV1GetReportData, LearningV1GetReportResponses, LearningV1UnenrollData, LearningV1UnenrollResponses, MinimaApiHealthData, MinimaApiHealthResponses, OperationV1AgreePoliciesData, OperationV1AgreePoliciesResponses, OperationV1CreateAppealData, OperationV1CreateAppealResponses, OperationV1CreateInquiryData, OperationV1CreateInquiryResponses, OperationV1CreateThreadData, OperationV1CreateThreadResponses, OperationV1DeleteCommentData, OperationV1DeleteCommentResponses, OperationV1DeleteDeviceData, OperationV1DeleteDeviceResponses, OperationV1EffectivePoliciesData, OperationV1EffectivePoliciesResponses, OperationV1GetAnnouncementsData, OperationV1GetAnnouncementsResponses, OperationV1GetCommentsData, OperationV1GetCommentsResponses, OperationV1GetDevicesData, OperationV1GetDevicesResponses, OperationV1GetInquiriesData, OperationV1GetInquiriesResponses, OperationV1GetThreadCommentsData, OperationV1GetThreadCommentsResponses, OperationV1GetThreadData, OperationV1GetThreadResponses, OperationV1GetUnreadMessagesData, OperationV1GetUnreadMessagesResponses, OperationV1ReadAnnouncementData, OperationV1ReadAnnouncementResponses, OperationV1ReadMessageData, OperationV1ReadMessageResponses, OperationV1RegisterDeviceData, OperationV1RegisterDeviceResponses, OperationV1SaveCommentData, OperationV1SaveCommentResponses, OperationV1ToggleDeviceActiveData, OperationV1ToggleDeviceActiveResponses, OperationV1UpdateInquiryData, OperationV1UpdateInquiryResponses, PartnerV1MemberInfosData, PartnerV1MemberInfosResponses, QuizV1DeactivateAttemptData, QuizV1DeactivateAttemptResponses, QuizV1GetSessionData, QuizV1GetSessionResponses, QuizV1StartAttemptData, QuizV1StartAttemptResponses, QuizV1SubmitAttemptData, QuizV1SubmitAttemptResponses, SsoV1AuthorizeData, SsoV1AuthorizeResponses, SsoV1CallbackData, SsoV1CallbackResponses, SsoV1DeleteAccountData, SsoV1DeleteAccountResponses, SsoV1GetAccountsData, SsoV1GetAccountsResponses, SsoV1LinkData, SsoV1LinkResponses, StudioV1ContentSuggestionsData, StudioV1ContentSuggestionsResponses, StudioV1CourseStructureData, StudioV1CourseStructureResponses, StudioV1CreateMediaQuizData, StudioV1CreateMediaQuizResponses, StudioV1DeleteAssignmentQuesionData, StudioV1DeleteAssignmentQuesionResponses, StudioV1DeleteDiscussionQuesionData, StudioV1DeleteDiscussionQuesionResponses, StudioV1DeleteExamQuesionData, StudioV1DeleteExamQuesionResponses, StudioV1DeleteMediaSubtitleData, StudioV1DeleteMediaSubtitleResponses, StudioV1DeleteQuizQuesionData, StudioV1DeleteQuizQuesionResponses, StudioV1DeleteSurveyQuesionData, StudioV1DeleteSurveyQuesionResponses, StudioV1GetAssignmentData, StudioV1GetAssignmentResponses, StudioV1GetCourseData, StudioV1GetCourseResponses, StudioV1GetDiscussionData, StudioV1GetDiscussionResponses, StudioV1GetExamData, StudioV1GetExamResponses, StudioV1GetMediaData, StudioV1GetMediaResponses, StudioV1GetQuizData, StudioV1GetQuizResponses, StudioV1GetSurveyData, StudioV1GetSurveyResponses, StudioV1SaveAssignmentData, StudioV1SaveAssignmentQuestionData, StudioV1SaveAssignmentQuestionResponses, StudioV1SaveAssignmentResponses, StudioV1SaveCourseData, StudioV1SaveCourseResponses, StudioV1SaveDiscussionData, StudioV1SaveDiscussionQuestionData, StudioV1SaveDiscussionQuestionResponses, StudioV1SaveDiscussionResponses, StudioV1SaveExamData, StudioV1SaveExamQuestionData, StudioV1SaveExamQuestionResponses, StudioV1SaveExamQuestionsData, StudioV1SaveExamQuestionsResponses, StudioV1SaveExamResponses, StudioV1SaveMediaData, StudioV1SaveMediaResponses, StudioV1SaveMediaSubtitleData, StudioV1SaveMediaSubtitleResponses, StudioV1SaveQuizData, StudioV1SaveQuizQuestionData, StudioV1SaveQuizQuestionResponses, StudioV1SaveQuizQuestionsData, StudioV1SaveQuizQuestionsResponses, StudioV1SaveQuizResponses, StudioV1SaveSurveyData, StudioV1SaveSurveyQuestionData, StudioV1SaveSurveyQuestionResponses, StudioV1SaveSurveyQuestionsData, StudioV1SaveSurveyQuestionsResponses, StudioV1SaveSurveyResponses, SurveyV1GetAnonymousSurveyData, SurveyV1GetAnonymousSurveyResponses, SurveyV1GetSurveyData, SurveyV1GetSurveyResponses, SurveyV1ResultsAnonymousData, SurveyV1ResultsAnonymousResponses, SurveyV1ResultsData, SurveyV1ResultsResponses, SurveyV1SubmitAnonymousData, SurveyV1SubmitAnonymousResponses, SurveyV1SubmitData, SurveyV1SubmitResponses } from './types.gen';
+import type { AccountV1ActivateData, AccountV1ActivateResponses, AccountV1ApplyEmailChangeData, AccountV1ApplyEmailChangeResponses, AccountV1ApplyPasswordChangeData, AccountV1ApplyPasswordChangeResponses, AccountV1CompleteOtpSetupData, AccountV1CompleteOtpSetupResponses, AccountV1GetMeData, AccountV1GetMeResponses, AccountV1JoinData, AccountV1JoinResponses, AccountV1LoginData, AccountV1LoginResponses, AccountV1LogoutData, AccountV1LogoutResponses, AccountV1RequestActivationData, AccountV1RequestActivationResponses, AccountV1RequestEmailChangeData, AccountV1RequestEmailChangeResponses, AccountV1RequestPasswordChangeData, AccountV1RequestPasswordChangeResponses, AccountV1ResetOtpData, AccountV1ResetOtpResponses, AccountV1SetupOtpData, AccountV1SetupOtpResponses, AccountV1UpdateMeData, AccountV1UpdateMeResponses, AccountV1UploadAvatarData, AccountV1UploadAvatarResponses, AccountV1VerifyOtpData, AccountV1VerifyOtpResponses, AssignmentV1DeactivateAttemptData, AssignmentV1DeactivateAttemptResponses, AssignmentV1GetSessionData, AssignmentV1GetSessionResponses, AssignmentV1StartAttemptData, AssignmentV1StartAttemptResponses, AssignmentV1SubmitAttemptData, AssignmentV1SubmitAttemptResponses, AssistantV1ChatMessageData, AssistantV1ChatMessageResponses, AssistantV1DeleteChatData, AssistantV1DeleteChatResponses, AssistantV1GetChatMessagesData, AssistantV1GetChatMessagesResponses, AssistantV1GetChatsData, AssistantV1GetChatsResponses, AssistantV1SaveAssistantNoteData, AssistantV1SaveAssistantNoteResponses, AssistantV1UpdateChatMessageData, AssistantV1UpdateChatMessageResponses, CompetencyV1DeleteCompetencyGoalData, CompetencyV1DeleteCompetencyGoalResponses, CompetencyV1GetCertificateAwardsData, CompetencyV1GetCertificateAwardsResponses, CompetencyV1GetCertificatesData, CompetencyV1GetCertificatesResponses, CompetencyV1GetClassificationSkillsDataData, CompetencyV1GetClassificationSkillsDataResponses, CompetencyV1GetClassificationTreeData, CompetencyV1GetClassificationTreeResponses, CompetencyV1GetCompetencyGoalsData, CompetencyV1GetCompetencyGoalsResponses, CompetencyV1SaveCompetencyGoalData, CompetencyV1SaveCompetencyGoalResponses, ContentV1DeleteMediaWatchData, ContentV1DeleteMediaWatchResponses, ContentV1GetMediaData, ContentV1GetMediaNoteData, ContentV1GetMediaNoteResponses, ContentV1GetMediaResponses, ContentV1GetMediaWatchData, ContentV1GetMediaWatchResponses, ContentV1GetSubtitlesData, ContentV1GetSubtitlesResponses, ContentV1GetWatchMediasData, ContentV1GetWatchMediasResponses, ContentV1SaveMediaNoteData, ContentV1SaveMediaNoteResponses, ContentV1SearchData, ContentV1SearchResponses, ContentV1SearchSuggestionData, ContentV1SearchSuggestionResponses, ContentV1UpdateMediaWatchData, ContentV1UpdateMediaWatchResponses, CourseV1GetDetailData, CourseV1GetDetailResponses, CourseV1GetSessionData, CourseV1GetSessionResponses, CourseV1RequestCertificateData, CourseV1RequestCertificateResponses, CourseV1StartEngagementData, CourseV1StartEngagementResponses, DiscussionV1CreatePostData, DiscussionV1CreatePostResponses, DiscussionV1DeactivateAttemptData, DiscussionV1DeactivateAttemptResponses, DiscussionV1DeletePostData, DiscussionV1DeletePostResponses, DiscussionV1GetOwnPostsData, DiscussionV1GetOwnPostsResponses, DiscussionV1GetPostsData, DiscussionV1GetPostsResponses, DiscussionV1GetSessionData, DiscussionV1GetSessionResponses, DiscussionV1StartAttemptData, DiscussionV1StartAttemptResponses, DiscussionV1UpdatePostData, DiscussionV1UpdatePostResponses, ExamV1DeactivateAttemptData, ExamV1DeactivateAttemptResponses, ExamV1GetSessionData, ExamV1GetSessionResponses, ExamV1GetTimestampData, ExamV1GetTimestampResponses, ExamV1SaveAnswersData, ExamV1SaveAnswersResponses, ExamV1StartAttemptData, ExamV1StartAttemptResponses, ExamV1SubmitAttemptData, ExamV1SubmitAttemptResponses, LearningV1EnrollCatalogItemData, LearningV1EnrollCatalogItemResponses, LearningV1GetCatalogItemsData, LearningV1GetCatalogItemsResponses, LearningV1GetCatalogsData, LearningV1GetCatalogsResponses, LearningV1GetEnrolledData, LearningV1GetEnrolledResponses, LearningV1GetRecordsData, LearningV1GetRecordsResponses, LearningV1GetReportData, LearningV1GetReportResponses, LearningV1UnenrollData, LearningV1UnenrollResponses, MinimaApiHealthData, MinimaApiHealthResponses, OperationV1AgreePoliciesData, OperationV1AgreePoliciesResponses, OperationV1CreateAppealData, OperationV1CreateAppealResponses, OperationV1CreateInquiryData, OperationV1CreateInquiryResponses, OperationV1CreateThreadData, OperationV1CreateThreadResponses, OperationV1DeleteCommentData, OperationV1DeleteCommentResponses, OperationV1DeleteDeviceData, OperationV1DeleteDeviceResponses, OperationV1EffectivePoliciesData, OperationV1EffectivePoliciesResponses, OperationV1GetAnnouncementsData, OperationV1GetAnnouncementsResponses, OperationV1GetCommentsData, OperationV1GetCommentsResponses, OperationV1GetDevicesData, OperationV1GetDevicesResponses, OperationV1GetInquiriesData, OperationV1GetInquiriesResponses, OperationV1GetThreadCommentsData, OperationV1GetThreadCommentsResponses, OperationV1GetThreadData, OperationV1GetThreadResponses, OperationV1GetUnreadMessagesData, OperationV1GetUnreadMessagesResponses, OperationV1ReadAnnouncementData, OperationV1ReadAnnouncementResponses, OperationV1ReadMessageData, OperationV1ReadMessageResponses, OperationV1RegisterDeviceData, OperationV1RegisterDeviceResponses, OperationV1SaveCommentData, OperationV1SaveCommentResponses, OperationV1ToggleDeviceActiveData, OperationV1ToggleDeviceActiveResponses, OperationV1UpdateInquiryData, OperationV1UpdateInquiryResponses, PartnerV1MemberInfosData, PartnerV1MemberInfosResponses, QuizV1DeactivateAttemptData, QuizV1DeactivateAttemptResponses, QuizV1GetSessionData, QuizV1GetSessionResponses, QuizV1StartAttemptData, QuizV1StartAttemptResponses, QuizV1SubmitAttemptData, QuizV1SubmitAttemptResponses, SsoV1AuthorizeData, SsoV1AuthorizeResponses, SsoV1CallbackData, SsoV1CallbackResponses, SsoV1DeleteAccountData, SsoV1DeleteAccountResponses, SsoV1GetAccountsData, SsoV1GetAccountsResponses, SsoV1LinkData, SsoV1LinkResponses, StudioV1AssessmentSuggestionsData, StudioV1AssessmentSuggestionsResponses, StudioV1CategorySuggestionsData, StudioV1CategorySuggestionsResponses, StudioV1CertificateSuggestionsData, StudioV1CertificateSuggestionsResponses, StudioV1ContentData, StudioV1ContentResponses, StudioV1ContentSuggestionsData, StudioV1ContentSuggestionsResponses, StudioV1CreateMediaQuizData, StudioV1CreateMediaQuizResponses, StudioV1DeleteAssignmentQuesionData, StudioV1DeleteAssignmentQuesionResponses, StudioV1DeleteDiscussionQuesionData, StudioV1DeleteDiscussionQuesionResponses, StudioV1DeleteExamQuesionData, StudioV1DeleteExamQuesionResponses, StudioV1DeleteMediaSubtitleData, StudioV1DeleteMediaSubtitleResponses, StudioV1DeleteQuizQuesionData, StudioV1DeleteQuizQuesionResponses, StudioV1DeleteSurveyQuesionData, StudioV1DeleteSurveyQuesionResponses, StudioV1FaqSuggestionsData, StudioV1FaqSuggestionsResponses, StudioV1GetAssignmentData, StudioV1GetAssignmentResponses, StudioV1GetCourseData, StudioV1GetCourseResponses, StudioV1GetDiscussionData, StudioV1GetDiscussionResponses, StudioV1GetExamData, StudioV1GetExamResponses, StudioV1GetFaqItemsData, StudioV1GetFaqItemsResponses, StudioV1GetMediaData, StudioV1GetMediaResponses, StudioV1GetQuizData, StudioV1GetQuizResponses, StudioV1GetSurveyData, StudioV1GetSurveyResponses, StudioV1InstructorSuggestionsData, StudioV1InstructorSuggestionsResponses, StudioV1RemoveCourseAssessmentData, StudioV1RemoveCourseAssessmentResponses, StudioV1RemoveCourseCategoryData, StudioV1RemoveCourseCategoryResponses, StudioV1RemoveCourseCertificateData, StudioV1RemoveCourseCertificateResponses, StudioV1RemoveCourseFaqItemData, StudioV1RemoveCourseFaqItemResponses, StudioV1RemoveCourseInstructorData, StudioV1RemoveCourseInstructorResponses, StudioV1RemoveCourseLessonData, StudioV1RemoveCourseLessonResponses, StudioV1RemoveCourseRelationData, StudioV1RemoveCourseRelationResponses, StudioV1RemoveCourseSurveyData, StudioV1RemoveCourseSurveyResponses, StudioV1SaveAssignmentData, StudioV1SaveAssignmentQuestionData, StudioV1SaveAssignmentQuestionResponses, StudioV1SaveAssignmentResponses, StudioV1SaveCourseAssessmentsData, StudioV1SaveCourseAssessmentsResponses, StudioV1SaveCourseCategoriesData, StudioV1SaveCourseCategoriesResponses, StudioV1SaveCourseCertificatesData, StudioV1SaveCourseCertificatesResponses, StudioV1SaveCourseData, StudioV1SaveCourseFaqItemsData, StudioV1SaveCourseFaqItemsResponses, StudioV1SaveCourseInstructorsData, StudioV1SaveCourseInstructorsResponses, StudioV1SaveCourseLessonsData, StudioV1SaveCourseLessonsResponses, StudioV1SaveCourseRelationsData, StudioV1SaveCourseRelationsResponses, StudioV1SaveCourseResponses, StudioV1SaveCourseSurveysData, StudioV1SaveCourseSurveysResponses, StudioV1SaveDiscussionData, StudioV1SaveDiscussionQuestionData, StudioV1SaveDiscussionQuestionResponses, StudioV1SaveDiscussionResponses, StudioV1SaveExamData, StudioV1SaveExamQuestionsData, StudioV1SaveExamQuestionsResponses, StudioV1SaveExamResponses, StudioV1SaveMediaData, StudioV1SaveMediaResponses, StudioV1SaveMediaSubtitleData, StudioV1SaveMediaSubtitleResponses, StudioV1SaveQuizData, StudioV1SaveQuizQuestionsData, StudioV1SaveQuizQuestionsResponses, StudioV1SaveQuizResponses, StudioV1SaveSurveyData, StudioV1SaveSurveyQuestionsData, StudioV1SaveSurveyQuestionsResponses, StudioV1SaveSurveyResponses, SurveyV1GetAnonymousSurveyData, SurveyV1GetAnonymousSurveyResponses, SurveyV1GetSurveyData, SurveyV1GetSurveyResponses, SurveyV1ResultsAnonymousData, SurveyV1ResultsAnonymousResponses, SurveyV1ResultsData, SurveyV1ResultsResponses, SurveyV1SubmitAnonymousData, SurveyV1SubmitAnonymousResponses, SurveyV1SubmitData, SurveyV1SubmitResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -554,7 +554,7 @@ export const discussionV1GetOwnPosts = <ThrowOnError extends boolean = true>(opt
 /**
  * Delete Post
  */
-export const discussionV1DeletePost = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1DeletePostData, ThrowOnError>) => (options.client ?? client).delete<DiscussionV1DeletePostResponses, unknown, ThrowOnError>({ url: '/api/v1/discussion/{id}/post/{postId}', ...options });
+export const discussionV1DeletePost = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1DeletePostData, ThrowOnError>) => (options.client ?? client).delete<DiscussionV1DeletePostResponses, unknown, ThrowOnError>({ url: '/api/v1/discussion/{id}/post/{post_id}', ...options });
 
 /**
  * Update Post
@@ -562,7 +562,7 @@ export const discussionV1DeletePost = <ThrowOnError extends boolean = true>(opti
 export const discussionV1UpdatePost = <ThrowOnError extends boolean = true>(options: Options<DiscussionV1UpdatePostData, ThrowOnError>) => (options.client ?? client).post<DiscussionV1UpdatePostResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     responseType: 'json',
-    url: '/api/v1/discussion/{id}/post/{postId}',
+    url: '/api/v1/discussion/{id}/post/{post_id}',
     ...options,
     headers: {
         'Content-Type': null,
@@ -795,7 +795,7 @@ export const operationV1AgreePolicies = <ThrowOnError extends boolean = true>(op
  */
 export const operationV1GetThread = <ThrowOnError extends boolean = true>(options: Options<OperationV1GetThreadData, ThrowOnError>) => (options.client ?? client).get<OperationV1GetThreadResponses, unknown, ThrowOnError>({
     responseType: 'json',
-    url: '/api/v1/operation/thread/{appLabel}/{model}/subject/{subjectId}',
+    url: '/api/v1/operation/thread/{app_label}/{model}/subject/{subject_id}',
     ...options
 });
 
@@ -838,7 +838,7 @@ export const operationV1SaveComment = <ThrowOnError extends boolean = true>(opti
 /**
  * Delete Comment
  */
-export const operationV1DeleteComment = <ThrowOnError extends boolean = true>(options: Options<OperationV1DeleteCommentData, ThrowOnError>) => (options.client ?? client).delete<OperationV1DeleteCommentResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/thread/{id}/comment/{commentId}', ...options });
+export const operationV1DeleteComment = <ThrowOnError extends boolean = true>(options: Options<OperationV1DeleteCommentData, ThrowOnError>) => (options.client ?? client).delete<OperationV1DeleteCommentResponses, unknown, ThrowOnError>({ url: '/api/v1/operation/thread/{id}/comment/{comment_id}', ...options });
 
 /**
  * Get Comments
@@ -972,11 +972,74 @@ export const ssoV1GetAccounts = <ThrowOnError extends boolean = true>(options?: 
 export const ssoV1DeleteAccount = <ThrowOnError extends boolean = true>(options: Options<SsoV1DeleteAccountData, ThrowOnError>) => (options.client ?? client).delete<SsoV1DeleteAccountResponses, unknown, ThrowOnError>({ url: '/api/v1/sso/account/{id}', ...options });
 
 /**
+ * Content
+ */
+export const studioV1Content = <ThrowOnError extends boolean = true>(options?: Options<StudioV1ContentData, ThrowOnError>) => (options?.client ?? client).get<StudioV1ContentResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/content',
+    ...options
+});
+
+/**
  * Content Suggestions
  */
 export const studioV1ContentSuggestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1ContentSuggestionsData, ThrowOnError>) => (options.client ?? client).get<StudioV1ContentSuggestionsResponses, unknown, ThrowOnError>({
     responseType: 'json',
     url: '/api/v1/studio/suggestion/content',
+    ...options
+});
+
+/**
+ * Assessment Suggestions
+ */
+export const studioV1AssessmentSuggestions = <ThrowOnError extends boolean = true>(options?: Options<StudioV1AssessmentSuggestionsData, ThrowOnError>) => (options?.client ?? client).get<StudioV1AssessmentSuggestionsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/suggestion/assessment',
+    ...options
+});
+
+/**
+ * Certificate Suggestions
+ */
+export const studioV1CertificateSuggestions = <ThrowOnError extends boolean = true>(options?: Options<StudioV1CertificateSuggestionsData, ThrowOnError>) => (options?.client ?? client).get<StudioV1CertificateSuggestionsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/suggestion/certificate',
+    ...options
+});
+
+/**
+ * Category Suggestions
+ */
+export const studioV1CategorySuggestions = <ThrowOnError extends boolean = true>(options?: Options<StudioV1CategorySuggestionsData, ThrowOnError>) => (options?.client ?? client).get<StudioV1CategorySuggestionsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/suggestion/category',
+    ...options
+});
+
+/**
+ * Instructor Suggestions
+ */
+export const studioV1InstructorSuggestions = <ThrowOnError extends boolean = true>(options?: Options<StudioV1InstructorSuggestionsData, ThrowOnError>) => (options?.client ?? client).get<StudioV1InstructorSuggestionsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/suggestion/instructor',
+    ...options
+});
+
+/**
+ * Faq Suggestions
+ */
+export const studioV1FaqSuggestions = <ThrowOnError extends boolean = true>(options?: Options<StudioV1FaqSuggestionsData, ThrowOnError>) => (options?.client ?? client).get<StudioV1FaqSuggestionsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/suggestion/faq',
+    ...options
+});
+
+/**
+ * Get Faq Items
+ */
+export const studioV1GetFaqItems = <ThrowOnError extends boolean = true>(options: Options<StudioV1GetFaqItemsData, ThrowOnError>) => (options.client ?? client).get<StudioV1GetFaqItemsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/faq/{id}/item',
     ...options
 });
 
@@ -1004,9 +1067,9 @@ export const studioV1SaveExam = <ThrowOnError extends boolean = true>(options: O
 });
 
 /**
- * Save Exam Question
+ * Save Exam Questions
  */
-export const studioV1SaveExamQuestion = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveExamQuestionData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveExamQuestionResponses, unknown, ThrowOnError>({
+export const studioV1SaveExamQuestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveExamQuestionsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveExamQuestionsResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     responseType: 'json',
     url: '/api/v1/studio/exam/{id}/question',
@@ -1020,21 +1083,7 @@ export const studioV1SaveExamQuestion = <ThrowOnError extends boolean = true>(op
 /**
  * Delete Exam Quesion
  */
-export const studioV1DeleteExamQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteExamQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteExamQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/exam/{id}/question/{q}', ...options });
-
-/**
- * Save Exam Questions
- */
-export const studioV1SaveExamQuestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveExamQuestionsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveExamQuestionsResponses, unknown, ThrowOnError>({
-    ...formDataBodySerializer,
-    responseType: 'json',
-    url: '/api/v1/studio/exam/{id}/questionset',
-    ...options,
-    headers: {
-        'Content-Type': null,
-        ...options.headers
-    }
-});
+export const studioV1DeleteExamQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteExamQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteExamQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/exam/{id}/question/{question_id}', ...options });
 
 /**
  * Get Quiz
@@ -1060,9 +1109,9 @@ export const studioV1SaveQuiz = <ThrowOnError extends boolean = true>(options: O
 });
 
 /**
- * Save Quiz Question
+ * Save Quiz Questions
  */
-export const studioV1SaveQuizQuestion = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveQuizQuestionData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveQuizQuestionResponses, unknown, ThrowOnError>({
+export const studioV1SaveQuizQuestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveQuizQuestionsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveQuizQuestionsResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     responseType: 'json',
     url: '/api/v1/studio/quiz/{id}/question',
@@ -1076,21 +1125,7 @@ export const studioV1SaveQuizQuestion = <ThrowOnError extends boolean = true>(op
 /**
  * Delete Quiz Quesion
  */
-export const studioV1DeleteQuizQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteQuizQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteQuizQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/quiz/{id}/question/{q}', ...options });
-
-/**
- * Save Quiz Questions
- */
-export const studioV1SaveQuizQuestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveQuizQuestionsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveQuizQuestionsResponses, unknown, ThrowOnError>({
-    ...formDataBodySerializer,
-    responseType: 'json',
-    url: '/api/v1/studio/quiz/{id}/questionset',
-    ...options,
-    headers: {
-        'Content-Type': null,
-        ...options.headers
-    }
-});
+export const studioV1DeleteQuizQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteQuizQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteQuizQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/quiz/{id}/question/{question_id}', ...options });
 
 /**
  * Get Survey
@@ -1116,9 +1151,9 @@ export const studioV1SaveSurvey = <ThrowOnError extends boolean = true>(options:
 });
 
 /**
- * Save Survey Question
+ * Save Survey Questions
  */
-export const studioV1SaveSurveyQuestion = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveSurveyQuestionData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveSurveyQuestionResponses, unknown, ThrowOnError>({
+export const studioV1SaveSurveyQuestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveSurveyQuestionsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveSurveyQuestionsResponses, unknown, ThrowOnError>({
     ...formDataBodySerializer,
     responseType: 'json',
     url: '/api/v1/studio/survey/{id}/question',
@@ -1132,21 +1167,7 @@ export const studioV1SaveSurveyQuestion = <ThrowOnError extends boolean = true>(
 /**
  * Delete Survey Quesion
  */
-export const studioV1DeleteSurveyQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteSurveyQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteSurveyQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/survey/{id}/question/{q}', ...options });
-
-/**
- * Save Survey Questions
- */
-export const studioV1SaveSurveyQuestions = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveSurveyQuestionsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveSurveyQuestionsResponses, unknown, ThrowOnError>({
-    ...formDataBodySerializer,
-    responseType: 'json',
-    url: '/api/v1/studio/survey/{id}/questionset',
-    ...options,
-    headers: {
-        'Content-Type': null,
-        ...options.headers
-    }
-});
+export const studioV1DeleteSurveyQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteSurveyQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteSurveyQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/survey/{id}/question/{question_id}', ...options });
 
 /**
  * Get Discussion
@@ -1188,7 +1209,7 @@ export const studioV1SaveDiscussionQuestion = <ThrowOnError extends boolean = tr
 /**
  * Delete Discussion Quesion
  */
-export const studioV1DeleteDiscussionQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteDiscussionQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteDiscussionQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/discussion/{id}/question/{q}', ...options });
+export const studioV1DeleteDiscussionQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteDiscussionQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteDiscussionQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/discussion/{id}/question/{question_id}', ...options });
 
 /**
  * Get Assignment
@@ -1230,7 +1251,7 @@ export const studioV1SaveAssignmentQuestion = <ThrowOnError extends boolean = tr
 /**
  * Delete Assignment Quesion
  */
-export const studioV1DeleteAssignmentQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteAssignmentQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteAssignmentQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/assignment/{id}/question/{q}', ...options });
+export const studioV1DeleteAssignmentQuesion = <ThrowOnError extends boolean = true>(options: Options<StudioV1DeleteAssignmentQuesionData, ThrowOnError>) => (options.client ?? client).delete<StudioV1DeleteAssignmentQuesionResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/assignment/{id}/question/{question_id}', ...options });
 
 /**
  * Get Media
@@ -1305,13 +1326,148 @@ export const studioV1SaveCourse = <ThrowOnError extends boolean = true>(options:
 });
 
 /**
- * Course Structure
+ * Save Course Surveys
  */
-export const studioV1CourseStructure = <ThrowOnError extends boolean = true>(options: Options<StudioV1CourseStructureData, ThrowOnError>) => (options.client ?? client).get<StudioV1CourseStructureResponses, unknown, ThrowOnError>({
+export const studioV1SaveCourseSurveys = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseSurveysData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseSurveysResponses, unknown, ThrowOnError>({
     responseType: 'json',
-    url: '/api/v1/studio/course/{id}/structure',
-    ...options
+    url: '/api/v1/studio/course/{id}/survey',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
+
+/**
+ * Remove Course Survey
+ */
+export const studioV1RemoveCourseSurvey = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseSurveyData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseSurveyResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/survey/{course_survey_id}', ...options });
+
+/**
+ * Save Course Assessments
+ */
+export const studioV1SaveCourseAssessments = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseAssessmentsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseAssessmentsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/assessment',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Assessment
+ */
+export const studioV1RemoveCourseAssessment = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseAssessmentData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseAssessmentResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/assessment/{assessment_id}', ...options });
+
+/**
+ * Save Course Lessons
+ */
+export const studioV1SaveCourseLessons = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseLessonsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseLessonsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/lesson',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Lesson
+ */
+export const studioV1RemoveCourseLesson = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseLessonData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseLessonResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/lesson/{lesson_id}', ...options });
+
+/**
+ * Save Course Certificates
+ */
+export const studioV1SaveCourseCertificates = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseCertificatesData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseCertificatesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/certificate',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Certificate
+ */
+export const studioV1RemoveCourseCertificate = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseCertificateData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseCertificateResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/certificate/{course_certificate_id}', ...options });
+
+/**
+ * Save Course Relations
+ */
+export const studioV1SaveCourseRelations = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseRelationsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseRelationsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/relation',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Relation
+ */
+export const studioV1RemoveCourseRelation = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseRelationData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseRelationResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/relation/{course_relation_id}', ...options });
+
+/**
+ * Save Course Categories
+ */
+export const studioV1SaveCourseCategories = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseCategoriesData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseCategoriesResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/category',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Category
+ */
+export const studioV1RemoveCourseCategory = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseCategoryData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseCategoryResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/category/{course_category_id}', ...options });
+
+/**
+ * Save Course Instructors
+ */
+export const studioV1SaveCourseInstructors = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseInstructorsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseInstructorsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/instructor',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Instructor
+ */
+export const studioV1RemoveCourseInstructor = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseInstructorData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseInstructorResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/instructor/{course_instructor_id}', ...options });
+
+/**
+ * Save Course Faq Items
+ */
+export const studioV1SaveCourseFaqItems = <ThrowOnError extends boolean = true>(options: Options<StudioV1SaveCourseFaqItemsData, ThrowOnError>) => (options.client ?? client).post<StudioV1SaveCourseFaqItemsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/v1/studio/course/{id}/faqitem',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove Course Faq Item
+ */
+export const studioV1RemoveCourseFaqItem = <ThrowOnError extends boolean = true>(options: Options<StudioV1RemoveCourseFaqItemData, ThrowOnError>) => (options.client ?? client).delete<StudioV1RemoveCourseFaqItemResponses, unknown, ThrowOnError>({ url: '/api/v1/studio/course/{id}/faqitem/{faq_item_id}', ...options });
 
 /**
  * Get Survey

@@ -25,8 +25,8 @@ def test_studio_survey_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "get survey"
 
     data = res.json()
-    question_set = data["questionSet"]
-    del data["questionSet"]
+    questions = data["questions"]
+    del data["questions"]
 
     # save survey
     res = client.post("/api/v1/studio/survey", data={"data": json.dumps(data)}, format="multipart")
@@ -39,26 +39,17 @@ def test_studio_survey_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/survey", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new survey"
 
-    question = question_set[0]
-    question["id"] = 0
-
-    # save survey question
-    res = client.post(
-        f"/api/v1/studio/survey/{survey_id}/question", data={"data": json.dumps(question)}, format="multipart"
-    )
-    assert res.status_code == 200, "save survey question"
-
-    # delete survey question
-    res = client.delete(f"/api/v1/studio/survey/{survey_id}/question/{res.json()}")
-    assert res.status_code == 200, "delete survey question"
-
-    for question in question_set:
+    for question in questions:
         question["question"] += "1"
 
     # save survey questions
     res = client.post(
-        f"/api/v1/studio/survey/{survey_id}/questionset",
-        data={"data": json.dumps({"data": question_set})},
+        f"/api/v1/studio/survey/{survey_id}/question",
+        data={"data": json.dumps({"data": questions})},
         format="multipart",
     )
     assert res.status_code == 200, "save survey questions"
+
+    # delete survey question
+    res = client.delete(f"/api/v1/studio/survey/{survey_id}/question/{res.json()[0]}")
+    assert res.status_code == 200, "delete survey question"

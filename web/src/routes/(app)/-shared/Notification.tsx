@@ -27,7 +27,7 @@ export const Notification = () => {
   onMount(() => {
     setTimeout(() => {
       setEnabled(true)
-    }, 1000 * 2)
+    }, 1000 * 0.3)
   })
 
   const [unreadCount, setUnreadCount] = createSignal(0)

@@ -81,13 +81,13 @@ async def create_post(
     )
 
 
-@router.post("/{id}/post/{postId}", response=DiscussionPostSchema)
+@router.post("/{id}/post/{post_id}", response=DiscussionPostSchema)
 @active_context()
 @access_date("discussion", "discussion")
 async def update_post(
     request: HttpRequest,
     id: str,
-    post_id: Annotated[int, functions.Path(alias="postId")],
+    post_id: int,
     data: Form[DiscussionPostSaveSchema],
     files: Annotated[
         list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
@@ -104,8 +104,8 @@ async def update_post(
     )
 
 
-@router.delete("/{id}/post/{postId}")
+@router.delete("/{id}/post/{post_id}")
 @active_context()
 @access_date("discussion", "discussion")
-async def delete_post(request: HttpRequest, id: str, post_id: Annotated[int, functions.Path(alias="postId")]):
+async def delete_post(request: HttpRequest, id: str, post_id: int):
     await Post.remove(discussion_id=id, learner_id=request.auth, context=request.active_context, post_id=post_id)

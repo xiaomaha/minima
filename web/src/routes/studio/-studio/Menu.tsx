@@ -1,8 +1,12 @@
-import { IconFileSpark, IconSearch } from '@tabler/icons-solidjs'
-import { createEffect, createSignal, Show } from 'solid-js'
+import { IconChevronLeft, IconFileSpark, IconHome, IconSearch } from '@tabler/icons-solidjs'
+import { useNavigate, useParams, useRouter } from '@tanstack/solid-router'
+import { createEffect, createMemo, createSignal, Show } from 'solid-js'
+import { type StudioV1ContentSuggestionsData, studioV1ContentSuggestions } from '@/api'
 import { AutocompleteInput } from '@/shared/AutocompleteInput'
+import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
-import { EMPTY_CONTENT_ID, useContentSuggestion } from '../-context/ContentSuggestion'
+import { capitalize } from '@/shared/utils'
+import { EMPTY_CONTENT_ID } from '../-context/editing'
 
 type Props = {
   class?: string
@@ -10,51 +14,88 @@ type Props = {
 
 export const Menu = (props: Props) => {
   const { t } = useTranslation()
+  const router = useRouter()
+  const params = useParams({ from: '/studio/$app/$id' })
+  const navigate = useNavigate()
 
-  const { kind, select, setSelect, suggestionList } = useContentSuggestion()
+  const [suggestions] = createCachedStore(
+    'studioV1ContentSuggestions',
+    () => ({ query: { kind: params().app as StudioV1ContentSuggestionsData['query']['kind'] } }),
+    async (options) => (await studioV1ContentSuggestions(options)).data,
+  )
+
+  const suggestionMap = createMemo(() =>
+    Object.fromEntries((suggestions.data ?? []).map((data) => [data.title, data.id])),
+  )
+
+  const suggestionList = createMemo(() => {
+    return suggestions.data?.map((suggestion) => suggestion.title) ?? []
+  })
 
   const [searchOpen, setSearchOpen] = createSignal(false)
 
-  const handleCommit = (key: string) => {
-    if (!kind()) return
-    const parts = key.split(' - ')
-    const kindId = parts.at(-1)!
-    setSelect(kind()!, kindId)
-  }
-
-  const handleNew = () => {
-    if (!kind()) return
-    setSelect(kind()!, EMPTY_CONTENT_ID)
+  const select = (key: string) => {
+    const id = suggestionMap()[key]
+    navigate({ to: `/studio/${params().app}/${id}` })
   }
 
   return (
     <>
-      <div class={`flex items-center gap-4 opacity-40 hover:opacity-100 [&:has(*:hover)]:opacity-100 ${props.class ?? ''}`}>
-        <div class="text-sm text-end">{select[kind()!]}</div>
+      <div
+        class={`flex items-center gap-6 opacity-40 hover:opacity-100 [&:has(*:hover)]:opacity-100 ${props.class ?? ''}`}
+      >
+        <div class="breadcrumbs text-sm">
+          <ul>
+            <li>{t(capitalize(params().app))}</li>
+            <li>{params().id === EMPTY_CONTENT_ID ? t('New content') : params().id}</li>
+          </ul>
+        </div>
+
         <button
           type="button"
-          class="btn btn-sm btn-ghost btn-circle outline-non"
+          class="btn btn-sm btn-ghost btn-circle"
           onClick={() => setSearchOpen(true)}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
-          <IconSearch />
+          <IconSearch class="shrink-0" />
         </button>
+
         <button
           type="button"
-          class="btn btn-sm btn-circle btn-ghost outline-none"
-          onClick={handleNew}
+          class="btn btn-sm btn-ghost btn-circle"
+          onClick={() => navigate({ to: `/studio/${params().app}/new` })}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
-          <IconFileSpark />
+          <IconFileSpark class="shrink-0" />
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-ghost btn-circle"
+          onClick={() => router.history.back()}
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
+        >
+          <IconChevronLeft class="shrink-0" />
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-ghost btn-circle"
+          onClick={() => {
+            navigate({ to: '/studio' })
+          }}
+        >
+          <IconHome class="shrink-0" />
         </button>
       </div>
 
       <SearchBox
         suggestions={suggestionList()}
         placeholder={t('Select content')}
-        onCommit={handleCommit}
+        onCommit={select}
         open={searchOpen()}
         setOpen={setSearchOpen}
       />
@@ -63,7 +104,6 @@ export const Menu = (props: Props) => {
 }
 
 interface SearchProps {
-  buttonClass?: string
   suggestions: string[]
   placeholder: string
   onCommit: (item: string) => void
@@ -103,7 +143,7 @@ const SearchBox = (props: SearchProps) => {
             onCommit={onCommit}
             dropdownClass="bg-base-200! max-h-100 overflow-y-auto flex-nowrap"
             inputClass="input-lg outline-0 rounded-xl border-base-100"
-            enterFirstSelect
+            selectFirstOnCommit
             suggestionCount={20}
             class="text-center"
             autofocus

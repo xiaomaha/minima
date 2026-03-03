@@ -111,7 +111,7 @@ export const CommentEditor = (props: Props) => {
     if (!confirm(t('Are you sure you want to delete this comment?'))) return
 
     await operationV1DeleteComment({
-      path: { id: thread.data!.id, commentId: comment.id },
+      path: { id: thread.data!.id, comment_id: comment.id },
     })
 
     if (!comment.parentId) {
