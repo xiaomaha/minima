@@ -37,7 +37,7 @@ export const Course = (props: Props) => {
     props.onSave(id)
 
     if (staging.id === EMPTY_CONTENT_ID) {
-      navigate({ to: `/studio/quiz/${id}`, replace: true })
+      navigate({ to: `/studio/course/${id}`, replace: true })
     } else {
       modifyMutable(source, reconcile(structuredClone(unwrap({ ...staging, assets: source.assets }))))
     }
