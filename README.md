@@ -23,6 +23,7 @@ Access with username `admin@example.com` and password `1111`
 
 - web: [http://localhost:5173](http://localhost:5173)
 - admin: [http://localhost:8000](http://localhost:8000/admin/)
+- studio: [http://localhost:5173/studio](http://localhost:5173/studio)
 
 ## Screenshots
 
