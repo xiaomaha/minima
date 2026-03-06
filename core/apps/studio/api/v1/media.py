@@ -4,7 +4,7 @@ from typing import Annotated
 from django.conf import settings
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.shortcuts import aget_object_or_404
 from ninja import Field, Router, UploadedFile
 from ninja.params import functions
@@ -13,6 +13,7 @@ from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
 from apps.common.util import HttpRequest
 from apps.content.models import Media, Subtitle
+from apps.quiz.models import Quiz
 from apps.studio.decorator import editor_required, track_draft
 
 
@@ -60,7 +61,12 @@ router = Router(by_alias=True)
 @router.get("/media/{id}", response=MediaSpec)
 @editor_required()
 async def get_media(request: HttpRequest, id: str):
-    return await Media.objects.prefetch_related("subtitles", "quizzes").aget(id=id, owner_id=request.auth)
+    return (
+        await Media.objects
+        .prefetch_related(Prefetch("subtitles", queryset=Subtitle.objects.order_by("id")))
+        .prefetch_related(Prefetch("quizzes", queryset=Quiz.objects.order_by("mediaquiz__id")))
+        .aget(id=id, owner_id=request.auth)
+    )
 
 
 @router.post("/media", response=str)

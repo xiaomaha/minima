@@ -25,11 +25,11 @@ export const Question = (props: Props) => {
   const saveQuestion = async (validated: v.InferOutput<typeof vDiscussionQuestionEditingSpec>) => {
     const { data } = await studioV1SaveDiscussionQuestion({
       path: { id: staging.id },
-      body: { data: validated, files: files() },
+      body: { data: { data: [validated] }, files: files() },
     })
 
     batch(() => {
-      staging.questions[props.index]!.id = data
+      staging.questions[props.index]!.id = data[0]!
       source.questions[props.index] = structuredClone(unwrap(staging.questions[props.index]!))
     })
   }
@@ -117,9 +117,9 @@ export const Question = (props: Props) => {
 
             <div class="flex gap-2 items-center justify-end">
               <actions.Remove onRemove={removeQuestion} />
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save label={t('Save')} onSave={saveQuestion} />
             </div>
           </Paper>

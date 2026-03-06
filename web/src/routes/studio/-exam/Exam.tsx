@@ -3,11 +3,11 @@ import { useNavigate } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import * as v from 'valibot'
-import { type ExamSpec, studioV1SaveExam } from '@/api'
+import { type ExamSpec, studioV1InlineSuggestions, studioV1SaveExam } from '@/api'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { BooleanField, NumberField, RichTextField, TextField, ThumbnailField } from '../-studio/field'
+import { BooleanField, DataBindField, NumberField, TextField, ThumbnailField } from '../-studio/field'
 import { Paper } from '../-studio/Paper'
 import { questionFormats, vExamEditingSpec } from './data'
 
@@ -58,7 +58,7 @@ export const Exam = (props: Props) => {
 
             <ThumbnailField path={['thumbnail']} label={t('Thumbnail')} onFileSelect={setThumbnail} required />
 
-            <div class="flex gap-4">
+            <div class="grid grid-cols-3 gap-4">
               <BooleanField path={['featured']} label={t('Featured')} schema={schema.featured} />
               <BooleanField
                 path={['verificationRequired']}
@@ -82,25 +82,17 @@ export const Exam = (props: Props) => {
 
             <div class="divider" />
 
-            <TextField
-              path={['honorCode', 'title']}
-              label={t('Honor code title')}
-              schema={schema.honorCode.entries.title}
-            />
-            <RichTextField
-              path={['honorCode', 'code']}
-              label={t('Honor code content')}
-              schema={schema.honorCode.entries.code}
+            <DataBindField<number, Parameters<typeof studioV1InlineSuggestions>[0]>
+              path={['honorCodeId']}
+              label={t('Honor code')}
+              cacheKey="studioV1InlineSuggestions"
+              fetchParams={() => ({ query: { kind: 'honor_code' } })}
+              fetchFn={async (options) => (await studioV1InlineSuggestions(options)).data}
+              schema={schema.honorCodeId}
             />
 
             <div class="divider" />
 
-            <TextField
-              path={['questionPool', 'description']}
-              label={t('Question pool description')}
-              schema={schema.questionPool.entries.description}
-              multiline
-            />
             <div class="grid grid-cols-4 gap-4">
               <For each={questionFormats}>
                 {(format) => (

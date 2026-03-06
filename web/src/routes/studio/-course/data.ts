@@ -23,8 +23,8 @@ export const EmptyCourse = (): CourseSpec => {
     effortHours: -1,
     level: '' as LevelChoices,
     published: null,
-    honorCode: { title: '', code: '' },
-    faq: { name: '', description: '' },
+    honorCodeId: -1,
+    faqId: -1,
     gradingPolicy: { assessmentWeight: -1, completionWeight: -1, completionPassingPoint: -1 },
     assets: EmptyCourseAssets(),
   }
@@ -38,11 +38,11 @@ export const EmptyCourseAssets = (): CourseAssetsSpec => ({
   courseCertificates: [],
   courseCategories: [],
   courseInstructors: [],
-  faqItems: [],
 })
 
 const REQUIRED = lazyT('required')
 const AT_LEAST_ZERO = lazyT('at least 0')
+const AT_LEAST_ONE = lazyT('at least 1')
 
 export const vCourseEditingSpec = v.object({
   title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
@@ -56,14 +56,8 @@ export const vCourseEditingSpec = v.object({
   previewUrl: v.pipe(v.string(), v.url('URL address')),
   effortHours: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   level: v.picklist(['beginner', 'intermediate', 'advanced', 'common'], REQUIRED),
-  honorCode: v.object({
-    title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-    code: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
-  faq: v.object({
-    name: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-    description: v.pipe(v.string()),
-  }),
+  honorCodeId: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
+  faqId: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
   gradingPolicy: v.object({
     assessmentWeight: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
     completionWeight: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),

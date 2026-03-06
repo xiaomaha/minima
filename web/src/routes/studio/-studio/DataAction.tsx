@@ -1,4 +1,4 @@
-import { IconDownload, IconRefresh, IconUpload, IconX } from '@tabler/icons-solidjs'
+import { IconDownload, IconRotate, IconUpload, IconX } from '@tabler/icons-solidjs'
 import Papa from 'papaparse'
 import { createMemo, type JSX, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
@@ -90,7 +90,7 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
     ),
     HasError: () => (
       <Show when={hasError()}>
-        <div class="status status-error tooltip" data-tip={t('Validation error')} />
+        <div class="status status-error tooltip" data-tip={hasError()} />
       </Show>
     ),
   }
@@ -245,7 +245,7 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
         title={t('Export data to CSV')}
       >
         <IconDownload size={20} />
-        {label ?? t('Export')}
+        {label}
       </button>
     ),
     Import: ({ label }: { label?: string }) => (
@@ -258,7 +258,7 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
         title={t('Import data from CSV')}
       >
         <IconUpload size={20} />
-        {label ?? t('Import')}
+        {label}
       </button>
     ),
     Reset: ({ label }: { label?: string }) => (
@@ -270,8 +270,8 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
         tabIndex={-1}
         title={t('Reset all changes')}
       >
-        <IconRefresh size={20} />
-        {label ?? t('Reset')}
+        <IconRotate size={20} />
+        {label}
       </button>
     ),
     Save: ({ label, onSave }: { label?: string; onSave: (data: InferOutput<TSchema>) => Promise<void> }) => (

@@ -5,12 +5,13 @@ from typing import Annotated, Literal
 from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.db import connection
-from django.db.models import Value
+from django.db.models import F, Value
 from django.db.models.functions import JSONObject
 from ninja import Router
 from ninja.params import functions
 
 from apps.assignment.models import Assignment
+from apps.common.error import ErrorCode
 from apps.common.schema import ContentTypeSchema, Schema
 from apps.common.util import HttpRequest, PaginatedResponse
 from apps.competency.models import Certificate
@@ -18,7 +19,7 @@ from apps.content.models import Media
 from apps.course.models import ASSESSIBLE_MODELS, Course
 from apps.discussion.models import Discussion
 from apps.exam.models import Exam
-from apps.operation.models import FAQ, Category, FAQItem, Instructor
+from apps.operation.models import FAQ, Category, HonorCode, Instructor
 from apps.quiz.models import Quiz
 from apps.studio.api.v1.assignment import router as assignment_router
 from apps.studio.api.v1.course import router as course_router
@@ -46,11 +47,6 @@ STUDIO_MODELS = {
     "media": Media,
     "course": Course,
 }
-
-
-class StudioContentTypeSpec(Schema):
-    app_label: str
-    model: StudioModel
 
 
 class StudioContentSpec(Schema):
@@ -125,12 +121,33 @@ async def content(
     return {"items": rows, "count": total, "size": size, "page": page, "pages": ceil(total / size) if total else 1}
 
 
+MAX_SUGGESTIONS = 1000
+
+
+class AssessmentSuggestionSpec(Schema):
+    id: str
+    label: str
+    item_type: ContentTypeSchema
+
+
+@router.get("/suggestion/assessment", response=list[AssessmentSuggestionSpec])
+@editor_required()
+async def assessment_suggestions(request: HttpRequest):
+    qs = [
+        M.objects
+        .filter(owner_id=request.auth)  # required owner permission
+        .annotate(item_type=JSONObject(app_label=Value(M._meta.app_label), model=Value(M._meta.model_name)))
+        .annotate(label=F("title"))
+        .values("id", "label", "item_type")
+        .order_by("label")[:MAX_SUGGESTIONS]
+        for M in ASSESSIBLE_MODELS
+    ]
+    return [o async for o in qs[0].union(*qs[1:], all=True)]
+
+
 class ContentSuggestionSpec(Schema):
     id: str
-    title: str
-
-
-MAX_SUGGESTIONS = 1000
+    label: str
 
 
 @router.get("/suggestion/content", response=list[ContentSuggestionSpec])
@@ -139,89 +156,48 @@ async def content_suggestions(request: HttpRequest, kind: Annotated[StudioModel,
     return [
         raw
         async for raw in STUDIO_MODELS[kind]
-        .objects.filter(owner_id=request.auth)
-        .values("title", "id")
-        .order_by("-modified")[:MAX_SUGGESTIONS]
+        .objects.annotate(label=F("title"))
+        .filter(owner_id=request.auth)  # required owner permission
+        .values("label", "id")
+        .order_by("label")[:MAX_SUGGESTIONS]
     ]
 
 
-class AssessmentSuggestion(Schema):
-    id: str
-    title: str
-    item_type: ContentTypeSchema
-
-
-@router.get("/suggestion/assessment", response=list[AssessmentSuggestion])
-@editor_required()
-async def assessment_suggestions(request: HttpRequest):
-    qs = [
-        M.objects
-        .filter(owner_id=request.auth)
-        .annotate(item_type=JSONObject(app_label=Value(M._meta.app_label), model=Value(M._meta.model_name)))
-        .values("id", "title", "item_type")
-        .order_by("-modified")[:MAX_SUGGESTIONS]
-        for M in ASSESSIBLE_MODELS
-    ]
-    return [o async for o in qs[0].union(*qs[1:], all=True)]
-
-
-class CertificateSuggestionSpec(Schema):
+class InlineSuggestionSpec(Schema):
     id: int
-    name: str
+    label: str
 
 
-@router.get("/suggestion/certificate", response=list[CertificateSuggestionSpec])
+InlineItem = Literal["honor_code", "faq", "category", "instructor", "certificate"]
+
+
+@router.get("/suggestion/inline", response=list[InlineSuggestionSpec])
 @editor_required()
-async def certificate_suggestions(request: HttpRequest):
-    return [c async for c in Certificate.objects.filter(active=True).order_by("-modified")]
+async def inline_suggestions(request: HttpRequest, kind: Annotated[InlineItem, functions.Query(...)]):
+    qs = None
 
+    if kind == "honor_code":
+        qs = HonorCode.objects.annotate(label=F("title"))
 
-class CategorySuggestionSpec(Schema):
-    id: int
-    full_path: str
+    elif kind == "faq":
+        qs = FAQ.objects.annotate(label=F("name"))
 
+    elif kind == "instructor":
+        qs = Instructor.objects.filter(active=True).annotate(label=F("name"))
 
-@router.get("/suggestion/category", response=list[CategorySuggestionSpec])
-@editor_required()
-async def category_suggestions(request: HttpRequest):
-    return [
-        {"id": c.id, "full_path": " / ".join([*c.ancestors, c.name])}
-        async for c in Category.objects.filter(depth=3).order_by("id")
-    ]
+    elif kind == "certificate":
+        qs = Certificate.objects.filter(active=True).annotate(label=F("name"))
 
+    elif kind == "category":
+        return [
+            {"id": c.id, "label": " / ".join([*c.ancestors, c.name])}
+            async for c in Category.objects.filter(depth=3).order_by("id")
+        ][:MAX_SUGGESTIONS]
 
-class InstructorSuggestionSpec(Schema):
-    id: int
-    name: str
+    if qs is None:
+        raise ValueError(ErrorCode.UNKNOWN_CONTENT)
 
-
-@router.get("/suggestion/instructor", response=list[InstructorSuggestionSpec])
-@editor_required()
-async def instructor_suggestions(request: HttpRequest):
-    return [c async for c in Instructor.objects.filter(active=True).order_by("-modified")]
-
-
-class FAQSuggestionSpec(Schema):
-    id: int
-    name: str
-
-
-@router.get("/suggestion/faq", response=list[FAQSuggestionSpec])
-@editor_required()
-async def faq_suggestions(request: HttpRequest):
-    return [c async for c in FAQ.objects.order_by("-id")]
-
-
-class FAQItemCopySpec(Schema):
-    question: str
-    answer: str
-    active: bool
-
-
-@router.get("/faq/{id}/item", response=list[FAQItemCopySpec])
-@editor_required()
-async def get_faq_items(request: HttpRequest, id: int):
-    return [c async for c in FAQItem.objects.filter(faq_id=id, active=True).order_by("ordering")]
+    return [item async for item in qs.values("id", "label").order_by("label")][:MAX_SUGGESTIONS]
 
 
 router.add_router("", exam_router, tags=["studio"])

@@ -20,7 +20,6 @@ export const EmptyQuiz = (): QuizSpec => {
     verificationRequired: false,
     published: null,
     questionPool: {
-      description: '',
       selectCount: -1,
     },
     questions: [],
@@ -56,7 +55,6 @@ export const vQuizEditingSpec = v.object({
   passingPoint: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO), v.maxValue(100, AT_MOST_100)),
   maxAttempts: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   questionPool: v.object({
-    description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
     selectCount: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   }),
 })

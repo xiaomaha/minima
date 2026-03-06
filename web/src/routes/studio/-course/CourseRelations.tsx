@@ -1,15 +1,15 @@
 import { IconMinus } from '@tabler/icons-solidjs'
-import { batch, createMemo, createSignal, For } from 'solid-js'
+import { batch, For } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
 import {
+  type ContentSuggestionSpec,
   type CourseSpec,
   studioV1ContentSuggestions,
   studioV1RemoveCourseRelation,
   studioV1SaveCourseRelations,
 } from '@/api'
 import { DraggableTable } from '@/shared/DraggableTable'
-import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -72,27 +72,11 @@ export const CourseRelations = () => {
     return true
   }
 
-  const [touched, setTouched] = createSignal(false)
-  const [suggestions] = createCachedStore(
-    'studioV1ContentSuggestions',
-    () => (touched() ? { query: { kind: 'course' as const } } : undefined),
-    async (options) => (await studioV1ContentSuggestions(options)).data,
-  )
-
-  const suggestionMap = createMemo(() => Object.fromEntries((suggestions.data ?? []).map((data) => [data.title, data])))
-  const cleanedSuggestionList = createMemo(() => {
-    const ids = staging.assets.courseRelations.map((relation) => relation.relatedCourseId)
-    const filtered = suggestions.data?.filter(
-      (suggestion) => !ids.includes(suggestion.id) && suggestion.id !== staging.id,
-    )
-    return filtered?.map((s) => s.title) ?? []
-  })
-
-  const suggestionCommit = (suggestion: string) => {
+  const addCourseRelation = (suggestion: ContentSuggestionSpec) => {
     staging.assets.courseRelations.push({
       id: 0,
-      label: suggestion,
-      relatedCourseId: suggestionMap()[suggestion]!.id,
+      label: suggestion.label,
+      relatedCourseId: suggestion.id,
     })
   }
 
@@ -156,15 +140,18 @@ export const CourseRelations = () => {
             </div>
 
             <div class="flex gap-2 items-center justify-end">
-              <InlineSuggestion
-                suggestionList={cleanedSuggestionList()}
-                onCommit={suggestionCommit}
-                onFocus={() => setTouched(true)}
+              <InlineSuggestion<string, Parameters<typeof studioV1ContentSuggestions>[0]>
+                placeholder={t('Add related course')}
+                cacheKey="studioV1ContentSuggestions"
+                fetchParams={() => ({ query: { kind: 'course' as const } })}
+                fetchFn={async (options) => (await studioV1ContentSuggestions(options)).data}
+                excludeIds={() => [...staging.assets.courseRelations.map((cr) => cr.relatedCourseId), staging.id]}
+                onCommit={addCourseRelation}
               />
 
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save onSave={save} />
             </div>
           </Paper>

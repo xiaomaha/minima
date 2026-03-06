@@ -41,8 +41,12 @@ def test_studio_exam_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/exam", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new exam"
 
+    # get exam questions
+    res = client.get(f"/api/v1/studio/exam/{exam_id}/question")
+    assert res.status_code == 200, "get exam questions"
+
     for question in questions:
-        question["question"] += "1"
+        del question["id"]
 
     # save exam questions
     res = client.post(

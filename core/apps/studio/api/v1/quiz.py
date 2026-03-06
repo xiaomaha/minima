@@ -21,7 +21,7 @@ class QuizQuestionSaveSpec(Schema):
         correct_answers: list[str]
         explanation: str
 
-    id: int
+    id: Annotated[int, Field(None)]
     question: str
     supplement: str
     options: list[str]
@@ -30,6 +30,8 @@ class QuizQuestionSaveSpec(Schema):
 
 
 class QuizQuestionSpec(QuizQuestionSaveSpec):
+    id: int
+
     @staticmethod
     def resolve_supplement(obj: Question):
         return obj.cleaned_supplement
@@ -46,7 +48,6 @@ class QuizQuestionsSpec(RootModel[list[QuizQuestionSpec]]):
 
 class QuizSpec(LearningObjectMixinSchema):
     class QuizQuestionPoolSpec(Schema):
-        description: str
         select_count: int
 
     id: str
@@ -82,7 +83,7 @@ async def get_quiz(request: HttpRequest, id: str):
         .prefetch_related(
             Prefetch(
                 "question_pool__questions",
-                queryset=Question.objects.prefetch_related("attachments").select_related("solution"),
+                queryset=Question.objects.prefetch_related("attachments").select_related("solution").order_by("id"),
             )
         )
         .aget(id=id, owner_id=request.auth)
@@ -130,6 +131,18 @@ async def save_quiz(
     return quiz.id
 
 
+@router.get("/quiz/{id}/question", response=list[QuizQuestionSpec])
+@editor_required()
+async def get_quiz_questions(request: HttpRequest, id: str):
+    return [
+        q
+        async for q in Question.objects
+        .select_related("solution")
+        .prefetch_related("attachments")
+        .filter(pool__quiz__id=id, pool__quiz__owner_id=request.auth)
+    ]
+
+
 @router.post("/quiz/{id}/question", response=list[int])
 @editor_required()
 @track_draft(Quiz, id_field="id")
@@ -143,9 +156,12 @@ async def save_quiz_questions(
     ],
 ):
     quiz = await aget_object_or_404(Quiz, id=id, owner_id=request.auth)
-    questions, solutions = [], []
+    questions, solutions, is_new = [], [], []
 
-    for question_data in data.model_dump()["data"]:
+    dumped = data.model_dump()["data"]
+    for question_data in dumped:
+        is_new.append(not question_data["id"])
+
         if not question_data["id"]:
             question_data["id"] = None
 
@@ -170,7 +186,9 @@ async def save_quiz_questions(
         update_fields=["correct_answers", "explanation"],
     )
 
-    for question in questions:
+    for question, new in zip(questions, is_new):
+        if new:
+            question._prefetched_objects_cache = {"attachments": []}
         await question.update_attachments(files=files, owner_id=request.auth, content=question.supplement)
 
     return [q.id for q in questions]

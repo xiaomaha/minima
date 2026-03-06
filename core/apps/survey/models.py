@@ -25,7 +25,7 @@ from django.db.models import (
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.error import ErrorCode
-from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin
 from apps.common.util import ModeChoices
 from apps.operation.models import AttachmentMixin
 
@@ -120,7 +120,7 @@ class Submission(AttemptMixin):
     respondent = ForeignKey(User, SET_NULL, null=True, blank=True, related_name="+", verbose_name=_("Respondent"))
     answers = JSONField(_("Answers"))
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Submission")
         verbose_name_plural = _("Submissions")
         constraints = [

@@ -37,8 +37,8 @@ up)
 	echo ""
 	echo "Elapsed: $((SECONDS - _start_time))s"
 	echo ""
-	echo "Admin:   http://localhost:8000/admin"
-	echo "Web: http://localhost:5173"
+	echo "Admin: http://localhost:8000/admin"
+	echo "Web:   http://localhost:5173"
 	echo ""
 	;;
 

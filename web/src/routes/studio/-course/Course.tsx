@@ -3,11 +3,11 @@ import { useNavigate } from '@tanstack/solid-router'
 import { createSignal, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import type * as v from 'valibot'
-import { type CourseSpec, studioV1SaveCourse } from '@/api'
+import { type CourseSpec, studioV1InlineSuggestions, studioV1SaveCourse } from '@/api'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { BooleanField, NumberField, RichTextField, SelectField, TextField, ThumbnailField } from '../-studio/field'
+import { BooleanField, DataBindField, NumberField, SelectField, TextField, ThumbnailField } from '../-studio/field'
 import { Paper } from '../-studio/Paper'
 import { levelOptions, vCourseEditingSpec } from './data'
 
@@ -106,24 +106,22 @@ export const Course = (props: Props) => {
 
             <div class="divider" />
 
-            <TextField
-              path={['honorCode', 'title']}
-              label={t('Honor code title')}
-              schema={schema.honorCode.entries.title}
-            />
-            <RichTextField
-              path={['honorCode', 'code']}
-              label={t('Honor code content')}
-              schema={schema.honorCode.entries.code}
+            <DataBindField<number, Parameters<typeof studioV1InlineSuggestions>[0]>
+              path={['honorCodeId']}
+              label={t('Honor code')}
+              cacheKey="studioV1InlineSuggestions"
+              fetchParams={() => ({ query: { kind: 'honor_code' } })}
+              fetchFn={async (options) => (await studioV1InlineSuggestions(options)).data}
+              schema={schema.honorCodeId}
             />
 
-            <div class="divider"/>
-
-            <TextField path={['faq', 'name']} label={t('FAQ name')} schema={schema.faq.entries.name} />
-            <TextField
-              path={['faq', 'description']}
-              label={t('FAQ description')}
-              schema={schema.faq.entries.description}
+            <DataBindField<number, Parameters<typeof studioV1InlineSuggestions>[0]>
+              path={['faqId']}
+              label={t('FAQ')}
+              cacheKey="studioV1InlineSuggestions"
+              fetchParams={() => ({ query: { kind: 'faq' } })}
+              fetchFn={async (options) => (await studioV1InlineSuggestions(options)).data}
+              schema={schema.faqId}
             />
 
             <div class="divider" />

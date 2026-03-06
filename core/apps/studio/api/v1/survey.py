@@ -17,7 +17,7 @@ from apps.survey.models import Question, QuestionPool, Survey
 
 
 class SurveyQuestionSaveSpec(Schema):
-    id: int
+    id: Annotated[int, Field(None)]
     format: Question.SurveyQuestionFormatChoices
     question: str
     supplement: str
@@ -27,6 +27,8 @@ class SurveyQuestionSaveSpec(Schema):
 
 
 class SurveyQuestionSpec(SurveyQuestionSaveSpec):
+    id: int
+
     @staticmethod
     def resolve_supplement(obj: Question):
         return obj.cleaned_supplement
@@ -42,11 +44,7 @@ class SurveyQuestionsSpec(RootModel[list[SurveyQuestionSpec]]):
 
 
 class SurveySpec(LearningObjectMixinSchema):
-    class SurveyQuestionPoolSpec(Schema):
-        description: str
-
     id: str
-    question_pool: SurveyQuestionPoolSpec
     questions: SurveyQuestionsSpec
     complete_message: str
     anonymous: bool
@@ -63,7 +61,6 @@ class SurveySaveSpec(Schema):
     description: str
     audience: str
     featured: bool
-    question_pool: SurveySpec.SurveyQuestionPoolSpec
     complete_message: str
     anonymous: bool
     show_results: bool
@@ -75,16 +72,9 @@ router = Router(by_alias=True)
 @router.get("/survey/{id}", response=SurveySpec)
 @editor_required()
 async def get_survey(request: HttpRequest, id: str):
-    return (
-        await Survey.objects
-        .select_related("question_pool")
-        .prefetch_related(
-            Prefetch(
-                "question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id")
-            )
-        )
-        .aget(id=id, owner_id=request.auth)
-    )
+    return await Survey.objects.prefetch_related(
+        Prefetch("question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id"))
+    ).aget(id=id, owner_id=request.auth)
 
 
 @router.post("/survey", response=str)
@@ -100,7 +90,6 @@ async def save_survey(
 ):
     survey_dict = data.model_dump(exclude_unset=True)
     survey_id = survey_dict.pop("id", None)
-    question_pool_data = survey_dict.pop("question_pool")
 
     if thumbnail:
         survey_dict["thumbnail"] = thumbnail
@@ -110,7 +99,6 @@ async def save_survey(
         for key, value in survey_dict.items():
             setattr(survey, key, value)
         await survey.asave()
-        await QuestionPool.objects.filter(id=survey.question_pool_id).aupdate(**question_pool_data)
 
     else:
 
@@ -118,7 +106,7 @@ async def save_survey(
         @transaction.atomic
         def create_new():
             try:
-                pool = QuestionPool.objects.create(**question_pool_data, owner_id=request.auth, title=data.title)
+                pool = QuestionPool.objects.create(owner_id=request.auth, title=data.title)
                 survey = Survey.objects.create(**survey_dict, question_pool=pool, owner_id=request.auth)
             except IntegrityError:
                 # both title conflict
@@ -128,6 +116,17 @@ async def save_survey(
         survey = await create_new()
 
     return survey.id
+
+
+@router.get("/survey/{id}/question", response=list[SurveyQuestionSpec])
+@editor_required()
+async def get_survey_questions(request: HttpRequest, id: str):
+    return [
+        q
+        async for q in Question.objects.prefetch_related("attachments").filter(
+            pool__survey__id=id, pool__survey__owner_id=request.auth
+        )
+    ]
 
 
 @router.post("/survey/{id}/question", response=list[int])
@@ -143,9 +142,12 @@ async def save_survey_questions(
     ],
 ):
     survey = await aget_object_or_404(Survey, id=id, owner_id=request.auth)
-    questions = []
+    questions, is_new = [], []
 
-    for question_data in data.model_dump()["data"]:
+    dumped = data.model_dump()["data"]
+    for question_data in dumped:
+        is_new.append(not question_data["id"])
+
         if not question_data["id"]:
             question_data["id"] = None
 
@@ -159,7 +161,9 @@ async def save_survey_questions(
         update_fields=["format", "question", "supplement", "options", "mandatory"],
     )
 
-    for question in questions:
+    for question, new in zip(questions, is_new):
+        if new:
+            question._prefetched_objects_cache = {"attachments": []}
         await question.update_attachments(files=files, owner_id=request.auth, content=question.supplement)
 
     return [q.id for q in questions]

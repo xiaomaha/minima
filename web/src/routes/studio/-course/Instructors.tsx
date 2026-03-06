@@ -1,15 +1,15 @@
 import { IconMinus } from '@tabler/icons-solidjs'
-import { batch, createMemo, createSignal, For } from 'solid-js'
+import { batch, For } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
 import {
   type CourseSpec,
-  studioV1InstructorSuggestions,
+  type InlineSuggestionSpec,
+  studioV1InlineSuggestions,
   studioV1RemoveCourseInstructor,
   studioV1SaveCourseInstructors,
 } from '@/api'
 import { DraggableTable } from '@/shared/DraggableTable'
-import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -72,25 +72,11 @@ export const Instructors = () => {
     return true
   }
 
-  const [touched, setTouched] = createSignal(false)
-  const [suggestions] = createCachedStore(
-    'studioV1CourseInstructorSuggestions',
-    () => (touched() ? {} : undefined),
-    async () => (await studioV1InstructorSuggestions()).data,
-  )
-
-  const suggestionMap = createMemo(() => Object.fromEntries((suggestions.data ?? []).map((data) => [data.name, data])))
-  const cleanedSuggestionList = createMemo(() => {
-    const ids = staging.assets.courseInstructors.map((instructor) => instructor.instructorId)
-    const filtered = suggestions.data?.filter((suggestion) => !ids.includes(suggestion.id))
-    return filtered?.map((s) => s.name) ?? []
-  })
-
-  const suggestionCommit = (suggestion: string) => {
+  const addCourseInstructor = (suggestion: InlineSuggestionSpec) => {
     staging.assets.courseInstructors.push({
       id: 0,
-      label: suggestion,
-      instructorId: suggestionMap()[suggestion]!.id,
+      label: suggestion.label,
+      instructorId: suggestion.id,
       lead: false,
     })
   }
@@ -164,15 +150,18 @@ export const Instructors = () => {
             </div>
 
             <div class="flex gap-2 items-center justify-end">
-              <InlineSuggestion
-                suggestionList={cleanedSuggestionList()}
-                onCommit={suggestionCommit}
-                onFocus={() => setTouched(true)}
+              <InlineSuggestion<number, Parameters<typeof studioV1InlineSuggestions>[0]>
+                placeholder={t('Add instructor')}
+                cacheKey="studioV1InlineSuggestions"
+                fetchParams={() => ({ query: { kind: 'instructor' as const } })}
+                fetchFn={async (options) => (await studioV1InlineSuggestions(options)).data}
+                excludeIds={() => staging.assets.courseInstructors.map((ci) => ci.instructorId)}
+                onCommit={addCourseInstructor}
               />
 
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save onSave={save} />
             </div>
           </Paper>

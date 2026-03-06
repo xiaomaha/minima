@@ -19,13 +19,11 @@ from apps.common.schema import (
     Schema,
 )
 from apps.common.util import HttpRequest
-from apps.operation.models import HonorCode
-from apps.studio.api.v1.schema import HonorCodeSpec
 from apps.studio.decorator import editor_required, track_draft
 
 
 class AssignmentQuestionSaveSpec(Schema):
-    id: int
+    id: Annotated[int, Field(None)]
     question: str
     supplement: str
     attachment_file_count: int
@@ -34,6 +32,7 @@ class AssignmentQuestionSaveSpec(Schema):
 
 
 class AssignmentQuestionSpec(AssignmentQuestionSaveSpec):
+    id: int
     sample_attachment: str | None
 
     @staticmethod
@@ -50,12 +49,8 @@ class AssignmentQuestionsSpec(RootModel[list[AssignmentQuestionSpec]]):
 
 
 class AssignmentSpec(LearningObjectMixinSchema, GradeWorkflowMixinSchema):
-    class AssignmentQuestionPoolSpec(Schema):
-        description: str
-
     id: str
-    honor_code: HonorCodeSpec
-    question_pool: AssignmentQuestionPoolSpec
+    honor_code_id: int
     questions: AssignmentQuestionsSpec
 
     @staticmethod
@@ -75,8 +70,7 @@ class AssignmentSaveSpec(Schema):
     grade_due_days: int
     appeal_deadline_days: int
     confirm_due_days: int
-    honor_code: HonorCodeSpec
-    question_pool: AssignmentSpec.AssignmentQuestionPoolSpec
+    honor_code_id: int
 
 
 router = Router(by_alias=True)
@@ -85,14 +79,9 @@ router = Router(by_alias=True)
 @router.get("/assignment/{id}", response=AssignmentSpec)
 @editor_required()
 async def get_assignment(request: HttpRequest, id: str):
-    assignment = (
-        await Assignment.objects
-        .select_related("honor_code", "question_pool")
-        .prefetch_related(
-            Prefetch("question_pool__questions", queryset=Question.objects.prefetch_related("attachments"))
-        )
-        .aget(id=id, owner_id=request.auth)
-    )
+    assignment = await Assignment.objects.prefetch_related(
+        Prefetch("question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id"))
+    ).aget(id=id, owner_id=request.auth)
 
     return assignment
 
@@ -110,8 +99,6 @@ async def save_assignment(
 ):
     assignment_dict = data.model_dump(exclude_unset=True)
     assignment_id = assignment_dict.pop("id", None)
-    honor_code = assignment_dict.pop("honor_code")
-    question_pool = assignment_dict.pop("question_pool")
 
     if thumbnail:
         assignment_dict["thumbnail"] = thumbnail
@@ -121,20 +108,15 @@ async def save_assignment(
         for key, value in assignment_dict.items():
             setattr(assignment, key, value)
         await assignment.asave()
-        await HonorCode.objects.filter(id=assignment.honor_code_id).aupdate(**honor_code)
-        await QuestionPool.objects.filter(id=assignment.question_pool_id).aupdate(**question_pool)
 
     else:
 
         @sync_to_async
         @transaction.atomic
         def create_new():
-            code = HonorCode.objects.create(**honor_code)
             try:
-                pool = QuestionPool.objects.create(**question_pool, owner_id=request.auth, title=data.title)
-                assignment = Assignment.objects.create(
-                    **assignment_dict, honor_code=code, question_pool=pool, owner_id=request.auth
-                )
+                pool = QuestionPool.objects.create(owner_id=request.auth, title=data.title)
+                assignment = Assignment.objects.create(**assignment_dict, question_pool=pool, owner_id=request.auth)
             except IntegrityError:
                 # both title conflict
                 raise ValueError(ErrorCode.TITLE_ALREADY_EXISTS)
@@ -145,13 +127,25 @@ async def save_assignment(
     return assignment.id
 
 
+@router.get("/assignment/{id}/question", response=list[AssignmentQuestionSpec])
+@editor_required()
+async def get_assignment_questions(request: HttpRequest, id: str):
+    return [
+        q
+        async for q in Question.objects
+        .select_related("solution")
+        .prefetch_related("attachments")
+        .filter(pool__assignment__id=id, pool__assignment__owner_id=request.auth)
+    ]
+
+
 @router.post("/assignment/{id}/question", response=int)
 @editor_required()
 @track_draft(Assignment, id_field="id")
 async def save_assignment_question(
     request: HttpRequest,
     id: str,
-    data: AssignmentQuestionSaveSpec,  # form doesn't work nested model
+    data: AssignmentQuestionSaveSpec,
     files: Annotated[
         list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
         functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),

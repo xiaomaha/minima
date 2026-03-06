@@ -70,7 +70,7 @@ function RouteComponent() {
           onChange={(e) => setFilter(e.target.value as 'public' | 'all')}
           value={filter()}
           name="filter"
-          class="select select-ghost w-auto absolute right-0 top-0 select-sm select-primary text-sm min-w-24 bg-base-100"
+          class="select select-ghost w-auto absolute right-0 top-0 select-sm select-primary text-sm min-w-24 bg-base-100 cursor-pointer"
         >
           <option value="public">{t('Public')}</option>
           <option value="all">{t('All')}</option>

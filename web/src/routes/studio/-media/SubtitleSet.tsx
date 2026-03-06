@@ -132,7 +132,7 @@ const Subtitle = (props: { index: number }) => {
 
             <div class="flex gap-2 items-center justify-end">
               <actions.Remove onRemove={() => remove()} />
-              <actions.Reset label="" />
+              <actions.Reset />
               <actions.Save label={t('Save')} onSave={save} />
               <fieldset disabled={subtitleDirty()}>
                 <button

@@ -1,4 +1,4 @@
-import { IconChevronLeft, IconFileSpark, IconHome, IconSearch } from '@tabler/icons-solidjs'
+import { IconChevronLeft, IconFile, IconHome, IconSearch } from '@tabler/icons-solidjs'
 import { useNavigate, useParams, useRouter } from '@tanstack/solid-router'
 import { createEffect, createMemo, createSignal, Show } from 'solid-js'
 import { type StudioV1ContentSuggestionsData, studioV1ContentSuggestions } from '@/api'
@@ -14,8 +14,8 @@ type Props = {
 
 export const Menu = (props: Props) => {
   const { t } = useTranslation()
-  const router = useRouter()
   const params = useParams({ from: '/studio/$app/$id' })
+  const router = useRouter()
   const navigate = useNavigate()
 
   const [suggestions] = createCachedStore(
@@ -25,11 +25,11 @@ export const Menu = (props: Props) => {
   )
 
   const suggestionMap = createMemo(() =>
-    Object.fromEntries((suggestions.data ?? []).map((data) => [data.title, data.id])),
+    Object.fromEntries((suggestions.data ?? []).map((data) => [data.label, data.id])),
   )
 
   const suggestionList = createMemo(() => {
-    return suggestions.data?.map((suggestion) => suggestion.title) ?? []
+    return suggestions.data?.map((suggestion) => suggestion.label) ?? []
   })
 
   const [searchOpen, setSearchOpen] = createSignal(false)
@@ -42,12 +42,12 @@ export const Menu = (props: Props) => {
   return (
     <>
       <div
-        class={`flex items-center gap-6 opacity-40 hover:opacity-100 [&:has(*:hover)]:opacity-100 ${props.class ?? ''}`}
+        class={`min-h-10 flex items-center gap-4 opacity-40 hover:opacity-100 [&:has(*:hover)]:opacity-100 ${props.class ?? ''}`}
       >
         <div class="breadcrumbs text-sm">
           <ul>
             <li>{t(capitalize(params().app))}</li>
-            <li>{params().id === EMPTY_CONTENT_ID ? t('New content') : params().id}</li>
+            <li class="font-mono">{params().id === EMPTY_CONTENT_ID ? t('New') : params().id}</li>
           </ul>
         </div>
 
@@ -68,7 +68,7 @@ export const Menu = (props: Props) => {
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
-          <IconFileSpark class="shrink-0" />
+          <IconFile class="shrink-0" />
         </button>
 
         <button
@@ -84,9 +84,9 @@ export const Menu = (props: Props) => {
         <button
           type="button"
           class="btn btn-sm btn-ghost btn-circle"
-          onClick={() => {
-            navigate({ to: '/studio' })
-          }}
+          onClick={() => navigate({ to: '/studio' })}
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
         >
           <IconHome class="shrink-0" />
         </button>
@@ -144,7 +144,6 @@ const SearchBox = (props: SearchProps) => {
             dropdownClass="bg-base-200! max-h-100 overflow-y-auto flex-nowrap"
             inputClass="input-lg outline-0 rounded-xl border-base-100"
             selectFirstOnCommit
-            suggestionCount={20}
             class="text-center"
             autofocus
             icon={<IconSearch size={32} />}

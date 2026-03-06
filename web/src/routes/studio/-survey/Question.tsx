@@ -100,9 +100,9 @@ export const Question = (props: Props) => {
 
             <div class="flex gap-2 items-center justify-end">
               <actions.Remove onRemove={removeQuestion} />
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save label={t('Save')} onSave={saveQuestion} />
             </div>
           </Paper>

@@ -40,7 +40,7 @@ def test_studio_assignment_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "create new assignment"
 
     question = questions[0]
-    question["id"] = 0
+    del question["id"]
 
     # save assignment question
     res = client.post(

@@ -3,10 +3,6 @@
 @plugin "@tailwindcss/typography";
 
 
-svg.tabler-icon {
-  stroke-width: 1.5;
-}
-
 .ProseMirror-focused p.is-empty::before {
   content: none !important;
 }

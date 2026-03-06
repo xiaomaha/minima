@@ -1,15 +1,15 @@
 import { IconMinus } from '@tabler/icons-solidjs'
-import { batch, createMemo, createSignal, For } from 'solid-js'
+import { batch, For } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
 import {
+  type AssessmentSuggestionSpec,
   type CourseSpec,
   studioV1AssessmentSuggestions,
   studioV1RemoveCourseAssessment,
   studioV1SaveCourseAssessments,
 } from '@/api'
 import { DraggableTable } from '@/shared/DraggableTable'
-import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { capitalize } from '@/shared/utils'
@@ -85,27 +85,12 @@ export const Assessments = () => {
     return true
   }
 
-  const [touched, setTouched] = createSignal(false)
-  const [suggestions] = createCachedStore(
-    'studioV1CourseAssessmentSuggestions',
-    () => (touched() ? {} : undefined),
-    async () => (await studioV1AssessmentSuggestions()).data,
-  )
-
-  const suggestionMap = createMemo(() => Object.fromEntries((suggestions.data ?? []).map((data) => [data.title, data])))
-  const cleanedSuggestionList = createMemo(() => {
-    const ids = staging.assets.assessments.map((assessment) => assessment.itemId)
-    const filtered = suggestions.data?.filter((suggestion) => !ids.includes(suggestion.id))
-    return filtered?.map((s) => s.title) ?? []
-  })
-
-  const suggestionCommit = (suggestion: string) => {
-    const item = suggestionMap()[suggestion]!
+  const suggestionCommit = (suggestion: AssessmentSuggestionSpec) => {
     staging.assets.assessments.push({
       id: 0,
-      label: suggestion,
-      itemId: item.id,
-      itemType: item.itemType,
+      label: suggestion.label,
+      itemId: suggestion.id,
+      itemType: suggestion.itemType,
       weight: 0,
       startOffset: staging.assets.assessments.at(-1)?.startOffset ?? 0,
       endOffset: 7,
@@ -199,15 +184,18 @@ export const Assessments = () => {
             </div>
 
             <div class="flex gap-2 items-center justify-end">
-              <InlineSuggestion
-                suggestionList={cleanedSuggestionList()}
-                onCommit={suggestionCommit}
-                onFocus={() => setTouched(true)}
+              <InlineSuggestion<string, Parameters<typeof studioV1AssessmentSuggestions>[0]>
+                placeholder={t('Add assessment')}
+                cacheKey="studioV1AssessmentSuggestions"
+                fetchParams={() => ({})}
+                fetchFn={async (options) => (await studioV1AssessmentSuggestions(options)).data}
+                excludeIds={() => [...staging.assets.courseRelations.map((cr) => cr.relatedCourseId), staging.id]}
+                onCommit={(suggestion) => suggestionCommit(suggestion as AssessmentSuggestionSpec)}
               />
 
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save onSave={save} />
             </div>
           </Paper>

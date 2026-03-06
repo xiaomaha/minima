@@ -202,7 +202,7 @@ class DailyUsageFact(ExecutionMetricsMixin):
         ("watch_count", Watch, "created"),
         # survey
         ("survey_count", Survey, "created"),
-        ("survey_submission_count", SurveySubmission, "created"),
+        ("survey_submission_count", SurveySubmission, "started"),
         # quiz
         ("quiz_count", Quiz, "created"),
         ("quiz_submission_count", QuizSubmission, "created"),
@@ -223,7 +223,7 @@ class DailyUsageFact(ExecutionMetricsMixin):
         ("discussion_grade_confirmed_count", DiscussionGrade, "confirmed"),
         # course
         ("course_count", Course, "created"),
-        ("course_engagement_count", CourseEngagement, "created"),
+        ("course_engagement_count", CourseEngagement, "started"),
         ("course_grade_confirmed_count", CourseGradebook, "confirmed"),
         # learning
         ("enrollment_count", Enrollment, "enrolled"),

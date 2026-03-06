@@ -1,8 +1,9 @@
 import { IconMinus } from '@tabler/icons-solidjs'
-import { batch, createMemo, createSignal, For } from 'solid-js'
+import { batch, For } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
 import {
+  type ContentSuggestionSpec,
   type CourseSpec,
   type LessonSpec,
   studioV1ContentSuggestions,
@@ -10,12 +11,11 @@ import {
   studioV1SaveCourseLessons,
 } from '@/api'
 import { DraggableTable } from '@/shared/DraggableTable'
-import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { NumberField, TagField, TextField } from '../-studio/field'
+import { DataBindField, NumberField, TextField } from '../-studio/field'
 import { InlineSuggestion } from '../-studio/InlineSuggestion'
 import { Paper } from '../-studio/Paper'
 import { vLessonEditingSpec } from './data'
@@ -85,25 +85,11 @@ export const Lessons = () => {
     return true
   }
 
-  const [touched, setTouched] = createSignal(false)
-  const [suggestions] = createCachedStore(
-    'studioV1ContentSuggestions',
-    () => (touched() ? { query: { kind: 'media' as const } } : undefined),
-    async (options) => (await studioV1ContentSuggestions(options)).data,
-  )
-
-  const suggestionMap = createMemo(() => Object.fromEntries((suggestions.data ?? []).map((data) => [data.title, data])))
-  const cleanedSuggestionList = createMemo(() => {
-    const ids = staging.assets.lessons.flatMap((lesson) => lesson.mediaIds)
-    const filtered = suggestions.data?.filter((suggestion) => !ids.includes(suggestion.id))
-    return filtered?.map((s) => s.title) ?? []
-  })
-
-  const suggestionCommit = (suggestion: string) => {
+  const addLesson = (suggestion: ContentSuggestionSpec) => {
     const newCourseLesson: LessonSpec = {
       id: 0,
-      label: suggestion,
-      mediaIds: [suggestionMap()[suggestion]!.id],
+      label: suggestion.label,
+      mediaIds: [suggestion.id],
       startOffset: staging.assets.lessons.at(-1)?.startOffset ?? 0,
       endOffset: 7,
     }
@@ -141,7 +127,7 @@ export const Lessons = () => {
                         {(_, i) => (
                           <tr data-draggable {...dragHandleProps(i())}>
                             <td class="text-center w-12">{i() + 1}</td>
-                            <td class="space-y-2">
+                            <td class="space-y-2 max-w-0">
                               <TextField
                                 path={['assets', 'lessons', i(), 'label']}
                                 label=""
@@ -149,12 +135,17 @@ export const Lessons = () => {
                                 class="bg-base-200 min-h-10!"
                                 multiline
                               />
-                              <TagField
+
+                              <DataBindField<string, Parameters<typeof studioV1ContentSuggestions>[0]>
                                 path={['assets', 'lessons', i(), 'mediaIds']}
-                                label=""
-                                schema={v.pipe(v.string(), v.minLength(1, t('comma separated characters')))}
-                                class="bg-base-200 min-h-0! py-1"
-                                badgeClass="badge-sm badge-soft"
+                                label={t('Media')}
+                                cacheKey="studioV1ContentSuggestions"
+                                fetchParams={() => ({ query: { kind: 'media' } })}
+                                fetchFn={async (options) => (await studioV1ContentSuggestions(options)).data}
+                                schema={v.pipe(v.string())}
+                                class="bg-base-200"
+                                badgeClass="badge-sm text-xs"
+                                multiple
                               />
                             </td>
 
@@ -195,15 +186,18 @@ export const Lessons = () => {
             </div>
 
             <div class="flex gap-2 items-center justify-end">
-              <InlineSuggestion
-                suggestionList={cleanedSuggestionList()}
-                onCommit={suggestionCommit}
-                onFocus={() => setTouched(true)}
+              <InlineSuggestion<string, Parameters<typeof studioV1ContentSuggestions>[0]>
+                placeholder={t('Add media lesson')}
+                cacheKey="studioV1ContentSuggestions"
+                fetchParams={() => ({ query: { kind: 'media' as const } })}
+                fetchFn={async (options) => (await studioV1ContentSuggestions(options)).data}
+                excludeIds={() => staging.assets.lessons.flatMap((lesson) => lesson.mediaIds)}
+                onCommit={addLesson}
               />
 
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save onSave={save} />
             </div>
           </Paper>

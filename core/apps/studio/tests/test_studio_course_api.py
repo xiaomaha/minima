@@ -3,6 +3,7 @@ import json
 import pytest
 from django.test.client import Client
 
+from apps.course.models import CourseRelation
 from apps.course.tests.factories import CourseFactory
 from conftest import AdminUser
 
@@ -12,13 +13,15 @@ from conftest import AdminUser
 def test_studio_course_flow(client: Client, admin_user: AdminUser):
     admin_user.login()
 
-    CourseFactory.create_batch(2, owner=admin_user.get_user())
+    c1, c2 = CourseFactory.create_batch(2, owner=admin_user.get_user())
+    CourseRelation.objects.get_or_create(course=c1, related_course=c2, defaults={"label": c2.title, "ordering": 0})
+    CourseRelation.objects.get_or_create(course=c2, related_course=c1, defaults={"label": c1.title, "ordering": 0})
 
     # get content suggestions
     res = client.get("/api/v1/studio/suggestion/content?kind=course")
     assert res.status_code == 200, "get content suggestions"
 
-    course_id = res.json()[0]["id"]
+    course_id = c2.id
 
     # get course
     res = client.get(f"/api/v1/studio/course/{course_id}")
@@ -34,7 +37,6 @@ def test_studio_course_flow(client: Client, admin_user: AdminUser):
 
     data["id"] = ""
     data["title"] += "unique"
-    data["faq"]["name"] += "unique"
 
     # create new course
     res = client.post("/api/v1/studio/course", data={"data": json.dumps(data)}, format="multipart")
@@ -77,7 +79,7 @@ def test_studio_course_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "delete course lesson"
 
     # certificate suggestions
-    res = client.get("/api/v1/studio/suggestion/certificate")
+    res = client.get("/api/v1/studio/suggestion/inline?kind=certificate")
     assert res.status_code == 200, "get certificate suggestions"
 
     # save course certificates
@@ -133,7 +135,7 @@ def test_studio_course_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "add related course"
 
     # category suggestions
-    res = client.get("/api/v1/studio/suggestion/category")
+    res = client.get("/api/v1/studio/suggestion/inline?kind=category")
     assert res.status_code == 200, "get category suggestions"
 
     # save category
@@ -161,7 +163,7 @@ def test_studio_course_flow(client: Client, admin_user: AdminUser):
     assert res.status_code == 200, "add category"
 
     # instructor suggestions
-    res = client.get("/api/v1/studio/suggestion/instructor")
+    res = client.get("/api/v1/studio/suggestion/inline?kind=instructor")
     assert res.status_code == 200, "get instructor suggestions"
 
     # save instructor

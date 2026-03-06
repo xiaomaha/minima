@@ -23,7 +23,7 @@ function RouteComponent() {
 
   return (
     <>
-      <div class="flex flex-col md:flex-row gap-4 mx-auto my-4">
+      <div class="py-4 flex flex-col md:flex-row gap-4 mx-auto">
         <Menu class="ml-auto" />
       </div>
       <Switch>

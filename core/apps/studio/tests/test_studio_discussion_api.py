@@ -39,15 +39,21 @@ def test_studio_discussion_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/discussion", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new discussion"
 
-    question = questions[0]
-    question["id"] = 0
+    # get discussion questions
+    res = client.get(f"/api/v1/studio/discussion/{discussion_id}/question")
+    assert res.status_code == 200, "get discussion questions"
 
-    # save discussion question
+    for question in questions:
+        del question["id"]
+
+    # save discussion questions
     res = client.post(
-        f"/api/v1/studio/discussion/{discussion_id}/question", data={"data": json.dumps(question)}, format="multipart"
+        f"/api/v1/studio/discussion/{discussion_id}/question",
+        data={"data": json.dumps({"data": questions})},
+        format="multipart",
     )
-    assert res.status_code == 200, "save discussion question"
+    assert res.status_code == 200, "save discussion questions"
 
     # delete discussion question
-    res = client.delete(f"/api/v1/studio/discussion/{discussion_id}/question/{res.json()}")
+    res = client.delete(f"/api/v1/studio/discussion/{discussion_id}/question/{res.json()[0]}")
     assert res.status_code == 200, "delete discussion question"

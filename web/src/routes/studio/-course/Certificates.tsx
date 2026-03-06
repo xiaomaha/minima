@@ -1,15 +1,15 @@
 import { IconMinus } from '@tabler/icons-solidjs'
-import { batch, createMemo, createSignal, For } from 'solid-js'
+import { batch, For } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
 import {
   type CourseSpec,
-  studioV1CertificateSuggestions,
+  type InlineSuggestionSpec,
+  studioV1InlineSuggestions,
   studioV1RemoveCourseCertificate,
   studioV1SaveCourseCertificates,
 } from '@/api'
 import { DraggableTable } from '@/shared/DraggableTable'
-import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -72,25 +72,11 @@ export const Certificates = () => {
     return true
   }
 
-  const [touched, setTouched] = createSignal(false)
-  const [suggestions] = createCachedStore(
-    'studioV1CourseCertificateSuggestions',
-    () => (touched() ? {} : undefined),
-    async () => (await studioV1CertificateSuggestions()).data,
-  )
-
-  const suggestionMap = createMemo(() => Object.fromEntries((suggestions.data ?? []).map((data) => [data.name, data])))
-  const cleanedSuggestionList = createMemo(() => {
-    const ids = staging.assets.courseCertificates.map((certificate) => certificate.certificateId)
-    const filtered = suggestions.data?.filter((suggestion) => !ids.includes(suggestion.id))
-    return filtered?.map((s) => s.name) ?? []
-  })
-
-  const suggestionCommit = (suggestion: string) => {
+  const addCourseCertificate = (suggestion: InlineSuggestionSpec) => {
     staging.assets.courseCertificates.push({
       id: 0,
-      label: suggestion,
-      certificateId: suggestionMap()[suggestion]!.id,
+      label: suggestion.label,
+      certificateId: suggestion.id,
     })
   }
 
@@ -154,15 +140,18 @@ export const Certificates = () => {
             </div>
 
             <div class="flex gap-2 items-center justify-end">
-              <InlineSuggestion
-                suggestionList={cleanedSuggestionList()}
-                onCommit={suggestionCommit}
-                onFocus={() => setTouched(true)}
+              <InlineSuggestion<number, Parameters<typeof studioV1InlineSuggestions>[0]>
+                placeholder={t('Add certificate')}
+                cacheKey="studioV1InlineSuggestions"
+                fetchParams={() => ({ query: { kind: 'certificate' as const } })}
+                fetchFn={async (options) => (await studioV1InlineSuggestions(options)).data}
+                excludeIds={() => staging.assets.courseCertificates.map((cc) => cc.certificateId)}
+                onCommit={addCourseCertificate}
               />
 
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save onSave={save} />
             </div>
           </Paper>

@@ -23,9 +23,6 @@ export const EmptySurvey = (): SurveySpec => {
     maxAttempts: -1,
     verificationRequired: false,
     published: null,
-    questionPool: {
-      description: '',
-    },
     questions: [],
   }
 }
@@ -57,9 +54,6 @@ export const vSurveyEditingSpec = v.object({
   featured: v.boolean(),
   anonymous: v.boolean(),
   showResults: v.boolean(),
-  questionPool: v.object({
-    description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
 })
 
 export const vSurveyQuestionEditingSpec = v.pipe(

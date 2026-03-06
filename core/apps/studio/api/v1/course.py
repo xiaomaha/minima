@@ -35,8 +35,6 @@ from apps.course.models import (
     Lesson,
     LessonMedia,
 )
-from apps.operation.models import FAQ, FAQItem, HonorCode
-from apps.studio.api.v1.schema import HonorCodeSpec
 from apps.studio.decorator import editor_required, track_draft
 
 log = logging.getLogger(__name__)
@@ -99,11 +97,6 @@ class CourseCategorySpec(Schema):
     category_id: int
 
 
-class FAQSpec(Schema):
-    name: str
-    description: str
-
-
 class FAQItemSpec(Schema):
     id: int
     question: str
@@ -119,7 +112,6 @@ class CourseAssetsSpec(Schema):
     course_certificates: list[CourseCertificateSpec]
     course_categories: list[CourseCategorySpec]
     course_instructors: list[CourseInstructorSpec]
-    faq_items: list[FAQItemSpec]
 
 
 class CourseSpec(LearningObjectMixinSchema):
@@ -128,8 +120,8 @@ class CourseSpec(LearningObjectMixinSchema):
     preview_url: str | None
     effort_hours: int
     level: Course.LevelChoices
-    honor_code: HonorCodeSpec
-    faq: FAQSpec
+    honor_code_id: int
+    faq_id: int
     grading_policy: GradingPolicySpec
     assets: CourseAssetsSpec
 
@@ -143,7 +135,6 @@ class CourseSpec(LearningObjectMixinSchema):
             "course_certificates": obj.course_certificates.all(),
             "course_categories": obj.course_categories.all(),
             "course_instructors": obj.course_instructors.all(),
-            "faq_items": obj.faq.items.all() if obj.faq else [],
         }
 
 
@@ -160,8 +151,8 @@ class CourseSaveSpec(Schema):
     preview_url: HttpUrl
     effort_hours: int
     level: Course.LevelChoices
-    honor_code: HonorCodeSpec
-    faq: FAQSpec
+    honor_code_id: int
+    faq_id: int
     grading_policy: GradingPolicySpec
 
 
@@ -199,10 +190,7 @@ async def get_course(request: HttpRequest, id: str):
         .prefetch_related(Prefetch("course_categories", CourseCategory.objects.order_by("ordering")))
         .prefetch_related(Prefetch("course_certificates", CourseCertificate.objects.order_by("ordering")))
         .prefetch_related(Prefetch("course_instructors", CourseInstructor.objects.order_by("ordering")))
-        .prefetch_related(
-            Prefetch("faq", FAQ.objects.prefetch_related(Prefetch("items", FAQItem.objects.order_by("ordering"))))
-        )
-        .select_related("honor_code", "grading_policy")
+        .select_related("grading_policy")
         .aget(id=id, owner_id=request.auth)
     )
 
@@ -221,8 +209,6 @@ async def save_course(
     course_dict = data.model_dump(exclude_unset=True)
     course_id = course_dict.pop("id", None)
     grading_policy = course_dict.pop("grading_policy")
-    honor_code = course_dict.pop("honor_code")
-    faq = course_dict.pop("faq")
 
     if thumbnail:
         course_dict["thumbnail"] = thumbnail
@@ -232,18 +218,14 @@ async def save_course(
         for key, value in course_dict.items():
             setattr(course, key, value)
         await course.asave()
-        await HonorCode.objects.filter(id=course.honor_code_id).aupdate(**honor_code)
-        await FAQ.objects.filter(id=course.faq_id).aupdate(**faq)
 
     else:
 
         @sync_to_async()
         @transaction.atomic
         def create_new():
-            c = HonorCode.objects.create(**honor_code)
             try:
-                f = FAQ.objects.create(**faq)
-                course = Course.objects.create(**course_dict, honor_code=c, faq=f, owner_id=request.auth)
+                course = Course.objects.create(**course_dict, owner_id=request.auth)
             except IntegrityError:
                 raise ValueError(ErrorCode.TITLE_ALREADY_EXISTS)
             return course
@@ -515,63 +497,5 @@ async def remove_course_instructor(request: HttpRequest, id: str, course_instruc
     count, _ = await CourseInstructor.objects.filter(
         course_id=id, id=course_instructor_id, course__owner_id=request.auth
     ).adelete()
-    if count == 0:
-        raise ValueError(ErrorCode.NOT_FOUND)
-
-
-class FAQItemSaveSpec(FAQItemSpec):
-    id: Annotated[int, Field(None)]
-
-
-@router.post("/course/{id}/faqitem", response=list[int])
-@editor_required()
-@track_draft(Course, id_field="id")
-async def save_course_faq_items(request: HttpRequest, id: str, data: RootModel[list[FAQItemSaveSpec]]):
-    course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
-
-    seen_ids = set()
-    deduped = []
-    for c in data.model_dump():
-        key = c["id"]
-        if key is None or key not in seen_ids:
-            deduped.append(c)
-            if key is not None:
-                seen_ids.add(key)
-
-    new_items = [(i, c) for i, c in enumerate(deduped) if c["id"] is None]
-    existing_items = [(i, c) for i, c in enumerate(deduped) if c["id"] is not None]
-
-    try:
-        created = (
-            await FAQItem.objects.abulk_create([
-                FAQItem(faq_id=course.faq_id, ordering=i, **{k: v for k, v in c.items() if k != "id"})
-                for i, c in new_items
-            ])
-            if new_items
-            else []
-        )
-    except IntegrityError:
-        raise ValueError(ErrorCode.DATA_ERROR)
-
-    updated = (
-        await FAQItem.objects.abulk_create(
-            [FAQItem(faq_id=course.faq_id, ordering=i, **c) for i, c in existing_items],
-            update_conflicts=True,
-            unique_fields=["id"],
-            update_fields=["question", "answer", "active", "ordering"],
-        )
-        if existing_items
-        else []
-    )
-
-    return [f.id for f in created + updated]
-
-
-@router.delete("/course/{id}/faqitem/{faq_item_id}")
-@editor_required()
-@track_draft(Course, id_field="id")
-async def remove_course_faq_item(request: HttpRequest, id: str, faq_item_id: int):
-    course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
-    count, _ = await FAQItem.objects.filter(faq_id=course.faq_id, id=faq_item_id).adelete()
     if count == 0:
         raise ValueError(ErrorCode.NOT_FOUND)

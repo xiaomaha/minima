@@ -15,6 +15,7 @@ export type CachedStoreActions<T> = {
 export type CachedStoreReturn<T> = [CachedStoreState<T>, CachedStoreActions<T>]
 
 const cache = new Map<string, CachedStoreState<unknown>>()
+const inflight = new Map<string, Promise<void>>()
 
 export const clearCachedStore = (): void => {
   cache.clear()
@@ -68,16 +69,29 @@ export const createCachedStore = <TData, TParams>(
     let currentKey: string | undefined
 
     const load = async (params: TParams, key: string) => {
-      setStore({ loading: true, error: undefined })
-      try {
-        const data = await fetcher(params)
-        setStore({ data, loading: false })
-        cache.set(key, { data, loading: false, error: undefined })
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error(String(err))
-        setStore({ loading: false, error })
-        cache.set(key, { data: undefined, loading: false, error })
+      if (inflight.has(key)) {
+        await inflight.get(key)
+        const cached = cache.get(key) as CachedStoreState<TData> | undefined
+        if (cached) setStore({ data: cached.data, loading: cached.loading, error: cached.error })
+        return
       }
+
+      setStore({ loading: true, error: undefined })
+      const promise = (async () => {
+        try {
+          const data = await fetcher(params)
+          setStore({ data, loading: false })
+          cache.set(key, { data, loading: false, error: undefined })
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err))
+          setStore({ loading: false, error })
+          cache.set(key, { data: undefined, loading: false, error })
+        } finally {
+          inflight.delete(key)
+        }
+      })()
+      inflight.set(key, promise)
+      await promise
     }
 
     const refetch = async () => {

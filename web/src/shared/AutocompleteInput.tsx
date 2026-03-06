@@ -11,7 +11,6 @@ interface Props {
   placeholder: string
   onCommit: (item: string) => void
   onInput?: (item: string) => void
-  suggestionCount?: number
   class?: string
   inputClass?: string
   dropdownClass?: string
@@ -77,6 +76,8 @@ export const AutocompleteInput = (props: Props) => {
     // if (props.suggestions.length > 0 && suggestions().length < 1) {
     if (props.suggestions.length > 0) {
       dropdownRef?.classList.remove('dropdown-close')
+      setScrollTop(0)
+      if (listRef) listRef.scrollTop = 0
       setSuggestions(props.suggestions)
     }
   }
@@ -105,7 +106,7 @@ export const AutocompleteInput = (props: Props) => {
       return acc
     }, [] as string[])
 
-    if (filtered?.length) setSuggestions(filtered.slice(0, props.suggestionCount ?? 10))
+    if (filtered?.length) setSuggestions(filtered)
   })
 
   let listRef: HTMLUListElement | undefined
@@ -144,7 +145,7 @@ export const AutocompleteInput = (props: Props) => {
 
   return (
     <div ref={dropdownRef} class={`dropdown w-full ${props.class ?? ''}`}>
-      <label class={`w-full input ${props.inputClass ?? ''}`}>
+      <label class={`w-full input ${props.inputClass ?? ''}`} onclick={() => inputRef?.focus()}>
         <Show when={props.icon} fallback={<IconSearch class="cursor-pointer" />}>
           {props.icon}
         </Show>
@@ -177,7 +178,10 @@ export const AutocompleteInput = (props: Props) => {
             onCleanup(() => observer.disconnect())
           }}
           tabindex="-1"
-          class={`mt-0.5 dropdown-content ml-0 menu rounded-box z-1 w-full p-2 shadow-lg opacity-100! transition-none! overflow-y-auto ${props.dropdownClass ?? ''}`}
+          class={
+            'max-h-68 mt-0.5 dropdown-content ml-0 menu rounded-box z-1 w-full p-2 ' +
+            `shadow-lg opacity-100! transition-none! overflow-y-auto ${props.dropdownClass ?? ''}`
+          }
           onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
         >
           <div style={{ position: 'relative', width: '100%', height: `${virtualList().totalHeight}px` }}>

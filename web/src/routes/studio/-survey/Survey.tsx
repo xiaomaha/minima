@@ -68,15 +68,6 @@ export const Survey = (props: Props) => {
 
             <div class="divider" />
 
-            <TextField
-              path={['questionPool', 'description']}
-              label={t('Survey question pool description')}
-              schema={schema.questionPool.entries.description}
-              multiline
-            />
-
-            <div class="divider" />
-
             <div class="flex gap-2 items-center justify-end">
               <Show when={source.id !== EMPTY_CONTENT_ID}>
                 <a
