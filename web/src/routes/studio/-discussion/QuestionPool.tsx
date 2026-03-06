@@ -70,7 +70,7 @@ export const QuestionPool = () => {
               <actions.Import label={t('Import questions')} />
               <Show when={questions().length}>
                 <actions.Export label={t('Export all questions')} />
-                <actions.Reset label="" />
+                <actions.Reset />
               </Show>
             </div>
           </>

@@ -21,11 +21,8 @@ export const EmptyDiscussion = (): DiscussionSpec => {
     gradeDueDays: -1,
     appealDeadlineDays: -1,
     confirmDueDays: -1,
-    honorCode: { title: '', code: '' },
+    honorCodeId: -1,
     published: null,
-    questionPool: {
-      description: '',
-    },
     questions: [],
   }
 }
@@ -62,13 +59,7 @@ export const vDiscussionEditingSpec = v.object({
   gradeDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   appealDeadlineDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   confirmDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
-  honorCode: v.object({
-    title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-    code: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
-  questionPool: v.object({
-    description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
+  honorCodeId: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
 })
 
 export const vDiscussionQuestionEditingSpec = v.pipe(
@@ -76,8 +67,8 @@ export const vDiscussionQuestionEditingSpec = v.pipe(
     id: v.pipe(v.number(), v.integer()),
     directive: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
     supplement: v.string(),
-    postPoint: v.pipe(v.number(), v.integer(), v.minValue(1, 'at least 1')),
-    replyPoint: v.pipe(v.number(), v.integer(), v.minValue(1, 'at least 1')),
+    postPoint: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
+    replyPoint: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
     tutorAssessmentPoint: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
     postMinCharacters: v.pipe(v.number(), v.integer(), v.minValue(100, AT_LEAST_100)),
     replyMinCharacters: v.pipe(v.number(), v.integer(), v.minValue(100, AT_LEAST_100)),

@@ -39,8 +39,12 @@ def test_studio_survey_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/survey", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new survey"
 
+    # get survey questions
+    res = client.get(f"/api/v1/studio/survey/{survey_id}/question")
+    assert res.status_code == 200, "get survey questions"
+
     for question in questions:
-        question["question"] += "1"
+        del question["id"]
 
     # save survey questions
     res = client.post(

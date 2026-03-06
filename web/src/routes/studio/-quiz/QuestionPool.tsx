@@ -1,15 +1,22 @@
-import { IconPlus } from '@tabler/icons-solidjs'
+import { IconPlus, IconSearch } from '@tabler/icons-solidjs'
 import { batch, createMemo, For, Show, Suspense } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
-import { type QuizSpec, studioV1SaveQuizQuestions } from '@/api'
+import {
+  type ContentSuggestionSpec,
+  type QuizSpec,
+  studioV1ContentSuggestions,
+  studioV1GetQuizQuestions,
+  studioV1SaveQuizQuestions,
+} from '@/api'
 import { CollapseButton } from '@/shared/CollapseButton'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useCollapse } from '../-context/CollapseContext'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
+import { collectBlobFiles } from '../-studio/field'
 import { checkTree, getNestedState, scrollToLastPaper } from '../-studio/helper'
-import { collectBlobFiles } from '../-studio/RichtextField'
+import { InlineSuggestion } from '../-studio/InlineSuggestion'
 import { EmptyQuestion, vQuizQuestionEditingSpec } from './data'
 import { Question } from './Question'
 
@@ -26,20 +33,21 @@ export const QuestionPool = () => {
   }
 
   const saveAllQuestions = async (d: v.InferOutput<typeof vQuizQuestionEditingSpec>[]) => {
-    const changedQuestions = d.filter((q, i) => {
-      if (!q.id) return true
+    const changedIndices: number[] = []
+    d.forEach((q, i) => {
+      if (!q.id) {
+        changedIndices.push(i)
+        return
+      }
       const node = getNestedState(fieldState, ['questions', i])
-      return node ? checkTree(node, new Set()).dirty : false
+      if (node && checkTree(node, new Set()).dirty) changedIndices.push(i)
     })
 
-    if (changedQuestions.length === 0) return
+    if (changedIndices.length === 0) return
 
-    const supplements = changedQuestions
-      .map((q) => {
-        const idx = staging.questions.findIndex((s) => s.id === q.id)
-        return staging.questions[idx]?.supplement ?? ''
-      })
-      .join('')
+    const changedQuestions = changedIndices.map((i) => d[i]!)
+
+    const supplements = changedIndices.map((i) => staging.questions[i]?.supplement ?? '').join('')
 
     const files = await collectBlobFiles(supplements)
 
@@ -68,6 +76,15 @@ export const QuestionPool = () => {
     if (completedCount >= selectCount) return 100
     return Math.round((completedCount / selectCount) * 100)
   })
+
+  const copyQuestionPool = async (suggestion: ContentSuggestionSpec) => {
+    const { data } = await studioV1GetQuizQuestions({ path: { id: suggestion.id } })
+    const filteredQuestions = data
+      .filter((q) => staging.questions.findIndex((sq) => sq.question === q.question) < 0)
+      .map((q) => ({ ...q, id: 0 }))
+    if (filteredQuestions.length === 0) return
+    staging.questions.push(...filteredQuestions)
+  }
 
   const collapseAll = useCollapse()
 
@@ -105,16 +122,28 @@ export const QuestionPool = () => {
             <div class="flex gap-2 items-center justify-end mx-4">
               <Show when={collapseAll && questions().length}>
                 <CollapseButton
-                  class="absolute left-4 opacity-30 hover:opacity-100"
+                  class="opacity-30 hover:opacity-100"
                   collapsed={collapseAll!.collapsed}
                   setCollapsed={collapseAll!.setCollapsed}
                   default={true}
                 />
               </Show>
+
+              <InlineSuggestion<string, Parameters<typeof studioV1ContentSuggestions>[0]>
+                placeholder={t('Copy question pool')}
+                cacheKey="studioV1ContentSuggestions"
+                fetchParams={() => ({ query: { kind: 'quiz' } })}
+                fetchFn={async (options) => (await studioV1ContentSuggestions(options)).data}
+                excludeIds={() => [staging.id]}
+                onCommit={copyQuestionPool}
+                icon={<IconSearch size={20} class="cursor-pointer shrink-0" />}
+                inputClass="bg-transparent"
+              />
+
               <actions.Import label={t('Import questions')} />
               <Show when={questions().length}>
                 <actions.Export label={t('Export all questions')} />
-                <actions.Reset label="" />
+                <actions.Reset />
                 <actions.Save label={t('Save all questions')} onSave={saveAllQuestions} />
               </Show>
             </div>

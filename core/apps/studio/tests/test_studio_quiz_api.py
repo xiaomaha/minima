@@ -41,8 +41,12 @@ def test_studio_quiz_flow(client: Client, admin_user: AdminUser):
     res = client.post("/api/v1/studio/quiz", data={"data": json.dumps(data)}, format="multipart")
     assert res.status_code == 200, "create new quiz"
 
+    # get quiz questions
+    res = client.get(f"/api/v1/studio/quiz/{quiz_id}/question")
+    assert res.status_code == 200, "get quiz questions"
+
     for question in questions:
-        question["question"] += "1"
+        del question["id"]
 
     # save quiz questions
     res = client.post(

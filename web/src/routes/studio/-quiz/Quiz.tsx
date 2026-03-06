@@ -81,25 +81,16 @@ export const Quiz = (props: Props) => {
 
               <ThumbnailField path={['thumbnail']} label={t('Thumbnail')} onFileSelect={setThumbnail} required />
 
-              <div class="grid grid-cols-3 gap-4">
+              <div class="grid grid-cols-4 gap-4">
                 <BooleanField path={['featured']} label={t('Featured')} schema={schema.featured} class="self-start" />
                 <NumberField path={['passingPoint']} label={t('Passing point')} schema={schema.passingPoint} />
                 <NumberField path={['maxAttempts']} label={t('Max attempts')} schema={schema.maxAttempts} />
+                <NumberField
+                  path={['questionPool', 'selectCount']}
+                  label={t('Question select count')}
+                  schema={schema.questionPool.entries.selectCount}
+                />
               </div>
-
-              <div class="divider" />
-
-              <TextField
-                path={['questionPool', 'description']}
-                label={t('Question pool description')}
-                schema={schema.questionPool.entries.description}
-                multiline
-              />
-              <NumberField
-                path={['questionPool', 'selectCount']}
-                label={t('Select count')}
-                schema={schema.questionPool.entries.selectCount}
-              />
 
               <div class="divider" />
 

@@ -3,11 +3,11 @@ import { useNavigate } from '@tanstack/solid-router'
 import { createSignal, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import * as v from 'valibot'
-import { type MediaSpec, studioV1SaveMedia } from '@/api'
+import { type MediaSpec, studioV1ContentSuggestions, studioV1SaveMedia } from '@/api'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { BooleanField, NumberField, SelectField, TagField, TextField, ThumbnailField } from '../-studio/field'
+import { BooleanField, DataBindField, NumberField, SelectField, TextField, ThumbnailField } from '../-studio/field'
 import { Paper } from '../-studio/Paper'
 import { mediaFormatOptions, vMediaEditingSpec } from './data'
 
@@ -37,7 +37,7 @@ export const Media = (props: Props) => {
     props.onSave(id)
 
     if (staging.id === EMPTY_CONTENT_ID) {
-      navigate({ to: `/studio/quiz/${id}`, replace: true })
+      navigate({ to: `/studio/media/${id}`, replace: true })
     } else {
       modifyMutable(source, reconcile(structuredClone(unwrap({ ...staging, subtitles: source.subtitles }))))
     }
@@ -77,17 +77,22 @@ export const Media = (props: Props) => {
               <NumberField path={['durationSeconds']} label={t('Duration (seconds)')} schema={schema.durationSeconds} />
             </div>
 
-            <TagField
-              path={['quizzes']}
-              label={t('Comma separated quiz ids')}
-              schema={v.pipe(v.string())}
-              badgeClass="badge-soft"
-            />
-
             <div class="flex gap-4">
               <TextField path={['channel']} label={t('Channel')} schema={schema.channel} multiline />
               <TextField path={['license']} label={t('License')} schema={schema.license} multiline />
             </div>
+
+            <div class="divider" />
+
+            <DataBindField<string, Parameters<typeof studioV1ContentSuggestions>[0]>
+              path={['quizzes']}
+              label={t('Quizzes')}
+              cacheKey="studioV1ContentSuggestions"
+              fetchParams={() => ({ query: { kind: 'quiz' } })}
+              fetchFn={async (options) => (await studioV1ContentSuggestions(options)).data}
+              schema={v.pipe(v.string())}
+              multiple
+            />
 
             <div class="divider" />
 

@@ -1,15 +1,15 @@
 import { IconMinus } from '@tabler/icons-solidjs'
-import { batch, createMemo, createSignal, For } from 'solid-js'
+import { batch, For } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
 import {
   type CourseSpec,
-  studioV1CategorySuggestions,
+  type InlineSuggestionSpec,
+  studioV1InlineSuggestions,
   studioV1RemoveCourseCategory,
   studioV1SaveCourseCategories,
 } from '@/api'
 import { DraggableTable } from '@/shared/DraggableTable'
-import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -72,27 +72,11 @@ export const Categories = () => {
     return true
   }
 
-  const [touched, setTouched] = createSignal(false)
-  const [suggestions] = createCachedStore(
-    'studioV1CourseCategorySuggestions',
-    () => (touched() ? {} : undefined),
-    async () => (await studioV1CategorySuggestions()).data,
-  )
-
-  const suggestionMap = createMemo(() =>
-    Object.fromEntries((suggestions.data ?? []).map((data) => [data.fullPath, data])),
-  )
-  const cleanedSuggestionList = createMemo(() => {
-    const ids = staging.assets.courseCategories.map((category) => category.categoryId)
-    const filtered = suggestions.data?.filter((suggestion) => !ids.includes(suggestion.id))
-    return filtered?.map((s) => s.fullPath) ?? []
-  })
-
-  const suggestionCommit = (suggestion: string) => {
+  const addCourseCategory = (suggestion: InlineSuggestionSpec) => {
     staging.assets.courseCategories.push({
       id: 0,
-      label: suggestion,
-      categoryId: suggestionMap()[suggestion]!.id,
+      label: suggestion.label,
+      categoryId: suggestion.id,
     })
   }
 
@@ -156,15 +140,18 @@ export const Categories = () => {
             </div>
 
             <div class="flex gap-2 items-center justify-end">
-              <InlineSuggestion
-                suggestionList={cleanedSuggestionList()}
-                onCommit={suggestionCommit}
-                onFocus={() => setTouched(true)}
+              <InlineSuggestion<number, Parameters<typeof studioV1InlineSuggestions>[0]>
+                placeholder={t('Add category')}
+                cacheKey="studioV1InlineSuggestions"
+                fetchParams={() => ({ query: { kind: 'category' as const } })}
+                fetchFn={async (options) => (await studioV1InlineSuggestions(options)).data}
+                excludeIds={() => staging.assets.courseCategories.map((cc) => cc.categoryId)}
+                onCommit={addCourseCategory}
               />
 
-              <actions.Import label="" />
-              <actions.Export label="" />
-              <actions.Reset label="" />
+              <actions.Import />
+              <actions.Export />
+              <actions.Reset />
               <actions.Save onSave={save} />
             </div>
           </Paper>

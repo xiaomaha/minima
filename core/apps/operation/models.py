@@ -189,7 +189,7 @@ class Instructor(TimeStampedMixin):
 
 @pghistory.track()
 class HonorCode(TimeStampedMixin):
-    title = CharField(max_length=255, verbose_name=_("Title"))
+    title = CharField(_("Title"), max_length=255, unique=True)
     code = TextField(_("Code"))
 
     class Meta(TimeStampedMixin.Meta):
@@ -292,8 +292,19 @@ class AttachmentMixin(Model):
 
         existing_attachments = []
         if self.pk:
-            async for a in self.attachments.all():
-                existing_attachments.append(a)
+            cached = (
+                self._prefetched_objects_cache.get("attachments")
+                if hasattr(self, "_prefetched_objects_cache")
+                else None
+            )
+
+            if cached is not None:
+                existing_attachments = list(cached)
+            else:
+                async for a in self.attachments.all():
+                    existing_attachments.append(a)
+
+            for a in existing_attachments:
                 if self.restore_filename(a.file.name) in used_filenames:
                     attachments_to_keep.append(a)
                     seen_hashes.add((a.hash, owner_id))
@@ -320,6 +331,8 @@ class AttachmentMixin(Model):
         existing_ids = set(a.id for a in existing_attachments)
         new_ids = set(a.pk for a in attachments_to_keep)
         if existing_ids != new_ids:
+            if hasattr(self, "_prefetched_objects_cache"):
+                self._prefetched_objects_cache.pop("attachments", None)
             await self.attachments.aset(attachments_to_keep)
 
         if hasattr(self, "_prefetched_objects_cache"):

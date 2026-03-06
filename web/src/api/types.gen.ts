@@ -4599,6 +4599,21 @@ export type StudioContentSpec = {
 };
 
 /**
+ * AssessmentSuggestionSpec
+ */
+export type AssessmentSuggestionSpec = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Label
+     */
+    label: string;
+    itemType: ContentTypeSchema;
+};
+
+/**
  * ContentSuggestionSpec
  */
 export type ContentSuggestionSpec = {
@@ -4607,108 +4622,29 @@ export type ContentSuggestionSpec = {
      */
     id: string;
     /**
-     * Title
+     * Label
      */
-    title: string;
+    label: string;
 };
 
 /**
- * AssessmentSuggestion
+ * InlineSuggestionSpec
  */
-export type AssessmentSuggestion = {
-    /**
-     * Id
-     */
-    id: string;
-    /**
-     * Title
-     */
-    title: string;
-    itemType: ContentTypeSchema;
-};
-
-/**
- * CertificateSuggestionSpec
- */
-export type CertificateSuggestionSpec = {
+export type InlineSuggestionSpec = {
     /**
      * Id
      */
     id: number;
     /**
-     * Name
+     * Label
      */
-    name: string;
-};
-
-/**
- * CategorySuggestionSpec
- */
-export type CategorySuggestionSpec = {
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Fullpath
-     */
-    fullPath: string;
-};
-
-/**
- * InstructorSuggestionSpec
- */
-export type InstructorSuggestionSpec = {
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Name
-     */
-    name: string;
-};
-
-/**
- * FAQSuggestionSpec
- */
-export type FaqSuggestionSpec = {
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Name
-     */
-    name: string;
-};
-
-/**
- * FAQItemCopySpec
- */
-export type FaqItemCopySpec = {
-    /**
-     * Question
-     */
-    question: string;
-    /**
-     * Answer
-     */
-    answer: string;
-    /**
-     * Active
-     */
-    active: boolean;
+    label: string;
 };
 
 /**
  * ExamQuestionPoolSpec
  */
 export type ExamQuestionPoolSpec = {
-    /**
-     * Description
-     */
-    description: string;
     /**
      * Composition
      */
@@ -4840,23 +4776,12 @@ export type ExamSpec = {
      * Id
      */
     id: string;
-    honorCode: HonorCodeSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
     questionPool: ExamQuestionPoolSpec;
     questions: ExamQuestionsSpec;
-};
-
-/**
- * HonorCodeSpec
- */
-export type HonorCodeSpec = {
-    /**
-     * Title
-     */
-    title: string;
-    /**
-     * Code
-     */
-    code: string;
 };
 
 /**
@@ -4911,7 +4836,10 @@ export type ExamSaveSpec = {
      * Confirmduedays
      */
     confirmDueDays: number;
-    honorCode: HonorCodeSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
     questionPool: ExamQuestionPoolSpec;
 };
 
@@ -4922,7 +4850,7 @@ export type ExamQuestionSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     format: ExamQuestionFormatChoices;
     /**
      * Question
@@ -4957,10 +4885,6 @@ export type ExamQuestionsSaveSpec = {
  * QuizQuestionPoolSpec
  */
 export type QuizQuestionPoolSpec = {
-    /**
-     * Description
-     */
-    description: string;
     /**
      * Selectcount
      */
@@ -5119,7 +5043,7 @@ export type QuizQuestionSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     /**
      * Question
      */
@@ -5153,16 +5077,6 @@ export type QuizQuestionsSaveSpec = {
  * SurveyQuestionFormatChoices
  */
 export type SurveyQuestionFormatChoices = 'single_choice' | 'text_input' | 'number_input';
-
-/**
- * SurveyQuestionPoolSpec
- */
-export type SurveyQuestionPoolSpec = {
-    /**
-     * Description
-     */
-    description: string;
-};
 
 /**
  * SurveyQuestionSpec
@@ -5260,7 +5174,6 @@ export type SurveySpec = {
      * Id
      */
     id: string;
-    questionPool: SurveyQuestionPoolSpec;
     questions: SurveyQuestionsSpec;
     /**
      * Completemessage
@@ -5300,7 +5213,6 @@ export type SurveySaveSpec = {
      * Featured
      */
     featured: boolean;
-    questionPool: SurveyQuestionPoolSpec;
     /**
      * Completemessage
      */
@@ -5322,7 +5234,7 @@ export type SurveyQuestionSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     format: SurveyQuestionFormatChoices;
     /**
      * Question
@@ -5354,16 +5266,6 @@ export type SurveyQuestionsSaveSpec = {
      * Data
      */
     data: Array<SurveyQuestionSaveSpec>;
-};
-
-/**
- * DiscussionQuestionPoolSpec
- */
-export type DiscussionQuestionPoolSpec = {
-    /**
-     * Description
-     */
-    description: string;
 };
 
 /**
@@ -5481,8 +5383,10 @@ export type DiscussionSpec = {
      * Id
      */
     id: string;
-    honorCode: HonorCodeSpec;
-    questionPool: DiscussionQuestionPoolSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
     questions: DiscussionQuestionsSpec;
 };
 
@@ -5534,8 +5438,10 @@ export type DiscussionSaveSpec = {
      * Confirmduedays
      */
     confirmDueDays: number;
-    honorCode: HonorCodeSpec;
-    questionPool: DiscussionQuestionPoolSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
 };
 
 /**
@@ -5545,7 +5451,7 @@ export type DiscussionQuestionSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     /**
      * Directive
      */
@@ -5577,13 +5483,13 @@ export type DiscussionQuestionSaveSpec = {
 };
 
 /**
- * AssignmentQuestionPoolSpec
+ * DiscussionQuestionsSaveSpec
  */
-export type AssignmentQuestionPoolSpec = {
+export type DiscussionQuestionsSaveSpec = {
     /**
-     * Description
+     * Data
      */
-    description: string;
+    data: Array<DiscussionQuestionSaveSpec>;
 };
 
 /**
@@ -5697,8 +5603,10 @@ export type AssignmentSpec = {
      * Id
      */
     id: string;
-    honorCode: HonorCodeSpec;
-    questionPool: AssignmentQuestionPoolSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
     questions: AssignmentQuestionsSpec;
 };
 
@@ -5750,8 +5658,10 @@ export type AssignmentSaveSpec = {
      * Confirmduedays
      */
     confirmDueDays: number;
-    honorCode: HonorCodeSpec;
-    questionPool: AssignmentQuestionPoolSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
 };
 
 /**
@@ -5761,7 +5671,7 @@ export type AssignmentQuestionSaveSpec = {
     /**
      * Id
      */
-    id: number;
+    id?: number;
     /**
      * Question
      */
@@ -5983,10 +5893,6 @@ export type CourseAssetsSpec = {
      * Courseinstructors
      */
     courseInstructors: Array<CourseInstructorSpec>;
-    /**
-     * Faqitems
-     */
-    faqItems: Array<FaqItemSpec>;
 };
 
 /**
@@ -6138,8 +6044,14 @@ export type CourseSpec = {
      */
     effortHours: number;
     level: LevelChoices;
-    honorCode: HonorCodeSpec;
-    faq: FaqSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
+    /**
+     * Faqid
+     */
+    faqId: number;
     gradingPolicy: GradingPolicySpec;
     assets: CourseAssetsSpec;
 };
@@ -6168,42 +6080,6 @@ export type CourseSurveySpec = {
      * Endoffset
      */
     endOffset: number | null;
-};
-
-/**
- * FAQItemSpec
- */
-export type FaqItemSpec = {
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Question
-     */
-    question: string;
-    /**
-     * Answer
-     */
-    answer: string;
-    /**
-     * Active
-     */
-    active: boolean;
-};
-
-/**
- * FAQSpec
- */
-export type FaqSpec = {
-    /**
-     * Name
-     */
-    name: string;
-    /**
-     * Description
-     */
-    description: string;
 };
 
 /**
@@ -6299,8 +6175,14 @@ export type CourseSaveSpec = {
      */
     effortHours: number;
     level: LevelChoices;
-    honorCode: HonorCodeSpec;
-    faq: FaqSpec;
+    /**
+     * Honorcodeid
+     */
+    honorCodeId: number;
+    /**
+     * Faqid
+     */
+    faqId: number;
     gradingPolicy: GradingPolicySpec;
 };
 
@@ -6497,33 +6379,6 @@ export type CourseInstructorSaveSpec = {
  * RootModel[list[CourseInstructorSaveSpec]]
  */
 export type RootModelListCourseInstructorSaveSpec = Array<CourseInstructorSaveSpec>;
-
-/**
- * FAQItemSaveSpec
- */
-export type FaqItemSaveSpec = {
-    /**
-     * Id
-     */
-    id?: number;
-    /**
-     * Question
-     */
-    question: string;
-    /**
-     * Answer
-     */
-    answer: string;
-    /**
-     * Active
-     */
-    active: boolean;
-};
-
-/**
- * RootModel[list[FAQItemSaveSpec]]
- */
-export type RootModelListFaqItemSaveSpec = Array<FaqItemSaveSpec>;
 
 /**
  * SurveyQuestionSchema
@@ -8980,6 +8835,24 @@ export type StudioV1ContentResponses = {
 
 export type StudioV1ContentResponse = StudioV1ContentResponses[keyof StudioV1ContentResponses];
 
+export type StudioV1AssessmentSuggestionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/studio/suggestion/assessment';
+};
+
+export type StudioV1AssessmentSuggestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<AssessmentSuggestionSpec>;
+};
+
+export type StudioV1AssessmentSuggestionsResponse = StudioV1AssessmentSuggestionsResponses[keyof StudioV1AssessmentSuggestionsResponses];
+
 export type StudioV1ContentSuggestionsData = {
     body?: never;
     path?: never;
@@ -9003,118 +8876,28 @@ export type StudioV1ContentSuggestionsResponses = {
 
 export type StudioV1ContentSuggestionsResponse = StudioV1ContentSuggestionsResponses[keyof StudioV1ContentSuggestionsResponses];
 
-export type StudioV1AssessmentSuggestionsData = {
+export type StudioV1InlineSuggestionsData = {
     body?: never;
     path?: never;
-    query?: never;
-    url: '/api/v1/studio/suggestion/assessment';
-};
-
-export type StudioV1AssessmentSuggestionsResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: Array<AssessmentSuggestion>;
-};
-
-export type StudioV1AssessmentSuggestionsResponse = StudioV1AssessmentSuggestionsResponses[keyof StudioV1AssessmentSuggestionsResponses];
-
-export type StudioV1CertificateSuggestionsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/v1/studio/suggestion/certificate';
-};
-
-export type StudioV1CertificateSuggestionsResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: Array<CertificateSuggestionSpec>;
-};
-
-export type StudioV1CertificateSuggestionsResponse = StudioV1CertificateSuggestionsResponses[keyof StudioV1CertificateSuggestionsResponses];
-
-export type StudioV1CategorySuggestionsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/v1/studio/suggestion/category';
-};
-
-export type StudioV1CategorySuggestionsResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: Array<CategorySuggestionSpec>;
-};
-
-export type StudioV1CategorySuggestionsResponse = StudioV1CategorySuggestionsResponses[keyof StudioV1CategorySuggestionsResponses];
-
-export type StudioV1InstructorSuggestionsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/v1/studio/suggestion/instructor';
-};
-
-export type StudioV1InstructorSuggestionsResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: Array<InstructorSuggestionSpec>;
-};
-
-export type StudioV1InstructorSuggestionsResponse = StudioV1InstructorSuggestionsResponses[keyof StudioV1InstructorSuggestionsResponses];
-
-export type StudioV1FaqSuggestionsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/v1/studio/suggestion/faq';
-};
-
-export type StudioV1FaqSuggestionsResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: Array<FaqSuggestionSpec>;
-};
-
-export type StudioV1FaqSuggestionsResponse = StudioV1FaqSuggestionsResponses[keyof StudioV1FaqSuggestionsResponses];
-
-export type StudioV1GetFaqItemsData = {
-    body?: never;
-    path: {
+    query: {
         /**
-         * Id
+         * Kind
          */
-        id: number;
+        kind: 'honor_code' | 'faq' | 'category' | 'instructor' | 'certificate';
     };
-    query?: never;
-    url: '/api/v1/studio/faq/{id}/item';
+    url: '/api/v1/studio/suggestion/inline';
 };
 
-export type StudioV1GetFaqItemsResponses = {
+export type StudioV1InlineSuggestionsResponses = {
     /**
      * Response
      *
      * OK
      */
-    200: Array<FaqItemCopySpec>;
+    200: Array<InlineSuggestionSpec>;
 };
 
-export type StudioV1GetFaqItemsResponse = StudioV1GetFaqItemsResponses[keyof StudioV1GetFaqItemsResponses];
+export type StudioV1InlineSuggestionsResponse = StudioV1InlineSuggestionsResponses[keyof StudioV1InlineSuggestionsResponses];
 
 export type StudioV1GetExamData = {
     body?: never;
@@ -9165,6 +8948,29 @@ export type StudioV1SaveExamResponses = {
 };
 
 export type StudioV1SaveExamResponse = StudioV1SaveExamResponses[keyof StudioV1SaveExamResponses];
+
+export type StudioV1GetExamQuestionsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/exam/{id}/question';
+};
+
+export type StudioV1GetExamQuestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<ExamQuestionSpec>;
+};
+
+export type StudioV1GetExamQuestionsResponse = StudioV1GetExamQuestionsResponses[keyof StudioV1GetExamQuestionsResponses];
 
 export type StudioV1SaveExamQuestionsData = {
     /**
@@ -9273,6 +9079,29 @@ export type StudioV1SaveQuizResponses = {
 
 export type StudioV1SaveQuizResponse = StudioV1SaveQuizResponses[keyof StudioV1SaveQuizResponses];
 
+export type StudioV1GetQuizQuestionsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/quiz/{id}/question';
+};
+
+export type StudioV1GetQuizQuestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<QuizQuestionSpec>;
+};
+
+export type StudioV1GetQuizQuestionsResponse = StudioV1GetQuizQuestionsResponses[keyof StudioV1GetQuizQuestionsResponses];
+
 export type StudioV1SaveQuizQuestionsData = {
     /**
      * MultiPartBodyParams
@@ -9379,6 +9208,29 @@ export type StudioV1SaveSurveyResponses = {
 };
 
 export type StudioV1SaveSurveyResponse = StudioV1SaveSurveyResponses[keyof StudioV1SaveSurveyResponses];
+
+export type StudioV1GetSurveyQuestionsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/survey/{id}/question';
+};
+
+export type StudioV1GetSurveyQuestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<SurveyQuestionSpec>;
+};
+
+export type StudioV1GetSurveyQuestionsResponse = StudioV1GetSurveyQuestionsResponses[keyof StudioV1GetSurveyQuestionsResponses];
 
 export type StudioV1SaveSurveyQuestionsData = {
     /**
@@ -9487,6 +9339,29 @@ export type StudioV1SaveDiscussionResponses = {
 
 export type StudioV1SaveDiscussionResponse = StudioV1SaveDiscussionResponses[keyof StudioV1SaveDiscussionResponses];
 
+export type StudioV1GetDiscussionQuestionsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/discussion/{id}/question';
+};
+
+export type StudioV1GetDiscussionQuestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<DiscussionQuestionSpec>;
+};
+
+export type StudioV1GetDiscussionQuestionsResponse = StudioV1GetDiscussionQuestionsResponses[keyof StudioV1GetDiscussionQuestionsResponses];
+
 export type StudioV1SaveDiscussionQuestionData = {
     /**
      * MultiPartBodyParams
@@ -9498,7 +9373,7 @@ export type StudioV1SaveDiscussionQuestionData = {
          * Max size: 3MB
          */
         files?: Array<Blob | File>;
-        data: DiscussionQuestionSaveSpec;
+        data: DiscussionQuestionsSaveSpec;
     };
     path: {
         /**
@@ -9516,7 +9391,7 @@ export type StudioV1SaveDiscussionQuestionResponses = {
      *
      * OK
      */
-    200: number;
+    200: Array<number>;
 };
 
 export type StudioV1SaveDiscussionQuestionResponse = StudioV1SaveDiscussionQuestionResponses[keyof StudioV1SaveDiscussionQuestionResponses];
@@ -9593,6 +9468,29 @@ export type StudioV1SaveAssignmentResponses = {
 };
 
 export type StudioV1SaveAssignmentResponse = StudioV1SaveAssignmentResponses[keyof StudioV1SaveAssignmentResponses];
+
+export type StudioV1GetAssignmentQuestionsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/assignment/{id}/question';
+};
+
+export type StudioV1GetAssignmentQuestionsResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<AssignmentQuestionSpec>;
+};
+
+export type StudioV1GetAssignmentQuestionsResponse = StudioV1GetAssignmentQuestionsResponses[keyof StudioV1GetAssignmentQuestionsResponses];
 
 export type StudioV1SaveAssignmentQuestionData = {
     /**
@@ -10142,52 +10040,6 @@ export type StudioV1RemoveCourseInstructorData = {
 };
 
 export type StudioV1RemoveCourseInstructorResponses = {
-    /**
-     * OK
-     */
-    200: unknown;
-};
-
-export type StudioV1SaveCourseFaqItemsData = {
-    body: RootModelListFaqItemSaveSpec;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/api/v1/studio/course/{id}/faqitem';
-};
-
-export type StudioV1SaveCourseFaqItemsResponses = {
-    /**
-     * Response
-     *
-     * OK
-     */
-    200: Array<number>;
-};
-
-export type StudioV1SaveCourseFaqItemsResponse = StudioV1SaveCourseFaqItemsResponses[keyof StudioV1SaveCourseFaqItemsResponses];
-
-export type StudioV1RemoveCourseFaqItemData = {
-    body?: never;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-        /**
-         * Faq Item Id
-         */
-        faq_item_id: number;
-    };
-    query?: never;
-    url: '/api/v1/studio/course/{id}/faqitem/{faq_item_id}';
-};
-
-export type StudioV1RemoveCourseFaqItemResponses = {
     /**
      * OK
      */

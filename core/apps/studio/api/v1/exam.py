@@ -19,8 +19,6 @@ from apps.common.schema import (
 )
 from apps.common.util import HttpRequest
 from apps.exam.models import Attempt, Exam, Question, QuestionPool, Solution
-from apps.operation.models import HonorCode
-from apps.studio.api.v1.schema import HonorCodeSpec
 from apps.studio.decorator import editor_required, track_draft
 
 
@@ -30,7 +28,7 @@ class ExamQuestionSaveSpec(Schema):
         correct_criteria: str
         explanation: str
 
-    id: int
+    id: Annotated[int, Field(None)]
     format: Question.ExamQuestionFormatChoices
     question: str
     supplement: str
@@ -40,6 +38,8 @@ class ExamQuestionSaveSpec(Schema):
 
 
 class ExamQuestionSpec(ExamQuestionSaveSpec):
+    id: int
+
     @staticmethod
     def resolve_supplement(obj: Question):
         return obj.cleaned_supplement
@@ -56,13 +56,11 @@ class ExamQuestionsSpec(RootModel[list[ExamQuestionSpec]]):
 
 class ExamSpec(LearningObjectMixinSchema, GradeWorkflowMixinSchema):
     class ExamQuestionPoolSpec(Schema):
-        description: str
         composition: dict[Question.ExamQuestionFormatChoices, int]
 
     id: str
     duration_seconds: float
-
-    honor_code: HonorCodeSpec
+    honor_code_id: int
     question_pool: ExamQuestionPoolSpec
     questions: ExamQuestionsSpec
 
@@ -84,7 +82,7 @@ class ExamSaveSpec(Schema):
     grade_due_days: int
     appeal_deadline_days: int
     confirm_due_days: int
-    honor_code: HonorCodeSpec
+    honor_code_id: int
     question_pool: ExamSpec.ExamQuestionPoolSpec
 
 
@@ -96,11 +94,11 @@ router = Router(by_alias=True)
 async def get_exam(request: HttpRequest, id: str):
     return (
         await Exam.objects
-        .select_related("honor_code", "question_pool")
+        .select_related("question_pool")
         .prefetch_related(
             Prefetch(
                 "question_pool__questions",
-                queryset=Question.objects.prefetch_related("attachments").select_related("solution"),
+                queryset=Question.objects.prefetch_related("attachments").select_related("solution").order_by("id"),
             )
         )
         .aget(id=id, owner_id=request.auth)
@@ -120,7 +118,6 @@ async def save_exam(
 ):
     exam_dict = data.model_dump(exclude_unset=True)
     exam_id = exam_dict.pop("id", None)
-    honor_code = exam_dict.pop("honor_code")
     question_pool = exam_dict.pop("question_pool")
 
     if thumbnail:
@@ -131,7 +128,6 @@ async def save_exam(
         for key, value in exam_dict.items():
             setattr(exam, key, value)
         await exam.asave()
-        await HonorCode.objects.filter(id=exam.honor_code_id).aupdate(**honor_code)
         await QuestionPool.objects.filter(id=exam.question_pool_id).aupdate(**question_pool)
 
     else:
@@ -139,10 +135,9 @@ async def save_exam(
         @sync_to_async
         @transaction.atomic
         def create_new():
-            code = HonorCode.objects.create(**honor_code)
             try:
                 pool = QuestionPool.objects.create(**question_pool, owner_id=request.auth, title=data.title)
-                exam = Exam.objects.create(**exam_dict, honor_code=code, question_pool=pool, owner_id=request.auth)
+                exam = Exam.objects.create(**exam_dict, question_pool=pool, owner_id=request.auth)
             except IntegrityError:
                 # both title conflict
                 raise ValueError(ErrorCode.TITLE_ALREADY_EXISTS)
@@ -151,6 +146,18 @@ async def save_exam(
         exam = await create_new()
 
     return exam.id
+
+
+@router.get("/exam/{id}/question", response=list[ExamQuestionSpec])
+@editor_required()
+async def get_exam_questions(request: HttpRequest, id: str):
+    return [
+        q
+        async for q in Question.objects
+        .select_related("solution")
+        .prefetch_related("attachments")
+        .filter(pool__exam__id=id, pool__exam__owner_id=request.auth)
+    ]
 
 
 @router.post("/exam/{id}/question", response=list[int])
@@ -166,9 +173,12 @@ async def save_exam_questions(
     ],
 ):
     exam = await aget_object_or_404(Exam, id=id, owner_id=request.auth)
-    questions, solutions = [], []
+    questions, solutions, is_new = [], [], []
 
-    for question_data in data.model_dump()["data"]:
+    dumped = data.model_dump()["data"]
+    for question_data in dumped:
+        is_new.append(not question_data["id"])
+
         if not question_data["id"]:
             question_data["id"] = None
 
@@ -193,7 +203,9 @@ async def save_exam_questions(
         update_fields=["correct_answers", "correct_criteria", "explanation"],
     )
 
-    for question in questions:
+    for question, new in zip(questions, is_new):
+        if new:
+            question._prefetched_objects_cache = {"attachments": []}
         await question.update_attachments(files=files, owner_id=request.auth, content=question.supplement)
 
     return [q.id for q in questions]

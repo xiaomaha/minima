@@ -1,10 +1,37 @@
 import { IconDownload, IconX } from '@tabler/icons-solidjs'
-import { createEffect, createSignal, For, lazy, Match, onMount, Show, Switch, untrack } from 'solid-js'
+import { Editor } from '@tiptap/core'
+import Highlight from '@tiptap/extension-highlight'
+import Placeholder from '@tiptap/extension-placeholder'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
+import TextAlign from '@tiptap/extension-text-align'
+import { EditorState } from '@tiptap/pm/state'
+import StarterKit from '@tiptap/starter-kit'
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  Match,
+  onCleanup,
+  onMount,
+  type Setter,
+  Show,
+  Switch,
+  untrack,
+} from 'solid-js'
+import ImageResize from 'tiptap-extension-resize-image'
 import type { GenericSchema } from 'valibot'
 import * as v from 'valibot'
 import { ATTACHMENT_MAX_SIZE } from '@/config'
+import { AutocompleteInput } from '@/shared/AutocompleteInput'
+import { Attachment, AttachmentLink } from '@/shared/editor/Attachment'
+import { SafeUndo } from '@/shared/editor/SafeUndo'
+import { Toolbar } from '@/shared/editor/Toolbar'
 import { ImageCropDialog } from '@/shared/image/ImageCropDialog'
+import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
+import { showToast } from '@/shared/toast/store'
 import { filenameFromUrl } from '@/shared/utils'
 import type { ContentType, State } from '../-context/editing'
 import { useEditing } from '../-context/editing'
@@ -598,36 +625,255 @@ export const AttachmentField = (props: AttachmentFieldProps) => {
   )
 }
 
-interface TagFieldProps extends CommaSeparatedFieldProps {
-  badgeClass?: string
+interface Props extends FieldProps {
+  setFiles?: Setter<File[]>
 }
 
-export const TagField = (props: TagFieldProps) => {
+export const RichTextField = (props: Props) => {
+  const normalizeHtml = (html: string) => {
+    return html
+      .replace(/<li><p>(.*?)<\/p><\/li>/g, '<li>$1</li>')
+      .replace(/<p>\s*<\/p>/g, '')
+      .replace(/\s+<\//g, '</')
+      .replace(/^<p>|<\/p>$/g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/(<\/p><p>)\s+/g, '$1')
+      .trim()
+  }
+
+  let editorWrapperEl: HTMLDivElement | undefined
+  let editor: Editor | undefined
+  let currentHtml: string = ''
+
   const { source, staging, fieldState } = useEditing()
 
-  const value = () => (getNestedValue(staging, props.path) as string[] | undefined) || []
+  const value = () => (getNestedValue(staging, props.path) as string | undefined) || ''
   const state = () => getNestedState(fieldState, props.path) as State | undefined
 
   const isDirty = () => state()?.dirty ?? false
   const hasError = () => state()?.error ?? ''
 
-  const [inputDraft, setInputDraft] = createSignal('')
+  const [draft, setDraft] = createSignal(value())
+
+  const [editorInstance, setEditorInstance] = createSignal<Editor | undefined>()
+
+  onMount(() => {
+    if (!editorWrapperEl) return
+
+    requestAnimationFrame(() => {
+      editor = new Editor({
+        element: editorWrapperEl,
+        extensions: [
+          SafeUndo,
+          StarterKit.configure({ link: false }),
+          Placeholder.configure({ placeholder: props.label }),
+          TextAlign.configure({ types: ['heading', 'paragraph'] }),
+          Highlight.configure({ multicolor: false }),
+          TaskList,
+          TaskItem.configure({ nested: true }),
+          ...(props.setFiles
+            ? [
+                ImageResize,
+                AttachmentLink,
+                Attachment.configure({
+                  onChange: (files) => props.setFiles?.(files),
+                  onValidationError: (message) => {
+                    showToast({ title: message, message, type: 'error', duration: 3000 })
+                  },
+                }),
+              ]
+            : []),
+        ],
+        content: draft(),
+        editorProps: {
+          attributes: {
+            class: 'prose max-w-none break-all h-full text-sm px-3 py-2 outline-0 border-0 w-full min-h-20',
+          },
+        },
+        onUpdate: () => {
+          if (!editor) return
+          currentHtml = editor.isEmpty ? '' : editor.getHTML()
+          setDraft(currentHtml)
+          setNestedValue(staging, props.path, currentHtml)
+        },
+      })
+      setEditorInstance(editor)
+    })
+  })
+
+  createEffect(() => {
+    const editor = editorInstance()
+    if (!editor) return
+    const currentValue = value()
+
+    if (currentValue === currentHtml) return
+    editor.commands.setContent(currentValue ?? '')
+    editor.view.updateState(
+      EditorState.create({
+        schema: editor.state.schema,
+        plugins: editor.state.plugins,
+        doc: editor.state.doc,
+      }),
+    )
+
+    if (!props.setFiles) return
+    if (currentValue === getNestedValue(source, props.path)) return
+
+    // restore files between route changes
+    const entries: { url: string; name: string }[] = []
+    editor.state.doc.descendants((node) => {
+      if (
+        (node.type.name === 'image' || node.type.name === 'imageResize') &&
+        node.attrs.src?.startsWith('blob:') &&
+        node.attrs.alt
+      ) {
+        entries.push({ url: node.attrs.src, name: node.attrs.alt })
+      }
+      node.marks.forEach((mark) => {
+        if (mark.type.name === 'attachmentLink' && mark.attrs.href?.startsWith('blob:') && mark.attrs.download) {
+          entries.push({ url: mark.attrs.href, name: mark.attrs.download })
+        }
+      })
+      return true
+    })
+
+    Promise.all(
+      entries.map(({ url, name }) =>
+        fetch(url)
+          .then((r) => r.blob())
+          .then((blob) => new File([blob], name, { type: blob.type })),
+      ),
+    ).then((files) => {
+      if (files.length > 0) props.setFiles?.(files)
+    })
+  })
+
+  createEffect(() => {
+    const val = draft()
+    const result = v.safeParse(props.schema, val.replace(/<[^>]*>/g, '').trim())
+    setNestedState(fieldState, props.path, {
+      dirty: normalizeHtml(val) !== normalizeHtml((getNestedValue(source, props.path) as string | undefined) || ''),
+      error: result.success ? '' : result.issues[0].message,
+    })
+  })
+
+  onCleanup(() => {
+    editor?.destroy()
+  })
+
+  return (
+    <div class="[&_button]:opacity-40 hover:[&_button]:opacity-100">
+      <div class="floating-label rounded" classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}>
+        <span class="bg-transparent -top-0.5">{props.label}</span>
+        <input name={props.label} placeholder={props.label} value={value()} hidden />
+        <div
+          class="flex flex-col min-h-0 w-full placeholder:text-base-content/40"
+          classList={{ 'hover:bg-base-200 has-focus-within:bg-base-200': !isDirty() }}
+        >
+          <Toolbar editor={() => editor} class="bg-base-100" enableAttachment={!!props.setFiles} />
+          <div ref={editorWrapperEl} class="max-h-100 flex-1 overflow-y-auto inset-shadow-xs" />
+        </div>
+      </div>
+      <Show when={hasError()}>
+        <div class="bg-transparent text-xs ml-3 mt-0.5 text-base-content/40 flex items-center gap-2">
+          <div class="status status-error" />
+          {hasError()}
+        </div>
+      </Show>
+    </div>
+  )
+}
+
+export const collectBlobFiles = async (html: string): Promise<File[]> => {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'text/html')
+
+  const entries: { url: string; name: string }[] = []
+
+  // image / imageResize: <img src="blob:..." alt="filename">
+  doc.querySelectorAll('img[src^="blob:"]').forEach((el) => {
+    const src = el.getAttribute('src')!
+    const name = el.getAttribute('alt') || 'image'
+    entries.push({ url: src, name })
+  })
+
+  // attachmentLink: <a href="blob:..." download="filename">
+  doc.querySelectorAll('a[href^="blob:"][download]').forEach((el) => {
+    const href = el.getAttribute('href')!
+    const name = el.getAttribute('download') || 'file'
+    entries.push({ url: href, name })
+  })
+
+  const results = await Promise.allSettled(
+    entries.map(({ url, name }) =>
+      fetch(url)
+        .then((r) => r.blob())
+        .then((blob) => new File([blob], name, { type: blob.type })),
+    ),
+  )
+
+  return results.filter((r): r is PromiseFulfilledResult<File> => r.status === 'fulfilled').map((r) => r.value)
+}
+
+interface AutocompleteOption<T extends number | string> {
+  id: T
+  label: string
+}
+
+interface AutocompleteFieldProps<T extends number | string> {
+  path: Paths<ContentType>
+  label: string
+  schema: GenericSchema
+  suggestions: AutocompleteOption<T>[]
+  multiple?: boolean
+  class?: string
+  badgeClass?: string
+  readonly?: boolean
+  onFocus?: () => void
+}
+
+export const AutocompleteField = <T extends number | string>(props: AutocompleteFieldProps<T>) => {
+  const { source, staging, fieldState } = useEditing()
+
+  const value = () => {
+    const val = getNestedValue(staging, props.path)
+    if (props.multiple) return (val as T[] | undefined) ?? []
+    return val as T | undefined
+  }
+
+  const selectedItems = () => {
+    if (props.multiple) {
+      return (value() as T[])
+        .map((id) => props.suggestions.find((s) => s.id === id))
+        .filter(Boolean) as AutocompleteOption<T>[]
+    }
+    const id = value() as T | undefined
+    if (id == null) return []
+    const found = props.suggestions.find((s) => s.id === id)
+    return found ? [found] : []
+  }
+
+  const state = () => getNestedState(fieldState, props.path) as State | undefined
+  const isDirty = () => state()?.dirty ?? false
+  const hasError = () => state()?.error ?? ''
 
   const checkDirty = () => {
-    const sourceArray = getNestedValue(source, props.path) as string[] | undefined
-    const stagingArray = getNestedValue(staging, props.path) as string[] | undefined
-
-    if (!stagingArray && !sourceArray) return false
-    if (!stagingArray || !sourceArray) return true
-    if (stagingArray.length !== sourceArray.length) return true
-    for (let i = 0; i < stagingArray.length; i++) {
-      if (stagingArray[i] !== sourceArray[i]) return true
+    const sourceVal = getNestedValue(source, props.path)
+    const stagingVal = getNestedValue(staging, props.path)
+    if (props.multiple) {
+      const src = (sourceVal as T[] | undefined) ?? []
+      const stg = (stagingVal as T[] | undefined) ?? []
+      if (src.length !== stg.length) return true
+      for (let i = 0; i < stg.length; i++) {
+        if (stg[i] !== src[i]) return true
+      }
+      return false
     }
-    return false
+    return stagingVal !== sourceVal
   }
 
   createEffect(() => {
-    const val = value().join(', ')
+    const val = props.multiple ? (value() as T[]).join(', ') : value()
     const result = v.safeParse(props.schema, val)
     setNestedState(fieldState, props.path, {
       dirty: checkDirty(),
@@ -635,71 +881,80 @@ export const TagField = (props: TagFieldProps) => {
     })
   })
 
-  const addTag = (tag: string) => {
-    const trimmed = tag.trim()
-    if (!trimmed || value().includes(trimmed)) return
-    setNestedValue(staging, props.path, [...value(), trimmed])
-    setInputDraft('')
+  const labelToId = createMemo(
+    () => Object.fromEntries(props.suggestions.map((s) => [s.label, s.id])) as Record<string, T>,
+  )
+
+  const suggestionLabels = createMemo(() => {
+    if (props.multiple) {
+      const current = value() as T[]
+      return props.suggestions.filter((s) => !current.includes(s.id)).map((s) => s.label)
+    }
+    return props.suggestions.map((s) => s.label)
+  })
+
+  const addItem = (label: string) => {
+    const id = labelToId()[label]
+    if (id == null) return
+    if (props.multiple) {
+      const current = value() as T[]
+      if (current.includes(id)) return
+      setNestedValue(staging, props.path, [...current, id] as never)
+    } else {
+      setNestedValue(staging, props.path, id as never)
+    }
   }
 
-  const removeTag = (index: number) => {
-    setNestedValue(
-      staging,
-      props.path,
-      value().filter((_, i) => i !== index),
-    )
+  const removeItem = (id: T) => {
+    if (props.multiple) {
+      setNestedValue(staging, props.path, (value() as T[]).filter((v) => v !== id) as never)
+    } else {
+      setNestedValue(staging, props.path, getNestedValue(source, props.path) as never)
+    }
   }
-
-  let inputRef: HTMLInputElement | undefined
 
   return (
-    <label class="floating-label flex-1" onclick={(e) => e.preventDefault()}>
-      <span class="bg-transparent">{props.label}</span>
+    <div class="flex-1" onclick={(e) => e.preventDefault()}>
       <div
-        class={`input flex flex-wrap gap-1 items-center h-auto min-h-10 cursor-text ${STUDIO_FIELD_STYLE} ${props.class ?? ''}`}
+        class={
+          'py-2 px-3 flex flex-wrap gap-2 items-center h-auto min-h-10 cursor-text rounded focus-within:bg-base-200 ' +
+          `${STUDIO_FIELD_STYLE} ${props.class ?? ''}`
+        }
         classList={{ [DIRTY_FIELD_STYLE]: isDirty() }}
-        onclick={() => inputRef?.focus()}
       >
-        <For each={value()}>
-          {(tag, i) => (
-            <span class={`badge gap-1 ${props.badgeClass ?? ''}`}>
-              {tag}
-              <button
-                type="button"
-                class="cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  removeTag(i())
-                }}
-                onMouseDown={(e) => e.preventDefault()}
-                tabIndex={-1}
-              >
-                <IconX size={12} />
-              </button>
+        <For each={selectedItems()}>
+          {(item) => (
+            <span class={`badge badge-soft gap-1 max-w-full ${props.badgeClass ?? ''}`}>
+              <span class="line-clamp-1 truncate">{item.label}</span>
+              <Show when={!props.readonly}>
+                <button
+                  type="button"
+                  class="cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    removeItem(item.id)
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  tabIndex={-1}
+                >
+                  <IconX size={12} />
+                </button>
+              </Show>
             </span>
           )}
         </For>
-        <input
-          name={props.path.join('.')}
-          ref={inputRef}
-          value={inputDraft() || (value().length ? ' ' : '')} // trick to float label
-          onInput={(e) => setInputDraft(e.currentTarget.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ',') {
-              e.preventDefault()
-              addTag(inputDraft())
-            }
-            if (e.key === 'Backspace' && !inputDraft() && value().length) {
-              removeTag(value().length - 1)
-            }
-          }}
-          onBlur={() => {
-            if (inputDraft()) addTag(inputDraft())
-          }}
-          class="bg-transparent flex-1 min-w-20 h-6 text-sm placeholder:text-base-content/40"
+        <AutocompleteInput
+          suggestions={suggestionLabels()}
           placeholder={props.label}
-          readonly={props.readonly}
+          onCommit={addItem}
+          onFocus={props.onFocus}
+          clearInputOnCommit
+          selectFirstOnCommit
+          class="flex-1 min-w-40 border-0 shadow-none -my-2"
+          inputClass="outline-0 border-none shadow-none bg-transparent"
+          dropdownClass="bg-base-100 z-10"
+          autofocus={false}
         />
       </div>
       <Show when={hasError()}>
@@ -708,8 +963,40 @@ export const TagField = (props: TagFieldProps) => {
           {hasError()}
         </div>
       </Show>
-    </label>
+    </div>
   )
 }
 
-export const RichTextField = lazy(() => import('./RichtextField'))
+interface DataBindFieldProps<T extends number | string, P = void> {
+  path: Paths<ContentType>
+  label: string
+  schema: GenericSchema
+  fetchParams: () => P
+  fetchFn: (params: P) => Promise<AutocompleteOption<T>[] | undefined>
+  cacheKey: string
+  multiple?: boolean
+  class?: string
+  badgeClass?: string
+  readonly?: boolean
+}
+
+export const DataBindField = <T extends number | string, P = void>(props: DataBindFieldProps<T, P>) => {
+  const [store] = createCachedStore(
+    props.cacheKey,
+    () => props.fetchParams() ?? ({} as P),
+    async (params) => props.fetchFn(params),
+  )
+
+  return (
+    <AutocompleteField
+      path={props.path}
+      label={props.label}
+      schema={props.schema}
+      suggestions={store.data ?? []}
+      multiple={props.multiple}
+      class={props.class}
+      badgeClass={props.badgeClass}
+      readonly={props.readonly}
+    />
+  )
+}

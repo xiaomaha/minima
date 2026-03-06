@@ -79,7 +79,7 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
           <div role="alert" class="alert alert-success bg-success/50">
             <div>
               <div class="text-lg mb-2">{t('Thank you for your response!')}</div>
-              <div class="">{props.survey.completeMessage}</div>
+              <ContentViewer content={props.survey.completeMessage} />
             </div>
           </div>
         </div>

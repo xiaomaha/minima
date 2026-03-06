@@ -37,6 +37,7 @@ function RouteComponent() {
               color-mix(in oklch, var(--color-base-content), transparent 97%) 13px,
               color-mix(in oklch, var(--color-base-content), transparent 97%) 14px
             );
+            background-attachment: fixed;
           }
         `}
       </style>

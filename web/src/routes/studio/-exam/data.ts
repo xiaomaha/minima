@@ -22,10 +22,9 @@ export const EmptyExam = (): ExamSpec => {
     gradeDueDays: -1,
     appealDeadlineDays: -1,
     confirmDueDays: -1,
-    honorCode: { title: '', code: '' },
+    honorCodeId: -1,
     published: null,
     questionPool: {
-      description: '',
       composition: { single_choice: -1, number_input: -1, text_input: -1, essay: -1 },
     },
     questions: [],
@@ -77,12 +76,8 @@ export const vExamEditingSpec = v.object({
   gradeDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   appealDeadlineDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   confirmDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
-  honorCode: v.object({
-    title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-    code: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
+  honorCodeId: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
   questionPool: v.object({
-    description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
     composition: v.record(vExamQuestionFormatChoices, v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO))),
   }),
 })

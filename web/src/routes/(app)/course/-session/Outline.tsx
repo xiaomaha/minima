@@ -32,6 +32,7 @@ export const Outline = () => {
   ].sort((a, b) => {
     const dateCompare = new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
     if (dateCompare !== 0) return dateCompare
+    if (a.type === 'lesson' && b.type === 'lesson') return a.number - b.number
     return a.type === 'lesson' ? -1 : 1
   })
 

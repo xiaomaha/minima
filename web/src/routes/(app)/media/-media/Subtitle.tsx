@@ -26,10 +26,7 @@ export const Subtitle = (props: Props) => {
   const [subtitles] = createCachedStore(
     'contentV1GetSubtitles',
     () => ({ path: { id: props.mediaId } }),
-    async (options) => {
-      const { data } = await contentV1GetSubtitles(options)
-      return data
-    },
+    async (options) => (await contentV1GetSubtitles(options)).data,
   )
 
   const [userScrolling, setUserScrolling] = createSignal(false)

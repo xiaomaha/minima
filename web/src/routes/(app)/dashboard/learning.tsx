@@ -215,7 +215,7 @@ const ContentCard = (props: ContentCardProps) => {
                 </button>
                 <ul
                   tabindex="0"
-                  class="mt-0 rounded-box bg-base-100 menu dropdown-content [&_li>*]:rounded-none p-1 py-2 z-1 w-60 shadow-xl"
+                  class="rounded-box bg-base-100 menu dropdown-content p-1 py-2 z-1 w-60 shadow-lg mt-1"
                   onclick={(e) => e.stopPropagation()}
                 >
                   <li class="bg-transparent-0 mb-0">

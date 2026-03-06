@@ -10,7 +10,6 @@ import { Certificates } from './Certificates'
 import { Course } from './Course'
 import { CourseRelations } from './CourseRelations'
 import { EmptyCourse } from './data'
-import { FaqItems } from './FaqItems'
 import { Instructors } from './Instructors'
 import { Lessons } from './Lessons'
 import { Surveys } from './Surveys'
@@ -40,7 +39,6 @@ export const App = (props: { id: string }) => {
             <Categories />
             <CourseRelations />
             <Instructors />
-            <FaqItems />
           </Show>
         </EditingProvider>
       </Show>

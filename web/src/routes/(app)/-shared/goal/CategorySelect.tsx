@@ -148,7 +148,6 @@ export const CategorySelect = (props: Props) => {
             dropdownClass="bg-base-200! max-h-64 overflow-y-auto flex-nowrap"
             inputClass="w-full"
             selectFirstOnCommit
-            suggestionCount={20}
           />
         </div>
 

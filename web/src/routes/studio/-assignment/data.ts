@@ -21,11 +21,8 @@ export const EmptyAssignment = (): AssignmentSpec => {
     gradeDueDays: -1,
     appealDeadlineDays: -1,
     confirmDueDays: -1,
-    honorCode: { title: '', code: '' },
+    honorCodeId: -1,
     published: null,
-    questionPool: {
-      description: '',
-    },
     questions: [],
   }
 }
@@ -60,13 +57,7 @@ export const vAssignmentEditingSpec = v.object({
   gradeDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   appealDeadlineDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
   confirmDueDays: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
-  honorCode: v.object({
-    title: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-    code: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
-  questionPool: v.object({
-    description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
-  }),
+  honorCodeId: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
 })
 
 export const vAssignmentQuestionEditingSpec = v.pipe(
