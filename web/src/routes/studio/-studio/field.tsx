@@ -71,7 +71,7 @@ export const TextField = (props: TextFieldProps) => {
     const val = draft()
     const result = v.safeParse(props.schema, val)
     setNestedState(fieldState, props.path, {
-      dirty: val !== (getNestedValue(source, props.path) ?? ''),
+      dirty: val !== getNestedValue(source, props.path),
       error: result.success ? '' : result.issues[0].message,
     })
   })
@@ -396,7 +396,10 @@ export const ThumbnailField = (props: ThumbnailFieldProps) => {
   onMount(() => {
     const url = value()
     if (!url?.startsWith('blob:')) return
+
+    // no need to rstore filename
     if (!isDirty()) return
+
     const filename = blobFilenameMap.get(url) ?? filenameFromUrl(url)
     fetch(url)
       .then((r) => r.blob())
@@ -522,13 +525,15 @@ export const AttachmentField = (props: AttachmentFieldProps) => {
   onMount(() => {
     const url = value()
     if (!url?.startsWith('blob:')) return
-    if (!isDirty()) return
+
     const filename = blobFilenameMap.get(url) ?? filenameFromUrl(url)
+    setFilename(filename)
+    if (!isDirty()) return
+
     fetch(url)
       .then((r) => r.blob())
       .then((blob) => {
         props.onFileSelect(new File([blob], filename, { type: blob.type }))
-        setFilename(filename)
       })
   })
 

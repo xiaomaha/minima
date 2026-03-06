@@ -8,7 +8,7 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
 import { forceDownload } from '@/shared/utils'
 import { type ContentType, useEditing } from '../-context/editing'
-import { checkTree, getNestedState, getNestedValue, type Paths, setNestedState } from './helper'
+import { checkArrayLengths, checkTree, getNestedState, getNestedValue, type Paths, setNestedState } from './helper'
 
 interface Props<TSchema extends GenericSchema = GenericSchema> {
   rootKey?: Paths<ContentType> | []
@@ -47,7 +47,11 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
   const treeState = createMemo(() => {
     if (props.rootKey === undefined) return { error: false, dirty: false }
     const node = props.rootKey.length === 0 ? fieldState : getNestedState(fieldState, props.rootKey)
-    return checkTree(node, excludeSet())
+    const sourceNode = props.rootKey.length === 0 ? source : getNestedValue(source, props.rootKey)
+    const stagingNode = props.rootKey.length === 0 ? staging : getNestedValue(staging, props.rootKey)
+    const tree = checkTree(node, excludeSet())
+    const lengthDirty = checkArrayLengths(sourceNode, stagingNode, excludeSet(), node)
+    return { ...tree, dirty: tree.dirty || lengthDirty }
   })
 
   const isDirty = () => treeState().dirty
@@ -90,7 +94,7 @@ export const DataAction = <TSchema extends GenericSchema = GenericSchema>(props:
     ),
     HasError: () => (
       <Show when={hasError()}>
-        <div class="status status-error tooltip" data-tip={hasError()} />
+        <div class="status status-error tooltip" data-tip={t('Error')} />
       </Show>
     ),
   }

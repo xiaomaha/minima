@@ -20,6 +20,7 @@ export const Submission = () => {
 
   const [session, { setStore }] = useSession()
   const s = () => session.data!
+  const assignment = s().assignment
 
   const [formState, { Form, Field }] = createForm<v.InferInput<typeof vAssignmentSubmitSchema>>({
     initialValues: { answer: s().submission?.answer ?? '' },
@@ -31,7 +32,7 @@ export const Submission = () => {
 
     const { data } = await assignmentV1SubmitAttempt({
       body: { ...values, files: files() },
-      path: { id: s().assignment.id },
+      path: { id: assignment.id },
     })
 
     setStore('data', 'submission', data)
@@ -51,7 +52,7 @@ export const Submission = () => {
           <div class="label text-sm flex justify-between">
             <span>{t('Question')}</span>
             <div class="badge badge-sm badge-outline">
-              {t('{{count}} point', { count: question.solution?.rubricData.possiblePoint })}
+              {t('{{count}} point', { count: assignment.rubricData!.possiblePoint })}
             </div>
           </div>
 
@@ -64,7 +65,7 @@ export const Submission = () => {
           <div>
             <div class="label my-4 text-sm text-base-content/60">{t('Assessment Criteria')}</div>
             <ul class="list-disc pl-4 space-y-2 text-sm text-base-content/60">
-              <For each={question.solution?.rubricData.criteria}>
+              <For each={assignment.rubricData!.criteria}>
                 {(criterion) => (
                   <li>
                     <span>{criterion.name}</span>
@@ -101,9 +102,9 @@ export const Submission = () => {
                     size: Math.floor(ASSIGNMENT_ATTACHMENT_MAX_SIZE / 1024 / 1024),
                   })}
                 </li>
-                <Show when={question.sampleAttachment}>
+                <Show when={assignment.sampleAttachment}>
                   <li>
-                    <a class="link link-primary text-sm" href={question.sampleAttachment!} target="_blank">
+                    <a class="link link-primary text-sm" href={assignment.sampleAttachment!} target="_blank">
                       {t('View sample file')}
                     </a>
                   </li>

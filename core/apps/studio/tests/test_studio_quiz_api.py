@@ -13,14 +13,12 @@ from conftest import AdminUser
 def test_studio_quiz_flow(client: Client, admin_user: AdminUser):
     admin_user.login()
 
-    quiz = QuizFactory(owner=admin_user.get_user())
-    Attempt.objects.filter(quiz=quiz).delete()
+    quiz = QuizFactory(owner=admin_user.get_user(), published=None)
+    quiz_id = quiz.id
 
     # get content suggestions
     res = client.get("/api/v1/studio/suggestion/content?kind=quiz")
     assert res.status_code == 200, "get content suggestions"
-
-    quiz_id = res.json()[0]["id"]
 
     # get quiz
     res = client.get(f"/api/v1/studio/quiz/{quiz_id}")
@@ -57,3 +55,8 @@ def test_studio_quiz_flow(client: Client, admin_user: AdminUser):
     # delete quiz question
     res = client.delete(f"/api/v1/studio/quiz/{quiz_id}/question/{res.json()[0]}")
     assert res.status_code == 200, "delete quiz question"
+
+    # delete quiz
+    Attempt.objects.filter(quiz=quiz).delete()
+    res = client.delete(f"/api/v1/studio/quiz/{quiz_id}")
+    assert res.status_code == 200, "delete quiz"

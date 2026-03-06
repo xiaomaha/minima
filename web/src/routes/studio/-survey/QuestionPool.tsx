@@ -1,9 +1,7 @@
 import { IconPlus, IconSearch } from '@tabler/icons-solidjs'
-import { batch, For, Show, Suspense } from 'solid-js'
-import { unwrap } from 'solid-js/store'
+import { For, Show } from 'solid-js'
 import * as v from 'valibot'
 import {
-  type ContentSuggestionSpec,
   type SurveyQuestionFormatChoices,
   type SurveySpec,
   studioV1ContentSuggestions,
@@ -15,9 +13,9 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { useCollapse } from '../-context/CollapseContext'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { collectBlobFiles } from '../-studio/field'
-import { checkTree, getNestedState, scrollToLastPaper } from '../-studio/helper'
+import { scrollToLastPaper } from '../-studio/helper'
 import { InlineSuggestion } from '../-studio/InlineSuggestion'
+import { makeCopyQuestionPool, makeSaveQuestions } from '../-studio/questionPool'
 import { EmptyQuestion, questionFormats, vSurveyQuestionEditingSpec } from './data'
 import { Question } from './Question'
 
@@ -33,51 +31,8 @@ export const QuestionPool = () => {
     scrollToLastPaper()
   }
 
-  const saveAllQuestions = async (d: v.InferOutput<typeof vSurveyQuestionEditingSpec>[]) => {
-    const changedIndices: number[] = []
-    d.forEach((q, i) => {
-      if (!q.id) {
-        changedIndices.push(i)
-        return
-      }
-      const node = getNestedState(fieldState, ['questions', i])
-      if (node && checkTree(node, new Set()).dirty) changedIndices.push(i)
-    })
-
-    if (changedIndices.length === 0) return
-
-    const changedQuestions = changedIndices.map((i) => d[i]!)
-
-    const supplements = changedIndices.map((i) => staging.questions[i]?.supplement ?? '').join('')
-
-    const files = await collectBlobFiles(supplements)
-
-    const { data: savedIds } = await studioV1SaveSurveyQuestions({
-      path: { id: staging.id },
-      body: { data: { data: changedQuestions }, files },
-    })
-
-    batch(() => {
-      for (let i = 0; i < changedQuestions.length; i++) {
-        const oldId = changedQuestions[i]!.id
-        const newId = savedIds[i]!
-        const index = staging.questions.findIndex((q) => q.id === oldId)
-        if (index >= 0 && oldId !== newId) {
-          staging.questions[index]!.id = newId
-        }
-      }
-      source.questions = structuredClone(unwrap(staging.questions))
-    })
-  }
-
-  const copyQuestionPool = async (suggestion: ContentSuggestionSpec) => {
-    const { data } = await studioV1GetSurveyQuestions({ path: { id: suggestion.id } })
-    const filteredQuestions = data
-      .filter((q) => staging.questions.findIndex((sq) => sq.question === q.question) < 0)
-      .map((q) => ({ ...q, id: 0 }))
-    if (filteredQuestions.length === 0) return
-    staging.questions.push(...filteredQuestions)
-  }
+  const saveAllQuestions = makeSaveQuestions(staging, source, fieldState, studioV1SaveSurveyQuestions)
+  const copyQuestionPool = makeCopyQuestionPool(staging, studioV1GetSurveyQuestions)
 
   const collapseAll = useCollapse()
 
@@ -142,9 +97,7 @@ export const QuestionPool = () => {
         <For each={questions()}>
           {(question, index) => (
             <Show when={question}>
-              <Suspense>
-                <Question index={index()} />
-              </Suspense>
+              <Question index={index()} />
             </Show>
           )}
         </For>

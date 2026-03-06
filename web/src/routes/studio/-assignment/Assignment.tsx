@@ -7,7 +7,7 @@ import { type AssignmentSpec, studioV1InlineSuggestions, studioV1SaveAssignment 
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { BooleanField, DataBindField, NumberField, TextField, ThumbnailField } from '../-studio/field'
+import { AttachmentField, BooleanField, DataBindField, NumberField, TextField, ThumbnailField } from '../-studio/field'
 import { Paper } from '../-studio/Paper'
 import { vAssignmentEditingSpec } from './data'
 
@@ -24,12 +24,14 @@ export const Assignment = (props: Props) => {
   const schema = vAssignmentEditingSpec.entries
 
   const [thumbnail, setThumbnail] = createSignal<File | undefined>()
+  const [sampleFile, setSampleFile] = createSignal<File>()
 
   const saveAssignment = async (validated: v.InferOutput<typeof vAssignmentEditingSpec>) => {
     const { data: id } = await studioV1SaveAssignment({
       body: {
         data: { id: staging.id === EMPTY_CONTENT_ID ? undefined : staging.id, ...validated },
         thumbnail: thumbnail(),
+        sampleAttachment: sampleFile(),
       },
     })
     setThumbnail(undefined)
@@ -39,12 +41,22 @@ export const Assignment = (props: Props) => {
     if (staging.id === EMPTY_CONTENT_ID) {
       navigate({ to: `/studio/assignment/${id}`, replace: true })
     } else {
-      modifyMutable(source, reconcile(structuredClone(unwrap({ ...staging, questions: source.questions }))))
+      modifyMutable(
+        source,
+        reconcile(
+          structuredClone(unwrap({ ...staging, questions: source.questions, rubricCriteria: source.rubricCriteria })),
+        ),
+      )
     }
   }
 
   return (
-    <DataAction rootKey={[]} excludeKeys={[['questions']]} label={t('Assignment')} schema={vAssignmentEditingSpec}>
+    <DataAction
+      rootKey={[]}
+      excludeKeys={[['questions'], ['rubricCriteria']]}
+      label={t('Assignment')}
+      schema={vAssignmentEditingSpec}
+    >
       {(status, actions) => (
         <div class="relative">
           <div class="flex gap-4 items-center px-4 right-full top-0 min-h-12 absolute z-1">
@@ -78,6 +90,15 @@ export const Assignment = (props: Props) => {
               />
               <NumberField path={['confirmDueDays']} label={t('Confirm due days')} schema={schema.confirmDueDays} />
             </div>
+
+            <div class="divider" />
+
+            <AttachmentField
+              path={['sampleAttachment']}
+              label={t('Sample attachment')}
+              onFileSelect={setSampleFile}
+              required
+            />
 
             <div class="divider" />
 

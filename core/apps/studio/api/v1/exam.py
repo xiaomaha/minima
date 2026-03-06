@@ -17,7 +17,7 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest
+from apps.common.util import HttpRequest, ModeChoices
 from apps.exam.models import Attempt, Exam, Question, QuestionPool, Solution
 from apps.studio.decorator import editor_required, track_draft
 
@@ -146,6 +146,15 @@ async def save_exam(
         exam = await create_new()
 
     return exam.id
+
+
+@router.delete("/exam/{id}")
+@editor_required()
+@track_draft(Exam, id_field="id")
+async def delete_exam(request: HttpRequest, id: str):
+    if await Attempt.objects.filter(exam_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+        raise ValueError(ErrorCode.ATTEMPT_EXISTS)
+    await Exam.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/exam/{id}/question", response=list[ExamQuestionSpec])

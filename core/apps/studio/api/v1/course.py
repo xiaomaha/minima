@@ -21,7 +21,7 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest
+from apps.common.util import HttpRequest, ModeChoices
 from apps.course.models import (
     ASSESSIBLE_MODELS,
     Assessment,
@@ -31,6 +31,7 @@ from apps.course.models import (
     CourseInstructor,
     CourseRelation,
     CourseSurvey,
+    Engagement,
     GradingPolicy,
     Lesson,
     LessonMedia,
@@ -236,6 +237,15 @@ async def save_course(
     await GradingPolicy.objects.filter(course_id=course.id).aupdate(**grading_policy)
 
     return course.id
+
+
+@router.delete("/course/{id}")
+@editor_required()
+@track_draft(Course, id_field="id")
+async def delete_course(request: HttpRequest, id: str):
+    if await Engagement.objects.filter(course_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+        raise ValueError(ErrorCode.ATTEMPT_EXISTS)
+    await Course.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 class CourseSurveySaveSpec(CourseSurveySpec):

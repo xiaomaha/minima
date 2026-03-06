@@ -76,6 +76,25 @@ export const checkTree = (node: unknown, exclude: Set<unknown>): { error: boolea
   return result
 }
 
+export const checkArrayLengths = (src: unknown, stg: unknown, exclude?: Set<unknown>, node?: unknown): boolean => {
+  if (exclude?.has(node)) return false
+  if (Array.isArray(src) && Array.isArray(stg)) {
+    if (src.length !== stg.length) return true
+    return src.some((_, i) => checkArrayLengths(src[i], stg[i], exclude, Array.isArray(node) ? node[i] : undefined))
+  }
+  if (src && stg && typeof src === 'object' && typeof stg === 'object') {
+    return Object.keys(src).some((k) =>
+      checkArrayLengths(
+        (src as Record<string, unknown>)[k],
+        (stg as Record<string, unknown>)[k],
+        exclude,
+        (node as Record<string, unknown> | undefined)?.[k],
+      ),
+    )
+  }
+  return false
+}
+
 export const scrollToLastPaper = () => {
   requestAnimationFrame(() => {
     const papers = document.querySelectorAll('[data-paper]')

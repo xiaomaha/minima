@@ -22,6 +22,8 @@ class AssignmentSchema(LearningObjectMixinSchema):
     id: str
     owner: OwnerSchema
     honor_code: HonorCodeSchema
+    rubric_data: RubricSchema | None
+    sample_attachment: str | None
 
 
 class AssignmentSubmissionSchema(TimeStampedMixinSchema):
@@ -39,9 +41,7 @@ class AssignmentQuestionSchema(Schema):
     supplement: str
     attachment_file_count: int
     attachment_file_types: list[str]
-    sample_attachment: str | None
     plagiarism_threshold: int
-    solution: "AssignmentSolutionSchema"
 
     @staticmethod
     def resolve_supplement(obj: Question):
@@ -56,12 +56,6 @@ class AssignmentAttemptSchema(AttemptMixinSchema):
 
 class AssignmentGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
     id: int
-
-
-class AssignmentSolutionSchema(Schema):
-    id: int
-    rubric_data: "RubricSchema"
-    explanation: str
 
 
 class RubricSchema(Schema):

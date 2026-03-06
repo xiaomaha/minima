@@ -19,7 +19,6 @@ from apps.assignment.models import (
     QuestionPool,
     Rubric,
     RubricCriterion,
-    Solution,
     Submission,
 )
 from apps.common.admin import (
@@ -43,20 +42,10 @@ class QuestionPoolAdmin(ModelAdmin[QuestionPool]):
 
 @admin.register(Question)
 class QuestionAdmin(HiddenModelAdmin[Question]):
-    class SolutionInline(TabularInline[Solution]):
-        model = Solution
-
-    inlines = (SolutionInline,)
-
     def formfield_for_dbfield(self, db_field, request, **kwargs: object):
         if db_field.name == "supplement":
             kwargs["widget"] = WysiwygWidget()
         return super().formfield_for_dbfield(db_field, request, **kwargs)
-
-
-@admin.register(Solution)
-class SolutionAdmin(HiddenModelAdmin[Solution]):
-    pass
 
 
 @admin.register(Rubric)
@@ -158,14 +147,11 @@ class GradeAdmin(ModelAdmin[Grade]):
 
     @action(description=_("Grade"), permissions=["grade"])  # type: ignore # gettext not working
     def grade(self, request: HttpRequest, obj: Grade):
-        grade = Grade.objects.select_related("attempt__assignment", "attempt__question__solution__rubric").get(
-            pk=obj.pk
-        )
+        grade = Grade.objects.select_related("attempt__assignment", "attempt__question").get(pk=obj.pk)
         prefetch_related_objects(
-            [grade.attempt],
+            [grade.attempt.assignment],
             Prefetch(
-                "question__solution__rubric__rubric_criteria__performance_levels",
-                queryset=PerformanceLevel.objects.order_by("point"),
+                "rubric__rubric_criteria__performance_levels", queryset=PerformanceLevel.objects.order_by("point")
             ),
         )
         async_to_sync(grade.grade)(grader_id=cast(str, request.user.pk) if request.user else None)

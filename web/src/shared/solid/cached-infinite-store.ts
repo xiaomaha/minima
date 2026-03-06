@@ -62,6 +62,13 @@ export const initCachedInfiniteStore = <T, P>(
   })
 }
 
+export const clearCachedInfiniteStoreBy = (matcher: string | RegExp): void => {
+  for (const key of cache.keys()) {
+    const matches = typeof matcher === 'string' ? key.startsWith(matcher) : matcher.test(key)
+    if (matches) cache.delete(key)
+  }
+}
+
 export const createCachedInfiniteStore = <T, P>(
   prefix: string,
   getParams: () => P | undefined,

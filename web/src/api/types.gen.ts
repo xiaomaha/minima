@@ -480,14 +480,9 @@ export type AssignmentQuestionSchema = {
      */
     attachmentFileTypes: Array<string>;
     /**
-     * Sampleattachment
-     */
-    sampleAttachment: string | null;
-    /**
      * Plagiarismthreshold
      */
     plagiarismThreshold: number;
-    solution: AssignmentSolutionSchema;
 };
 
 /**
@@ -552,6 +547,11 @@ export type AssignmentSchema = {
     id: string;
     owner: OwnerSchema;
     honorCode: HonorCodeSchema;
+    rubricData: RubricSchema | null;
+    /**
+     * Sampleattachment
+     */
+    sampleAttachment: string | null;
 };
 
 /**
@@ -579,21 +579,6 @@ export type AssignmentSessionSchema = {
      * Otptoken
      */
     otpToken?: string;
-};
-
-/**
- * AssignmentSolutionSchema
- */
-export type AssignmentSolutionSchema = {
-    /**
-     * Id
-     */
-    id: number;
-    rubricData: RubricSchema;
-    /**
-     * Explanation
-     */
-    explanation: string;
 };
 
 /**
@@ -5520,10 +5505,6 @@ export type AssignmentQuestionSpec = {
      * Plagiarismthreshold
      */
     plagiarismThreshold: number;
-    /**
-     * Sampleattachment
-     */
-    sampleAttachment: string | null;
 };
 
 /**
@@ -5607,7 +5588,33 @@ export type AssignmentSpec = {
      * Honorcodeid
      */
     honorCodeId: number;
+    /**
+     * Rubriccriteria
+     */
+    rubricCriteria: Array<RubricCriterionSpec>;
     questions: AssignmentQuestionsSpec;
+    /**
+     * Sampleattachment
+     */
+    sampleAttachment: string | null;
+};
+
+/**
+ * RubricCriterionSpec
+ */
+export type RubricCriterionSpec = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Performancelevels
+     */
+    performanceLevels: Array<PerformanceLevelSchema>;
 };
 
 /**
@@ -5693,6 +5700,21 @@ export type AssignmentQuestionSaveSpec = {
      */
     plagiarismThreshold: number;
 };
+
+/**
+ * AssignmentQuestionsSaveSpec
+ */
+export type AssignmentQuestionsSaveSpec = {
+    /**
+     * Data
+     */
+    data: Array<AssignmentQuestionSaveSpec>;
+};
+
+/**
+ * RootModel[list[RubricCriterionSpec]]
+ */
+export type RootModelListRubricCriterionSpec = Array<RubricCriterionSpec>;
 
 /**
  * MediaSpec
@@ -8899,6 +8921,25 @@ export type StudioV1InlineSuggestionsResponses = {
 
 export type StudioV1InlineSuggestionsResponse = StudioV1InlineSuggestionsResponses[keyof StudioV1InlineSuggestionsResponses];
 
+export type StudioV1DeleteExamData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/exam/{id}';
+};
+
+export type StudioV1DeleteExamResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type StudioV1GetExamData = {
     body?: never;
     path: {
@@ -9023,6 +9064,25 @@ export type StudioV1DeleteExamQuesionData = {
 };
 
 export type StudioV1DeleteExamQuesionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1DeleteQuizData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/quiz/{id}';
+};
+
+export type StudioV1DeleteQuizResponses = {
     /**
      * OK
      */
@@ -9159,6 +9219,25 @@ export type StudioV1DeleteQuizQuesionResponses = {
     200: unknown;
 };
 
+export type StudioV1DeleteSurveyData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/survey/{id}';
+};
+
+export type StudioV1DeleteSurveyResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type StudioV1GetSurveyData = {
     body?: never;
     path: {
@@ -9289,6 +9368,25 @@ export type StudioV1DeleteSurveyQuesionResponses = {
     200: unknown;
 };
 
+export type StudioV1DeleteDiscussionData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/discussion/{id}';
+};
+
+export type StudioV1DeleteDiscussionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type StudioV1GetDiscussionData = {
     body?: never;
     path: {
@@ -9362,7 +9460,7 @@ export type StudioV1GetDiscussionQuestionsResponses = {
 
 export type StudioV1GetDiscussionQuestionsResponse = StudioV1GetDiscussionQuestionsResponses[keyof StudioV1GetDiscussionQuestionsResponses];
 
-export type StudioV1SaveDiscussionQuestionData = {
+export type StudioV1SaveDiscussionQuestionsData = {
     /**
      * MultiPartBodyParams
      */
@@ -9385,7 +9483,7 @@ export type StudioV1SaveDiscussionQuestionData = {
     url: '/api/v1/studio/discussion/{id}/question';
 };
 
-export type StudioV1SaveDiscussionQuestionResponses = {
+export type StudioV1SaveDiscussionQuestionsResponses = {
     /**
      * Response
      *
@@ -9394,7 +9492,7 @@ export type StudioV1SaveDiscussionQuestionResponses = {
     200: Array<number>;
 };
 
-export type StudioV1SaveDiscussionQuestionResponse = StudioV1SaveDiscussionQuestionResponses[keyof StudioV1SaveDiscussionQuestionResponses];
+export type StudioV1SaveDiscussionQuestionsResponse = StudioV1SaveDiscussionQuestionsResponses[keyof StudioV1SaveDiscussionQuestionsResponses];
 
 export type StudioV1DeleteDiscussionQuesionData = {
     body?: never;
@@ -9413,6 +9511,25 @@ export type StudioV1DeleteDiscussionQuesionData = {
 };
 
 export type StudioV1DeleteDiscussionQuesionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1DeleteAssignmentData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/assignment/{id}';
+};
+
+export type StudioV1DeleteAssignmentResponses = {
     /**
      * OK
      */
@@ -9451,6 +9568,12 @@ export type StudioV1SaveAssignmentData = {
          * Max size: 3MB
          */
         thumbnail?: Blob | File;
+        /**
+         * Sampleattachment
+         *
+         * Max size: 3MB
+         */
+        sampleAttachment?: Blob | File;
         data: AssignmentSaveSpec;
     };
     path?: never;
@@ -9492,7 +9615,7 @@ export type StudioV1GetAssignmentQuestionsResponses = {
 
 export type StudioV1GetAssignmentQuestionsResponse = StudioV1GetAssignmentQuestionsResponses[keyof StudioV1GetAssignmentQuestionsResponses];
 
-export type StudioV1SaveAssignmentQuestionData = {
+export type StudioV1SaveAssignmentQuestionsData = {
     /**
      * MultiPartBodyParams
      */
@@ -9503,13 +9626,7 @@ export type StudioV1SaveAssignmentQuestionData = {
          * Max size: 3MB
          */
         files?: Array<Blob | File>;
-        /**
-         * Sample
-         *
-         * Max size: 3MB
-         */
-        sample?: Blob | File;
-        data: AssignmentQuestionSaveSpec;
+        data: AssignmentQuestionsSaveSpec;
     };
     path: {
         /**
@@ -9521,16 +9638,16 @@ export type StudioV1SaveAssignmentQuestionData = {
     url: '/api/v1/studio/assignment/{id}/question';
 };
 
-export type StudioV1SaveAssignmentQuestionResponses = {
+export type StudioV1SaveAssignmentQuestionsResponses = {
     /**
      * Response
      *
      * OK
      */
-    200: number;
+    200: Array<number>;
 };
 
-export type StudioV1SaveAssignmentQuestionResponse = StudioV1SaveAssignmentQuestionResponses[keyof StudioV1SaveAssignmentQuestionResponses];
+export type StudioV1SaveAssignmentQuestionsResponse = StudioV1SaveAssignmentQuestionsResponses[keyof StudioV1SaveAssignmentQuestionsResponses];
 
 export type StudioV1DeleteAssignmentQuesionData = {
     body?: never;
@@ -9549,6 +9666,67 @@ export type StudioV1DeleteAssignmentQuesionData = {
 };
 
 export type StudioV1DeleteAssignmentQuesionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1GetAssignmentRubricData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/assignment/{id}/rubric';
+};
+
+export type StudioV1GetAssignmentRubricResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: Array<RubricCriterionSpec>;
+};
+
+export type StudioV1GetAssignmentRubricResponse = StudioV1GetAssignmentRubricResponses[keyof StudioV1GetAssignmentRubricResponses];
+
+export type StudioV1SaveAssignmentRubricData = {
+    body: RootModelListRubricCriterionSpec;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/assignment/{id}/rubric';
+};
+
+export type StudioV1SaveAssignmentRubricResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type StudioV1DeleteMediaData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/media/{id}';
+};
+
+export type StudioV1DeleteMediaResponses = {
     /**
      * OK
      */
@@ -9673,6 +9851,25 @@ export type StudioV1CreateMediaQuizResponses = {
 };
 
 export type StudioV1CreateMediaQuizResponse = StudioV1CreateMediaQuizResponses[keyof StudioV1CreateMediaQuizResponses];
+
+export type StudioV1DeleteCourseData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/studio/course/{id}';
+};
+
+export type StudioV1DeleteCourseResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type StudioV1GetCourseData = {
     body?: never;

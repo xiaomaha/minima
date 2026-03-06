@@ -1,20 +1,27 @@
-import { IconPlus } from '@tabler/icons-solidjs'
+import { IconPlus, IconSearch } from '@tabler/icons-solidjs'
 import { createMemo, For, Show } from 'solid-js'
 import * as v from 'valibot'
-import type { DiscussionSpec } from '@/api'
+import {
+  type DiscussionSpec,
+  studioV1ContentSuggestions,
+  studioV1GetDiscussionQuestions,
+  studioV1SaveDiscussionQuestions,
+} from '@/api'
 import { CollapseButton } from '@/shared/CollapseButton'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useCollapse } from '../-context/CollapseContext'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
 import { scrollToLastPaper } from '../-studio/helper'
+import { InlineSuggestion } from '../-studio/InlineSuggestion'
+import { makeCopyQuestionPool, makeSaveQuestions } from '../-studio/questionPool'
 import { EmptyQuestion, vDiscussionQuestionEditingSpec } from './data'
 import { Question } from './Question'
 
 export const QuestionPool = () => {
   const { t } = useTranslation()
 
-  const { staging } = useEditing<DiscussionSpec>()
+  const { source, staging, fieldState } = useEditing<DiscussionSpec>()
 
   const questions = () => staging.questions
 
@@ -22,6 +29,9 @@ export const QuestionPool = () => {
     staging.questions.push(EmptyQuestion())
     scrollToLastPaper()
   }
+
+  const saveAllQuestions = makeSaveQuestions(staging, source, fieldState, studioV1SaveDiscussionQuestions)
+  const copyQuestionPool = makeCopyQuestionPool(staging, studioV1GetDiscussionQuestions)
 
   const completePercentage = createMemo((): number => {
     return questions().length >= 1 ? 100 : 0
@@ -61,16 +71,29 @@ export const QuestionPool = () => {
             <div class="flex gap-2 items-center justify-end mx-4">
               <Show when={collapseAll && questions().length}>
                 <CollapseButton
-                  class="absolute left-4 opacity-30 hover:opacity-100"
+                  class="opacity-30 hover:opacity-100"
                   collapsed={collapseAll!.collapsed}
                   setCollapsed={collapseAll!.setCollapsed}
                   default={true}
                 />
               </Show>
+
+              <InlineSuggestion<string, Parameters<typeof studioV1ContentSuggestions>[0]>
+                placeholder={t('Copy question pool')}
+                cacheKey="studioV1ContentSuggestions"
+                fetchParams={() => ({ query: { kind: 'discussion' } })}
+                fetchFn={async (options) => (await studioV1ContentSuggestions(options)).data}
+                excludeIds={() => [staging.id]}
+                onCommit={copyQuestionPool}
+                icon={<IconSearch size={20} class="cursor-pointer shrink-0" />}
+                inputClass="bg-transparent"
+              />
+
               <actions.Import label={t('Import questions')} />
               <Show when={questions().length}>
                 <actions.Export label={t('Export all questions')} />
                 <actions.Reset />
+                <actions.Save label={t('Save all questions')} onSave={saveAllQuestions} />
               </Show>
             </div>
           </>

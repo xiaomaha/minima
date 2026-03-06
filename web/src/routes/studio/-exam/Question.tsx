@@ -93,7 +93,7 @@ export const Question = (props: Props) => {
                   {(_, index) => (
                     <TextField
                       path={['questions', props.index, 'options', index()]}
-                      label={`${t('Option {{num}}', { num: index() + 1 })} ${index() > 1 ? t('Optional') : ''}`}
+                      label={`${t('Option {{num}}', { num: index() + 1 })} ${index() > 1 ? t('(Optional)') : ''}`}
                       schema={index() < 2 ? v.pipe(v.string(), v.nonEmpty(t('required'))) : v.string()}
                       multiline
                     />

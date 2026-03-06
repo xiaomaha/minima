@@ -107,7 +107,7 @@ export const SitePolicy = (props: SitePolicyProps) => {
                 <div class="flex items-center gap-2 justify-between mb-0">
                   <span class="text-base font-semibold">
                     <span class="mr-2">{policy.title}</span>
-                    <Show when={policy.mandatory} fallback={<span class="text-xs label">{t('Optional')}</span>}>
+                    <Show when={policy.mandatory} fallback={<span class="text-xs label">{t('(Optional)')}</span>}>
                       <span class="text-base text-red-600">*</span>
                     </Show>
                   </span>
