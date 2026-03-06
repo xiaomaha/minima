@@ -42,8 +42,17 @@ export const Menu = (props: Props) => {
   return (
     <>
       <div
-        class={`min-h-10 flex items-center gap-4 opacity-40 hover:opacity-100 [&:has(*:hover)]:opacity-100 ${props.class ?? ''}`}
+        class={`w-full min-h-10 flex items-center gap-4 opacity-40 hover:opacity-100 [&:has(*:hover)]:opacity-100 ${props.class ?? ''}`}
       >
+        <button
+          type="button"
+          class="btn btn-sm btn-ghost btn-circle mr-auto"
+          onClick={() => navigate({ to: '/studio' })}
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
+        >
+          <IconHome class="shrink-0" />
+        </button>
         <div class="breadcrumbs text-sm">
           <ul>
             <li>{t(capitalize(params().app))}</li>
@@ -79,16 +88,6 @@ export const Menu = (props: Props) => {
           tabIndex={-1}
         >
           <IconChevronLeft class="shrink-0" />
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-sm btn-ghost btn-circle"
-          onClick={() => navigate({ to: '/studio' })}
-          onMouseDown={(e) => e.preventDefault()}
-          tabIndex={-1}
-        >
-          <IconHome class="shrink-0" />
         </button>
       </div>
 

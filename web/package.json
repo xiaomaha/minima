@@ -26,7 +26,6 @@
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/router-plugin": "^1.166.2",
     "@tanstack/solid-router": "^1.166.2",
-    "@tanstack/solid-virtual": "^3.13.20",
     "@tiptap/core": "^3.20.0",
     "@tiptap/extension-dropcursor": "^3.20.0",
     "@tiptap/extension-file-handler": "^3.20.0",

@@ -1,10 +1,10 @@
 import { Show } from 'solid-js'
-import { type QuizSpec, studioV1GetQuiz } from '@/api'
+import { type QuizSpec, studioV1DeleteQuiz, studioV1GetQuiz } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { CollapseProvider } from '../-context/CollapseContext'
 import { EditingProvider, EMPTY_CONTENT_ID } from '../-context/editing'
 import { type ContentEntry, initEditing } from '../-studio/initEditing'
-import { PublishBadge } from '../-studio/PublishBadge'
+import { PublishStatus } from '../-studio/PublishStatus'
 import { EmptyQuiz } from './data'
 import { QuestionPool } from './QuestionPool'
 import { Quiz } from './Quiz'
@@ -23,8 +23,8 @@ export const App = (props: { id: string }) => {
   return (
     <div class="py-4 relative space-y-8">
       <Show when={!loading()} fallback={<LoadingOverlay class="static" />}>
-        <PublishBadge published={source.published} class="absolute -top-2 left-2" />
         <EditingProvider value={{ source, staging, fieldState }}>
+          <PublishStatus class="mb-2" deleteFn={studioV1DeleteQuiz} />
           <Quiz onSave={onSave} />
           <Show when={props.id !== EMPTY_CONTENT_ID}>
             <CollapseProvider>

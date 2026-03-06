@@ -25,8 +25,7 @@ export const GradingReview = () => {
 
   const assignment = s().assignment
   const grade = s().grade!
-  const solution = s().attempt!.question.solution
-  const rubricData = solution.rubricData
+  const rubricData = assignment.rubricData!
 
   const possiblePoint = grade.possiblePoint
   const passingPoint = assignment.passingPoint ?? 0
@@ -57,11 +56,6 @@ export const GradingReview = () => {
     <>
       <div class="w-full space-y-12">
         <ScorePanel grade={grade} passingPoint={passingPoint} />
-
-        <Show when={solution.explanation}>
-          <div class="label my-1 text-sm">{t('Explanation')}</div>
-          <div>{solution.explanation}</div>
-        </Show>
 
         <Show
           when={

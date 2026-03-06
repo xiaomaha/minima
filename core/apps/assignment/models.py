@@ -108,78 +108,15 @@ class Question(AttachmentMixin):
     supplement = TextField(_("Supplement"), blank=True, default="")
     attachment_file_count = PositiveSmallIntegerField(_("Attachment File Count"), default=1)
     attachment_file_types = ArrayField(CharField(max_length=10), blank=True, default=list, verbose_name=_("Attachment File Types"))  # fmt: off
-    sample_attachment = FileField(_("Sample Attachment"), max_length=255, blank=True, null=True)
     plagiarism_threshold = PositiveSmallIntegerField(_("Plagiarism Threshold Percentage"))
 
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
 
-    if TYPE_CHECKING:
-        solution: "Solution"
-
     @property
     def cleaned_supplement(self):
         return self.update_attachment_urls(content=self.supplement)
-
-    @property
-    def sample_attachment_url(self):
-        if self.sample_attachment:
-            return self.sample_attachment.url
-
-
-@pghistory.track()
-class Solution(Model):
-    question = OneToOneField(Question, CASCADE, verbose_name=_("Question"))
-    rubric = ForeignKey("Rubric", CASCADE, verbose_name=_("Rubric"))
-    explanation = TextField(_("Explanation"), blank=True, default="")
-
-    class Meta:
-        verbose_name = _("Solution")
-        verbose_name_plural = _("Solutions")
-
-    @property
-    def rubric_data(self):
-        return getattr(self, "_rubric_data", None)
-
-    @rubric_data.setter
-    def rubric_data(self, data: RubricDataDict):
-        self._rubric_data = data
-
-    async def get_rubric_data(self) -> RubricDataDict:
-        criteria_dict: dict[int, RubricCriterionDataDict] = {}
-        max_points_by_criterion: dict[int, dict[str, int]] = {}
-
-        async for criterion in self.rubric.rubric_criteria.all():
-            criterion_id = criterion.pk
-            criteria_dict[criterion_id] = {
-                "id": criterion_id,
-                "name": criterion.name,
-                "description": criterion.description,
-                "performance_levels": [],
-            }
-            max_points_by_criterion[criterion_id] = {"max_point": 0}
-
-            async for level in criterion.performance_levels.all():
-                max_points_by_criterion[criterion_id]["max_point"] = max(
-                    max_points_by_criterion[criterion_id]["max_point"], level.point
-                )
-                criteria_dict[criterion_id]["performance_levels"].append({
-                    "id": level.pk,
-                    "name": level.name,
-                    "description": level.description,
-                    "point": level.point,
-                })
-
-        possible_point = sum(data["max_point"] for data in max_points_by_criterion.values())
-
-        return {
-            "id": self.rubric.pk,
-            "name": self.rubric.name,
-            "description": self.rubric.description,
-            "possible_point": possible_point,
-            "criteria": list(criteria_dict.values()),
-        }
 
 
 @pghistory.track()
@@ -187,6 +124,8 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     honor_code = ForeignKey(HonorCode, CASCADE, verbose_name=_("Honor Code"))
     question_pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+    rubric = ForeignKey("Rubric", CASCADE, verbose_name=_("Rubric"))
+    sample_attachment = FileField(_("Sample Attachment"), max_length=255, blank=True, null=True)
 
     class Meta(LearningObjectMixin.Meta, GradeWorkflowMixin.Meta):
         verbose_name = _("Assignment")
@@ -196,6 +135,19 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
     if TYPE_CHECKING:
         question_pool_id: int
         pk: str
+
+    @property
+    def sample_attachment_url(self):
+        if self.sample_attachment:
+            return self.sample_attachment.url
+
+    @property
+    def rubric_data(self):
+        return getattr(self, "_rubric_data", None)
+
+    @rubric_data.setter
+    def rubric_data(self, data: RubricDataDict):
+        self._rubric_data = data
 
     @classmethod
     async def get_session(cls, *, assignment_id: str, learner_id: str, context: str, access_date: AccessDate):
@@ -212,8 +164,7 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
         attempt = (
             await Attempt.objects
             .filter(assignment_id=assignment_id, learner_id=learner_id, context=context, active=True)
-            .select_related("assignment", "submission", "grade", "question__solution__rubric")
-            .prefetch_related("question__solution__rubric__rubric_criteria__performance_levels")
+            .select_related("assignment", "submission", "grade")
             .prefetch_related("question__attachments")
             .alast()
         )
@@ -227,8 +178,14 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
                 )
             return session
 
-        # cf exam solution logic
-        attempt.question.solution.rubric_data = await attempt.question.solution.get_rubric_data()
+        await aprefetch_related_objects(
+            [assignment],
+            Prefetch(
+                "rubric__rubric_criteria__performance_levels", queryset=PerformanceLevel.objects.order_by("point")
+            ),
+        )
+        assignment.rubric_data = await assignment.get_rubric_data()
+
         session["attempt"] = attempt
 
         if not hasattr(attempt, "submission"):
@@ -270,6 +227,41 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
 
         return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
 
+    async def get_rubric_data(self) -> RubricDataDict:
+        criteria_dict: dict[int, RubricCriterionDataDict] = {}
+        max_points_by_criterion: dict[int, dict[str, int]] = {}
+
+        async for criterion in self.rubric.rubric_criteria.all():
+            criterion_id = criterion.pk
+            criteria_dict[criterion_id] = {
+                "id": criterion_id,
+                "name": criterion.name,
+                "description": criterion.description,
+                "performance_levels": [],
+            }
+            max_points_by_criterion[criterion_id] = {"max_point": 0}
+
+            async for level in criterion.performance_levels.all():
+                max_points_by_criterion[criterion_id]["max_point"] = max(
+                    max_points_by_criterion[criterion_id]["max_point"], level.point
+                )
+                criteria_dict[criterion_id]["performance_levels"].append({
+                    "id": level.pk,
+                    "name": level.name,
+                    "description": level.description,
+                    "point": level.point,
+                })
+
+        possible_point = sum(data["max_point"] for data in max_points_by_criterion.values())
+
+        return {
+            "id": self.rubric.pk,
+            "name": self.rubric.name,
+            "description": self.rubric.description,
+            "possible_point": possible_point,
+            "criteria": list(criteria_dict.values()),
+        }
+
 
 @pghistory.track()
 class Attempt(AttemptMixin):
@@ -306,16 +298,16 @@ class Attempt(AttemptMixin):
             if not await OtpLog.check_otp_verification(user_id=learner_id, consumer=assignment):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
 
-        question = await QuestionPool(id=assignment.question_pool_id).select_question()
         await aprefetch_related_objects(
-            [question],
-            "attachments",
+            [assignment],
             Prefetch(
-                "solution__rubric__rubric_criteria__performance_levels",
-                queryset=PerformanceLevel.objects.order_by("point"),
+                "rubric__rubric_criteria__performance_levels", queryset=PerformanceLevel.objects.order_by("point")
             ),
         )
-        question.solution.rubric_data = await question.solution.get_rubric_data()
+        assignment.rubric_data = await assignment.get_rubric_data()
+
+        question = await QuestionPool(id=assignment.question_pool_id).select_question()
+        await aprefetch_related_objects([question], "attachments")
 
         try:
             attempt = await Attempt.objects.acreate(
@@ -338,15 +330,16 @@ class Attempt(AttemptMixin):
     async def submit(
         cls, *, assignment_id: str, learner_id: str, context: str, answer: str, files: Sequence[File] | None
     ):
-        attempt = await cls.objects.select_related("assignment", "question__solution__rubric").aget(
-            assignment_id=assignment_id, learner_id=learner_id, context=context, active=True
-        )
-        await aprefetch_related_objects(
-            [attempt],
-            Prefetch(
-                "question__solution__rubric__rubric_criteria__performance_levels",
-                queryset=PerformanceLevel.objects.order_by("point"),
-            ),
+        attempt = (
+            await cls.objects
+            .select_related("assignment", "question")
+            .prefetch_related(
+                Prefetch(
+                    "assignment__rubric__rubric_criteria__performance_levels",
+                    queryset=PerformanceLevel.objects.order_by("point"),
+                )
+            )
+            .aget(assignment_id=assignment_id, learner_id=learner_id, context=context, active=True)
         )
 
         file_count = attempt.question.attachment_file_count
@@ -448,7 +441,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pgh_event_model: type[Model]
 
     async def grade(self, grader_id: str | None = None):
-        rubric_data = await self.attempt.question.solution.get_rubric_data()
+        rubric_data = await self.attempt.assignment.get_rubric_data()
         default_details = {criterion["name"]: None for criterion in rubric_data["criteria"]}
         self.earned_details = default_details | (self.earned_details or {})
         self.possible_point = rubric_data["possible_point"]

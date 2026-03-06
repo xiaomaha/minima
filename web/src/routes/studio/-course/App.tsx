@@ -1,9 +1,9 @@
 import { Show } from 'solid-js'
-import { type CourseSpec, studioV1GetCourse } from '@/api'
+import { type CourseSpec, studioV1DeleteCourse, studioV1GetCourse } from '@/api'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { EditingProvider, EMPTY_CONTENT_ID } from '../-context/editing'
 import { type ContentEntry, initEditing } from '../-studio/initEditing'
-import { PublishBadge } from '../-studio/PublishBadge'
+import { PublishStatus } from '../-studio/PublishStatus'
 import { Assessments } from './Assessments'
 import { Categories } from './Categories'
 import { Certificates } from './Certificates'
@@ -28,8 +28,8 @@ export const App = (props: { id: string }) => {
   return (
     <div class="py-4 relative space-y-8">
       <Show when={!loading()} fallback={<LoadingOverlay class="static" />}>
-        <PublishBadge published={source.published} class="absolute -top-2 left-2" />
         <EditingProvider value={{ source, staging, fieldState }}>
+          <PublishStatus class="mb-2" deleteFn={studioV1DeleteCourse} />
           <Course onSave={onSave} />
           <Show when={props.id !== EMPTY_CONTENT_ID}>
             <Assessments />

@@ -1,11 +1,11 @@
 import { batch, createSignal } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import * as v from 'valibot'
-import { type AssignmentSpec, studioV1DeleteAssignmentQuesion, studioV1SaveAssignmentQuestion } from '@/api'
+import { type AssignmentSpec, studioV1DeleteAssignmentQuesion, studioV1SaveAssignmentQuestions } from '@/api'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
-import { AttachmentField, CommaSeparatedField, NumberField, RichTextField, TextField } from '../-studio/field'
+import { CommaSeparatedField, NumberField, RichTextField, TextField } from '../-studio/field'
 import { Paper } from '../-studio/Paper'
 import { vAssignmentQuestionEditingSpec } from './data'
 
@@ -21,16 +21,15 @@ export const Question = (props: Props) => {
   const question = () => staging.questions[props.index]!
 
   const [files, setFiles] = createSignal<File[]>([])
-  const [sampleFile, setSampleFile] = createSignal<File>()
 
   const saveQuestion = async (validated: v.InferOutput<typeof vAssignmentQuestionEditingSpec>) => {
-    const { data } = await studioV1SaveAssignmentQuestion({
+    const { data } = await studioV1SaveAssignmentQuestions({
       path: { id: staging.id },
-      body: { data: validated, files: files(), sample: sampleFile() },
+      body: { data: { data: [validated] }, files: files() },
     })
 
     batch(() => {
-      staging.questions[props.index]!.id = data
+      staging.questions[props.index]!.id = data[0]!
       source.questions[props.index] = structuredClone(unwrap(staging.questions[props.index]!))
     })
   }
@@ -56,7 +55,7 @@ export const Question = (props: Props) => {
   return (
     <DataAction
       rootKey={['questions', props.index]}
-      label={('Assignment question')}
+      label={'Assignment question'}
       schema={vAssignmentQuestionEditingSpec}
     >
       {(status, actions) => (
@@ -100,14 +99,8 @@ export const Question = (props: Props) => {
               />
             </div>
 
-            <AttachmentField
-              path={['questions', props.index, 'sampleAttachment']}
-              label={t('Sample attachment')}
-              onFileSelect={setSampleFile}
-              required
-            />
-
             <div class="divider" />
+
             <div class="flex gap-2 items-center justify-end">
               <actions.Remove onRemove={removeQuestion} />
               <actions.Import />

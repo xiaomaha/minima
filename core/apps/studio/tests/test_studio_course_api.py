@@ -3,7 +3,7 @@ import json
 import pytest
 from django.test.client import Client
 
-from apps.course.models import CourseRelation
+from apps.course.models import CourseRelation, Engagement
 from apps.course.tests.factories import CourseFactory
 from conftest import AdminUser
 
@@ -17,11 +17,11 @@ def test_studio_course_flow(client: Client, admin_user: AdminUser):
     CourseRelation.objects.get_or_create(course=c1, related_course=c2, defaults={"label": c2.title, "ordering": 0})
     CourseRelation.objects.get_or_create(course=c2, related_course=c1, defaults={"label": c1.title, "ordering": 0})
 
+    course_id = c2.id
+
     # get content suggestions
     res = client.get("/api/v1/studio/suggestion/content?kind=course")
     assert res.status_code == 200, "get content suggestions"
-
-    course_id = c2.id
 
     # get course
     res = client.get(f"/api/v1/studio/course/{course_id}")
@@ -189,3 +189,8 @@ def test_studio_course_flow(client: Client, admin_user: AdminUser):
         content_type="application/json",
     )
     assert res.status_code == 200, "add instructor"
+
+    # delete course
+    Engagement.objects.filter(course_id=course_id).delete()
+    res = client.delete(f"/api/v1/studio/course/{course_id}")
+    assert res.status_code == 200, "delete course"

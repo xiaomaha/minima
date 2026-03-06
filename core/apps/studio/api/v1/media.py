@@ -11,8 +11,8 @@ from ninja.params import functions
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest
-from apps.content.models import Media, Subtitle
+from apps.common.util import HttpRequest, ModeChoices
+from apps.content.models import Media, Subtitle, Watch
 from apps.quiz.models import Quiz
 from apps.studio.decorator import editor_required, track_draft
 
@@ -113,6 +113,15 @@ async def save_media(
             raise ValueError(ErrorCode.QUIZ_NOT_FOUND)
 
     return media.id
+
+
+@router.delete("/media/{id}")
+@editor_required()
+@track_draft(Media, id_field="id")
+async def delete_media(request: HttpRequest, id: str):
+    if await Watch.objects.filter(media_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+        raise ValueError(ErrorCode.ATTEMPT_EXISTS)
+    await Media.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.post("/media/{id}/subtitle")

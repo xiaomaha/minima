@@ -195,6 +195,31 @@ export const vAssignmentGradeSchema = v.object({
 });
 
 /**
+ * AssignmentQuestionSchema
+ */
+export const vAssignmentQuestionSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    question: v.string(),
+    supplement: v.string(),
+    attachmentFileCount: v.pipe(v.number(), v.integer()),
+    attachmentFileTypes: v.array(v.string()),
+    plagiarismThreshold: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * AssignmentAttemptSchema
+ */
+export const vAssignmentAttemptSchema = v.object({
+    started: v.pipe(v.string(), v.isoTimestamp()),
+    active: v.boolean(),
+    context: v.string(),
+    mode: v.string(),
+    id: v.pipe(v.number(), v.integer()),
+    question: vAssignmentQuestionSchema,
+    retry: v.pipe(v.number(), v.integer())
+});
+
+/**
  * AssignmentSubmissionSchema
  */
 export const vAssignmentSubmissionSchema = v.object({
@@ -241,28 +266,6 @@ export const vOwnerSchema = v.object({
 });
 
 /**
- * AssignmentSchema
- */
-export const vAssignmentSchema = v.object({
-    created: v.pipe(v.string(), v.isoTimestamp()),
-    modified: v.pipe(v.string(), v.isoTimestamp()),
-    title: v.string(),
-    description: v.string(),
-    audience: v.string(),
-    thumbnail: v.nullable(v.string()),
-    featured: v.boolean(),
-    format: v.string(),
-    durationSeconds: v.nullable(v.number()),
-    passingPoint: v.pipe(v.number(), v.integer()),
-    maxAttempts: v.pipe(v.number(), v.integer()),
-    verificationRequired: v.boolean(),
-    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
-    id: v.string(),
-    owner: vOwnerSchema,
-    honorCode: vHonorCodeSchema
-});
-
-/**
  * PerformanceLevelSchema
  */
 export const vPerformanceLevelSchema = v.object({
@@ -291,39 +294,27 @@ export const vRubricSchema = v.object({
 });
 
 /**
- * AssignmentSolutionSchema
+ * AssignmentSchema
  */
-export const vAssignmentSolutionSchema = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    rubricData: vRubricSchema,
-    explanation: v.string()
-});
-
-/**
- * AssignmentQuestionSchema
- */
-export const vAssignmentQuestionSchema = v.object({
-    id: v.pipe(v.number(), v.integer()),
-    question: v.string(),
-    supplement: v.string(),
-    attachmentFileCount: v.pipe(v.number(), v.integer()),
-    attachmentFileTypes: v.array(v.string()),
-    sampleAttachment: v.nullable(v.string()),
-    plagiarismThreshold: v.pipe(v.number(), v.integer()),
-    solution: vAssignmentSolutionSchema
-});
-
-/**
- * AssignmentAttemptSchema
- */
-export const vAssignmentAttemptSchema = v.object({
-    started: v.pipe(v.string(), v.isoTimestamp()),
-    active: v.boolean(),
-    context: v.string(),
-    mode: v.string(),
-    id: v.pipe(v.number(), v.integer()),
-    question: vAssignmentQuestionSchema,
-    retry: v.pipe(v.number(), v.integer())
+export const vAssignmentSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    title: v.string(),
+    description: v.string(),
+    audience: v.string(),
+    thumbnail: v.nullable(v.string()),
+    featured: v.boolean(),
+    format: v.string(),
+    durationSeconds: v.nullable(v.number()),
+    passingPoint: v.pipe(v.number(), v.integer()),
+    maxAttempts: v.pipe(v.number(), v.integer()),
+    verificationRequired: v.boolean(),
+    published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    id: v.string(),
+    owner: vOwnerSchema,
+    honorCode: vHonorCodeSchema,
+    rubricData: v.nullable(vRubricSchema),
+    sampleAttachment: v.nullable(v.string())
 });
 
 /**
@@ -2409,14 +2400,22 @@ export const vAssignmentQuestionSpec = v.object({
     supplement: v.string(),
     attachmentFileCount: v.pipe(v.number(), v.integer()),
     attachmentFileTypes: v.array(v.string()),
-    plagiarismThreshold: v.pipe(v.number(), v.integer()),
-    sampleAttachment: v.nullable(v.string())
+    plagiarismThreshold: v.pipe(v.number(), v.integer())
 });
 
 /**
  * AssignmentQuestionsSpec
  */
 export const vAssignmentQuestionsSpec = v.array(vAssignmentQuestionSpec);
+
+/**
+ * RubricCriterionSpec
+ */
+export const vRubricCriterionSpec = v.object({
+    name: v.string(),
+    description: v.string(),
+    performanceLevels: v.array(vPerformanceLevelSchema)
+});
 
 /**
  * AssignmentSpec
@@ -2440,7 +2439,9 @@ export const vAssignmentSpec = v.object({
     published: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     id: v.string(),
     honorCodeId: v.pipe(v.number(), v.integer()),
-    questions: vAssignmentQuestionsSpec
+    rubricCriteria: v.array(vRubricCriterionSpec),
+    questions: vAssignmentQuestionsSpec,
+    sampleAttachment: v.nullable(v.string())
 });
 
 /**
@@ -2472,6 +2473,18 @@ export const vAssignmentQuestionSaveSpec = v.object({
     attachmentFileTypes: v.array(v.string()),
     plagiarismThreshold: v.pipe(v.number(), v.integer())
 });
+
+/**
+ * AssignmentQuestionsSaveSpec
+ */
+export const vAssignmentQuestionsSaveSpec = v.object({
+    data: v.array(vAssignmentQuestionSaveSpec)
+});
+
+/**
+ * RootModel[list[RubricCriterionSpec]]
+ */
+export const vRootModelListRubricCriterionSpec = v.array(vRubricCriterionSpec);
 
 /**
  * SubtitleSpec
@@ -4158,6 +4171,14 @@ export const vStudioV1InlineSuggestionsData = v.object({
  */
 export const vStudioV1InlineSuggestionsResponse = v.array(vInlineSuggestionSpec);
 
+export const vStudioV1DeleteExamData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
 export const vStudioV1GetExamData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -4225,6 +4246,14 @@ export const vStudioV1DeleteExamQuesionData = v.object({
     path: v.object({
         id: v.string(),
         question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1DeleteQuizData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
     }),
     query: v.optional(v.never())
 });
@@ -4300,6 +4329,14 @@ export const vStudioV1DeleteQuizQuesionData = v.object({
     query: v.optional(v.never())
 });
 
+export const vStudioV1DeleteSurveyData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
 export const vStudioV1GetSurveyData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -4371,6 +4408,14 @@ export const vStudioV1DeleteSurveyQuesionData = v.object({
     query: v.optional(v.never())
 });
 
+export const vStudioV1DeleteDiscussionData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
 export const vStudioV1GetDiscussionData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -4415,7 +4460,7 @@ export const vStudioV1GetDiscussionQuestionsData = v.object({
  */
 export const vStudioV1GetDiscussionQuestionsResponse = v.array(vDiscussionQuestionSpec);
 
-export const vStudioV1SaveDiscussionQuestionData = v.object({
+export const vStudioV1SaveDiscussionQuestionsData = v.object({
     body: v.object({
         files: v.optional(v.array(v.string())),
         data: vDiscussionQuestionsSaveSpec
@@ -4431,13 +4476,21 @@ export const vStudioV1SaveDiscussionQuestionData = v.object({
  *
  * OK
  */
-export const vStudioV1SaveDiscussionQuestionResponse = v.array(v.pipe(v.number(), v.integer()));
+export const vStudioV1SaveDiscussionQuestionsResponse = v.array(v.pipe(v.number(), v.integer()));
 
 export const vStudioV1DeleteDiscussionQuesionData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.string(),
         question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1DeleteAssignmentData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
     }),
     query: v.optional(v.never())
 });
@@ -4458,6 +4511,7 @@ export const vStudioV1GetAssignmentResponse = vAssignmentSpec;
 export const vStudioV1SaveAssignmentData = v.object({
     body: v.object({
         thumbnail: v.optional(v.string()),
+        sampleAttachment: v.optional(v.string()),
         data: vAssignmentSaveSpec
     }),
     path: v.optional(v.never()),
@@ -4486,11 +4540,10 @@ export const vStudioV1GetAssignmentQuestionsData = v.object({
  */
 export const vStudioV1GetAssignmentQuestionsResponse = v.array(vAssignmentQuestionSpec);
 
-export const vStudioV1SaveAssignmentQuestionData = v.object({
+export const vStudioV1SaveAssignmentQuestionsData = v.object({
     body: v.object({
         files: v.optional(v.array(v.string())),
-        sample: v.optional(v.string()),
-        data: vAssignmentQuestionSaveSpec
+        data: vAssignmentQuestionsSaveSpec
     }),
     path: v.object({
         id: v.string()
@@ -4503,13 +4556,44 @@ export const vStudioV1SaveAssignmentQuestionData = v.object({
  *
  * OK
  */
-export const vStudioV1SaveAssignmentQuestionResponse = v.pipe(v.number(), v.integer());
+export const vStudioV1SaveAssignmentQuestionsResponse = v.array(v.pipe(v.number(), v.integer()));
 
 export const vStudioV1DeleteAssignmentQuesionData = v.object({
     body: v.optional(v.never()),
     path: v.object({
         id: v.string(),
         question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1GetAssignmentRubricData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vStudioV1GetAssignmentRubricResponse = v.array(vRubricCriterionSpec);
+
+export const vStudioV1SaveAssignmentRubricData = v.object({
+    body: vRootModelListRubricCriterionSpec,
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+export const vStudioV1DeleteMediaData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
     }),
     query: v.optional(v.never())
 });
@@ -4575,6 +4659,14 @@ export const vStudioV1CreateMediaQuizData = v.object({
  * OK
  */
 export const vStudioV1CreateMediaQuizResponse = v.string();
+
+export const vStudioV1DeleteCourseData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
 
 export const vStudioV1GetCourseData = v.object({
     body: v.optional(v.never()),

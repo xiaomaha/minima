@@ -11,7 +11,7 @@ from pydantic import RootModel
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest
+from apps.common.util import HttpRequest, ModeChoices
 from apps.quiz.models import Attempt, Question, QuestionPool, Quiz, Solution
 from apps.studio.decorator import editor_required, track_draft
 
@@ -129,6 +129,15 @@ async def save_quiz(
         quiz = await create_new()
 
     return quiz.id
+
+
+@router.delete("/quiz/{id}")
+@editor_required()
+@track_draft(Quiz, id_field="id")
+async def delete_quiz(request: HttpRequest, id: str):
+    if await Attempt.objects.filter(quiz_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+        raise ValueError(ErrorCode.ATTEMPT_EXISTS)
+    await Quiz.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/quiz/{id}/question", response=list[QuizQuestionSpec])

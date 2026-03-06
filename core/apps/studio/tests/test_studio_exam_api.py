@@ -14,13 +14,11 @@ def test_studio_exam_flow(client: Client, admin_user: AdminUser):
     admin_user.login()
 
     exam = ExamFactory(owner=admin_user.get_user())
-    Attempt.objects.filter(exam=exam).delete()
+    exam_id = exam.id
 
     # get content suggestions
     res = client.get("/api/v1/studio/suggestion/content?kind=exam")
     assert res.status_code == 200, "get content suggestions"
-
-    exam_id = res.json()[0]["id"]
 
     # get exam
     res = client.get(f"/api/v1/studio/exam/{exam_id}")
@@ -57,3 +55,8 @@ def test_studio_exam_flow(client: Client, admin_user: AdminUser):
     # delete exam question
     res = client.delete(f"/api/v1/studio/exam/{exam_id}/question/{res.json()[0]}")
     assert res.status_code == 200, "delete exam question"
+
+    # delete exam
+    Attempt.objects.filter(exam_id=exam_id).delete()
+    res = client.delete(f"/api/v1/studio/exam/{exam_id}")
+    assert res.status_code == 200, "delete exam"

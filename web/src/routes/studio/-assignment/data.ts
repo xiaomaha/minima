@@ -1,5 +1,5 @@
 import * as v from 'valibot'
-import type { AssignmentQuestionSpec, AssignmentSpec } from '@/api'
+import type { AssignmentQuestionSpec, AssignmentSpec, PerformanceLevelSchema, RubricCriterionSchema } from '@/api'
 import { lazyT } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID } from '../-context/editing'
 
@@ -23,7 +23,25 @@ export const EmptyAssignment = (): AssignmentSpec => {
     confirmDueDays: -1,
     honorCodeId: -1,
     published: null,
+    sampleAttachment: '',
+    rubricCriteria: [EmptyRubricCriterion()],
     questions: [],
+  }
+}
+
+export const EmptyRubricCriterion = (): RubricCriterionSchema => {
+  return {
+    name: '',
+    description: '',
+    performanceLevels: [EmptyPerformanceLevel()],
+  }
+}
+
+export const EmptyPerformanceLevel = (): PerformanceLevelSchema => {
+  return {
+    name: '',
+    description: '',
+    point: 1,
   }
 }
 
@@ -36,7 +54,6 @@ export const EmptyQuestion = (): AssignmentQuestionSpec => {
     supplement: '',
     attachmentFileCount: -1,
     attachmentFileTypes: [],
-    sampleAttachment: '',
     plagiarismThreshold: -1,
   }
 }
@@ -67,7 +84,30 @@ export const vAssignmentQuestionEditingSpec = v.pipe(
     supplement: v.string(),
     attachmentFileCount: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO)),
     attachmentFileTypes: v.pipe(v.array(v.pipe(v.string(), v.nonEmpty(REQUIRED))), v.minLength(1, AT_LEAST_ONE)),
-    sampleAttachment: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
     plagiarismThreshold: v.pipe(v.number(), v.integer(), v.minValue(0, AT_LEAST_ZERO), v.maxValue(100, AT_MOST_100)),
   }),
+)
+
+export const vRubricCriteriaEditingSpec = v.pipe(
+  v.array(
+    v.object({
+      name: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
+      description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
+      performanceLevels: v.pipe(
+        v.array(
+          v.object({
+            name: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
+            description: v.pipe(v.string(), v.nonEmpty(REQUIRED)),
+            point: v.pipe(v.number(), v.integer(), v.minValue(1, AT_LEAST_ONE)),
+          }),
+        ),
+        v.check((levels) => new Set(levels.map((l) => l.point)).size === levels.length, lazyT('point must be unique')),
+        v.check((levels) => new Set(levels.map((l) => l.name)).size === levels.length, lazyT('name must be unique')),
+      ),
+    }),
+  ),
+  v.check(
+    (criteria) => new Set(criteria.map((c) => c.name)).size === criteria.length,
+    lazyT('criterion name must be unique'),
+  ),
 )

@@ -11,9 +11,9 @@ from pydantic import RootModel
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest
+from apps.common.util import HttpRequest, ModeChoices
 from apps.studio.decorator import editor_required, track_draft
-from apps.survey.models import Question, QuestionPool, Survey
+from apps.survey.models import Question, QuestionPool, Submission, Survey
 
 
 class SurveyQuestionSaveSpec(Schema):
@@ -116,6 +116,15 @@ async def save_survey(
         survey = await create_new()
 
     return survey.id
+
+
+@router.delete("/survey/{id}")
+@editor_required()
+@track_draft(Survey, id_field="id")
+async def delete_survey(request: HttpRequest, id: str):
+    if await Submission.objects.filter(survey_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+        raise ValueError(ErrorCode.ATTEMPT_EXISTS)
+    await Survey.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/survey/{id}/question", response=list[SurveyQuestionSpec])

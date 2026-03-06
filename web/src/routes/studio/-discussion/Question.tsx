@@ -1,7 +1,7 @@
 import { batch, createSignal } from 'solid-js'
 import { unwrap } from 'solid-js/store'
 import type * as v from 'valibot'
-import { type DiscussionSpec, studioV1DeleteDiscussionQuesion, studioV1SaveDiscussionQuestion } from '@/api'
+import { type DiscussionSpec, studioV1DeleteDiscussionQuesion, studioV1SaveDiscussionQuestions } from '@/api'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -23,7 +23,7 @@ export const Question = (props: Props) => {
   const [files, setFiles] = createSignal<File[]>([])
 
   const saveQuestion = async (validated: v.InferOutput<typeof vDiscussionQuestionEditingSpec>) => {
-    const { data } = await studioV1SaveDiscussionQuestion({
+    const { data } = await studioV1SaveDiscussionQuestions({
       path: { id: staging.id },
       body: { data: { data: [validated] }, files: files() },
     })

@@ -17,7 +17,7 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest
+from apps.common.util import HttpRequest, ModeChoices
 from apps.discussion.models import Attempt, Discussion, Question, QuestionPool
 from apps.studio.decorator import editor_required, track_draft
 
@@ -128,6 +128,15 @@ async def save_discussion(
     return discussion.id
 
 
+@router.delete("/discussion/{id}")
+@editor_required()
+@track_draft(Discussion, id_field="id")
+async def delete_discussion(request: HttpRequest, id: str):
+    if await Attempt.objects.filter(discussion_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+        raise ValueError(ErrorCode.ATTEMPT_EXISTS)
+    await Discussion.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
+
+
 @router.get("/discussion/{id}/question", response=list[DiscussionQuestionSpec])
 @editor_required()
 async def get_discussion_questions(request: HttpRequest, id: str):
@@ -142,7 +151,7 @@ async def get_discussion_questions(request: HttpRequest, id: str):
 @router.post("/discussion/{id}/question", response=list[int])
 @editor_required()
 @track_draft(Discussion, id_field="id")
-async def save_discussion_question(
+async def save_discussion_questions(
     request: HttpRequest,
     id: str,
     data: DiscussionQuestionsSaveSpec,
