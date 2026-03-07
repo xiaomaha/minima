@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 @pghistory.track()
-class Draft(Model):
+class Editing(Model):
     author = ForeignKey(User, CASCADE, verbose_name=_("Author"))
     edited = DateTimeField(_("Edited"), default=timezone.now)
     detail = TextField(_("Action"), blank=True, default="")
@@ -21,10 +21,10 @@ class Draft(Model):
     content = GenericForeignKey("content_type", "content_id")
 
     class Meta:
-        verbose_name = _("Content Draft")
-        verbose_name_plural = _("Content Drafts")
+        verbose_name = _("Content Editing")
+        verbose_name_plural = _("Content Editings")
         constraints = [
-            UniqueConstraint(fields=["author", "content_type", "content_id"], name="studio_draft_coty_coid_uniq")
+            UniqueConstraint(fields=["author", "content_type", "content_id"], name="studio_editing_coty_coid_uniq")
         ]
 
     if TYPE_CHECKING:

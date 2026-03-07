@@ -19,7 +19,7 @@ from apps.common.schema import (
 )
 from apps.common.util import HttpRequest, ModeChoices
 from apps.discussion.models import Attempt, Discussion, Question, QuestionPool
-from apps.studio.decorator import editor_required, track_draft
+from apps.studio.decorator import editor_required, track_editing
 
 
 class DiscussionQuestionSaveSpec(Schema):
@@ -89,7 +89,7 @@ async def get_discussion(request: HttpRequest, id: str):
 
 @router.post("/discussion", response=str)
 @editor_required()
-@track_draft(Discussion)
+@track_editing(Discussion)
 async def save_discussion(
     request: HttpRequest,
     data: DiscussionSaveSpec,
@@ -130,7 +130,7 @@ async def save_discussion(
 
 @router.delete("/discussion/{id}")
 @editor_required()
-@track_draft(Discussion, id_field="id")
+@track_editing(Discussion, id_field="id")
 async def delete_discussion(request: HttpRequest, id: str):
     if await Attempt.objects.filter(discussion_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
@@ -150,7 +150,7 @@ async def get_discussion_questions(request: HttpRequest, id: str):
 
 @router.post("/discussion/{id}/question", response=list[int])
 @editor_required()
-@track_draft(Discussion, id_field="id")
+@track_editing(Discussion, id_field="id")
 async def save_discussion_questions(
     request: HttpRequest,
     id: str,
@@ -198,7 +198,7 @@ async def save_discussion_questions(
 
 @router.delete("/discussion/{id}/question/{question_id}")
 @editor_required()
-@track_draft(Discussion, id_field="id")
+@track_editing(Discussion, id_field="id")
 async def delete_discussion_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
         discussion_id=id, question_id=question_id, discussion__owner_id=request.auth

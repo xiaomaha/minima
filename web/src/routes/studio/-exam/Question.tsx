@@ -53,7 +53,7 @@ export const Question = (props: Props) => {
   }
 
   return (
-    <DataAction rootKey={['questions', props.index]} label={t('exam-question')} schema={vExamQuestionEditingSpec}>
+    <DataAction rootKey={['questions', props.index]} label={t('Exam questions')} schema={vExamQuestionEditingSpec}>
       {(status, actions) => (
         <div class="relative">
           <div class="flex gap-4 items-center px-4 right-full top-0 min-h-12 absolute z-1">

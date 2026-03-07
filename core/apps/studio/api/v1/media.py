@@ -14,7 +14,7 @@ from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObj
 from apps.common.util import HttpRequest, ModeChoices
 from apps.content.models import Media, Subtitle, Watch
 from apps.quiz.models import Quiz
-from apps.studio.decorator import editor_required, track_draft
+from apps.studio.decorator import editor_required, track_editing
 
 
 class SubtitleSpec(Schema):
@@ -71,7 +71,7 @@ async def get_media(request: HttpRequest, id: str):
 
 @router.post("/media", response=str)
 @editor_required()
-@track_draft(Media)
+@track_editing(Media)
 async def save_media(
     request: HttpRequest,
     data: MediaSaveSpec,
@@ -117,7 +117,7 @@ async def save_media(
 
 @router.delete("/media/{id}")
 @editor_required()
-@track_draft(Media, id_field="id")
+@track_editing(Media, id_field="id")
 async def delete_media(request: HttpRequest, id: str):
     if await Watch.objects.filter(media_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
@@ -126,7 +126,7 @@ async def delete_media(request: HttpRequest, id: str):
 
 @router.post("/media/{id}/subtitle")
 @editor_required()
-@track_draft(Media, id_field="id")
+@track_editing(Media, id_field="id")
 async def save_media_subtitle(request, id: str, data: SubtitleSpec):
     media = await aget_object_or_404(Media, id=id, owner_id=request.auth)
     await Subtitle.objects.aupdate_or_create(media=media, lang=data.lang, defaults={"body": data.body})
@@ -134,7 +134,7 @@ async def save_media_subtitle(request, id: str, data: SubtitleSpec):
 
 @router.delete("/media/{id}/subtitle/{lang}")
 @editor_required()
-@track_draft(Media, id_field="id")
+@track_editing(Media, id_field="id")
 async def delete_media_subtitle(request: HttpRequest, id: str, lang: str):
     count, _ = await Subtitle.objects.filter(lang=lang, media_id=id, media__owner_id=request.auth).adelete()
     if count < 1:
@@ -143,7 +143,7 @@ async def delete_media_subtitle(request: HttpRequest, id: str, lang: str):
 
 @router.post("/media/{id}/subtitle/{lang}/quiz", response=str)
 @editor_required()
-@track_draft(Media, id_field="id")
+@track_editing(Media, id_field="id")
 async def create_media_quiz(request, id: str, lang: str):
     media = await aget_object_or_404(Media, id=id, owner_id=request.auth)
     quiz = await media.create_quiz(lang_code=lang)

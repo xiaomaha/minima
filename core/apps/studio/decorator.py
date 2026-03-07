@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from apps.common.error import ErrorCode
 from apps.common.util import HttpRequest
-from apps.studio.models import Draft
+from apps.studio.models import Editing
 
 
 def editor_required():
@@ -24,7 +24,7 @@ def editor_required():
     return decorator
 
 
-def track_draft(model, *, id_field: str | None = None):
+def track_editing(model, *, id_field: str | None = None):
     def decorator(func):
         @wraps(func)
         async def wrapper(request: HttpRequest, *args, **kwargs):
@@ -34,7 +34,7 @@ def track_draft(model, *, id_field: str | None = None):
             if not id_field and (type(result) not in (int, str)):
                 raise ImproperlyConfigured
 
-            await Draft.objects.aupdate_or_create(
+            await Editing.objects.aupdate_or_create(
                 author_id=request.auth,
                 content_type=content_type,
                 content_id=kwargs[id_field] if id_field else result,

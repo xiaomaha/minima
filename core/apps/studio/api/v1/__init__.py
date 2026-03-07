@@ -29,7 +29,7 @@ from apps.studio.api.v1.media import router as media_router
 from apps.studio.api.v1.quiz import router as quiz_router
 from apps.studio.api.v1.survey import router as survey_router
 from apps.studio.decorator import editor_required
-from apps.studio.models import Draft
+from apps.studio.models import Editing
 from apps.survey.models import Survey
 
 router = Router(by_alias=True)
@@ -74,7 +74,7 @@ async def content(
     if kind:
         table_names = [(t, a, m) for t, a, m in table_names if m == kind]
 
-    draft_table = Draft._meta.db_table
+    editing_table = Editing._meta.db_table
     union_sql = " UNION ALL ".join(
         f"SELECT id, title, thumbnail, created, modified, published, '{app_label}' AS app_label, '{model_name}' AS model"
         + f" FROM {table} WHERE owner_id = %s"
@@ -85,13 +85,13 @@ async def content(
     count_sql = f"""
         SELECT COUNT(*)
         FROM ({union_sql}) u
-        LEFT OUTER JOIN {draft_table} d ON d.content_id = u.id AND d.author_id = %s
+        LEFT OUTER JOIN {editing_table} d ON d.content_id = u.id AND d.author_id = %s
     """
 
     sql = f"""
         SELECT u.id, u.title, u.thumbnail, u.created, u.modified, u.published, u.app_label, u.model, d.edited
         FROM ({union_sql}) u
-        LEFT OUTER JOIN {draft_table} d ON d.content_id = u.id AND d.author_id = %s
+        LEFT OUTER JOIN {editing_table} d ON d.content_id = u.id AND d.author_id = %s
         ORDER BY COALESCE(d.edited, u.modified) DESC, u.modified DESC
         LIMIT %s OFFSET %s
     """

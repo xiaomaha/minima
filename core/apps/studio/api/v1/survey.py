@@ -12,7 +12,7 @@ from pydantic import RootModel
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
 from apps.common.util import HttpRequest, ModeChoices
-from apps.studio.decorator import editor_required, track_draft
+from apps.studio.decorator import editor_required, track_editing
 from apps.survey.models import Question, QuestionPool, Submission, Survey
 
 
@@ -79,7 +79,7 @@ async def get_survey(request: HttpRequest, id: str):
 
 @router.post("/survey", response=str)
 @editor_required()
-@track_draft(Survey)
+@track_editing(Survey)
 async def save_survey(
     request: HttpRequest,
     data: SurveySaveSpec,  # form doesn't work nested model
@@ -120,7 +120,7 @@ async def save_survey(
 
 @router.delete("/survey/{id}")
 @editor_required()
-@track_draft(Survey, id_field="id")
+@track_editing(Survey, id_field="id")
 async def delete_survey(request: HttpRequest, id: str):
     if await Submission.objects.filter(survey_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
@@ -140,7 +140,7 @@ async def get_survey_questions(request: HttpRequest, id: str):
 
 @router.post("/survey/{id}/question", response=list[int])
 @editor_required()
-@track_draft(Survey, id_field="id")
+@track_editing(Survey, id_field="id")
 async def save_survey_questions(
     request: HttpRequest,
     id: str,
@@ -180,7 +180,7 @@ async def save_survey_questions(
 
 @router.delete("/survey/{id}/question/{question_id}")
 @editor_required()
-@track_draft(Survey, id_field="id")
+@track_editing(Survey, id_field="id")
 async def delete_survey_quesion(request: HttpRequest, id: str, question_id: int):
     count, _ = await Question.objects.filter(id=question_id, pool__survey__id=id).adelete()
     if count < 1:
