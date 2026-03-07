@@ -59,7 +59,7 @@ export const AccountButton = () => {
             </li>
           </Show>
 
-          <Show when={accountStore.user?.roles.includes('grader')}>
+          <Show when={accountStore.user?.roles.includes('tutor')}>
             <li>
               <button
                 type="button"
@@ -68,7 +68,7 @@ export const AccountButton = () => {
               >
                 <IconListDetails />
                 <span class="flex-1 text-left">{t('Grading')}</span>
-                <span class="badge badge-primary badge-xs">{t('Grader')}</span>
+                <span class="badge badge-primary badge-xs">{t('tutor')}</span>
               </button>
             </li>
           </Show>
