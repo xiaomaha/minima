@@ -27,7 +27,7 @@ from apps.common.schema import (
     Schema,
 )
 from apps.common.util import HttpRequest, ModeChoices
-from apps.studio.decorator import editor_required, track_draft
+from apps.studio.decorator import editor_required, track_editing
 
 
 class AssignmentQuestionSaveSpec(Schema):
@@ -126,7 +126,7 @@ async def get_assignment(request: HttpRequest, id: str):
 
 @router.post("/assignment", response=str)
 @editor_required()
-@track_draft(Assignment)
+@track_editing(Assignment)
 async def save_assignment(
     request: HttpRequest,
     data: AssignmentSaveSpec,
@@ -177,7 +177,7 @@ async def save_assignment(
 
 @router.delete("/assignment/{id}")
 @editor_required()
-@track_draft(Assignment, id_field="id")
+@track_editing(Assignment, id_field="id")
 async def delete_assignment(request: HttpRequest, id: str):
     if await Attempt.objects.filter(assignment_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
@@ -197,7 +197,7 @@ async def get_assignment_questions(request: HttpRequest, id: str):
 
 @router.post("/assignment/{id}/question", response=list[int])
 @editor_required()
-@track_draft(Assignment, id_field="id")
+@track_editing(Assignment, id_field="id")
 async def save_assignment_questions(
     request: HttpRequest,
     id: str,
@@ -243,7 +243,7 @@ async def save_assignment_questions(
 
 @router.delete("/assignment/{id}/question/{question_id}")
 @editor_required()
-@track_draft(Assignment, id_field="id")
+@track_editing(Assignment, id_field="id")
 async def delete_assignment_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
         assignment_id=id, question=question_id, assignment__owner_id=request.auth
@@ -266,7 +266,7 @@ async def get_assignment_rubric(request: HttpRequest, id: str):
 
 @router.post("/assignment/{id}/rubric")
 @editor_required()
-@track_draft(Assignment, id_field="id")
+@track_editing(Assignment, id_field="id")
 async def save_assignment_rubric(request: HttpRequest, id: str, data: RootModel[list[RubricCriterionSpec]]):
     assignment = await aget_object_or_404(Assignment, id=id, owner_id=request.auth)
 

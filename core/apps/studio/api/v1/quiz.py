@@ -13,7 +13,7 @@ from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
 from apps.common.util import HttpRequest, ModeChoices
 from apps.quiz.models import Attempt, Question, QuestionPool, Quiz, Solution
-from apps.studio.decorator import editor_required, track_draft
+from apps.studio.decorator import editor_required, track_editing
 
 
 class QuizQuestionSaveSpec(Schema):
@@ -92,7 +92,7 @@ async def get_quiz(request: HttpRequest, id: str):
 
 @router.post("/quiz", response=str)
 @editor_required()
-@track_draft(Quiz)
+@track_editing(Quiz)
 async def save_quiz(
     request: HttpRequest,
     data: QuizSaveSpec,
@@ -133,7 +133,7 @@ async def save_quiz(
 
 @router.delete("/quiz/{id}")
 @editor_required()
-@track_draft(Quiz, id_field="id")
+@track_editing(Quiz, id_field="id")
 async def delete_quiz(request: HttpRequest, id: str):
     if await Attempt.objects.filter(quiz_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
@@ -154,7 +154,7 @@ async def get_quiz_questions(request: HttpRequest, id: str):
 
 @router.post("/quiz/{id}/question", response=list[int])
 @editor_required()
-@track_draft(Quiz, id_field="id")
+@track_editing(Quiz, id_field="id")
 async def save_quiz_questions(
     request: HttpRequest,
     id: str,
@@ -205,7 +205,7 @@ async def save_quiz_questions(
 
 @router.delete("/quiz/{id}/question/{question_id}")
 @editor_required()
-@track_draft(Quiz, id_field="id")
+@track_editing(Quiz, id_field="id")
 async def delete_quiz_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(quiz_id=id, questions=question_id, quiz__owner_id=request.auth).aexists():
         raise ValueError(ErrorCode.IN_USE)
