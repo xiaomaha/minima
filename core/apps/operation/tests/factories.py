@@ -2,7 +2,6 @@ import mimesis
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
@@ -58,7 +57,7 @@ class InstructorFactory(DjangoModelFactory[Instructor]):
 
 
 class HonorCodeFactory(DjangoModelFactory[HonorCode]):
-    title = LazyFunction(lambda: f"{generic.food.fruit()} {_('Honor Code')}")
+    title = LazyFunction(lambda: " ".join(generic.text.words(quantity=generic.random.randint(3, 5))))
     code = LazyFunction(
         lambda: "\n\n".join([
             generic.text.text(quantity=generic.random.randint(2, 4)) for _ in range(generic.random.randint(5, 10))
@@ -71,7 +70,7 @@ class HonorCodeFactory(DjangoModelFactory[HonorCode]):
 
 
 class FAQFactory(DjangoModelFactory[FAQ]):
-    name = FactoryField("text.title")
+    name = LazyFunction(lambda: " ".join(generic.text.words(quantity=generic.random.randint(3, 5))))
     description = FactoryField("sentence")
 
     class Meta:
@@ -129,7 +128,7 @@ class InquiryFactory(DjangoModelFactory[Inquiry]):
         if not create:
             return
 
-        if self.inquiryresponse_set.exists():
+        if self.inquiry_responses.exists():
             return
 
         for i in range(generic.random.randint(0, 2)):

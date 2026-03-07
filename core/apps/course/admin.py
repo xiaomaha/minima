@@ -5,12 +5,14 @@ from django_jsonform.forms.fields import JSONFormField
 from unfold.decorators import action
 
 from apps.common.admin import BooleanDatetimeFormMixin, HiddenModelAdmin, ModelAdmin, TabularInline
-from apps.competency.models import Certificate
 from apps.course.models import (
     TEMPLATE_SCHEDULES,
     Assessment,
     Course,
+    CourseCategory,
+    CourseCertificate,
     CourseInstructor,
+    CourseRelation,
     CourseSurvey,
     Engagement,
     Gradebook,
@@ -19,43 +21,50 @@ from apps.course.models import (
     LessonMedia,
     MessagePreset,
 )
-from apps.operation.models import Category
 
 
 @admin.register(Course)
 class CourseAdmin(ModelAdmin[Course]):
-    class CategoryInline(TabularInline[Category]):
-        model = Course.categories.through
+    class CategoryInline(TabularInline[CourseCategory]):
+        model = CourseCategory
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
+        ordering_field = "ordering"
+        ordering = ("ordering",)
 
-    class CertificateInline(TabularInline[Certificate]):
-        model = Course.certificates.through
+    class CertificateInline(TabularInline[CourseCertificate]):
+        model = CourseCertificate
         verbose_name = _("Certificate")
         verbose_name_plural = _("Certificates")
+        ordering_field = "ordering"
+        ordering = ("ordering",)
 
     class CourseInstructorInline(TabularInline[CourseInstructor]):
         model = CourseInstructor
-        # orderable
-        ordering = ("ordering", "id")
         ordering_field = "ordering"
+        ordering = ("ordering",)
 
     class CourseSurveyInline(TabularInline[CourseSurvey]):
         model = CourseSurvey
+        ordering_field = "ordering"
+        ordering = ("start_offset", "ordering")
 
     class AssessmentInline(TabularInline[Assessment]):
         model = Assessment
+        ordering_field = "ordering"
+        ordering = ("start_offset", "ordering")
 
     class LessonInline(TabularInline[Lesson]):
         model = Lesson
-        ordering_field = "start_offset"
+        ordering_field = "ordering"
+        ordering = ("start_offset", "ordering")
 
     class GradingPolicyInline(TabularInline[GradingPolicy]):
         model = GradingPolicy
 
-    class RelatedCourseInline(TabularInline[Course]):
-        model = Course.related_courses.through
-        fk_name = "from_course"
+    class CourseRelationInline(TabularInline[CourseRelation]):
+        model = CourseRelation
+        fk_name = "course"
         verbose_name = _("Related Course")
         verbose_name_plural = _("Related Courses")
 
@@ -67,15 +76,8 @@ class CourseAdmin(ModelAdmin[Course]):
         LessonInline,
         AssessmentInline,
         GradingPolicyInline,
-        RelatedCourseInline,
+        CourseRelationInline,
     )
-
-    def get_fields(self, request, obj=None):
-        return [
-            f
-            for f in super().get_fields(request, obj=obj)
-            if f not in ("categories", "certificates", "related_courses")
-        ]
 
 
 @admin.register(Lesson)
@@ -162,3 +164,18 @@ class MessagePresetAdmin(HiddenModelAdmin[MessagePreset]):
                 schema={"type": "array", "items": {"type": "string", "choices": list(TEMPLATE_SCHEDULES.keys())}}
             )
         return super().formfield_for_dbfield(db_field, request, **kwargs)
+
+
+@admin.register(CourseCategory)
+class CourseCategoryAdmin(HiddenModelAdmin[CourseCategory]):
+    pass
+
+
+@admin.register(CourseRelation)
+class CourseRelationAdmin(HiddenModelAdmin[CourseRelation]):
+    pass
+
+
+@admin.register(CourseCertificate)
+class CourseCertificateAdmin(HiddenModelAdmin[CourseCertificate]):
+    pass

@@ -1,8 +1,8 @@
 pre-commit:
   commands:
-    student:
-      glob: "student/**/*.{ts,tsx}"
-      root: "student/"
+    web:
+      glob: "web/**/*.{ts,tsx}"
+      root: "web/"
       run: "npm run lint"
 
     core:

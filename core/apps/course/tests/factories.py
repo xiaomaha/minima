@@ -14,7 +14,10 @@ from apps.course.models import (
     TEMPLATE_SCHEDULES,
     Assessment,
     Course,
+    CourseCategory,
+    CourseCertificate,
     CourseInstructor,
+    CourseRelation,
     CourseSurvey,
     Lesson,
     LessonMedia,
@@ -25,6 +28,7 @@ from apps.exam.tests.factories import ExamFactory
 from apps.operation.models import Category
 from apps.operation.tests.factories import FAQFactory, HonorCodeFactory, InstructorFactory
 from apps.survey.tests.factories import SurveyFactory
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -45,9 +49,9 @@ class CourseFactory(LearningObjectFactory[Course]):
     max_attempts = FactoryField("choice", items=[1, 2])
     verification_required = True
 
-    owner = SubFactory(UserFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
     objective = FactoryField("text")
-    preview_url = None
+    preview_url = "http://example.com"
     effort_hours = FactoryField("choice", items=[8, 16, 32])
     level = Iterator(Course.LevelChoices)
     honor_code = SubFactory(HonorCodeFactory)
@@ -64,15 +68,35 @@ class CourseFactory(LearningObjectFactory[Course]):
         if not create:
             return
 
-        self.categories.set(Category.objects.filter(depth=3).order_by("?")[: generic.random.randint(1, 2)])
-        self.related_courses.set(Course.objects.exclude(id=self.pk).order_by("?")[: generic.random.randint(1, 2)])
-        self.certificates.set(CertificateFactory.create_batch(2))
+        course_categories = [
+            CourseCategory(
+                course=self, category=category, label=" / ".join([*category.ancestors, category.name]), ordering=i
+            )
+            for i, category in enumerate(Category.objects.filter(depth=3).order_by("?")[: generic.random.randint(2, 3)])
+        ]
+        CourseCategory.objects.bulk_create(course_categories, ignore_conflicts=True)
+
+        course_relations = [
+            CourseRelation(course=self, related_course=related, label=related.title, ordering=i)
+            for i, related in enumerate(
+                Course.objects.exclude(id=self.pk).order_by("?")[: generic.random.randint(2, 3)]
+            )
+        ]
+        CourseRelation.objects.bulk_create(course_relations, ignore_conflicts=True)
+
+        course_certificates = [
+            CourseCertificate(course=self, certificate=certificate, label=certificate.name, ordering=i)
+            for i, certificate in enumerate(CertificateFactory.create_batch(generic.random.randint(2, 3), active=True))
+        ]
+        CourseCertificate.objects.bulk_create(course_certificates, ignore_conflicts=True)
 
         instructors = InstructorFactory.create_batch(generic.random.randint(1, 3))
         if instructors:
             CourseInstructor.objects.bulk_create(
                 [
-                    CourseInstructor(course=self, instructor=instructor, lead=True if i == 0 else False)
+                    CourseInstructor(
+                        course=self, instructor=instructor, label=instructor.name, lead=True if i == 0 else False
+                    )
                     for i, instructor in enumerate(instructors)
                 ],
                 ignore_conflicts=True,
@@ -84,9 +108,7 @@ class CourseFactory(LearningObjectFactory[Course]):
         for i in range(count):
             media = MediaFactory.create(owner=self.owner)
             lesson, created = Lesson.objects.get_or_create(
-                course=self,
-                title=media.title,
-                defaults={"description": media.description, "start_offset": i * 7, "end_offset": 7},
+                course=self, label=media.title, defaults={"start_offset": i * 7, "end_offset": 7}
             )
             last_lesson_start_offset = i * 7
             if created:
@@ -100,9 +122,15 @@ class CourseFactory(LearningObjectFactory[Course]):
         if surveys:
             CourseSurvey.objects.bulk_create(
                 [
-                    CourseSurvey(course=self, survey=surveys[0], start_offset=0, end_offset=None),
                     CourseSurvey(
-                        course=self, survey=surveys[1], start_offset=last_lesson_start_offset, end_offset=None
+                        course=self, label=surveys[0].title, survey=surveys[0], start_offset=0, end_offset=None
+                    ),
+                    CourseSurvey(
+                        course=self,
+                        label=surveys[1].title,
+                        survey=surveys[1],
+                        start_offset=last_lesson_start_offset,
+                        end_offset=None,
                     ),
                 ],
                 ignore_conflicts=True,
@@ -112,7 +140,7 @@ class CourseFactory(LearningObjectFactory[Course]):
         exams = ExamFactory.create_batch(2)
         assignments = AssignmentFactory.create_batch(2)
 
-        last_lesson = self.lesson_set.last()
+        last_lesson = self.lessons.last()
         course_days = last_lesson.start_offset + 7 if last_lesson else 30
 
         weeks = course_days // 7
@@ -134,7 +162,14 @@ class CourseFactory(LearningObjectFactory[Course]):
                 if week <= weeks:
                     start_offset = (week - 1) * 7
                     assessments_to_create.append(
-                        Assessment(course=self, weight=20, start_offset=start_offset, end_offset=7, item=discussion)
+                        Assessment(
+                            course=self,
+                            label=discussion.title,
+                            weight=20,
+                            start_offset=start_offset,
+                            end_offset=7,
+                            item=discussion,
+                        )
                     )
 
         for i, assignment in enumerate(assignments):
@@ -143,7 +178,14 @@ class CourseFactory(LearningObjectFactory[Course]):
                 if week <= weeks:
                     start_offset = (week - 1) * 7
                     assessments_to_create.append(
-                        Assessment(course=self, weight=30, start_offset=start_offset, end_offset=7, item=assignment)
+                        Assessment(
+                            course=self,
+                            label=assignment.title,
+                            weight=30,
+                            start_offset=start_offset,
+                            end_offset=7,
+                            item=assignment,
+                        )
                     )
 
         for i, exam in enumerate(exams):
@@ -151,7 +193,9 @@ class CourseFactory(LearningObjectFactory[Course]):
                 week = exam_weeks[i]
                 start_day = (week - 1) * 7
                 assessments_to_create.append(
-                    Assessment(course=self, weight=50, start_offset=start_day, end_offset=7, item=exam)
+                    Assessment(
+                        course=self, label=exam.title, weight=50, start_offset=start_day, end_offset=7, item=exam
+                    )
                 )
 
         Assessment.objects.bulk_create(assessments_to_create, ignore_conflicts=True)

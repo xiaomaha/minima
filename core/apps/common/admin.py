@@ -90,7 +90,6 @@ COMMON_SEARCH_FIELDS = [
     "code",
     "slug",
     "number",
-    "reference",
     "status",
     "category",
     "type",
@@ -293,7 +292,7 @@ class TabularInline[T: Model](GenericEditLinkMixin, BaseTabularInline):
             def make_detail_link_method(model_class: type[Model]):
                 @admin.display(description=f"{_('Detail')}")
                 def detail_link_method(self: object, obj: Model):
-                    if obj.pk:
+                    if obj.pk is not None:
                         change_url = reverse(
                             f"admin:{model_class._meta.app_label}_{model_class._meta.model_name}_change", args=[obj.pk]
                         )

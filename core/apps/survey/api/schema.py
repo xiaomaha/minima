@@ -9,6 +9,18 @@ from apps.survey.models import Question, Survey
 
 
 class SurveySchema(LearningObjectMixinSchema):
+    class SurveyQuestionSchema(Schema):
+        id: int
+        format: Question.SurveyQuestionFormatChoices
+        question: str
+        supplement: str
+        options: list[str]
+        mandatory: bool
+
+        @staticmethod
+        def resolve_supplement(obj: Question):
+            return obj.cleaned_supplement
+
     id: str
     thumbnail: str
     owner: OwnerSchema
@@ -19,16 +31,7 @@ class SurveySchema(LearningObjectMixinSchema):
 
     @staticmethod
     def resolve_questions(obj: Survey):
-        return obj.paper.question_set.all()
-
-
-class SurveyQuestionSchema(Schema):
-    id: int
-    format: Question.SurveyFormatChoices
-    question: str
-    supplement: str
-    options: list[str]
-    mandatory: bool
+        return obj.question_pool.questions.all()
 
 
 class SurveyAnswersSchema(RootModel[dict[str, Annotated[str, Field(min_length=1)]]]):

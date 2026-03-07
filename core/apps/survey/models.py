@@ -25,52 +25,58 @@ from django.db.models import (
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.error import ErrorCode
-from apps.common.models import LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin
+from apps.common.util import ModeChoices
+from apps.operation.models import AttachmentMixin
 
 User = get_user_model()
 
 
 @pghistory.track()
-class QuestionPaper(Model):
+class QuestionPool(Model):
     title = CharField(_("Title"), max_length=255)
     description = TextField(_("Description"), default="", blank=True)
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"), related_name="+")
 
     class Meta:
-        verbose_name = _("Question Paper")
-        verbose_name_plural = _("Question Papers")
-        constraints = [UniqueConstraint(fields=["title", "owner"], name="survey_questionpaper_ti_ow_uniq")]
+        verbose_name = _("Question Pool")
+        verbose_name_plural = _("Question Pools")
+        constraints = [UniqueConstraint(fields=["title", "owner"], name="survey_questionpool_ti_ow_uniq")]
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
 
 @pghistory.track()
-class Question(OrderableMixin):
-    class SurveyFormatChoices(TextChoices):
+class Question(OrderableMixin, AttachmentMixin):
+    class SurveyQuestionFormatChoices(TextChoices):
         SINGLE_CHOICE = "single_choice", _("Single Choice")
         TEXT_INPUT = "text_input", _("Text Input")
         NUMBER_INPUT = "number_input", _("Number Input")
 
-    paper = ForeignKey(QuestionPaper, CASCADE, verbose_name=_("Question Paper"))
-    format = CharField(_("Format"), max_length=20, choices=SurveyFormatChoices.choices)
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
+    format = CharField(_("Format"), max_length=20, choices=SurveyQuestionFormatChoices.choices)
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     options = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Options"))
     mandatory = BooleanField(_("Mandatory"), default=True)
 
-    ordering_group = ("paper",)
+    ordering_group = ("pool",)
 
     class Meta(OrderableMixin.Meta):
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
+
+    @property
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
 
 
 @pghistory.track()
 class Survey(LearningObjectMixin):
     thumbnail = ImageField(_("Thumbnail"))
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
-    paper = ForeignKey(QuestionPaper, CASCADE, verbose_name=_("Question Paper"))
+    question_pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
     complete_message = TextField(_("Complete Message"), blank=True, default="")
     anonymous = BooleanField(_("Anonymous"), default=True)
     show_results = BooleanField(_("Show Results"), default=False)
@@ -80,13 +86,14 @@ class Survey(LearningObjectMixin):
         verbose_name_plural = _("Surveys")
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
         question_ids: list[int]  # annotated
 
     @classmethod
     async def get_survey(cls, id: str, anonymous: bool = False):
-        qs = cls.objects.select_related("owner", "paper").prefetch_related(
-            Prefetch("paper__question_set", queryset=Question.objects.order_by("ordering"))
+        qs = cls.objects.select_related("owner", "question_pool").prefetch_related(
+            Prefetch(
+                "question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id")
+            )
         )
         if anonymous:
             qs = qs.filter(anonymous=True)
@@ -98,7 +105,7 @@ class Survey(LearningObjectMixin):
         from apps.survey.documents import SubmissionDocument
 
         qs = cls.objects.filter(anonymous=True) if anonymous else cls.objects.all()
-        qs = qs.annotate(question_ids=ArrayAgg("paper__question__id"))
+        qs = qs.annotate(question_ids=ArrayAgg("question_pool"))
         survey = await qs.aget(id=id)
 
         if not survey.show_results:
@@ -108,14 +115,12 @@ class Survey(LearningObjectMixin):
 
 
 @pghistory.track()
-class Submission(TimeStampedMixin):
+class Submission(AttemptMixin):
     survey = ForeignKey(Survey, CASCADE, verbose_name=_("Survey"))
     respondent = ForeignKey(User, SET_NULL, null=True, blank=True, related_name="+", verbose_name=_("Respondent"))
     answers = JSONField(_("Answers"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Submission")
         verbose_name_plural = _("Submissions")
         constraints = [
@@ -137,6 +142,7 @@ class Submission(TimeStampedMixin):
         *,
         survey_id: str,
         answers: dict[str, str],
+        mode: ModeChoices,
         respondent_id: str | None = None,
         context: str = "",
         anonymous: bool = False,
@@ -144,7 +150,7 @@ class Submission(TimeStampedMixin):
         survey = await Survey.objects.aget(id=survey_id)
 
         if survey.anonymous:
-            await Submission.objects.acreate(survey=survey, answers=answers)
+            await Submission.objects.acreate(survey=survey, answers=answers, mode=mode)
         else:
             if anonymous:
                 raise ValueError(ErrorCode.ANONYMOUS_NOT_ALLOWED)
@@ -154,5 +160,5 @@ class Submission(TimeStampedMixin):
                 survey=survey,
                 respondent_id=respondent_id,
                 context=context,
-                defaults={"answers": answers, "active": True},
+                defaults={"answers": answers, "active": True, "mode": mode},
             )

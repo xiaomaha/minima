@@ -8,6 +8,7 @@ from ninja.pagination import paginate
 from ninja.params import Form, Query, functions
 from ninja.router import Router
 
+from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, Pagination
 from apps.operation.api.schema import (
     AnnounceSchema,
@@ -64,7 +65,7 @@ async def get_inquiries(request: HttpRequest, filter: Query[InquiryFilterSchema]
     qs = (
         Inquiry.objects
         .select_related("content_type")
-        .prefetch_related("inquiryresponse_set__writer", "attachments")
+        .prefetch_related("inquiry_responses__writer", "attachments")
         .filter(writer_id=request.auth)
         .order_by("-created")
     )
@@ -75,10 +76,11 @@ async def get_inquiries(request: HttpRequest, filter: Query[InquiryFilterSchema]
 async def create_inquiry(
     request: HttpRequest,
     data: Form[InquiryCreateSchema],
-    files: list[UploadedFile] = functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
+    files: Annotated[
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
+    ],
 ):
-    if files:
-        Inquiry.validate_files(files)
     return await Inquiry.create(**data.model_dump(), writer_id=request.auth, files=files)
 
 
@@ -88,11 +90,10 @@ async def update_inquiry(
     id: int,
     data: Form[InquiryUpdateSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Inquiry.validate_files(files)
     return await Inquiry.update(**data.model_dump(), writer_id=request.auth, id=id, files=files)
 
 
@@ -113,11 +114,10 @@ async def create_appeal(
     request: HttpRequest,
     data: Form[AppealCreateSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Appeal.validate_files(files)
     return await Appeal.create(**data.model_dump(), learner_id=request.auth, files=files)
 
 
@@ -133,13 +133,8 @@ async def agree_policies(request: HttpRequest, data: PolicyVersionAgreementSchem
     return await PolicyAgreement.agree_policies(user_id=request.auth, agreements=data.model_dump())
 
 
-@router.get("/thread/{appLabel}/{model}/subject/{subjectId}", response=ThreadSchema)
-async def get_thread(
-    request: HttpRequest,
-    app_label: Annotated[str, functions.Path(alias="appLabel")],
-    model: str,
-    subject_id: Annotated[str, functions.Path(alias="subjectId")],
-):
+@router.get("/thread/{app_label}/{model}/subject/{subject_id}", response=ThreadSchema)
+async def get_thread(request: HttpRequest, app_label: str, model: str, subject_id: str):
     return await aget_object_or_404(
         Thread, subject_id=subject_id, subject_type__app_label=app_label, subject_type__model=model
     )
@@ -173,18 +168,17 @@ async def save_comment(
     id: int,
     data: Form[CommentSaveSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Inquiry.validate_files(files)
     return await Comment.upsert(
         **data.model_dump(exclude_unset=True), thread_id=id, writer_id=request.auth, files=files
     )
 
 
-@router.delete("/thread/{id}/comment/{commentId}")
-async def delete_comment(request: HttpRequest, id: int, comment_id: Annotated[int, functions.Path(alias="commentId")]):
+@router.delete("/thread/{id}/comment/{comment_id}")
+async def delete_comment(request: HttpRequest, id: int, comment_id: int):
     comment = await aget_object_or_404(Comment, id=comment_id, thread_id=id, writer_id=request.auth)
     comment.deleted = True
     await comment.asave()

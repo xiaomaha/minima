@@ -68,7 +68,7 @@ log = logging.getLogger(__name__)
 User = get_user_model()
 
 ENROLLABLE_MODELS = [Course, Media, Exam, Assignment, Discussion, Quiz, Survey]
-ENROLLABLE_MODEL_MAP = {(m._meta.app_label.lower(), m._meta.model.__name__.lower()): m for m in ENROLLABLE_MODELS}
+ENROLLABLE_MODEL_MAP = {(m._meta.app_label.lower(), m._meta.model_name): m for m in ENROLLABLE_MODELS}
 
 # cf Course.ASSESSIBLE_GRADE_MODELS
 ALL_GRADE_MODELS = {Exam: ExamGrade, Assignment: AssignmentGrade, Discussion: DiscussionGrade, Quiz: QuizGrade}
@@ -86,7 +86,7 @@ class Enrollment(TimeStampedMixin):
         ContentType,
         CASCADE,
         verbose_name=_("Content Type"),
-        limit_choices_to={"model__in": [m.__name__.lower() for m in ENROLLABLE_MODELS]},
+        limit_choices_to={"model__in": [m._meta.model_name for m in ENROLLABLE_MODELS]},
     )
     content_id = CharField(_("Content ID"), max_length=36)
     content = GenericForeignKey("content_type", "content_id")
@@ -177,7 +177,7 @@ class Enrollment(TimeStampedMixin):
         )
 
         for M, G in ALL_GRADE_MODELS.items():
-            pk_path = f"attempt__{M._meta.model.__name__.lower()}_id"
+            pk_path = f"attempt__{M._meta.model_name}_id"
             qs = qs.union(
                 G.objects
                 .annotate(score_=Round("score", 2))
@@ -290,7 +290,7 @@ class Enrollment(TimeStampedMixin):
                     AS quiz_attempt_count,
 
                 (SELECT COUNT(*) FROM {SurveySubmission._meta.db_table}
-                 WHERE respondent_id = %(user_id)s AND active = true {date_filter("created")})
+                 WHERE respondent_id = %(user_id)s AND active = true {date_filter("started")})
                     AS survey_submission_count,
 
                 (SELECT COUNT(*) FROM {Watch._meta.db_table}
@@ -343,7 +343,7 @@ class Catalog(TimeStampedMixin):
 
     if TYPE_CHECKING:
         item_content_type_id: int
-        catalogitem_set: QuerySet[CatalogItem]
+        catalog_items: QuerySet[CatalogItem]
 
     def is_available(self):
         if not self.active:
@@ -357,7 +357,7 @@ class Catalog(TimeStampedMixin):
         now = timezone.now()
 
         user_cohort_name = CohortCatalog.objects.filter(
-            catalog=OuterRef("pk"), cohort__members__user_id=user_id
+            catalog=OuterRef("pk"), cohort__cohort_members__member__user_id=user_id
         ).values("cohort__name")[:1]
 
         return (
@@ -366,11 +366,11 @@ class Catalog(TimeStampedMixin):
                 Q(available_from__lte=now, available_until__gte=now, active=True)
                 & (
                     Q(public=True)
-                    | Q(usercatalog__user_id=user_id)
-                    | Q(cohortcatalog__cohort__members__user_id=user_id)
+                    | Q(user_catalogs__user_id=user_id)
+                    | Q(cohort_catalogs__cohort__cohort_members__member__user_id=user_id)
                 )
             )
-            .annotate(item_count=Count("catalogitem", distinct=True), cohort_name=Subquery(user_cohort_name))
+            .annotate(item_count=Count("catalog_items", distinct=True), cohort_name=Subquery(user_cohort_name))
             .annotate(
                 provider=Case(
                     When(public=True, then=Value("public")),
@@ -424,12 +424,14 @@ class Catalog(TimeStampedMixin):
             await Catalog.objects
             .filter(id=catalog_id, available_from__lte=now, available_until__gte=now, active=True)
             .filter(
-                Q(public=True) | Q(usercatalog__user_id=user_id) | Q(cohortcatalog__cohort__members__user_id=user_id)
+                Q(public=True)
+                | Q(user_catalogs__user_id=user_id)
+                | Q(cohort_catalogs__cohort__cohort_members__member__user_id=user_id)
             )
             .filter(
-                catalogitem__content_id=content_id,
-                catalogitem__content_type__app_label=app_label,
-                catalogitem__content_type__model=model,
+                catalog_items__content_id=content_id,
+                catalog_items__content_type__app_label=app_label,
+                catalog_items__content_type__model=model,
             )
             .annotate(
                 item_content_type_id=Subquery(
@@ -462,12 +464,12 @@ class Catalog(TimeStampedMixin):
 
 
 class CatalogItem(TimeStampedMixin, OrderableMixin):
-    catalog = ForeignKey(Catalog, on_delete=CASCADE, verbose_name=_("Catalog"))
+    catalog = ForeignKey(Catalog, CASCADE, related_name="catalog_items", verbose_name=_("Catalog"))
     content_type = ForeignKey(
         ContentType,
         CASCADE,
         verbose_name=_("Content Type"),
-        limit_choices_to={"model__in": [m.__name__.lower() for m in ENROLLABLE_MODELS]},
+        limit_choices_to={"model__in": [m._meta.model_name for m in ENROLLABLE_MODELS]},
     )
     content_id = CharField(_("Content ID"), max_length=36)
     content = GenericForeignKey("content_type", "content_id")
@@ -493,8 +495,8 @@ setattr(CatalogItem._meta, "triggers", [content_exists_trigger(CatalogItem._meta
 @pghistory.track()
 class UserCatalog(TimeStampedMixin):
     user = ForeignKey(User, CASCADE, verbose_name=_("User"))
-    catalog = ForeignKey(Catalog, on_delete=CASCADE, verbose_name=_("Catalog"))
-    granted_by = ForeignKey(User, on_delete=CASCADE, verbose_name=_("Granted By"), null=True, related_name="+")
+    catalog = ForeignKey(Catalog, CASCADE, related_name="user_catalogs", verbose_name=_("Catalog"))
+    granted_by = ForeignKey(User, CASCADE, verbose_name=_("Granted By"), null=True, related_name="+")
     note = TextField(_("Note"), blank=True, default="")
 
     class Meta:
@@ -520,9 +522,9 @@ class UserCatalog(TimeStampedMixin):
 
 @pghistory.track()
 class CohortCatalog(TimeStampedMixin):
-    cohort = ForeignKey(Cohort, on_delete=CASCADE, verbose_name=_("Cohort"))
-    catalog = ForeignKey(Catalog, on_delete=CASCADE, verbose_name=_("Catalog"))
-    granted_by = ForeignKey(User, on_delete=CASCADE, verbose_name=_("Granted By"), null=True, related_name="+")
+    cohort = ForeignKey(Cohort, CASCADE, verbose_name=_("Cohort"))
+    catalog = ForeignKey(Catalog, CASCADE, related_name="cohort_catalogs", verbose_name=_("Catalog"))
+    granted_by = ForeignKey(User, CASCADE, verbose_name=_("Granted By"), null=True, related_name="+")
     note = TextField(_("Note"), blank=True, default="")
 
     class Meta:
@@ -535,7 +537,7 @@ async def _fetch_enrollable_contents(content_ids_by_type: dict):
     union_qs = []
 
     for M in ENROLLABLE_MODELS:
-        key = (M._meta.app_label.lower(), M._meta.model.__name__.lower())
+        key = (M._meta.app_label.lower(), M._meta.model_name)
         ids = content_ids_by_type.get(key)
 
         if not ids:

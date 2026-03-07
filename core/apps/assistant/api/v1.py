@@ -22,6 +22,7 @@ from apps.assistant.api.schema import (
 )
 from apps.assistant.models import AssistantNote, Chat, ChatMessage
 from apps.assistant.plugin.chat import AIChat
+from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, Pagination
 
 router = Router(by_alias=True)
@@ -50,12 +51,10 @@ async def chat_message(
     request: HttpRequest,
     data: Form[ChatMessageCreateSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        ChatMessage.validate_files(files)
-
     # create message
     message = await ChatMessage.create(user_id=request.auth, **data.model_dump(exclude_unset=True), files=files)
 

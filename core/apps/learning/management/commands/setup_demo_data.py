@@ -5,21 +5,23 @@ from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from django.conf import settings
+from django.contrib.auth.models import Group as DJangoGroup
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.utils.translation import get_language_info
 from django.utils.translation import gettext as _
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.models import User
-from apps.content.models import Media, PublicAccessMedia
+from apps.content.models import Media, MediaQuiz, PublicAccessMedia
 from apps.content.tests.factories import MediaFactory
 from apps.learning.models import CatalogItem
 from apps.learning.tests.factories import CatalogFactory, CohortCatalogFactory, UserCatalogFactory
 from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory, PolicyFactory
-from apps.partner.models import Group
+from apps.partner.models import CohortMember, Group
 from apps.partner.tests.factories import CohortFactory, MemberFactory, PartnerFactory
 from apps.quiz.models import Quiz
 
@@ -30,6 +32,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # test user
         test_user = User.objects.get(email=os.environ.get("DJANGO_SUPERUSER_EMAIL") or "admin@example.com")
+
+        # add group
+        test_user.groups.set(DJangoGroup.objects.all())
 
         # public catalog
         self.create_public_catalog(f"{_('Demo Public Catalog')} 1", 30)
@@ -65,7 +70,7 @@ class Command(BaseCommand):
 
         member = MemberFactory.create(group=group, email=test_user.email, user=test_user)
         cohort = CohortFactory.create()
-        cohort.members.add(member)
+        CohortMember.objects.create(cohort=cohort, member=member)
 
         CohortCatalogFactory.create(cohort=cohort, catalog=cohort_catalog)
 
@@ -98,7 +103,8 @@ class Command(BaseCommand):
         with open("apps/quiz/tests/quiz_data.json") as f:
             quiz_data_cycle = itertools.cycle(json.load(f))
 
-            for media in Media.objects.filter(quizzes__isnull=True):
+            media_quiz = []
+            for i, media in enumerate(Media.objects.filter(quizzes__isnull=True)):
                 quiz_data = next(quiz_data_cycle)
 
                 thumbnail = None
@@ -106,8 +112,8 @@ class Command(BaseCommand):
                     thumbnail = ContentFile(media.thumbnail.read())
                     thumbnail.name = media.thumbnail.name
 
-                quiz = async_to_sync(Quiz.create_quiz_set)(
-                    title=f"{media.title} - {media.id}",
+                quiz = async_to_sync(Quiz.create_quiz)(
+                    title=f"{media.title} {i + 1} - {get_language_info('en')['name_local']}",
                     description=media.description,
                     audience=media.audience,
                     thumbnail=media.thumbnail,
@@ -117,7 +123,9 @@ class Command(BaseCommand):
                     lang_code="en",
                     quiz_data=quiz_data,
                 )
-                media.quizzes.add(quiz)
+                media_quiz.append(MediaQuiz(media=media, quiz=quiz, lang="en"))
+
+            MediaQuiz.objects.bulk_create(media_quiz, ignore_conflicts=True)
 
         # announcement
         AnnouncementFactory.create_batch(size=50)

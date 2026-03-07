@@ -10,9 +10,7 @@ from django.core.files import File
 from django.db import IntegrityError
 from django.db.models import (
     CASCADE,
-    BooleanField,
     CharField,
-    DateTimeField,
     F,
     ForeignKey,
     JSONField,
@@ -25,6 +23,7 @@ from django.db.models import (
     QuerySet,
     TextField,
     UniqueConstraint,
+    aprefetch_related_objects,
 )
 from django.utils import timezone
 from django.utils.translation import get_language_info
@@ -32,8 +31,9 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.assistant.plugin.quiz import QuizMaker
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, LearningSessionStep, ScoreStatsDict, get_score_stats
+from apps.common.models import AttemptMixin, GradeFieldMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import AccessDate, LearningSessionStep, ModeChoices, ScoreStatsDict, get_score_stats
+from apps.operation.models import AttachmentMixin
 from apps.quiz.trigger import attempt_retry_count
 
 User = get_user_model()
@@ -80,18 +80,18 @@ class QuestionPool(Model):
         constraints = [UniqueConstraint(fields=["title", "owner"], name="quiz_questionpool_ti_ow_uniq")]
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
     async def select_questions(self):
-        all_question_ids = [q async for q in self.question_set.values_list("id", flat=True)]
+        all_question_ids = [q async for q in self.questions.values_list("id", flat=True)]
         random.shuffle(all_question_ids)
         question_ids = all_question_ids[: self.select_count]
         return Question.objects.filter(id__in=question_ids)
 
 
 @pghistory.track()
-class Question(Model):
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
+class Question(AttachmentMixin):
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     options = ArrayField(TextField(), verbose_name=_("Options"))
@@ -104,6 +104,10 @@ class Question(Model):
     if TYPE_CHECKING:
         pk: int
         solution: "Solution"
+
+    @property
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
 
 
 @pghistory.track()
@@ -122,7 +126,7 @@ class Quiz(LearningObjectMixin):
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     question_pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
 
-    class Meta(LearningObjectMixin.Meta, GradeWorkflowMixin.Meta):
+    class Meta:
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
         constraints = [UniqueConstraint(fields=["owner", "title"], name="quiz_quiz_ow_ti_uniq")]
@@ -139,6 +143,7 @@ class Quiz(LearningObjectMixin):
             .prefetch_related(
                 Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
             )
+            .prefetch_related("questions__attachments")
             .alast()
         )
 
@@ -168,7 +173,7 @@ class Quiz(LearningObjectMixin):
         return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
 
     @classmethod
-    async def create_quiz_set(
+    async def create_quiz(
         cls,
         *,
         title: str,
@@ -232,13 +237,10 @@ class Quiz(LearningObjectMixin):
 
 
 @pghistory.track()
-class Attempt(TimeStampedMixin):
+class Attempt(AttemptMixin):
     quiz = ForeignKey(Quiz, CASCADE, verbose_name=_("Quiz"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
-    started = DateTimeField(_("Attempt Start"))
     questions = ManyToManyField(Question, verbose_name=_("Questions"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta(TimeStampedMixin.Meta):
@@ -258,9 +260,10 @@ class Attempt(TimeStampedMixin):
         _prefetched_objects_cache: dict[str, QuerySet[Question]]
 
     @classmethod
-    async def start(cls, *, quiz_id: str, learner_id: str, context: str):
-        quiz = await Quiz.objects.prefetch_related("question_pool__question_set").aget(id=quiz_id)
+    async def start(cls, *, quiz_id: str, learner_id: str, context: str, mode: ModeChoices):
+        quiz = await Quiz.objects.prefetch_related("question_pool__questions").aget(id=quiz_id)
         questions = await quiz.question_pool.select_questions()
+        await aprefetch_related_objects(questions, "attachments")  # type: ignore
 
         try:
             attempt = await Attempt.objects.acreate(
@@ -269,6 +272,7 @@ class Attempt(TimeStampedMixin):
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
+                mode=mode,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)
@@ -291,6 +295,7 @@ class Attempt(TimeStampedMixin):
             .prefetch_related(
                 Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
             )
+            .prefetch_related("questions__attachments")
             .aget(quiz_id=quiz_id, learner_id=learner_id, context=context, active=True)
         )
 

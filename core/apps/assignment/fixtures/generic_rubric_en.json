@@ -1,0 +1,167 @@
+[
+  {
+    "model": "assignment.rubric",
+    "pk": 1,
+    "fields": {
+      "name": "General Rubric",
+      "description": "A general-purpose rubric for evaluating assignments."
+    }
+  },
+  {
+    "model": "assignment.rubriccriterion",
+    "pk": 1,
+    "fields": {
+      "rubric": 1,
+      "name": "Content",
+      "description": "Evaluates the accuracy, relevance, and depth of the content."
+    }
+  },
+  {
+    "model": "assignment.rubriccriterion",
+    "pk": 2,
+    "fields": {
+      "rubric": 1,
+      "name": "Organization",
+      "description": "Evaluates the logical structure and flow of the response."
+    }
+  },
+  {
+    "model": "assignment.rubriccriterion",
+    "pk": 3,
+    "fields": {
+      "rubric": 1,
+      "name": "Expression",
+      "description": "Evaluates clarity, grammar, and overall quality of writing."
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 1,
+    "fields": {
+      "criterion": 1,
+      "name": "Poor",
+      "description": "Content is largely inaccurate, irrelevant, or missing.",
+      "point": 1
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 2,
+    "fields": {
+      "criterion": 1,
+      "name": "Developing",
+      "description": "Content is partially accurate but lacks depth or relevance.",
+      "point": 2
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 3,
+    "fields": {
+      "criterion": 1,
+      "name": "Proficient",
+      "description": "Content is mostly accurate and relevant with adequate depth.",
+      "point": 3
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 4,
+    "fields": {
+      "criterion": 1,
+      "name": "Excellent",
+      "description": "Content is accurate, highly relevant, and demonstrates strong depth.",
+      "point": 4
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 5,
+    "fields": {
+      "criterion": 2,
+      "name": "Poor",
+      "description": "Response lacks clear structure and is difficult to follow.",
+      "point": 1
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 6,
+    "fields": {
+      "criterion": 2,
+      "name": "Developing",
+      "description": "Some structure is present but transitions and flow are inconsistent.",
+      "point": 2
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 7,
+    "fields": {
+      "criterion": 2,
+      "name": "Proficient",
+      "description": "Response is well-organized with clear transitions.",
+      "point": 3
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 8,
+    "fields": {
+      "criterion": 2,
+      "name": "Excellent",
+      "description": "Response is exceptionally well-structured and easy to follow.",
+      "point": 4
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 9,
+    "fields": {
+      "criterion": 3,
+      "name": "Poor",
+      "description": "Writing is unclear with frequent grammatical errors.",
+      "point": 1
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 10,
+    "fields": {
+      "criterion": 3,
+      "name": "Developing",
+      "description": "Writing is somewhat clear but has noticeable errors.",
+      "point": 2
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 11,
+    "fields": {
+      "criterion": 3,
+      "name": "Proficient",
+      "description": "Writing is clear and mostly free of grammatical errors.",
+      "point": 3
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 12,
+    "fields": {
+      "criterion": 3,
+      "name": "Excellent",
+      "description": "Writing is exceptionally clear, polished, and error-free.",
+      "point": 4
+    }
+  },
+  {
+    "model": "assignment.performancelevel",
+    "pk": 13,
+    "fields": {
+      "criterion": 3,
+      "name": "Outstanding",
+      "description": "Writing demonstrates exceptional style, precision, and sophistication.",
+      "point": 5
+    }
+  }
+]

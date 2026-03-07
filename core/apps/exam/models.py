@@ -11,9 +11,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.signing import dumps
 from django.db.models import (
     CASCADE,
-    BooleanField,
     CharField,
-    DateTimeField,
     DurationField,
     F,
     ForeignKey,
@@ -30,6 +28,7 @@ from django.db.models import (
     TextChoices,
     TextField,
     UniqueConstraint,
+    aprefetch_related_objects,
 )
 from django.db.utils import IntegrityError
 from django.utils import timezone
@@ -38,10 +37,18 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
-from apps.common.models import GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
+from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
+from apps.common.util import (
+    AccessDate,
+    GradingDate,
+    LearningSessionStep,
+    ModeChoices,
+    OtpTokenDict,
+    ScoreStatsDict,
+    get_score_stats,
+)
 from apps.exam.trigger import attempt_retry_count
-from apps.operation.models import Appeal, HonorCode, MessageType, user_message_created
+from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
 User = get_user_model()
 
@@ -80,10 +87,10 @@ class QuestionPool(Model):
         return self.title
 
     if TYPE_CHECKING:
-        question_set: "QuerySet[Question]"
+        questions: "QuerySet[Question]"
 
     async def compose_questions(self):
-        all_questions = [q async for q in self.question_set.values_list("id", "format")]
+        all_questions = [q async for q in self.questions.values_list("id", "format")]
         question_ids = []
         for format, count in self.composition.items():
             ids = [id for id, f in all_questions if f == format]
@@ -93,15 +100,15 @@ class QuestionPool(Model):
 
 
 @pghistory.track()
-class Question(Model):
-    class ExamFormatChoices(TextChoices):
+class Question(AttachmentMixin):
+    class ExamQuestionFormatChoices(TextChoices):
         SINGLE_CHOICE = "single_choice", _("Single Choice")
         TEXT_INPUT = "text_input", _("Text Input")
         NUMBER_INPUT = "number_input", _("Number Input")
         ESSAY = "essay", _("Essay")
 
-    pool = ForeignKey(QuestionPool, CASCADE, verbose_name=_("Question Pool"))
-    format = CharField(_("Format"), max_length=20, choices=ExamFormatChoices.choices)
+    pool = ForeignKey(QuestionPool, CASCADE, related_name="questions", verbose_name=_("Question Pool"))
+    format = CharField(_("Format"), max_length=20, choices=ExamQuestionFormatChoices.choices)
     question = TextField(_("Question"))
     supplement = TextField(_("Supplement"), blank=True, default="")
     options = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Options"))
@@ -118,6 +125,10 @@ class Question(Model):
     def __str__(self):
         return f"({self.pk}) {self.question[:30]} {'...' if len(self.question) > 30 else ''}"
 
+    @property
+    def cleaned_supplement(self):
+        return self.update_attachment_urls(content=self.supplement)
+
 
 @pghistory.track()
 class Solution(Model):
@@ -125,7 +136,6 @@ class Solution(Model):
     correct_answers = ArrayField(CharField(max_length=50), blank=True, default=list, verbose_name=_("Correct Answers"))
     correct_criteria = TextField(_("Correct Criteria"), blank=True, default="")
     explanation = TextField(_("Explanation"), blank=True, default="")
-    reference = ArrayField(TextField(), blank=True, default=list, verbose_name=_("Reference"))
 
     class Meta:
         verbose_name = _("Solution")
@@ -148,10 +158,6 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
         question_pool_id: int
         pk: str
 
-    @property
-    def duration_seconds(self):
-        return self.duration.total_seconds()
-
     @classmethod
     async def get_session(cls, *, exam_id: str, learner_id: str, context: str, access_date: AccessDate):
         exam = await Exam.objects.select_related("owner", "honor_code", "question_pool").aget(id=exam_id)
@@ -169,6 +175,7 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
             .prefetch_related(
                 Prefetch("questions", queryset=Question.objects.select_related("solution").order_by("id"))
             )
+            .prefetch_related("questions__attachments")
             .alast()
         )
 
@@ -229,13 +236,10 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
 
 
 @pghistory.track()
-class Attempt(Model):
+class Attempt(AttemptMixin):
     exam = ForeignKey(Exam, CASCADE, verbose_name=_("Exam"))
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     questions = ManyToManyField(Question, verbose_name=_("Questions"))
-    started = DateTimeField(_("Attempt Start"))
-    active = BooleanField(_("Active"), default=True)
-    context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     retry = PositiveSmallIntegerField(_("Retry"), default=0)
 
     class Meta:
@@ -262,14 +266,15 @@ class Attempt(Model):
             return self.tempanswer.answers
 
     @classmethod
-    async def start(cls, *, exam_id: str, learner_id: str, context: str):
-        exam = await Exam.objects.prefetch_related("question_pool__question_set").aget(id=exam_id)
+    async def start(cls, *, exam_id: str, learner_id: str, context: str, mode: ModeChoices):
+        exam = await Exam.objects.prefetch_related("question_pool__questions").aget(id=exam_id)
 
         if exam.verification_required:
             if not await OtpLog.check_otp_verification(user_id=learner_id, consumer=exam):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
 
         questions = await exam.question_pool.compose_questions()
+        await aprefetch_related_objects(questions, "attachments")  # type: ignore
 
         try:
             attempt = await Attempt.objects.acreate(
@@ -278,6 +283,7 @@ class Attempt(Model):
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
+                mode=mode,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

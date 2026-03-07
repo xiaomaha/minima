@@ -22,10 +22,13 @@ def cookie_auth_middleware(get_response):
 
             access_token = request.COOKIES.get(settings.ACCESS_TOKEN_NAME)
             if access_token:
-                decoded = decode_token(access_token)
-                request.auth = decoded.get("sub")
-                request.roles = decoded.get("roles", [])
-                return await get_response(request)
+                try:
+                    decoded = decode_token(access_token)
+                    request.auth = decoded.get("sub")
+                    request.roles = decoded.get("roles", [])
+                    return await get_response(request)
+                except InvalidTokenError:
+                    pass
 
             if await BlacklistedToken.objects.filter(token=refresh_token, expires__gt=timezone.now()).aexists():
                 return await get_response(request)

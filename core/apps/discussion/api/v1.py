@@ -6,6 +6,7 @@ from ninja.pagination import paginate
 from ninja.params import Form, functions
 from ninja.router import Router
 
+from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, Pagination
 from apps.discussion.api.schema import (
     DiscussionAttemptSchema,
@@ -17,7 +18,7 @@ from apps.discussion.api.schema import (
     DiscussionSessionSchema,
 )
 from apps.discussion.models import Attempt, Discussion, Post
-from apps.learning.api.access_control import access_date, active_context
+from apps.learning.api.access_control import access_date, access_mode, active_context
 
 router = Router(by_alias=True)
 
@@ -33,9 +34,12 @@ async def get_session(request: HttpRequest, id: str):
 
 @router.post("/{id}/attempt", response=DiscussionAttemptSchema)
 @active_context()
+@access_mode()
 @access_date("discussion", "discussion")
 async def start_attempt(request: HttpRequest, id: str):
-    return await Attempt.start(discussion_id=id, learner_id=request.auth, context=request.active_context)
+    return await Attempt.start(
+        discussion_id=id, learner_id=request.auth, context=request.active_context, mode=request.access_mode
+    )
 
 
 @router.delete("/{id}/attempt/deactivate")
@@ -68,31 +72,28 @@ async def create_post(
     id: str,
     data: Form[DiscussionPostSaveSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Post.validate_files(files)
     return await Post.create(
         discussion_id=id, learner_id=request.auth, context=request.active_context, **data.model_dump(), files=files
     )
 
 
-@router.post("/{id}/post/{postId}", response=DiscussionPostSchema)
+@router.post("/{id}/post/{post_id}", response=DiscussionPostSchema)
 @active_context()
 @access_date("discussion", "discussion")
 async def update_post(
     request: HttpRequest,
     id: str,
-    post_id: Annotated[int, functions.Path(alias="postId")],
+    post_id: int,
     data: Form[DiscussionPostSaveSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Post.validate_files(files)
-
     return await Post.update(
         discussion_id=id,
         learner_id=request.auth,
@@ -103,8 +104,8 @@ async def update_post(
     )
 
 
-@router.delete("/{id}/post/{postId}")
+@router.delete("/{id}/post/{post_id}")
 @active_context()
 @access_date("discussion", "discussion")
-async def delete_post(request: HttpRequest, id: str, post_id: Annotated[int, functions.Path(alias="postId")]):
+async def delete_post(request: HttpRequest, id: str, post_id: int):
     await Post.remove(discussion_id=id, learner_id=request.auth, context=request.active_context, post_id=post_id)

@@ -73,7 +73,7 @@ class Classification(MP_Node):
         return " / ".join(self.ancestors + [self.name])
 
     def save(self, *args, **kwargs):
-        parent = self.get_parent()
+        parent = cast(Classification, self.get_parent())
         self.ancestors = parent.ancestors + [parent.name] if parent else []
         return super().save(*args, **kwargs)
 
@@ -92,9 +92,7 @@ class Classification(MP_Node):
 
     @classmethod
     async def get_skills_data(cls, *, id: int):
-        return [
-            s async for s in Skill.objects.prefetch_related("factor_set").filter(classification_id=id).order_by("id")
-        ]
+        return [s async for s in Skill.objects.prefetch_related("factors").filter(classification_id=id).order_by("id")]
 
 
 @pghistory.track()
@@ -119,7 +117,7 @@ class Skill(Model):
 
 @pghistory.track()
 class Factor(Model):
-    skill = ForeignKey(Skill, CASCADE, verbose_name=_("Skill"))
+    skill = ForeignKey(Skill, CASCADE, related_name="factors", verbose_name=_("Skill"))
     code = CharField(_("Code"), max_length=12)
     name = CharField(_("Name"), max_length=200)
     number = CharField(_("Number"), max_length=30, unique=True)
@@ -261,7 +259,7 @@ class Certificate(TimeStampedMixin):
 
 @pghistory.track()
 class CertificateSkill(Model):
-    certificate = ForeignKey(Certificate, CASCADE, verbose_name=_("Certificate"))
+    certificate = ForeignKey(Certificate, CASCADE, related_name="certificate_skills", verbose_name=_("Certificate"))
     skill = ForeignKey(Skill, CASCADE, verbose_name=_("Skill"))
     factors = ManyToManyField(Factor, verbose_name=_("Factors"))
     coverage = FloatField(_("Coverage"))
@@ -277,7 +275,9 @@ class CertificateSkill(Model):
 
 @pghistory.track()
 class CertificateEndorsement(TimeStampedMixin):
-    certificate = ForeignKey(Certificate, CASCADE, verbose_name=_("Certificate"))
+    certificate = ForeignKey(
+        Certificate, CASCADE, related_name="certificate_endorsements", verbose_name=_("Certificate")
+    )
     partner = ForeignKey(Partner, CASCADE, verbose_name=_("Partner"))
     claim = TextField(_("Claim"))
     endorsed = DateTimeField(_("Endorsed"))

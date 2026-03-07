@@ -15,6 +15,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import storages
 from django.core.mail import send_mail
@@ -35,10 +36,11 @@ from django.db.models import (
     JSONField,
     Model,
     OneToOneField,
+    Q,
     TextField,
+    Value,
 )
 from django.db.models.expressions import OuterRef, Subquery
-from django.db.models.query import QuerySet
 from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
 from django.template.loader import get_template
@@ -136,7 +138,6 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
 
     if TYPE_CHECKING:
         pgh_event_model: type[Model]
-        totpdevice_set: QuerySet[TOTPDevice]
         otp_enabled: "datetime | None"  # annotated
         token_expires: "datetime | None"  # annotated
         pk: str
@@ -261,6 +262,7 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                         )
                     )
                 ),
+                roles=ArrayAgg("groups__name", filter=Q(groups__isnull=False), default=Value([])),
             )
             if annotate
             else cls.objects

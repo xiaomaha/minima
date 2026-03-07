@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Annotated
 
 from pydantic.fields import Field
@@ -6,6 +5,7 @@ from pydantic.fields import Field
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import (
     AccessDateSchema,
+    AttemptMixinSchema,
     GradeFieldMixinSchema,
     GradingDateSchema,
     LearningObjectMixinSchema,
@@ -14,7 +14,7 @@ from apps.common.schema import (
     TimeStampedMixinSchema,
 )
 from apps.common.util import LearningSessionStep
-from apps.discussion.models import Post
+from apps.discussion.models import Post, Question
 from apps.operation.api.schema import AppealSchema, HonorCodeSchema
 
 
@@ -33,16 +33,22 @@ class DiscussionQuestionSchema(Schema):
         reply_min_characters: Annotated[int, Field(None)]
 
     id: int
-    point_requirements: DiscussionPointRequirementsSchema
     directive: str
     supplement: str
+    post_point: int
+    reply_point: int
+    tutor_assessment_point: int
+    post_min_characters: int
+    reply_min_characters: int
+
+    @staticmethod
+    def resolve_supplement(obj: Question):
+        return obj.cleaned_supplement
 
 
-class DiscussionAttemptSchema(Schema):
+class DiscussionAttemptSchema(AttemptMixinSchema):
     id: int
     question: DiscussionQuestionSchema
-    started: datetime
-    active: bool
     retry: int
 
 
@@ -119,4 +125,4 @@ class DiscussionPostNestedSchema(DiscussionPostSchema):
 class DiscussionPostSaveSchema(Schema):
     parent_id: Annotated[int, Field(None)]
     title: Annotated[str, Field(min_length=10, max_length=100)]
-    body: Annotated[str, Field(max_length=5000)]  # Min is limited by qeustion.point_requirements
+    body: Annotated[str, Field(max_length=5000)]  # Min is limited by qeustion

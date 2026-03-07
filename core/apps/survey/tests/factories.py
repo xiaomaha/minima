@@ -7,39 +7,40 @@ from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
 from apps.common.tests.factories import LearningObjectFactory, dummy_html
-from apps.survey.models import Question, QuestionPaper, Submission, Survey
+from apps.survey.models import Question, QuestionPool, Submission, Survey
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
 
-class QuestionPaperFactory(DjangoModelFactory[QuestionPaper]):
+class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
     title = FactoryField("text.title")
     description = FactoryField("text")
     owner = SubFactory(UserFactory)
 
     class Meta:
-        model = QuestionPaper
+        model = QuestionPool
         django_get_or_create = ("title",)
         skip_postgeneration_save = True
 
     @post_generation
-    def post_generation(self: QuestionPaper, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: QuestionPool, create: bool, extracted: object, **kwargs: object):
         if not create:
             return
 
-        if self.question_set.exists():
+        if self.questions.exists():
             return
 
         QuestionFactory.reset_sequence()
-        QuestionFactory.create_batch(10, paper=self, format=Question.SurveyFormatChoices.SINGLE_CHOICE.value)
-        QuestionFactory.create_batch(3, paper=self, format=Question.SurveyFormatChoices.TEXT_INPUT.value)
-        QuestionFactory.create_batch(2, paper=self, format=Question.SurveyFormatChoices.NUMBER_INPUT.value)
+        QuestionFactory.create_batch(10, pool=self, format=Question.SurveyQuestionFormatChoices.SINGLE_CHOICE.value)
+        QuestionFactory.create_batch(3, pool=self, format=Question.SurveyQuestionFormatChoices.TEXT_INPUT.value)
+        QuestionFactory.create_batch(2, pool=self, format=Question.SurveyQuestionFormatChoices.NUMBER_INPUT.value)
 
 
 class QuestionFactory(DjangoModelFactory[Question]):
     ordering = Sequence(lambda n: n)
-    paper = SubFactory(QuestionPaperFactory)
-    format = Iterator(Question.SurveyFormatChoices)
+    pool = SubFactory(QuestionPoolFactory)
+    format = Iterator(Question.SurveyQuestionFormatChoices)
     question = Sequence(lambda n: f"{generic.text.text(quantity=generic.random.randint(1, 3))} {n}")
     supplement = LazyFunction(lambda: dummy_html() if generic.random.randint(1, 5) == 1 else "")
     mandatory = FactoryField("random.weighted_choice", choices={True: 9, False: 1})
@@ -49,7 +50,7 @@ class QuestionFactory(DjangoModelFactory[Question]):
 
     @lazy_attribute
     def options(self) -> list[str]:
-        if self.format == Question.SurveyFormatChoices.SINGLE_CHOICE.value:
+        if self.format == Question.SurveyQuestionFormatChoices.SINGLE_CHOICE.value:
             return [generic.text.text(quantity=generic.random.randint(1, 3)) for _ in range(5)]
         return []
 
@@ -59,8 +60,8 @@ class SurveyFactory(LearningObjectFactory[Survey]):
     max_attempts = 0
     verification_required = False
 
-    owner = SubFactory(UserFactory)
-    paper = SubFactory(QuestionPaperFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
+    question_pool = SubFactory(QuestionPoolFactory, owner=owner)
     complete_message = FactoryField("text")
     anonymous = Iterator([True, False])
     show_results = Iterator([True, False])
@@ -93,12 +94,12 @@ class SubmissionFactory(DjangoModelFactory[Submission]):
     @lazy_attribute
     def answers(self: Submission):
         answer_dict = {}
-        for q in self.survey.paper.question_set.all():
-            if q.format == Question.SurveyFormatChoices.SINGLE_CHOICE.value:
+        for q in self.survey.question_pool.questions.all():
+            if q.format == Question.SurveyQuestionFormatChoices.SINGLE_CHOICE.value:
                 answer = generic.random.randint(1, len(q.options))
-            elif q.format == Question.SurveyFormatChoices.TEXT_INPUT.value:
+            elif q.format == Question.SurveyQuestionFormatChoices.TEXT_INPUT.value:
                 answer = generic.text.word()
-            elif q.format == Question.SurveyFormatChoices.NUMBER_INPUT.value:
+            elif q.format == Question.SurveyQuestionFormatChoices.NUMBER_INPUT.value:
                 answer = generic.random.randint(1, 10)
             else:
                 raise ValueError(f"Invalid survey question format: {q.format}")

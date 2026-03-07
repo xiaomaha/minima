@@ -34,7 +34,7 @@ class PartnerFactory(DjangoModelFactory[Partner]):
         if not create:
             return
 
-        if self.group_set.exists():
+        if self.groups.exists():
             return
 
         GroupFactory.reset_sequence()
@@ -57,7 +57,7 @@ class GroupFactory(DjangoModelFactory[Group]):
         if not create:
             return
 
-        if self.member_set.exists():
+        if self.members.exists():
             return
 
         MemberFactory.create_batch(generic.random.randint(5, 10), group=self)

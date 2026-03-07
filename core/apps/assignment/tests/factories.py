@@ -3,6 +3,7 @@ from asgiref.sync import async_to_sync
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.db.models import Prefetch, prefetch_related_objects
 from django.utils import timezone
 from factory.declarations import Iterator, LazyAttribute, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
@@ -20,11 +21,11 @@ from apps.assignment.models import (
     QuestionPool,
     Rubric,
     RubricCriterion,
-    Solution,
     Submission,
 )
 from apps.common.tests.factories import GradeFieldFactory, GradeWorkflowFactory, LearningObjectFactory, dummy_html
 from apps.operation.tests.factories import HonorCodeFactory
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -43,7 +44,7 @@ class RubricFactory(DjangoModelFactory[Rubric]):
         if not create:
             return
 
-        if self.rubriccriterion_set.exists():
+        if self.rubric_criteria.exists():
             return
 
         RubricCriterionFactory.create_batch(generic.random.randint(3, 5), rubric=self)
@@ -64,7 +65,7 @@ class RubricCriterionFactory(DjangoModelFactory[RubricCriterion]):
         if not create:
             return
 
-        if self.performancelevel_set.exists():
+        if self.performance_levels.exists():
             return
 
         for i in range(generic.random.randint(4, 6)):
@@ -98,7 +99,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         if not create:
             return
 
-        if self.question_set.exists():
+        if self.questions.exists():
             return
 
         QuestionFactory.reset_sequence()
@@ -110,9 +111,6 @@ class QuestionFactory(DjangoModelFactory[Question]):
     question = Sequence(lambda n: f"{generic.text.text(quantity=generic.random.randint(1, 3))} {n}")
     supplement = LazyFunction(lambda: dummy_html())
     attachment_file_types = ["docx"]
-    sample_attachment = Sequence(
-        lambda n: ContentFile(generic.binaryfile.document(file_type=DocumentFile.DOCX), name=f"sample.{n}.docx")
-    )
     plagiarism_threshold = FactoryField("choice", items=[80, 100])
 
     class Meta:
@@ -125,28 +123,19 @@ class QuestionFactory(DjangoModelFactory[Question]):
         if not create:
             return
 
-        SolutionFactory.create(question=self)
-
-
-class SolutionFactory(DjangoModelFactory[Solution]):
-    question = SubFactory(QuestionFactory)
-    rubric = SubFactory(RubricFactory)
-    explanation = FactoryField("text")
-    reference = FactoryField("words", quantity=generic.random.randint(1, 3))
-
-    class Meta:
-        model = Solution
-        django_get_or_create = ("question",)
-
 
 class AssignmentFactory(LearningObjectFactory[Assignment], GradeWorkflowFactory[Assignment]):
     passing_point = FactoryField("choice", items=[60, 80])
     max_attempts = 1
     verification_required = True
+    rubric = SubFactory(RubricFactory)
+    sample_attachment = Sequence(
+        lambda n: ContentFile(generic.binaryfile.document(file_type=DocumentFile.DOCX), name=f"sample.{n}.docx")
+    )
 
-    owner = SubFactory(UserFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
+    question_pool = SubFactory(QuestionPoolFactory, owner=owner)
     honor_code = SubFactory(HonorCodeFactory)
-    question_pool = SubFactory(QuestionPoolFactory)
 
     class Meta:
         model = Assignment
@@ -211,23 +200,18 @@ class GradeFactory(GradeFieldFactory[Grade], DjangoModelFactory[Grade]):
             grade = Grade.objects.get(attempt=kwargs["attempt"])
         except Grade.DoesNotExist:
             grade = super().build(**kwargs)
-
-            # earned_details
-            attempt = Attempt.objects.select_related("question__solution__rubric", "assignment").get(
-                id=grade.attempt_id
+            attempt = Attempt.objects.select_related("question", "assignment").get(id=grade.attempt_id)
+            prefetch_related_objects(
+                [attempt.assignment],
+                Prefetch(
+                    "rubric__rubric_criteria__performance_levels", queryset=PerformanceLevel.objects.order_by("point")
+                ),
             )
-
-            solution = Solution.objects.select_related("rubric").get(question=attempt.question)
-            rubric_data = async_to_sync(solution.get_rubric_data)()
-
+            rubric_data = async_to_sync(attempt.assignment.get_rubric_data)()
             grade.earned_details = {
                 criterion["name"]: generic.random.choice([level["point"] for level in criterion["performance_levels"]])
                 for criterion in rubric_data["criteria"]
             }
-
-            # fix SynchronousOnlyOperation
             grade.attempt = attempt
-
             async_to_sync(grade.grade)()
-
         return grade

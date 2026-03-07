@@ -1,12 +1,12 @@
-from datetime import datetime
 from typing import Annotated
 
 from pydantic.fields import Field
 
 from apps.account.api.schema import OwnerSchema
-from apps.assignment.models import Submission
+from apps.assignment.models import Question, Submission
 from apps.common.schema import (
     AccessDateSchema,
+    AttemptMixinSchema,
     GradeFieldMixinSchema,
     GradingDateSchema,
     LearningObjectMixinSchema,
@@ -22,6 +22,8 @@ class AssignmentSchema(LearningObjectMixinSchema):
     id: str
     owner: OwnerSchema
     honor_code: HonorCodeSchema
+    rubric_data: RubricSchema | None
+    sample_attachment: str | None
 
 
 class AssignmentSubmissionSchema(TimeStampedMixinSchema):
@@ -39,28 +41,21 @@ class AssignmentQuestionSchema(Schema):
     supplement: str
     attachment_file_count: int
     attachment_file_types: list[str]
-    sample_attachment: str | None
     plagiarism_threshold: int
-    solution: "AssignmentSolutionSchema"
+
+    @staticmethod
+    def resolve_supplement(obj: Question):
+        return obj.cleaned_supplement
 
 
-class AssignmentAttemptSchema(Schema):
+class AssignmentAttemptSchema(AttemptMixinSchema):
     id: int
     question: AssignmentQuestionSchema
-    started: datetime
-    active: bool
     retry: int
 
 
 class AssignmentGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
     id: int
-
-
-class AssignmentSolutionSchema(Schema):
-    id: int
-    reference: list[str]
-    rubric_data: "RubricSchema"
-    explanation: str
 
 
 class RubricSchema(Schema):

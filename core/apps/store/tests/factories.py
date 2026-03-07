@@ -43,7 +43,7 @@ class ProductFactory(DjangoModelFactory[Product]):
         if not create:
             return
 
-        if self.productitem_set.exists():
+        if self.product_items.exists():
             return
 
         self.categories.set(Category.objects.filter(depth=3).order_by("?")[: generic.random.randint(1, 2)])

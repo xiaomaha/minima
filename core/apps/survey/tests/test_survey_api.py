@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.test.client import Client
 from mimesis import Generic
 
+from apps.account.tests.factories import UserFactory
 from apps.learning.tests.factories import EnrollmentFactory
 from apps.survey.models import Survey
 from apps.survey.tests.factories import SurveyFactory
@@ -15,7 +16,8 @@ from conftest import AdminUser
 @pytest.mark.django_db
 def test_survey_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
 
-    survey: Survey = SurveyFactory(anonymous=True)
+    another = UserFactory(email="hello@world.com")
+    survey: Survey = SurveyFactory(anonymous=True, owner=another)
 
     # get survey
     res = client.get(f"/api/v1/survey/{survey.id}")
@@ -37,7 +39,7 @@ def test_survey_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     )
     assert res.status_code == 200, "submit survey anonymous"
 
-    survey: Survey = SurveyFactory(anonymous=False, show_results=False)
+    survey: Survey = SurveyFactory(anonymous=False, show_results=False, owner=another)
 
     # get anonymous survey
     res = client.get(f"/api/v1/survey/{survey.id}/anonymous")

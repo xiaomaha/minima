@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "@tailwindcss/typography";
+
+
+.ProseMirror-focused p.is-empty::before {
+  content: none !important;
+}
+
+.prosemirror-dropcursor-block {
+  border-top: 3px solid var(--color-blue-500);
+}
+
+.modal-box {
+  max-height: calc(100svh - 2rem);
+}
+
+.badge {
+  white-space: nowrap;
+}
+
+.label {
+  white-space: normal;
+}
+
+fieldset:disabled .tiptap {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+fieldset:disabled .tiptap * {
+  pointer-events: none;
+}
+
+fieldset:disabled .tiptap a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* tiptap placeholder */
+.tiptap .is-empty::before {
+  content: attr(data-placeholder);
+  @apply text-base-content/40;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap {
+  p {
+    @apply my-3 first:mt-0 last:mb-0;
+  }
+
+  h1 {
+    @apply mt-8 mb-3 first:mt-0 last:mb-0;
+  }
+
+  h2 {
+    @apply mt-6 mb-3 first:mt-0 last:mb-0;
+  }
+
+  h3 {
+    @apply mt-4 mb-2 first:mt-0 last:mb-0;
+  }
+
+  ul,
+  ol {
+    @apply my-3 first:mt-0 last:mb-0;
+  }
+
+  blockquote {
+    @apply my-4 first:mt-0 last:mb-0;
+  }
+
+  img {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+}
+
+.tiptap {
+  :first-child {
+    margin-top: 0;
+  }
+
+  ul,
+  ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+
+  ul[data-type='taskList'] {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+
+    li {
+      align-items: flex-start;
+      display: flex;
+
+      >label {
+        flex: 0 0 auto;
+        margin-right: 0.5rem;
+        user-select: none;
+      }
+
+      >div {
+        flex: 1 1 auto;
+      }
+    }
+
+    input[type='checkbox'] {
+      cursor: pointer;
+    }
+
+    ul[data-type='taskList'] {
+      margin: 0;
+    }
+  }
+}

@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - "**.md"
       - "docs/**"
-      - "student/**"
+      - "web/**"
 
 jobs:
   build-and-test:
@@ -53,23 +53,14 @@ jobs:
       - name: Start services
         run: docker compose up -d
 
-      - name: Bootstrap django
-        run: |
-          commands="python manage.py migrate && \
-                   python manage.py collectstatic --noinput && \
-                   python manage.py createsuperuser --noinput || true && \
-                   python manage.py opensearch index create --force --ignore-error && \
-                   python manage.py create_platform_partner && \
-                   python manage.py create_base_policies && \
-                   python manage.py load_ncs_data"
-          docker compose exec -T minima sh -c "$commands"
-          docker compose restart minima worker
-
       - name: Install uv and dev tools
         run: |
           pip install uv
           uv tool install pyrefly
           uv tool install ruff
+
+      - name: Bootstrap apps
+        run: uv run dev.py bootstrap --no-tty
 
       - name: Run linting
         run: |

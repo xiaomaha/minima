@@ -60,7 +60,6 @@ dev = [
   "boto3-stubs[s3]",
   "yt-dlp",
   "youtube-transcript-api",
-  "django-upgrade",
   "mjml-python",
   "openpyxl",
   "django-stubs",
@@ -83,7 +82,7 @@ profile = "django"
 blank_line_after_tag = "load,extends,include"
 
 [tool.ty.src]
-exclude = ["**/migrations/**"]
+exclude = ["**/migrations/**", "**/tests/**"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "minima.settings"

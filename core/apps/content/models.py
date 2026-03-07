@@ -2,7 +2,7 @@ import logging
 import re
 from datetime import date, datetime, time, timedelta
 from io import StringIO
-from typing import TYPE_CHECKING, Literal, Sequence, TypedDict
+from typing import TYPE_CHECKING, Literal, Sequence
 
 import pghistory
 import webvtt
@@ -36,6 +36,7 @@ from django.db.models import (
     OneToOneField,
     OuterRef,
     Prefetch,
+    QuerySet,
     TextChoices,
     TextField,
     UniqueConstraint,
@@ -45,12 +46,13 @@ from django.db.models import (
 )
 from django.db.models.functions import Replace
 from django.utils import timezone
+from django.utils.translation import get_language_info
 from django.utils.translation import gettext_lazy as _
 from webvtt.errors import MalformedFileError
 
 from apps.common.error import ErrorCode
 from apps.common.models import LearningObjectMixin, TimeStampedMixin
-from apps.common.util import offset_paginate
+from apps.common.util import ModeChoices, PaginationDict, offset_paginate
 from apps.operation.models import AttachmentMixin
 from apps.quiz.models import Quiz
 
@@ -65,11 +67,6 @@ WATCH = "1"
 class VarBitField(Field):
     def db_type(self, connection: BaseDatabaseWrapper):
         return "varbit"
-
-
-class MatchedLineDict(TypedDict):
-    start: int
-    line: str
 
 
 @pghistory.track()
@@ -88,9 +85,8 @@ class Media(LearningObjectMixin):
     duration = DurationField(_("Duration"))
     license = CharField(_("License"), max_length=255, blank=True, default="")
     channel = CharField(_("Channel"), max_length=255, blank=True, default="")
-    uploaded = BooleanField(_("Uploaded"), default=False)
     url = URLField(_("URL"), max_length=500, unique=True)
-    quizzes = ManyToManyField(Quiz, blank=True, verbose_name=_("Quizzes"))
+    quizzes = ManyToManyField(Quiz, through="MediaQuiz", blank=True, verbose_name=_("Quizzes"))
 
     class Meta(LearningObjectMixin.Meta):
         verbose_name = _("Media")
@@ -98,10 +94,10 @@ class Media(LearningObjectMixin):
 
     if TYPE_CHECKING:
         pk: str
-        subtitle_set: "list[Subtitle]"
-        matched_lines: list[MatchedLineDict] | None
+        subtitles: "QuerySet[Subtitle]"
         owner_id: str
         open: datetime  # annotated
+        quiz_ids: list[str]  # annotated
 
     @property
     def duration_seconds(self):
@@ -112,7 +108,7 @@ class Media(LearningObjectMixin):
         now = timezone.now()
         return cls.objects.annotate(
             accessible=Case(
-                When(publicaccessmedia__start__lte=now, publicaccessmedia__archive__gte=now, then=True),
+                When(public_access__start__lte=now, public_access__archive__gte=now, then=True),
                 default=False,
                 output_field=BooleanField(),
             )
@@ -130,7 +126,7 @@ class Media(LearningObjectMixin):
                     ),
                 )
             )
-            .annotate(subtitle_count=Count("subtitle"))
+            .annotate(subtitle_count=Count("subtitles"))
             .select_related("owner")
             .aget(id=id)
         )
@@ -141,7 +137,7 @@ class Media(LearningObjectMixin):
 
         qs = cls.annotate_accessible().select_related("owner")
         if filter == "public":
-            qs = qs.filter(publicaccessmedia__start__lte=timezone.now(), publicaccessmedia__archive__gte=timezone.now())
+            qs = qs.filter(public_access__start__lte=timezone.now(), public_access__archive__gte=timezone.now())
 
         if not q:
             searched = None
@@ -149,7 +145,7 @@ class Media(LearningObjectMixin):
         else:
             # document search
             searched = await sync_to_async(document_search)(q=q, page=page, size=size)
-            paginated: dict = {
+            paginated: PaginationDict = {
                 "items": [m async for m in qs.filter(id__in=searched["lines"].keys())],
                 "count": searched["count"],
                 "size": size,
@@ -169,7 +165,7 @@ class Media(LearningObjectMixin):
     async def create_quiz(self, *, lang_code: str = settings.DEFAULT_LANGUAGE):
         subtitle = (
             await Subtitle.objects
-            .annotate(quiz_exist=Exists(Media.quizzes.through.objects.filter(media_id=OuterRef("media_id"))))
+            .annotate(quiz_exist=Exists(MediaQuiz.objects.filter(media_id=OuterRef("media_id"), lang=lang_code)))
             .select_related("media")
             .filter(media_id=self.pk)
             .order_by(Case(When(lang=lang_code, then=Value(0)), default=Value(1), output_field=IntegerField()))
@@ -177,16 +173,20 @@ class Media(LearningObjectMixin):
         )
 
         if not subtitle:
-            raise ValidationError(_("No subtitle found"))
+            raise ValueError(ErrorCode.NOT_FOUND)
 
         if subtitle.quiz_exist:
-            raise ValidationError(_("Quiz already exists"))
+            raise ValueError(ErrorCode.ALREADY_EXISTS)
+
+        media = subtitle.media
+        title = f"{media.title} - {get_language_info('ko')['name_local']}"
+
+        if await Quiz.objects.filter(title=title, owner_id=media.owner_id).aexists():
+            raise ValueError(ErrorCode.ALREADY_EXISTS)
 
         text = subtitle.get_plain_text()
         if not text or len(text) < 300:
-            raise ValidationError(_("Insufficient subtitle content for quiz"))
-
-        media = subtitle.media
+            raise ValueError(ErrorCode.INSUFFICIENT_CONTENT)
 
         def _calculate_question_count(duration: timedelta) -> int:
             total_minutes = int(duration.total_seconds() / 60)
@@ -198,8 +198,8 @@ class Media(LearningObjectMixin):
             thumbnail = ContentFile(media.thumbnail.read())
             thumbnail.name = media.thumbnail.name
 
-        quiz = await Quiz.create_quiz_set(
-            title=media.title,
+        quiz = await Quiz.create_quiz(
+            title=title,
             description=media.description,
             audience=media.audience,
             thumbnail=media.thumbnail,
@@ -209,19 +209,33 @@ class Media(LearningObjectMixin):
             lang_code=lang_code,
         )
 
-        await self.quizzes.aadd(quiz)
+        await MediaQuiz.objects.acreate(media=media, quiz=quiz, lang=lang_code)
+
+        return quiz
 
     @classmethod
     async def content_inline_access(cls, *, media_id: str, content_id: str, app_label: str, model: str):
-        if app_label == Quiz._meta.app_label and model == Quiz._meta.model.__name__.lower():
+        if app_label == Quiz._meta.app_label and model == Quiz._meta.model_name:
             if await cls.objects.filter(id=media_id, quizzes__id=content_id).aexists():
                 return
         raise ValueError(ErrorCode.CONTENT_NOT_AVAILABLE)
 
 
 @pghistory.track()
+class MediaQuiz(Model):
+    media = ForeignKey(Media, CASCADE, related_name="media_quizzes", verbose_name=_("Media"))
+    quiz = ForeignKey(Quiz, CASCADE, verbose_name=_("Quiz"))
+    lang = CharField(_("Language"), max_length=30, null=True, blank=True)
+
+    class Meta:
+        constraints = [UniqueConstraint(fields=["media", "quiz", "lang"], name="content_media_quiz_me_qu_la_uniq")]
+        verbose_name = _("Media Quiz")
+        verbose_name_plural = _("Media Quizzes")
+
+
+@pghistory.track()
 class PublicAccessMedia(TimeStampedMixin):
-    media = OneToOneField(Media, CASCADE, verbose_name=_("Media"))
+    media = OneToOneField(Media, CASCADE, related_name="public_access", verbose_name=_("Media"))
     start = DateTimeField(_("Start"), default=timezone.now)
     end = DateTimeField(_("End"))
     archive = DateTimeField(_("Archive"))
@@ -238,7 +252,7 @@ class PublicAccessMedia(TimeStampedMixin):
 
 @pghistory.track()
 class Subtitle(Model):
-    media = ForeignKey(Media, CASCADE, verbose_name=_("Media"))
+    media = ForeignKey(Media, CASCADE, related_name="subtitles", verbose_name=_("Media"))
     lang = CharField(_("Language"), max_length=10)
     body = TextField(_("Body"))
 
@@ -298,6 +312,7 @@ class Watch(TimeStampedMixin):
     rate = FloatField(_("Watch Rate"))
     passed = BooleanField(_("Passed"), default=False)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+    mode = CharField(_("Mode"), max_length=30, choices=ModeChoices.choices, default=ModeChoices.NORMAL, db_index=True)
 
     class Meta(TimeStampedMixin.Meta):
         constraints = [UniqueConstraint(fields=["user", "media", "context"], name="content_watch_us_me_co_ke_uniq")]
@@ -314,12 +329,22 @@ class Watch(TimeStampedMixin):
 
     @classmethod
     async def update_media_watch(
-        cls, *, media_id: str, user_id: str, context: str, last_position: float, watch_bits: str | None
+        cls,
+        *,
+        media_id: str,
+        user_id: str,
+        context: str,
+        mode: ModeChoices,
+        last_position: float,
+        watch_bits: str | None,
     ):
         def _execute_update():
             if watch_bits is None:
                 cls.objects.update_or_create(
-                    media_id=media_id, user_id=user_id, context=context, defaults={"last_position": last_position}
+                    media_id=media_id,
+                    user_id=user_id,
+                    context=context,
+                    defaults={"mode": mode, "last_position": last_position},
                 )
                 return
 
@@ -338,13 +363,10 @@ class Watch(TimeStampedMixin):
                     SELECT '{watch_bits}'::varbit AS bits
                 ),
                 media_info AS (
-                    SELECT passing_point
-                    FROM {media_table}
-                    WHERE id = %(media_id)s
+                    SELECT passing_point FROM {media_table} WHERE id = %(media_id)s
                 ),
                 existing AS (
-                    SELECT watch_bits FROM {table} WHERE user_id = %(user_id)s AND media_id = %(media_id)s AND context
-                    = %(context)s
+                    SELECT watch_bits FROM {table} WHERE user_id = %(user_id)s AND media_id = %(media_id)s AND context = %(context)s
                 ),
                 merged AS (
                     SELECT
@@ -362,16 +384,16 @@ class Watch(TimeStampedMixin):
                     LEFT JOIN existing e ON true
                 ),
                 final AS (
-                    SELECT bits, BIT_COUNT(bits) AS bit_count
-                    FROM merged
+                    SELECT bits, BIT_COUNT(bits) AS bit_count FROM merged
                 )
                 INSERT INTO {table} (
-                    user_id, media_id, context, watch_bits, rate, passed, last_position, created, modified
+                    user_id, media_id, context, mode, watch_bits, rate, passed, last_position, created, modified
                 )
                 VALUES (
                     %(user_id)s,
                     %(media_id)s,
                     %(context)s,
+                    %(mode)s,
                     (SELECT bits FROM input_bits),
                     %(rate)s,
                     %(rate)s >= (SELECT passing_point FROM media_info),
@@ -384,6 +406,7 @@ class Watch(TimeStampedMixin):
                     watch_bits = (SELECT bits FROM final),
                     rate = (SELECT bit_count FROM final) * 100.0 / %(bit_length)s,
                     passed = ((SELECT bit_count FROM final) * 100.0 / %(bit_length)s) >= (SELECT passing_point FROM media_info),
+                    mode = EXCLUDED.mode,
                     last_position = EXCLUDED.last_position,
                     modified = NOW();
             """
@@ -392,6 +415,7 @@ class Watch(TimeStampedMixin):
                 "media_id": media_id,
                 "user_id": user_id,
                 "context": context,
+                "mode": mode,
                 "last_position": last_position,
                 # "watch_bits": watch_bits, # large data, to avoid repeating leteral data, use f-string
                 "rate": bit_count * 100.0 / bit_length,

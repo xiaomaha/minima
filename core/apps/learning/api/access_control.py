@@ -1,14 +1,16 @@
 import logging
+from datetime import timedelta
 from functools import wraps
+from typing import cast
 
 from celery.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from apps.common.error import ErrorCode
-from apps.common.util import AccessDate, HttpRequest, openapi_query_param
+from apps.common.util import AccessDate, HttpRequest, ModeChoices, openapi_query_param
 from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
-from apps.learning.models import Enrollment
+from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
 from apps.quiz.models import Quiz
 
 log = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ def access_date(app_label, model, *, id_field: str = "id"):
         openapi_query_param(func=func, name="media", schema_type="string", required=False, nullable=False)
 
         # currently only quiz is allowed to be inlined
-        if app_label == Quiz._meta.app_label and model == Quiz._meta.model.__name__.lower():
+        if app_label == Quiz._meta.app_label and model == Quiz._meta.model_name:
             openapi_query_param(func=func, name="course", schema_type="string", required=False, nullable=False)
 
         @wraps(func)
@@ -37,9 +39,9 @@ def access_date(app_label, model, *, id_field: str = "id"):
             # step 1: check enrollment
 
             if course_id:
-                candidate = (course_id, Course._meta.app_label, Course._meta.model.__name__.lower())
+                candidate = (course_id, Course._meta.app_label, Course._meta.model_name)
             elif media_id:
-                candidate = (media_id, Media._meta.app_label, Media._meta.model.__name__.lower())
+                candidate = (media_id, Media._meta.app_label, Media._meta.model_name)
             else:
                 candidate = (content_id, app_label, model)
 
@@ -52,10 +54,24 @@ def access_date(app_label, model, *, id_field: str = "id"):
             ).afirst()  # unique
 
             public_access = None
-            if app_label == Media._meta.app_label and model == Media._meta.model.__name__.lower():
+            if app_label == Media._meta.app_label and model == Media._meta.model_name:
                 public_access = await PublicAccessMedia.get_access_date(media_id=content_id)
             elif media_id:
                 public_access = await PublicAccessMedia.get_access_date(media_id=media_id)
+
+            if not (enrollment or public_access):
+                if "editor" in request.roles:
+                    ContentModel = ENROLLABLE_MODEL_MAP[(app_label, model)]
+                    # Check ownership
+                    if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
+                        # grant 1 hour temporary access to editor
+                        now = timezone.now()
+                        accessible = AccessDate(
+                            start=now, end=now + timedelta(hours=1), archive=now + timedelta(hours=1)
+                        )
+                        request.access_date = accessible
+                        request.active_context = ""
+                        return await func(request, *args, **kwargs)
 
             # more favorable access date between enrollment and public access
             accessible = _get_favorable_date(enrollment, public_access)
@@ -137,6 +153,25 @@ def active_context():
                 active_context = await Course.issue_context(course_id=course_id, user_id=user_id)
 
             request.active_context = active_context
+            return await func(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def access_mode():
+    def decorator(func):
+        openapi_query_param(func=func, name="mode", schema_type="string", required=False, nullable=False)
+
+        @wraps(func)
+        async def wrapper(request: HttpRequest, *args, **kwargs):
+            mode = request.GET.get("mode", ModeChoices.NORMAL)
+            if mode not in ModeChoices:
+                raise ValueError(ErrorCode.INVALID_ACCESS_MODE)
+
+            request.access_mode = cast(ModeChoices, mode)
+
             return await func(request, *args, **kwargs)
 
         return wrapper

@@ -8,6 +8,7 @@ from ninja.pagination import paginate
 from ninja.params import Form, functions
 from ninja.router import Router
 
+from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, PaginatedResponse, Pagination
 from apps.content.api.schema import (
     MediaSchema,
@@ -21,7 +22,7 @@ from apps.content.api.schema import (
 )
 from apps.content.documents import get_search_suggestion
 from apps.content.models import Media, Note, Subtitle, Watch
-from apps.learning.api.access_control import access_date, active_context
+from apps.learning.api.access_control import access_date, access_mode, active_context
 
 router = Router(by_alias=True)
 
@@ -56,12 +57,14 @@ async def delete_media_watch(request: HttpRequest, id: str):
 
 @router.post("/media/{id}/watch")
 @active_context()
+@access_mode()
 @access_date("content", "media")
 async def update_media_watch(request: HttpRequest, id: str, data: WatchInSchema):
     await Watch.update_media_watch(
         media_id=id,
         user_id=request.auth,
         context=request.active_context,
+        mode=request.access_mode,
         last_position=data.last_position,
         watch_bits=data.watch_bits,
     )
@@ -84,11 +87,10 @@ async def save_media_note(
     id: str,
     data: Form[NoteSaveSchema],
     files: Annotated[
-        list[UploadedFile], functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB")
+        list[Annotated[UploadedFile, FileSizeValidator(), FileTypeValidator()]],
+        functions.File(None, description=f"Max size: {settings.ATTACHMENT_MAX_SIZE_MB}MB"),
     ],
 ):
-    if files:
-        Note.validate_files(files)
     return await Note.upsert(
         media_id=id, user_id=request.auth, context=request.active_context, note=data.note, files=files
     )

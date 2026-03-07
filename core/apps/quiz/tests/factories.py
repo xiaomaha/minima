@@ -10,6 +10,7 @@ from mimesis.plugins.factory import FactoryField
 from apps.account.tests.factories import UserFactory
 from apps.common.tests.factories import GradeFieldFactory, LearningObjectFactory, dummy_html
 from apps.quiz.models import Attempt, Grade, Question, QuestionPool, Quiz, Solution, Submission
+from conftest import test_user_email
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
@@ -30,7 +31,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
         if not create:
             return
 
-        if self.question_set.exists():
+        if self.questions.exists():
             return
 
         QuestionFactory.reset_sequence()
@@ -72,8 +73,8 @@ class QuizFactory(LearningObjectFactory[Quiz]):
     max_attempts = FactoryField("choice", items=[1, 5, 0])  # 0 means unlimited
     verification_required = False
 
-    owner = SubFactory(UserFactory)
-    question_pool = SubFactory(QuestionPoolFactory)
+    owner = LazyFunction(lambda: UserFactory(email=test_user_email))
+    question_pool = SubFactory(QuestionPoolFactory, owner=owner)
 
     class Meta:
         model = Quiz
