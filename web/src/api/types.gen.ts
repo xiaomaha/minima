@@ -361,10 +361,6 @@ export type AppealSchema = {
      */
     review: string;
     /**
-     * Closed
-     */
-    closed: string | null;
-    /**
      * Path
      */
     path: string;
@@ -1815,6 +1811,7 @@ export type CourseSchema = {
  */
 export type CourseSessionSchema = {
     accessDate: AccessDateSchema;
+    gradingDate: GradingDateSchema;
     course: CourseSchema;
     engagement?: CourseEngagementSchema;
     /**
@@ -2277,7 +2274,7 @@ export type DiscussionEarnedDetailsSchema = {
     /**
      * Tutorassessment
      */
-    tutorAssessment: number;
+    tutorAssessment: number | null;
 };
 
 /**
@@ -5998,6 +5995,18 @@ export type CourseRelationSpec = {
  */
 export type CourseSpec = {
     /**
+     * Gradeduedays
+     */
+    gradeDueDays: number;
+    /**
+     * Appealdeadlinedays
+     */
+    appealDeadlineDays: number;
+    /**
+     * Confirmduedays
+     */
+    confirmDueDays: number;
+    /**
      * Created
      */
     created: string;
@@ -6197,6 +6206,18 @@ export type CourseSaveSpec = {
      */
     effortHours: number;
     level: LevelChoices;
+    /**
+     * Gradeduedays
+     */
+    gradeDueDays: number;
+    /**
+     * Appealdeadlinedays
+     */
+    appealDeadlineDays: number;
+    /**
+     * Confirmduedays
+     */
+    confirmDueDays: number;
     /**
      * Honorcodeid
      */
@@ -6515,6 +6536,358 @@ export type SurveyAnswersSchema = {
     [key: string]: string;
 };
 
+/**
+ * AllocationSchema
+ */
+export type AllocationSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    content: TutorContentSchema;
+    contentType: ContentTypeSchema;
+};
+
+/**
+ * PaginatedResponse[AllocationSchema]
+ */
+export type PaginatedResponseAllocationSchema = {
+    /**
+     * Items
+     */
+    items: Array<AllocationSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * TutorContentSchema
+ */
+export type TutorContentSchema = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Lastgrading
+     */
+    lastGrading: string | null;
+    /**
+     * Submissioncount
+     */
+    submissionCount: number;
+    /**
+     * Gradecompletedcount
+     */
+    gradeCompletedCount: number;
+    /**
+     * Gradeconfirmedcount
+     */
+    gradeConfirmedCount: number;
+    /**
+     * Appealcount
+     */
+    appealCount: number;
+    /**
+     * Appealopencount
+     */
+    appealOpenCount: number;
+};
+
+/**
+ * AllocationStatsSchema
+ */
+export type AllocationStatsSchema = {
+    /**
+     * Allocationcount
+     */
+    allocationCount: number;
+    /**
+     * Submissioncount
+     */
+    submissionCount: number;
+    /**
+     * Gradecompletedcount
+     */
+    gradeCompletedCount: number;
+    /**
+     * Gradeconfirmedcount
+     */
+    gradeConfirmedCount: number;
+    /**
+     * Appealcount
+     */
+    appealCount: number;
+    /**
+     * Appealopencount
+     */
+    appealOpenCount: number;
+};
+
+/**
+ * GradingDate
+ */
+export type GradingDate = {
+    /**
+     * Gradedue
+     */
+    gradeDue: string;
+    /**
+     * Appealdeadline
+     */
+    appealDeadline: string;
+    /**
+     * Confirmdue
+     */
+    confirmDue: string;
+};
+
+/**
+ * PagedTutorExamGradeSchema
+ */
+export type PagedTutorExamGradeSchema = {
+    /**
+     * Items
+     */
+    items: Array<TutorExamGradeSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * TutorExamGradeSchema
+ */
+export type TutorExamGradeSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Score
+     */
+    score: number;
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Completed
+     */
+    completed: string | null;
+    /**
+     * Confirmed
+     */
+    confirmed: string | null;
+    /**
+     * Attemptretry
+     */
+    attemptRetry: number;
+    gradingDate: GradingDate;
+};
+
+/**
+ * TutorExamGradePaperSchema
+ */
+export type TutorExamGradePaperSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Earneddetails
+     */
+    earnedDetails: {
+        [key: string]: number | null;
+    };
+    /**
+     * Answers
+     */
+    answers: {
+        [key: string]: string;
+    };
+    /**
+     * Feedback
+     */
+    feedback: {
+        [key: string]: string;
+    };
+    grader: OwnerSchema | null;
+    /**
+     * Questions
+     */
+    questions: Array<TutorExamQuestionSchema>;
+    /**
+     * Analysis
+     */
+    analysis: {
+        [key: string]: {
+            [key: string]: number;
+        };
+    };
+};
+
+/**
+ * TutorExamQuestionSchema
+ */
+export type TutorExamQuestionSchema = {
+    /**
+     * Id
+     */
+    id: number;
+    format: ExamQuestionFormatChoices;
+    /**
+     * Options
+     */
+    options: Array<string>;
+    /**
+     * Question
+     */
+    question: string;
+    /**
+     * Supplement
+     */
+    supplement: string;
+    /**
+     * Point
+     */
+    point: number;
+    solution: ExamSolutionSchema | null;
+};
+
+/**
+ * TutorExamGradeSavedSchema
+ */
+export type TutorExamGradeSavedSchema = {
+    /**
+     * Score
+     */
+    score: number;
+    /**
+     * Passed
+     */
+    passed: boolean;
+    /**
+     * Completed
+     */
+    completed: string | null;
+};
+
+/**
+ * TutorExamGradeSaveSchema
+ */
+export type TutorExamGradeSaveSchema = {
+    /**
+     * Earneddetails
+     */
+    earnedDetails: {
+        [key: string]: number | null;
+    };
+    /**
+     * Feedback
+     */
+    feedback: {
+        [key: string]: string;
+    };
+};
+
+/**
+ * PagedAppealSchema
+ */
+export type PagedAppealSchema = {
+    /**
+     * Items
+     */
+    items: Array<AppealSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * TutorExamAppealSaveSchema
+ */
+export type TutorExamAppealSaveSchema = {
+    /**
+     * Review
+     */
+    review: string;
+    /**
+     * Appealids
+     */
+    appealIds: Array<number>;
+};
+
+/**
+ * TutorExamQuestionSolutionSchema
+ */
+export type TutorExamQuestionSolutionSchema = {
+    /**
+     * Correctanswers
+     */
+    correctAnswers: Array<string>;
+    /**
+     * Correctcriteria
+     */
+    correctCriteria: string;
+    /**
+     * Explanation
+     */
+    explanation: string;
+};
+
 export type MinimaApiHealthData = {
     body?: never;
     path?: never;
@@ -6788,6 +7161,7 @@ export type AssignmentV1GetSessionData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -6812,8 +7186,8 @@ export type AssignmentV1StartAttemptData = {
         id: string;
     };
     query?: {
-        media?: string;
         mode?: string;
+        media?: string;
         course?: string;
     };
     url: '/api/v1/assignment/{id}/attempt';
@@ -6851,6 +7225,7 @@ export type AssignmentV1SubmitAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -6875,6 +7250,7 @@ export type AssignmentV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7173,6 +7549,7 @@ export type ContentV1GetMediaData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
     };
     url: '/api/v1/content/media/{id}';
@@ -7196,6 +7573,7 @@ export type ContentV1GetSubtitlesData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
     };
     url: '/api/v1/content/media/{id}/subtitle';
@@ -7221,6 +7599,7 @@ export type ContentV1DeleteMediaWatchData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7243,6 +7622,7 @@ export type ContentV1GetMediaWatchData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7267,8 +7647,8 @@ export type ContentV1UpdateMediaWatchData = {
         id: string;
     };
     query?: {
-        media?: string;
         mode?: string;
+        media?: string;
         course?: string;
     };
     url: '/api/v1/content/media/{id}/watch';
@@ -7290,6 +7670,7 @@ export type ContentV1GetMediaNoteData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7328,6 +7709,7 @@ export type ContentV1SaveMediaNoteData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7445,6 +7827,7 @@ export type CourseV1GetSessionData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
     };
     url: '/api/v1/course/{id}/session';
@@ -7468,8 +7851,8 @@ export type CourseV1StartEngagementData = {
         id: string;
     };
     query?: {
-        media?: string;
         mode?: string;
+        media?: string;
     };
     url: '/api/v1/course/{id}/engage';
 };
@@ -7534,6 +7917,7 @@ export type DiscussionV1GetSessionData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7558,8 +7942,8 @@ export type DiscussionV1StartAttemptData = {
         id: string;
     };
     query?: {
-        media?: string;
         mode?: string;
+        media?: string;
         course?: string;
     };
     url: '/api/v1/discussion/{id}/attempt';
@@ -7583,6 +7967,7 @@ export type DiscussionV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7613,6 +7998,7 @@ export type DiscussionV1GetPostsData = {
          * Size
          */
         size?: number;
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7659,6 +8045,7 @@ export type DiscussionV1CreatePostData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7683,6 +8070,7 @@ export type DiscussionV1GetOwnPostsData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7713,6 +8101,7 @@ export type DiscussionV1DeletePostData = {
         post_id: number;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7761,6 +8150,7 @@ export type DiscussionV1UpdatePostData = {
         post_id: number;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7785,6 +8175,7 @@ export type ExamV1GetSessionData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7809,8 +8200,8 @@ export type ExamV1StartAttemptData = {
         id: string;
     };
     query?: {
-        media?: string;
         mode?: string;
+        media?: string;
         course?: string;
     };
     url: '/api/v1/exam/{id}/attempt';
@@ -7834,6 +8225,7 @@ export type ExamV1SaveAnswersData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7856,6 +8248,7 @@ export type ExamV1SubmitAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7880,6 +8273,7 @@ export type ExamV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8631,6 +9025,7 @@ export type QuizV1GetSessionData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8655,9 +9050,9 @@ export type QuizV1StartAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
-        mode?: string;
     };
     url: '/api/v1/quiz/{id}/attempt';
 };
@@ -8680,6 +9075,7 @@ export type QuizV1SubmitAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8704,6 +9100,7 @@ export type QuizV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
         course?: string;
     };
@@ -10252,6 +10649,7 @@ export type SurveyV1GetSurveyData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
     };
     url: '/api/v1/survey/{id}';
@@ -10275,8 +10673,8 @@ export type SurveyV1SubmitData = {
         id: string;
     };
     query?: {
-        media?: string;
         mode?: string;
+        media?: string;
         course?: string;
     };
     url: '/api/v1/survey/{id}/submit';
@@ -10298,6 +10696,7 @@ export type SurveyV1ResultsData = {
         id: string;
     };
     query?: {
+        mode?: string;
         media?: string;
     };
     url: '/api/v1/survey/{id}/results';
@@ -10386,3 +10785,196 @@ export type SurveyV1ResultsAnonymousResponses = {
 };
 
 export type SurveyV1ResultsAnonymousResponse = SurveyV1ResultsAnonymousResponses[keyof SurveyV1ResultsAnonymousResponses];
+
+export type TutorV1GetAllocationData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/tutor/allocation';
+};
+
+export type TutorV1GetAllocationResponses = {
+    /**
+     * OK
+     */
+    200: PaginatedResponseAllocationSchema;
+};
+
+export type TutorV1GetAllocationResponse = TutorV1GetAllocationResponses[keyof TutorV1GetAllocationResponses];
+
+export type TutorV1GetAllocationStatsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/tutor/allocation/stats';
+};
+
+export type TutorV1GetAllocationStatsResponses = {
+    /**
+     * OK
+     */
+    200: AllocationStatsSchema;
+};
+
+export type TutorV1GetAllocationStatsResponse = TutorV1GetAllocationStatsResponses[keyof TutorV1GetAllocationStatsResponses];
+
+export type TutorV1GetExamGradesData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/tutor/exam/{id}/grade';
+};
+
+export type TutorV1GetExamGradesResponses = {
+    /**
+     * OK
+     */
+    200: PagedTutorExamGradeSchema;
+};
+
+export type TutorV1GetExamGradesResponse = TutorV1GetExamGradesResponses[keyof TutorV1GetExamGradesResponses];
+
+export type TutorV1GetExamGradePaperData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Grade Id
+         */
+        grade_id: number;
+    };
+    query?: never;
+    url: '/api/v1/tutor/exam/{id}/grade/{grade_id}';
+};
+
+export type TutorV1GetExamGradePaperResponses = {
+    /**
+     * OK
+     */
+    200: TutorExamGradePaperSchema;
+};
+
+export type TutorV1GetExamGradePaperResponse = TutorV1GetExamGradePaperResponses[keyof TutorV1GetExamGradePaperResponses];
+
+export type TutorV1CompleteExamGradeData = {
+    body: TutorExamGradeSaveSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Grade Id
+         */
+        grade_id: number;
+    };
+    query?: never;
+    url: '/api/v1/tutor/exam/{id}/grade/{grade_id}';
+};
+
+export type TutorV1CompleteExamGradeResponses = {
+    /**
+     * OK
+     */
+    200: TutorExamGradeSavedSchema;
+};
+
+export type TutorV1CompleteExamGradeResponse = TutorV1CompleteExamGradeResponses[keyof TutorV1CompleteExamGradeResponses];
+
+export type TutorV1GetExamAppealsData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/tutor/exam/{id}/appeal';
+};
+
+export type TutorV1GetExamAppealsResponses = {
+    /**
+     * OK
+     */
+    200: PagedAppealSchema;
+};
+
+export type TutorV1GetExamAppealsResponse = TutorV1GetExamAppealsResponses[keyof TutorV1GetExamAppealsResponses];
+
+export type TutorV1ReviewExamAppealsData = {
+    body: TutorExamAppealSaveSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/tutor/exam/{id}/appeal';
+};
+
+export type TutorV1ReviewExamAppealsResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type TutorV1UpdateExamQuestionSolutionData = {
+    body: TutorExamQuestionSolutionSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Question Id
+         */
+        question_id: number;
+    };
+    query?: never;
+    url: '/api/v1/tutor/exam/{id}/question/{question_id}/solution';
+};
+
+export type TutorV1UpdateExamQuestionSolutionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};

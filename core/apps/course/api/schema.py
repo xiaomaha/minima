@@ -7,6 +7,7 @@ from apps.account.api.schema import OwnerSchema
 from apps.common.schema import (
     AccessDateSchema,
     AttemptMixinSchema,
+    GradingDateSchema,
     LearningObjectMixinSchema,
     Schema,
     TimeStampedMixinSchema,
@@ -133,6 +134,7 @@ class CourseSchema(LearningObjectMixinSchema):
 
 class CourseSessionSchema(Schema):
     access_date: AccessDateSchema
+    grading_date: GradingDateSchema
     course: CourseSchema
     engagement: Annotated[CourseEngagementSchema, Field(None)]
     otp_token: Annotated[str, Field(None)]

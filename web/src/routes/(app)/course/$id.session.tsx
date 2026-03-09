@@ -36,10 +36,7 @@ function RouteComponent() {
   const store = createCachedStore(
     'courseV1GetSession',
     () => ({ path: { id: courseId } }),
-    async (options) => {
-      const { data } = await courseV1GetSession(options)
-      return data
-    },
+    async (options) => (await courseV1GetSession(options)).data,
   )
 
   const s = () => store[0].data

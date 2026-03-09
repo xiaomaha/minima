@@ -5,6 +5,7 @@ import { examV1SaveAnswers, examV1SubmitAttempt, type LearningSessionStep } from
 import { vExamAttemptAnswersSchema } from '@/api/valibot.gen'
 import { SAVE_ATTEMPT_INTERVAL_SECONDS } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
+import { GoToTop } from '@/shared/GoToTop'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createForm, toCustom, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
@@ -194,6 +195,7 @@ export const TakeExam = () => {
           </div>
         </fieldset>
       </Form>
+      <GoToTop />
     </div>
   )
 }

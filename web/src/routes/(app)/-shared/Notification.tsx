@@ -18,16 +18,13 @@ export const Notification = () => {
   const [messages, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'operationV1GetUnreadMessages',
     () => (enabled() ? {} : undefined),
-    async (options, page) => {
-      const { data } = await operationV1GetUnreadMessages({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await operationV1GetUnreadMessages({ ...options, query: { page } })).data,
   )
 
   onMount(() => {
     setTimeout(() => {
       setEnabled(true)
-    }, 1000 * 0.3)
+    }, 1000 * 1)
   })
 
   const [unreadCount, setUnreadCount] = createSignal(0)

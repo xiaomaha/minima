@@ -23,10 +23,7 @@ export const CategorySelect = (props: Props) => {
   const [classifications] = createCachedStore(
     'competencyV1GetClassificationTree',
     () => ({}),
-    async () => {
-      const { data } = await competencyV1GetClassificationTree()
-      return data
-    },
+    async () => (await competencyV1GetClassificationTree()).data,
   )
   const [selection, setSelection] = createStore<SelectionType>({
     firstLevel: 0,

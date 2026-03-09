@@ -1,4 +1,4 @@
-import { createEffect, createSignal, type JSX, Show } from 'solid-js'
+import { createEffect, createSignal, type JSX, onCleanup, Show } from 'solid-js'
 import { OTP_VERIFICATION_EXPIRY_SECONDS } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { SubmitButton } from '@/shared/SubmitButton'
@@ -41,7 +41,7 @@ export const SessionStart = (props: Props) => {
       },
       OTP_VERIFICATION_EXPIRY_SECONDS * 1000 * 0.8,
     )
-    return () => clearTimeout(timer)
+    onCleanup(() => clearTimeout(timer))
   })
 
   return (

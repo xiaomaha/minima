@@ -44,7 +44,7 @@ export const QuestionReview = (props: Props) => {
       <div class="label mb-4">{t('Question {{num}}', { num: props.numbering })}</div>
       <div class="space-y-4">
         <div class="space-y-6 mb-12">
-          <h3 class="mb-6">{question.question}</h3>
+          <h3 class="mb-6 font-semibold">{question.question}</h3>
           <Show when={question.supplement}>
             <ContentViewer content={question.supplement!} class="bg-base-content/5 rounded-box p-6" />
           </Show>
@@ -132,40 +132,42 @@ export const QuestionReview = (props: Props) => {
           </div>
         </Show>
 
-        <table class="table table-sm">
-          <tbody class="[&_th]:whitespace-nowrap">
-            <tr>
-              <th>{t('Points')}</th>
-              <td class="font-bold">
-                <div
-                  class="badge"
-                  classList={{
-                    'badge-primary': earnedPoint >= question.point!,
-                    'badge-secondary': earnedPoint < question.point!,
-                  }}
-                >
-                  {earnedPoint} / {question.point}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th>{t('Feedback')}</th>
-              <td>{feedback}</td>
-            </tr>
-            <tr>
-              <th>{t('Correct Answer')}</th>
-              <td>{solution?.correctAnswers?.map((answer) => String(answer)).join(', ')}</td>
-            </tr>
-            <tr>
-              <th>{t('Correct Criteria')}</th>
-              <td>{solution?.correctCriteria}</td>
-            </tr>
-            <tr>
-              <th>{t('Explanation')}</th>
-              <td>{solution?.explanation}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+          <table class="table table-sm">
+            <tbody class="[&_th]:whitespace-nowrap">
+              <tr>
+                <th>{t('Points')}</th>
+                <td class="font-bold">
+                  <div
+                    class="badge"
+                    classList={{
+                      'badge-primary': earnedPoint >= question.point!,
+                      'badge-secondary': earnedPoint < question.point!,
+                    }}
+                  >
+                    {earnedPoint} / {question.point}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>{t('Feedback')}</th>
+                <td>{feedback}</td>
+              </tr>
+              <tr>
+                <th>{t('Correct Answer')}</th>
+                <td>{solution?.correctAnswers?.map((answer) => String(answer)).join(', ')}</td>
+              </tr>
+              <tr>
+                <th>{t('Correct Criteria')}</th>
+                <td>{solution?.correctCriteria}</td>
+              </tr>
+              <tr>
+                <th>{t('Explanation')}</th>
+                <td>{solution?.explanation}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Dialog

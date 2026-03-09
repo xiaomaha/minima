@@ -20,7 +20,7 @@ def dashboard_callback(request, context):
                      SELECT 1 FROM {response_table} r 
                      WHERE r.inquiry_id = i.id AND r.solved IS NOT NULL
                  )),
-                (SELECT COUNT(*) FROM {appeal_table} WHERE closed IS NULL)
+                (SELECT COUNT(*) FROM {appeal_table} WHERE review = '')
         """.format(
                 inquiry_table=Inquiry._meta.db_table,
                 response_table=InquiryResponse._meta.db_table,

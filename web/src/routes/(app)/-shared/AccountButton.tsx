@@ -1,5 +1,5 @@
 import { IconListDetails, IconLogout, IconPuzzle2, IconUser } from '@tabler/icons-solidjs'
-import { useNavigate } from '@tanstack/solid-router'
+import { useNavigate, useRouter } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
 import { accountStore } from '@/routes/(app)/account/-store'
 import { Avatar } from '@/shared/Avatar'
@@ -8,6 +8,7 @@ import { logout } from './logout'
 
 export const AccountButton = () => {
   const { t } = useTranslation()
+  const router = useRouter()
   const navigate = useNavigate()
 
   const closeDropdown = () => {
@@ -17,6 +18,7 @@ export const AccountButton = () => {
   const handleLogout = async () => {
     closeDropdown()
     await logout()
+    router.invalidate()
   }
 
   const goTo = (to: string) => {
@@ -64,10 +66,10 @@ export const AccountButton = () => {
               <button
                 type="button"
                 class="btn btn-ghost justify-start gap-4 border-0 font-normal"
-                onClick={() => goTo('/grading')}
+                onClick={() => goTo('/tutor')}
               >
                 <IconListDetails />
-                <span class="flex-1 text-left">{t('Grading')}</span>
+                <span class="flex-1 text-left">{t('Tutor')}</span>
                 <span class="badge badge-primary badge-xs">{t('tutor')}</span>
               </button>
             </li>

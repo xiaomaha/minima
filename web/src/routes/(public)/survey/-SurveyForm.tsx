@@ -65,8 +65,7 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
     () => (submitted() && props.survey.showResults ? { path: { id: props.survey.id } } : undefined),
     async (options) => {
       const api = user ? surveyV1Results : surveyV1ResultsAnonymous
-      const { data } = await api(options)
-      return data
+      return (await api(options)).data
     },
   )
 

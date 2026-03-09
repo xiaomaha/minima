@@ -25,10 +25,7 @@ function RouteComponent() {
   const store = createCachedStore(
     'assignmentV1GetSession',
     () => ({ path: { id: params().id }, query: accessContextParam() }),
-    async (options) => {
-      const { data } = await assignmentV1GetSession(options)
-      return data
-    },
+    async (options) => (await assignmentV1GetSession(options)).data,
   )
 
   const s = () => store[0].data

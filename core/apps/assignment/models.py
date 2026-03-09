@@ -291,7 +291,7 @@ class Attempt(AttemptMixin):
         submission: "Submission"
 
     @classmethod
-    async def start(cls, *, assignment_id: str, learner_id: str, context: str, mode: ModeChoices):
+    async def start(cls, *, assignment_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
         assignment = await Assignment.objects.aget(id=assignment_id)
 
         if assignment.verification_required:
@@ -313,6 +313,7 @@ class Attempt(AttemptMixin):
             attempt = await Attempt.objects.acreate(
                 assignment=assignment,
                 learner_id=learner_id,
+                lock=lock,
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
@@ -448,6 +449,8 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.earned_point = sum(filter(None, self.earned_details.values()))
         self.score = (self.earned_point * 100.0 / self.possible_point) if self.possible_point else 0
         self.passed = self.score >= (self.attempt.assignment.passing_point or 0)
+        if not self.completed:
+            self.completed = timezone.now()
         self.grader_id = grader_id
         await self.asave()
 

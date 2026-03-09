@@ -140,11 +140,6 @@ class InquiryResponseAdmin(HiddenModelAdmin[InquiryResponse]):
 
 @admin.register(Appeal)
 class AppealAdmin(ModelAdmin[Appeal]):
-    class AppealForm(BooleanDatetimeFormMixin):
-        boolean_datetime_fields = ["closed"]
-
-    form = AppealForm
-
     class AttachmentInline(TabularInline[Attachment]):
         model = Appeal.attachments.through
         verbose_name = _("Attachments")

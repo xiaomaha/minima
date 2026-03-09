@@ -23,7 +23,11 @@ async def get_session(request: HttpRequest, id: str):
 @access_date("quiz", "quiz")
 async def start_attempt(request: HttpRequest, id: str):
     return await Attempt.start(
-        quiz_id=id, learner_id=request.auth, context=request.active_context, mode=request.access_mode
+        quiz_id=id,
+        learner_id=request.auth,
+        lock=request.access_date["end"],
+        context=request.active_context,
+        mode=request.access_mode,
     )
 
 

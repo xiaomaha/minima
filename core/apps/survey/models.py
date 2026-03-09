@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 import pghistory
@@ -142,6 +143,7 @@ class Submission(AttemptMixin):
         *,
         survey_id: str,
         answers: dict[str, str],
+        lock: datetime,
         mode: ModeChoices,
         respondent_id: str | None = None,
         context: str = "",
@@ -150,7 +152,7 @@ class Submission(AttemptMixin):
         survey = await Survey.objects.aget(id=survey_id)
 
         if survey.anonymous:
-            await Submission.objects.acreate(survey=survey, answers=answers, mode=mode)
+            await Submission.objects.acreate(survey=survey, answers=answers, lock=lock, mode=mode)
         else:
             if anonymous:
                 raise ValueError(ErrorCode.ANONYMOUS_NOT_ALLOWED)
@@ -160,5 +162,5 @@ class Submission(AttemptMixin):
                 survey=survey,
                 respondent_id=respondent_id,
                 context=context,
-                defaults={"answers": answers, "active": True, "mode": mode},
+                defaults={"answers": answers, "lock": lock, "active": True, "mode": mode},
             )

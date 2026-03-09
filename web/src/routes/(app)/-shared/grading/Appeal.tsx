@@ -109,11 +109,11 @@ export const Appeal = (props: Props) => {
                       <span
                         class="badge badge-sm"
                         classList={{
-                          'badge-soft': !!appeal()!.closed,
-                          'badge-warning': !appeal()!.closed,
+                          'badge-soft': !!appeal()!.review,
+                          'badge-warning': !appeal()!.review,
                         }}
                       >
-                        {appeal()!.closed ? t('Reviewed') : t('Pending')}
+                        {appeal()!.review ? t('Reviewed') : t('Pending')}
                       </span>
                     </td>
                   </tr>

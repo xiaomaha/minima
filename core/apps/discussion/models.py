@@ -223,7 +223,7 @@ class Attempt(AttemptMixin):
         max_attempts: int  # annotated
 
     @classmethod
-    async def start(cls, *, discussion_id: str, learner_id: str, context: str, mode: ModeChoices):
+    async def start(cls, *, discussion_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
         discussion = await Discussion.objects.aget(id=discussion_id)
 
         if discussion.verification_required:
@@ -237,6 +237,7 @@ class Attempt(AttemptMixin):
             attempt = await Attempt.objects.acreate(
                 discussion=discussion,
                 learner_id=learner_id,
+                lock=lock,
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
@@ -449,13 +450,17 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.earned_details = {
             "post": min(post_count["valid_post"], question.post_point),
             "reply": min(post_count["valid_reply"], question.reply_point),
-            "tutor_assessment": min(tutor_assessment_point, question.tutor_assessment_point),
+            "tutor_assessment": min(tutor_assessment_point, question.tutor_assessment_point)
+            if tutor_assessment_point is not None
+            else None,
         }
 
         self.possible_point = question.point
-        self.earned_point = sum(self.earned_details.values())
+        self.earned_point = sum(v for v in self.earned_details.values() if v is not None)
         self.score = self.earned_point * 100.0 / self.possible_point if self.possible_point else 0.0
         self.passed = self.score >= (self.attempt.discussion.passing_point or 0)
+        if not self.completed:
+            self.completed = None if None in self.earned_details.values() else timezone.now()
         self.grader_id = grader_id
         await self.asave()
 

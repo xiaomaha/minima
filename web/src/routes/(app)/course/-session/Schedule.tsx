@@ -102,6 +102,8 @@ export const Schedule = () => {
   const courseStart = new Date(s().accessDate.start)
   const courseEnd = new Date(s().accessDate.end)
   const courseArchive = new Date(s().accessDate.archive)
+  const gradingDue = new Date(s().gradingDate.gradeDue)
+  const confirmDue = new Date(s().gradingDate.confirmDue)
   const now = new Date()
 
   const monthMarkers = createMemo(() => {
@@ -150,6 +152,28 @@ export const Schedule = () => {
                 </Show>
               </div>
               <div class="timeline-end timeline-box">{t('End')}</div>
+              <hr />
+            </li>
+            <li class="min-w-50 w-fll">
+              <hr />
+              <div class="timeline-start">{t(gradingDue.toLocaleDateString())}</div>
+              <div class="timeline-middle">
+                <Show when={now > gradingDue} fallback={<IconCircle size={24} />}>
+                  <IconCircleCheckFilled size={24} />
+                </Show>
+              </div>
+              <div class="timeline-end timeline-box">{t('Grading')}</div>
+              <hr />
+            </li>
+            <li class="min-w-50 w-fll">
+              <hr />
+              <div class="timeline-start">{t(confirmDue.toLocaleDateString())}</div>
+              <div class="timeline-middle">
+                <Show when={now > confirmDue} fallback={<IconCircle size={24} />}>
+                  <IconCircleCheckFilled size={24} />
+                </Show>
+              </div>
+              <div class="timeline-end timeline-box">{t('Grading Confirm')}</div>
               <hr />
             </li>
             <li class="min-w-50 w-fll">

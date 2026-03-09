@@ -48,10 +48,7 @@ function RouteComponent() {
   const [policies] = createCachedStore(
     'operationV1EffectivePolicies',
     () => ({}),
-    async () => {
-      const { data } = await operationV1EffectivePolicies()
-      return data
-    },
+    async () => (await operationV1EffectivePolicies()).data,
   )
 
   const [selectedPolicy, setSelectedPolicy] = createSignal<SitePolicySchema>()

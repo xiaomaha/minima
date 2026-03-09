@@ -26,7 +26,6 @@ async def get_enrolled(
     page: Annotated[int, functions.Query(1, ge=1)],
     size: Annotated[int, functions.Query(settings.DEFAULT_PAGINATION_SIZE, gte=1, le=100)],
 ):
-    # Custom pagination with generic relationship
     return await Enrollment.get_enrolled(user_id=request.auth, page=page, size=size)
 
 

@@ -17,10 +17,7 @@ export const Achievement = () => {
   const [certificates] = createCachedStore(
     'competencyV1GetCertificates',
     () => ({ query: { courseId: s().course.id } }),
-    async (options) => {
-      const { data } = await competencyV1GetCertificates(options)
-      return data
-    },
+    async (options) => (await competencyV1GetCertificates(options)).data,
   )
 
   return (

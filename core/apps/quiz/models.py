@@ -1,5 +1,5 @@
 import random
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, NotRequired, Sequence, TypedDict
 
 import pghistory
@@ -260,7 +260,7 @@ class Attempt(AttemptMixin):
         _prefetched_objects_cache: dict[str, QuerySet[Question]]
 
     @classmethod
-    async def start(cls, *, quiz_id: str, learner_id: str, context: str, mode: ModeChoices):
+    async def start(cls, *, quiz_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
         quiz = await Quiz.objects.prefetch_related("question_pool__questions").aget(id=quiz_id)
         questions = await quiz.question_pool.select_questions()
         await aprefetch_related_objects(questions, "attachments")  # type: ignore
@@ -269,6 +269,7 @@ class Attempt(AttemptMixin):
             attempt = await Attempt.objects.acreate(
                 quiz=quiz,
                 learner_id=learner_id,
+                lock=lock,
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),

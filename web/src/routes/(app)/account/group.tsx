@@ -16,10 +16,7 @@ function RouteComponent() {
   const [members] = createCachedStore(
     'partnerV1MemberInfos',
     () => ({}),
-    async () => {
-      const { data } = await partnerV1MemberInfos()
-      return data
-    },
+    async () => (await partnerV1MemberInfos()).data,
   )
 
   return (

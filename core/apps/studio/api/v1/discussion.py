@@ -132,7 +132,7 @@ async def save_discussion(
 @editor_required()
 @track_editing(Discussion, id_field="id")
 async def delete_discussion(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(discussion_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Attempt.objects.filter(discussion_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Discussion.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -201,7 +201,7 @@ async def save_discussion_questions(
 @track_editing(Discussion, id_field="id")
 async def delete_discussion_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        discussion_id=id, question_id=question_id, discussion__owner_id=request.auth
+        discussion_id=id, question_id=question_id, discussion__owner_id=request.auth, mode=ModeChoices.NORMAL
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 

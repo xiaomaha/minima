@@ -104,6 +104,7 @@ INSTALLED_APPS = [
     "apps.store",
     "apps.assistant",
     "apps.studio",
+    "apps.tutor",
     "apps.tracking",
     "apps.warehouse",
 ]

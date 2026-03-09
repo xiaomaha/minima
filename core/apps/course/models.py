@@ -45,8 +45,8 @@ from apps.account.models import OtpLog
 from apps.assignment.models import Assignment
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
-from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AccessDate, ModeChoices, OtpTokenDict, issue_active_context, track_fields
+from apps.common.models import AttemptMixin, GradeWorkflowMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
+from apps.common.util import AccessDate, GradingDate, ModeChoices, OtpTokenDict, issue_active_context, track_fields
 from apps.competency.models import Certificate, CertificateAward, CertificateAwardDataDict
 from apps.content.models import Media
 from apps.course.trigger import course_create_grading_policy, lesson_media_unifier
@@ -79,6 +79,7 @@ TEMPLATE_SCHEDULES = {
 
 class SessionDict(TypedDict):
     access_date: AccessDate
+    grading_date: GradingDate
     course: Course
     engagement: NotRequired[Engagement]
     otp_token: NotRequired[str]
@@ -105,7 +106,7 @@ class MessagePreset(Model):
 
 
 @pghistory.track()
-class Course(LearningObjectMixin):
+class Course(LearningObjectMixin, GradeWorkflowMixin):
     class LevelChoices(TextChoices):
         BEGINNER = "beginner", _("Beginner")
         INTERMEDIATE = "intermediate", _("Intermediate")
@@ -168,7 +169,7 @@ class Course(LearningObjectMixin):
         )
 
         course.grading_criteria = await course.grading_policy.grading_criteria(access_date)
-        session = SessionDict(access_date=access_date, course=course)
+        session = SessionDict(access_date=access_date, grading_date=course.get_grading_date(access_date), course=course)
 
         for unit in [*course.lessons.all(), *course.course_surveys.all()]:
             unit.start_date = access_date["start"] + timedelta(days=unit.start_offset)
@@ -590,7 +591,7 @@ class Engagement(AttemptMixin):
         return issue_active_context("course", self.course_id, self.pk)
 
     @classmethod
-    async def start(cls, *, course_id: str, learner_id: str, mode: ModeChoices):
+    async def start(cls, *, course_id: str, learner_id: str, lock: datetime, mode: ModeChoices):
         course = await Course.objects.aget(id=course_id)
 
         if course.verification_required:
@@ -599,7 +600,7 @@ class Engagement(AttemptMixin):
 
         try:
             engagement = await Engagement.objects.acreate(
-                course_id=course_id, learner_id=learner_id, active=True, mode=mode
+                course_id=course_id, learner_id=learner_id, active=True, lock=lock, mode=mode
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ALREADY_EXISTS)

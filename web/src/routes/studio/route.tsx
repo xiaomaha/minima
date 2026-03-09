@@ -1,29 +1,16 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
-import { createEffect } from 'solid-js'
-import { accountStore } from '@/routes/(app)/account/-store'
+import { createFileRoute, Outlet } from '@tanstack/solid-router'
 import { GoToTop } from '@/shared/GoToTop'
+import { NavbarLogo } from '@/shared/NavbarLogo'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { AccountButton } from '../(app)/-shared/AccountButton'
-import { NavbarLogo } from './-studio/NavbarLogo'
+import { protectedRoute } from '../protected'
 
 export const Route = createFileRoute('/studio')({
-  beforeLoad: async () => {
-    if (!accountStore.user?.roles.includes('editor')) {
-      throw redirect({ to: '/dashboard' })
-    }
-  },
+  beforeLoad: protectedRoute,
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const navigate = Route.useNavigate()
-
-  createEffect(() => {
-    if (!accountStore.user?.roles.includes('editor')) {
-      navigate({ to: '/dashboard', replace: true })
-    }
-  })
-
   return (
     <>
       <style>
@@ -45,6 +32,7 @@ function RouteComponent() {
         <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
           <div class="flex-1 flex items-center">
             <NavbarLogo />
+            <span class="text-md font-semibold">Minima Studio</span>
           </div>
 
           <div class="flex gap-2 md:gap-6 px-4">

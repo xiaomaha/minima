@@ -1,9 +1,9 @@
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-solidjs'
-import type { Accessor, Setter } from 'solid-js'
+import type { Accessor } from 'solid-js'
 
 interface Props {
   collapsed: Accessor<boolean | undefined>
-  setCollapsed: Setter<boolean | undefined>
+  setCollapsed: (v: boolean | undefined) => void
   class?: string
   default?: boolean
 }

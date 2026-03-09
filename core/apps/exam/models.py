@@ -234,6 +234,22 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
 
         return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
 
+    @classmethod
+    async def regrade_question(cls, *, exam_id: str, question_id: int, from_answers: list[str], to_answers: list[str]):
+        affected = set(from_answers).symmetric_difference(set(to_answers))
+        attempts = [
+            a
+            async for a in Attempt.objects.select_related("grade").filter(
+                exam_id=exam_id,
+                questions__id=question_id,
+                active=True,
+                **{f"submission__answers__{question_id}__in": list(affected)},
+            )
+        ]
+        for attempt in attempts:
+            if hasattr(attempt, "grade"):
+                await attempt.grade.regrade()
+
 
 @pghistory.track()
 class Attempt(AttemptMixin):
@@ -266,7 +282,7 @@ class Attempt(AttemptMixin):
             return self.tempanswer.answers
 
     @classmethod
-    async def start(cls, *, exam_id: str, learner_id: str, context: str, mode: ModeChoices):
+    async def start(cls, *, exam_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
         exam = await Exam.objects.prefetch_related("question_pool__questions").aget(id=exam_id)
 
         if exam.verification_required:
@@ -280,6 +296,7 @@ class Attempt(AttemptMixin):
             attempt = await Attempt.objects.acreate(
                 exam=exam,
                 learner_id=learner_id,
+                lock=lock,
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
@@ -399,6 +416,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pk: int
         pgh_event_model: type[Model]
         attempt_id: int
+        analysis: dict[str, dict[str, int]]
 
     async def grade(self, earned_existing: dict[str, int | None] | None = None, grader_id: str | None = None):
         questions = [q async for q in self.attempt.questions.all()]
@@ -438,6 +456,8 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         self.earned_point = sum(filter(None, self.earned_details.values()))
         self.score = self.earned_point * 100.0 / self.possible_point if self.possible_point else 0.0
         self.passed = self.score >= (self.attempt.exam.passing_point or 0)
+        if not self.completed:
+            self.completed = None if None in self.earned_details.values() else timezone.now()
         self.grader_id = grader_id
         await self.asave()
 

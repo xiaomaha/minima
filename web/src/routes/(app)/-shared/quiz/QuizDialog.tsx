@@ -22,10 +22,7 @@ export const QuizDialog = (props: Props) => {
   const [session, { setStore }] = createCachedStore(
     'quizV1GetSession',
     () => ({ path: { id: props.id }, query: { ...props.inlineContext } }),
-    async (options) => {
-      const { data } = await quizV1GetSession(options)
-      return data
-    },
+    async (options) => (await quizV1GetSession(options)).data,
   )
 
   const s = () => session.data

@@ -71,10 +71,7 @@ export const Inquiry = (props: Props) => {
   const [inquiries, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'operationV1GetInquiries',
     () => ({ query: { appLabel: props.appLabel, model: props.model, contentId: props.contentId } }),
-    async (options, page) => {
-      const { data } = await operationV1GetInquiries({ ...options, query: { ...options.query, page } })
-      return data
-    },
+    async (options, page) => (await operationV1GetInquiries({ ...options, query: { ...options.query, page } })).data,
   )
 
   onMount(() => props.setRefreshHandler(() => refetch))

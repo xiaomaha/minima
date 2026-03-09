@@ -26,8 +26,7 @@ function RouteComponent() {
     () => ({ path: { id: params().id } }),
     async (options) => {
       const api = user ? surveyV1GetSurvey : surveyV1GetAnonymousSurvey
-      const { data } = await api(options)
-      return data
+      return (await api(options)).data
     },
   )
 

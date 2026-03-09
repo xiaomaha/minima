@@ -36,10 +36,7 @@ export const Thread = () => {
   const [posts, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'discussionV1GetPosts',
     () => ({ path: { id: s().discussion.id }, query: accessContextParam() }),
-    async (options, page) => {
-      const { data } = await discussionV1GetPosts({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await discussionV1GetPosts({ ...options, query: { page } })).data,
   )
 
   const selectedPost = () => posts.items.find((item) => item.id === selectedPostID())

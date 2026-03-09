@@ -40,10 +40,7 @@ function RouteComponent() {
   const [media] = createCachedStore(
     'contentV1GetMedia',
     () => ({ path: { id: params().id }, query: accessContextParam() }),
-    async (options) => {
-      const { data } = await contentV1GetMedia(options)
-      return data
-    },
+    async (options) => (await contentV1GetMedia(options)).data,
   )
 
   const [currentTime, setCurrentTime] = createSignal(0)

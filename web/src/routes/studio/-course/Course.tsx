@@ -70,14 +70,17 @@ export const Course = (props: Props) => {
                 class="self-start"
               />
               <SelectField path={['level']} label={t('Level')} schema={schema.level} options={levelOptions} />
-            </div>
-
-            <div class="divider" />
-
-            <div class="grid grid-cols-3 gap-4">
               <NumberField path={['passingPoint']} label={t('Passing point')} schema={schema.passingPoint} />
               <NumberField path={['maxAttempts']} label={t('Max attempts')} schema={schema.maxAttempts} />
               <NumberField path={['effortHours']} label={t('Effort hours')} schema={schema.effortHours} />
+
+              <NumberField path={['gradeDueDays']} label={t('Grade due days')} schema={schema.gradeDueDays} />
+              <NumberField
+                path={['appealDeadlineDays']}
+                label={t('Appeal deadline')}
+                schema={schema.appealDeadlineDays}
+              />
+              <NumberField path={['confirmDueDays']} label={t('Confirm due days')} schema={schema.confirmDueDays} />
             </div>
 
             <div class="divider divider-end">

@@ -66,7 +66,7 @@ export const GradingReview = () => {
           <div class="text-right">
             <button type="button" class="btn btn-sm btn-neutral" onClick={() => setAppealDialogOpen(true)}>
               <IconHandStop size={20} />
-              {!appeal() ? t('Appeal available') : appeal()?.closed ? t('Appeal reviewed') : t('Appeal pending')}
+              {!appeal() ? t('Appeal available') : appeal()?.review ? t('Appeal reviewed') : t('Appeal pending')}
             </button>
           </div>
         </Show>

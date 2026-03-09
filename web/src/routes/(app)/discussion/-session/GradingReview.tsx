@@ -23,10 +23,7 @@ export const GradingReview = () => {
   const [posts] = createCachedStore(
     'discussionV1GetOwnPosts',
     () => ({ path: { id: s().discussion.id } }),
-    async (options) => {
-      const { data } = await discussionV1GetOwnPosts(options)
-      return data
-    },
+    async (options) => (await discussionV1GetOwnPosts(options)).data,
   )
 
   const onCreateAppeal = (appeal: AppealSchema) => {
@@ -61,7 +58,11 @@ export const GradingReview = () => {
               <tr>
                 <td class="text-center">{t('{{count}} point', { count: grade.earnedDetails.post })}</td>
                 <td class="text-center">{t('{{count}} point', { count: grade.earnedDetails.reply })}</td>
-                <td class="text-center">{t('{{count}} point', { count: grade.earnedDetails.tutorAssessment })}</td>
+                <td class="text-center">
+                  {grade.earnedDetails.tutorAssessment
+                    ? t('{{count}} point', { count: grade.earnedDetails.tutorAssessment })
+                    : '-'}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -76,7 +77,7 @@ export const GradingReview = () => {
           <div class="text-right">
             <button type="button" class="btn btn-sm btn-neutral" onClick={() => setAppealDialogOpen(true)}>
               <IconHandStop size={20} />
-              {!appeal() ? t('Appeal available') : appeal()?.closed ? t('Appeal reviewed') : t('Appeal pending')}
+              {!appeal() ? t('Appeal available') : appeal()?.review ? t('Appeal reviewed') : t('Appeal pending')}
             </button>
           </div>
         </Show>

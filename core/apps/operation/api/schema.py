@@ -107,7 +107,6 @@ class AppealSchema(TimeStampedMixinSchema):
     question_id: int
     explanation: str
     review: str
-    closed: datetime | None
     path: str
 
     @staticmethod
