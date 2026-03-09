@@ -1,15 +1,15 @@
 import { IconCheck, IconHome } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Match, Show, Switch } from 'solid-js'
-import { tutorV1GetExamGrades } from '@/api'
+import { tutorV1GetAssignmentGrades } from '@/api'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useAllocation } from '../-context'
-import { GradingProvider } from './-exam/context'
-import { GradingPaper } from './-exam/GradingPaper'
+import { GradingProvider } from './-assignment/context'
+import { GradingPaper } from './-assignment/GradingPaper'
 
-export const Route = createFileRoute('/tutor/exam/$id/grading')({
+export const Route = createFileRoute('/tutor/assignment/$id/grading')({
   component: RouteComponent,
 })
 
@@ -22,9 +22,9 @@ function RouteComponent() {
   const currentGrading = () => allocations.items.find((item) => item.content.id === params().id)
 
   const gradingStore = createCachedInfiniteStore(
-    'tutorV1GetExamGrades',
+    'tutorV1GetAssignmentGrades',
     () => ({ path: { id: params().id } }),
-    async (options, page) => (await tutorV1GetExamGrades({ ...options, query: { page } })).data,
+    async (options, page) => (await tutorV1GetAssignmentGrades({ ...options, query: { page } })).data,
   )
 
   const [gradings, setObserverEl] = gradingStore
@@ -112,7 +112,7 @@ function RouteComponent() {
                       <Show when={activeGradingId() === item.id}>
                         <tr class="bg-base-content/40">
                           <td colspan={10} class="w-0 p-0 border-none">
-                            <GradingPaper examId={params().id} gradingId={item.id} />
+                            <GradingPaper assignmentId={params().id} gradingId={item.id} />
                           </td>
                         </tr>
                       </Show>
@@ -125,7 +125,7 @@ function RouteComponent() {
         </div>
 
         <Show when={gradings.end && gradings.count === 0}>
-          <NoContent message={t('No exam grading yet.')} />
+          <NoContent message={t('No assignment grading yet.')} />
         </Show>
 
         <Show when={!gradings.end}>

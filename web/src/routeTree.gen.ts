@@ -40,6 +40,8 @@ import { Route as appAccountGroupRouteImport } from './routes/(app)/account/grou
 import { Route as appAccountEmailChangeRouteImport } from './routes/(app)/account/email-change'
 import { Route as appAccountDeviceRouteImport } from './routes/(app)/account/device'
 import { Route as TutorExamIdGradingRouteImport } from './routes/tutor/exam/$id.grading'
+import { Route as TutorDiscussionIdGradingRouteImport } from './routes/tutor/discussion/$id.grading'
+import { Route as TutorAssignmentIdGradingRouteImport } from './routes/tutor/assignment/$id.grading'
 import { Route as appExamIdSessionRouteImport } from './routes/(app)/exam/$id.session'
 import { Route as appDiscussionIdSessionRouteImport } from './routes/(app)/discussion/$id.session'
 import { Route as appCourseIdSessionRouteImport } from './routes/(app)/course/$id.session'
@@ -199,6 +201,18 @@ const TutorExamIdGradingRoute = TutorExamIdGradingRouteImport.update({
   path: '/exam/$id/grading',
   getParentRoute: () => TutorRouteRoute,
 } as any)
+const TutorDiscussionIdGradingRoute =
+  TutorDiscussionIdGradingRouteImport.update({
+    id: '/discussion/$id/grading',
+    path: '/discussion/$id/grading',
+    getParentRoute: () => TutorRouteRoute,
+  } as any)
+const TutorAssignmentIdGradingRoute =
+  TutorAssignmentIdGradingRouteImport.update({
+    id: '/assignment/$id/grading',
+    path: '/assignment/$id/grading',
+    getParentRoute: () => TutorRouteRoute,
+  } as any)
 const appExamIdSessionRoute = appExamIdSessionRouteImport.update({
   id: '/exam/$id/session',
   path: '/exam/$id/session',
@@ -253,6 +267,8 @@ export interface FileRoutesByFullPath {
   '/course/$id/session': typeof appCourseIdSessionRoute
   '/discussion/$id/session': typeof appDiscussionIdSessionRoute
   '/exam/$id/session': typeof appExamIdSessionRoute
+  '/tutor/assignment/$id/grading': typeof TutorAssignmentIdGradingRoute
+  '/tutor/discussion/$id/grading': typeof TutorDiscussionIdGradingRoute
   '/tutor/exam/$id/grading': typeof TutorExamIdGradingRoute
 }
 export interface FileRoutesByTo {
@@ -285,6 +301,8 @@ export interface FileRoutesByTo {
   '/course/$id/session': typeof appCourseIdSessionRoute
   '/discussion/$id/session': typeof appDiscussionIdSessionRoute
   '/exam/$id/session': typeof appExamIdSessionRoute
+  '/tutor/assignment/$id/grading': typeof TutorAssignmentIdGradingRoute
+  '/tutor/discussion/$id/grading': typeof TutorDiscussionIdGradingRoute
   '/tutor/exam/$id/grading': typeof TutorExamIdGradingRoute
 }
 export interface FileRoutesById {
@@ -323,6 +341,8 @@ export interface FileRoutesById {
   '/(app)/course/$id/session': typeof appCourseIdSessionRoute
   '/(app)/discussion/$id/session': typeof appDiscussionIdSessionRoute
   '/(app)/exam/$id/session': typeof appExamIdSessionRoute
+  '/tutor/assignment/$id/grading': typeof TutorAssignmentIdGradingRoute
+  '/tutor/discussion/$id/grading': typeof TutorDiscussionIdGradingRoute
   '/tutor/exam/$id/grading': typeof TutorExamIdGradingRoute
 }
 export interface FileRouteTypes {
@@ -360,6 +380,8 @@ export interface FileRouteTypes {
     | '/course/$id/session'
     | '/discussion/$id/session'
     | '/exam/$id/session'
+    | '/tutor/assignment/$id/grading'
+    | '/tutor/discussion/$id/grading'
     | '/tutor/exam/$id/grading'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -392,6 +414,8 @@ export interface FileRouteTypes {
     | '/course/$id/session'
     | '/discussion/$id/session'
     | '/exam/$id/session'
+    | '/tutor/assignment/$id/grading'
+    | '/tutor/discussion/$id/grading'
     | '/tutor/exam/$id/grading'
   id:
     | '__root__'
@@ -429,6 +453,8 @@ export interface FileRouteTypes {
     | '/(app)/course/$id/session'
     | '/(app)/discussion/$id/session'
     | '/(app)/exam/$id/session'
+    | '/tutor/assignment/$id/grading'
+    | '/tutor/discussion/$id/grading'
     | '/tutor/exam/$id/grading'
   fileRoutesById: FileRoutesById
 }
@@ -660,6 +686,20 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof TutorExamIdGradingRouteImport
       parentRoute: typeof TutorRouteRoute
     }
+    '/tutor/discussion/$id/grading': {
+      id: '/tutor/discussion/$id/grading'
+      path: '/discussion/$id/grading'
+      fullPath: '/tutor/discussion/$id/grading'
+      preLoaderRoute: typeof TutorDiscussionIdGradingRouteImport
+      parentRoute: typeof TutorRouteRoute
+    }
+    '/tutor/assignment/$id/grading': {
+      id: '/tutor/assignment/$id/grading'
+      path: '/assignment/$id/grading'
+      fullPath: '/tutor/assignment/$id/grading'
+      preLoaderRoute: typeof TutorAssignmentIdGradingRouteImport
+      parentRoute: typeof TutorRouteRoute
+    }
     '/(app)/exam/$id/session': {
       id: '/(app)/exam/$id/session'
       path: '/exam/$id/session'
@@ -796,11 +836,15 @@ const StudioRouteRouteWithChildren = StudioRouteRoute._addFileChildren(
 
 interface TutorRouteRouteChildren {
   TutorIndexRoute: typeof TutorIndexRoute
+  TutorAssignmentIdGradingRoute: typeof TutorAssignmentIdGradingRoute
+  TutorDiscussionIdGradingRoute: typeof TutorDiscussionIdGradingRoute
   TutorExamIdGradingRoute: typeof TutorExamIdGradingRoute
 }
 
 const TutorRouteRouteChildren: TutorRouteRouteChildren = {
   TutorIndexRoute: TutorIndexRoute,
+  TutorAssignmentIdGradingRoute: TutorAssignmentIdGradingRoute,
+  TutorDiscussionIdGradingRoute: TutorDiscussionIdGradingRoute,
   TutorExamIdGradingRoute: TutorExamIdGradingRoute,
 }
 

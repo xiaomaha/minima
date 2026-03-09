@@ -10,6 +10,9 @@ export const ContentViewer = (props: Props) => {
   const content = () => DOMPurify.sanitize(props.content, {})
 
   return (
-    <div innerHTML={decodeURLText(content())} class={`prose max-w-none text-base whitespace-pre-wrap break-all ${props.class ?? ''}`} />
+    <div
+      innerHTML={decodeURLText(content())}
+      class={`prose max-w-none text-base whitespace-pre-wrap break-all ${props.class ?? ''}`}
+    />
   )
 }

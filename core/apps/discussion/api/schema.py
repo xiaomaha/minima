@@ -51,10 +51,11 @@ class DiscussionEarnedDetailsSchema(Schema):
     tutor_assessment: int | None
 
 
-class DiscussionGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
-    class DiscussionFeedbackSchema(Schema):
-        tutor_assessment: str
+class DiscussionFeedbackSchema(Schema):
+    tutor_assessment: str = ""
 
+
+class DiscussionGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
     id: int
     # override
     earned_details: DiscussionEarnedDetailsSchema

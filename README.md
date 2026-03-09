@@ -24,6 +24,7 @@ Access with username `admin@example.com` and password `1111`
 - web: [http://localhost:5173](http://localhost:5173)
 - admin: [http://localhost:8000](http://localhost:8000/admin/)
 - studio: [http://localhost:5173/studio](http://localhost:5173/studio)
+- tutor: [http://localhost:5173/tutor](http://localhost:5173/tutor)
 
 ## Screenshots
 
@@ -34,6 +35,12 @@ Access with username `admin@example.com` and password `1111`
 - Content Studio
 
 ![Content Studio](screenshot/studio.webp)
+
+- Tutor Dashboard
+
+![Tutor Dashboard](screenshot/tutor.webp)
+
+![Tutor Dashboard](screenshot/tutor.webp)
 
 - Admin Panel
 

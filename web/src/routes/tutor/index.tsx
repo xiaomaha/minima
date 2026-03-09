@@ -33,10 +33,6 @@ function RouteComponent() {
     navigate({ to: `/tutor/${model}/${id}/grading` })
   }
 
-  const goToAppealList = (model: string, id: string) => {
-    navigate({ to: `/tutor/${model}/${id}/appeal` })
-  }
-
   const statsData = () => [
     { title: 'Allocated', value: (stats.data?.allocationCount ?? '').toLocaleString() },
     { title: 'Submissions', value: (stats.data?.submissionCount ?? '').toLocaleString() },
@@ -72,7 +68,7 @@ function RouteComponent() {
       </div>
 
       <Show when={!allocations.loading}>
-        <table class="table text-center">
+        <table class="table text-center text-base">
           <thead>
             <tr class="[&_th]:font-normal [&_th]:px-1">
               <th class="w-12">#</th>
@@ -100,41 +96,37 @@ function RouteComponent() {
           <tbody>
             <For each={allocations.items}>
               {(item, i) => (
-                <tr class="hover:bg-base-200">
+                <tr
+                  class="hover:bg-base-200 cursor-pointer"
+                  onClick={() => goToGradingList(item.contentType.model, item.content.id)}
+                >
                   <td>{allocations.count - i()}</td>
                   <td>{t(capitalize(item.contentType.model))}</td>
                   <td class="text-left">
                     <span
                       class="link decoration-base-content/30"
-                      onclick={() => previewContent(item.contentType.model, item.content.id)}
+                      onclick={(e) => {
+                        e.stopPropagation()
+                        previewContent(item.contentType.model, item.content.id)
+                      }}
                     >
                       {item.content.title}
                     </span>
                   </td>
-                  <td class="text-xs">
+                  <td class="text-sm">
                     {item.content.lastGrading
                       ? formatDistanceToNow(new Date(item.content.lastGrading), { addSuffix: true })
                       : ''}
                   </td>
                   <td>
-                    <span
-                      class="link decoration-base-content/30"
-                      onclick={() => goToGradingList(item.contentType.model, item.content.id)}
-                    >
-                      {item.content.submissionCount}
-                      {' / '}
-                      {item.content.gradeCompletedCount}
-                      {' / '}
-                      {item.content.gradeConfirmedCount}
-                    </span>
+                    {item.content.submissionCount}
+                    {' / '}
+                    {item.content.gradeCompletedCount}
+                    {' / '}
+                    {item.content.gradeConfirmedCount}
                   </td>
                   <td>
-                    <span
-                      class="link decoration-base-content/30"
-                      onclick={() => goToAppealList(item.contentType.model, item.content.id)}
-                    >
-                      {item.content.appealOpenCount} / {item.content.appealCount}
-                    </span>
+                    {item.content.appealOpenCount} / {item.content.appealCount}
                   </td>
                   <td>
                     <Switch>

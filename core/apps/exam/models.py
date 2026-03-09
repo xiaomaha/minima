@@ -417,6 +417,7 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pgh_event_model: type[Model]
         attempt_id: int
         analysis: dict[str, dict[str, int]]
+        grading_date: GradingDate
 
     async def grade(self, earned_existing: dict[str, int | None] | None = None, grader_id: str | None = None):
         questions = [q async for q in self.attempt.questions.all()]

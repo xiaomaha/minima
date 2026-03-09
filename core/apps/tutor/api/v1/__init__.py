@@ -7,6 +7,8 @@ from ninja.params import functions
 
 from apps.common.schema import ContentTypeSchema, Schema
 from apps.common.util import HttpRequest, PaginatedResponse
+from apps.tutor.api.v1.assignment import router as assignment_router
+from apps.tutor.api.v1.discussion import router as discussion_router
 from apps.tutor.api.v1.exam import router as exam_router
 from apps.tutor.decorator import tutor_required
 from apps.tutor.models import Allocation
@@ -64,3 +66,5 @@ async def get_allocation_stats(request: HttpRequest):
 
 
 router.add_router("", exam_router, tags=["tutor"])
+router.add_router("", assignment_router, tags=["tutor"])
+router.add_router("", discussion_router, tags=["tutor"])

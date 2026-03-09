@@ -439,21 +439,26 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pk: int
         pgh_event_model: type[Model]
 
-    async def grade(self, grader_id: str | None = None):
+    async def grade(self, earned_existing: dict[str, int | None] | None = None, grader_id: str | None = None):
         question = self.attempt.question
         post_count = await self.attempt.post_count()
 
-        # existing grade
-        tutor_assessment_point = (self.earned_details or {}).get("tutor_assessment", 0)
-
-        # update grade
-        self.earned_details = {
+        default_details: dict[str, int | None] = {
             "post": min(post_count["valid_post"], question.post_point),
             "reply": min(post_count["valid_reply"], question.reply_point),
-            "tutor_assessment": min(tutor_assessment_point, question.tutor_assessment_point)
-            if tutor_assessment_point is not None
-            else None,
+            "tutor_assessment": None,
         }
+
+        # existing grade
+        tutor_assessment_point = (self.earned_details or {}).get("tutor_assessment", 0)
+        default_details["tutor_assessment"] = (
+            min(tutor_assessment_point, question.tutor_assessment_point) if tutor_assessment_point is not None else None
+        )
+        self.earned_details = default_details
+
+        if earned_existing is not None:
+            valid_keys = set(self.earned_details.keys())
+            self.earned_details.update({k: v for k, v in earned_existing.items() if k in valid_keys})
 
         self.possible_point = question.point
         self.earned_point = sum(v for v in self.earned_details.values() if v is not None)

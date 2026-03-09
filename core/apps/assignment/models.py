@@ -440,17 +440,24 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pk: int
         attempt_id: int
         pgh_event_model: type[Model]
+        analysis: dict[str, dict[str, int]]
+        similar_answer: str | None
 
-    async def grade(self, grader_id: str | None = None):
+    async def grade(self, earned_existing: dict[str, int | None] | None = None, grader_id: str | None = None):
         rubric_data = await self.attempt.assignment.get_rubric_data()
-        default_details = {criterion["name"]: None for criterion in rubric_data["criteria"]}
+        default_details: dict[str, int | None] = {criterion["name"]: None for criterion in rubric_data["criteria"]}
         self.earned_details = default_details | (self.earned_details or {})
+
+        if earned_existing is not None:
+            valid_keys = set(self.earned_details.keys())
+            self.earned_details.update({k: v for k, v in earned_existing.items() if k in valid_keys})
+
         self.possible_point = rubric_data["possible_point"]
         self.earned_point = sum(filter(None, self.earned_details.values()))
         self.score = (self.earned_point * 100.0 / self.possible_point) if self.possible_point else 0
         self.passed = self.score >= (self.attempt.assignment.passing_point or 0)
         if not self.completed:
-            self.completed = timezone.now()
+            self.completed = None if None in self.earned_details.values() else timezone.now()
         self.grader_id = grader_id
         await self.asave()
 
