@@ -40,8 +40,6 @@ Access with username `admin@example.com` and password `1111`
 
 ![Tutor Dashboard](screenshot/tutor.webp)
 
-![Tutor Dashboard](screenshot/tutor.webp)
-
 - Admin Panel
 
 ![Admin Panel](screenshot/admin.webp)
