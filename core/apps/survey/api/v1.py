@@ -1,3 +1,4 @@
+from django.utils import timezone
 from ninja.router import Router
 
 from apps.common.util import HttpRequest
@@ -24,6 +25,7 @@ async def submit(request: HttpRequest, id: str, data: SurveyAnswersSchema):
         respondent_id=request.auth,
         context=request.active_context,
         answers=data.model_dump(),
+        lock=request.access_date["end"],
         mode=request.access_mode,
     )
 
@@ -42,7 +44,9 @@ async def get_anonymous_survey(request: HttpRequest, id: str):
 @router.post("/{id}/anonymous/submit", auth=None)
 @access_mode()
 async def submit_anonymous(request: HttpRequest, id: str, data: SurveyAnswersSchema):
-    await Submission.submit(survey_id=id, answers=data.model_dump(), anonymous=True, mode=request.access_mode)
+    await Submission.submit(
+        survey_id=id, answers=data.model_dump(), lock=timezone.now(), anonymous=True, mode=request.access_mode
+    )
 
 
 @router.get("/{id}/anonymous/results", auth=None, response=dict[str, dict[str, int]])

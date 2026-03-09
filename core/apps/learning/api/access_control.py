@@ -12,13 +12,18 @@ from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
 from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
 from apps.quiz.models import Quiz
+from apps.tutor.models import TUTORING_MODEL_MAP, Allocation
 
 log = logging.getLogger(__name__)
+
+
+SPECIAL_ACCESS_TIME = timedelta(hours=1)
 
 
 def access_date(app_label, model, *, id_field: str = "id"):
     def decorator(func):
         # openapi query param
+        openapi_query_param(func=func, name="mode", schema_type="string", required=False, nullable=False)
         openapi_query_param(func=func, name="media", schema_type="string", required=False, nullable=False)
 
         # currently only quiz is allowed to be inlined
@@ -60,17 +65,30 @@ def access_date(app_label, model, *, id_field: str = "id"):
                 public_access = await PublicAccessMedia.get_access_date(media_id=media_id)
 
             if not (enrollment or public_access):
-                if "editor" in request.roles:
-                    ContentModel = ENROLLABLE_MODEL_MAP[(app_label, model)]
-                    # Check ownership
-                    if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
-                        # grant 1 hour temporary access to editor
+                # Check preview and special access
+                if "preview" == request.GET.get("mode"):
+                    has_special_access = False
+
+                    # editor requires ownership
+                    if "editor" in request.roles:
+                        ContentModel = ENROLLABLE_MODEL_MAP[(app_label, model)]
+                        if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
+                            has_special_access = True
+
+                    # tutor rquires allocations
+                    elif "tutor" in request.roles:
+                        ContentModel = TUTORING_MODEL_MAP[(app_label, model)]
+                        if await Allocation.objects.filter(
+                            tutor_id=user_id, active=True, content_id=content_id
+                        ).aexists():
+                            has_special_access = True
+
+                    if has_special_access:
+                        # grant temporary access to tutor
                         now = timezone.now()
-                        accessible = AccessDate(
-                            start=now, end=now + timedelta(hours=1), archive=now + timedelta(hours=1)
-                        )
+                        expire = now + SPECIAL_ACCESS_TIME
+                        accessible = AccessDate(start=now, end=expire, archive=expire)
                         request.access_date = accessible
-                        request.active_context = ""
                         return await func(request, *args, **kwargs)
 
             # more favorable access date between enrollment and public access

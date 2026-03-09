@@ -25,13 +25,6 @@ class DiscussionSchema(LearningObjectMixinSchema):
 
 
 class DiscussionQuestionSchema(Schema):
-    class DiscussionPointRequirementsSchema(Schema):
-        post: Annotated[int, Field(None)]
-        reply: Annotated[int, Field(None)]
-        tutor_assessment: Annotated[int, Field(None)]
-        post_min_characters: Annotated[int, Field(None)]
-        reply_min_characters: Annotated[int, Field(None)]
-
     id: int
     directive: str
     supplement: str
@@ -55,13 +48,14 @@ class DiscussionAttemptSchema(AttemptMixinSchema):
 class DiscussionEarnedDetailsSchema(Schema):
     post: int
     reply: int
-    tutor_assessment: int
+    tutor_assessment: int | None
+
+
+class DiscussionFeedbackSchema(Schema):
+    tutor_assessment: str = ""
 
 
 class DiscussionGradeSchema(GradeFieldMixinSchema, TimeStampedMixinSchema):
-    class DiscussionFeedbackSchema(Schema):
-        tutor_assessment: str
-
     id: int
     # override
     earned_details: DiscussionEarnedDetailsSchema

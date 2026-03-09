@@ -30,10 +30,7 @@ function RouteComponent() {
   const [catalogs] = createCachedStore(
     'learningV1GetCatalogs',
     () => ({}),
-    async (params) => {
-      const { data } = await learningV1GetCatalogs(params)
-      return data
-    },
+    async (params) => (await learningV1GetCatalogs(params)).data,
   )
 
   return (
@@ -137,10 +134,7 @@ const ItemList = (props: ItemListProps) => {
   const [items, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'learningV1GetCatalogItems',
     () => (props.open ? { path: { id: props.catalog.id } } : undefined),
-    async (options, page) => {
-      const { data } = await learningV1GetCatalogItems({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await learningV1GetCatalogItems({ ...options, query: { page } })).data,
   )
 
   return (

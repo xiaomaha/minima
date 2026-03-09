@@ -26,10 +26,7 @@ export const SearchBox = () => {
       if (!input_ || hasIncompleteKorean(input_)) return
       return { query: { q: input_, limit: 20 } }
     },
-    async (options) => {
-      const { data } = await contentV1SearchSuggestion(options)
-      return data
-    },
+    async (options) => (await contentV1SearchSuggestion(options)).data,
   )
 
   const search = (q: string) => {

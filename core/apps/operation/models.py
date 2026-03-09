@@ -472,13 +472,12 @@ class InquiryResponse(TimeStampedMixin):
         )
 
 
-@track_fields("closed")
+@track_fields("review")
 @pghistory.track()
 class Appeal(TimeStampedMixin, AttachmentMixin):
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     explanation = TextField(_("Explanation"))
     review = TextField(_("Review"), blank=True, default="")
-    closed = DateTimeField(_("Closed"), null=True, blank=True)
     path = CharField(_("Path"), max_length=500, default="", blank=True)
 
     limit_choices_to = {"model__in": ["question"]}
@@ -494,6 +493,7 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
                 fields=["question_type", "question_id", "learner"], name="operation_appeal_quid_quty_le_uniq"
             )
         ]
+        indexes = [Index(fields=["question_type", "question_id"])]
 
     if TYPE_CHECKING:
         learner_id: str
@@ -528,8 +528,8 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
         await appeal.update_attachments(files=files, owner_id=learner_id, content=appeal.explanation)
         return appeal
 
-    def on_closed_changed(self, old_value: datetime | None):
-        if self.closed:
+    def on_review_changed(self, old_value: str):
+        if not old_value and self.review:
             user_message_created.send(
                 source=self,
                 path=self.path,

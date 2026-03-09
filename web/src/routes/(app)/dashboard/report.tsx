@@ -35,19 +35,13 @@ function RouteComponent() {
   const [report, { refetch: refetchReport }] = createCachedStore(
     'learningV1GetReport',
     () => ({ query: range() }),
-    async (options) => {
-      const { data } = await learningV1GetReport(options)
-      return data
-    },
+    async (options) => (await learningV1GetReport(options)).data,
   )
 
   const [watched, setObserverEl, { refetch: refetchWatched }] = createCachedInfiniteStore(
     'contentV1GetWatchMedias',
     () => ({ query: range() }),
-    async (options, page) => {
-      const { data } = await contentV1GetWatchMedias({ ...options, query: { ...options.query, page } })
-      return data
-    },
+    async (options, page) => (await contentV1GetWatchMedias({ ...options, query: { ...options.query, page } })).data,
   )
 
   const goToMedia = (watched: WatchedMediaSchema) => {

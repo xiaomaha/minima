@@ -31,10 +31,7 @@ export const GoalForm = (props: Props) => {
   const [skills] = createCachedStore(
     'competencyV1GetClassificationSkillsData',
     () => (props.classIdForSkills ? { path: { id: props.classIdForSkills } } : undefined),
-    async (options) => {
-      const { data } = await competencyV1GetClassificationSkillsData(options)
-      return data
-    },
+    async (options) => (await competencyV1GetClassificationSkillsData(options)).data,
   )
 
   const form = createForm<v.InferInput<typeof vCompetencyGoalSaveSchema>>({

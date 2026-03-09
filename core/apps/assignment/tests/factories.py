@@ -155,6 +155,7 @@ class AttemptFactory(DjangoModelFactory[Attempt]):
     learner = SubFactory(UserFactory)
     started = LazyFunction(lambda: timezone.now())
     question = LazyAttribute(lambda o: async_to_sync(o.assignment.question_pool.select_question)())
+    lock = LazyFunction(timezone.now)
     active = True
 
     class Meta:

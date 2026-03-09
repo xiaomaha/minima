@@ -51,6 +51,14 @@ export const GettingStarted = (props: Props) => {
               <td>{t('Review')}</td>
               <td>{`${new Date(s().accessDate.archive).toLocaleDateString()}`}</td>
             </tr>
+            <tr>
+              <td>{t('Grading Due')}</td>
+              <td>{`${new Date(s().gradingDate.gradeDue).toLocaleDateString()}`}</td>
+            </tr>
+            <tr>
+              <td>{t('Grade Confirm Due')}</td>
+              <td>{`${new Date(s().gradingDate.confirmDue).toLocaleDateString()}`}</td>
+            </tr>
           </tbody>
         </table>
       </div>

@@ -18,10 +18,7 @@ export const Chat = () => {
   const chatListStore = createCachedStore(
     'assistantV1GetChats',
     () => (open() ? {} : undefined),
-    async (options) => {
-      const { data } = await assistantV1GetChats(options)
-      return data
-    },
+    async (options) => (await assistantV1GetChats(options)).data,
   )
 
   const activeChat = () => chatListStore[0].data?.chats.find((chat) => chat.active)
@@ -29,10 +26,7 @@ export const Chat = () => {
   const chatMessageStore = createCachedInfiniteStore(
     'assistantV1GetChatMessages',
     () => (activeChat() ? { path: { id: activeChat()!.id } } : undefined),
-    async (options, page) => {
-      const { data } = await assistantV1GetChatMessages({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await assistantV1GetChatMessages({ ...options, query: { page } })).data,
   )
 
   return (

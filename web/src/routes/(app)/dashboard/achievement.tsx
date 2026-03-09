@@ -19,10 +19,7 @@ function RouteComponent() {
   const [certificates, setObserverEl, { refetch }] = createCachedInfiniteStore(
     'competencyV1GetCertificateAwards',
     () => ({}),
-    async (options, page) => {
-      const { data } = await competencyV1GetCertificateAwards({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await competencyV1GetCertificateAwards({ ...options, query: { page } })).data,
   )
 
   onMount(() => setRefreshHandler(() => refetch))

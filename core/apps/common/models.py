@@ -150,6 +150,7 @@ class LearningObjectMixin(TuidMixin, TimeStampedMixin):
 
 class AttemptMixin(Model):
     started = DateTimeField(_("Start Time"), default=timezone.now)
+    lock = DateTimeField(_("Lock"))
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
     mode = CharField(_("Mode"), max_length=30, choices=ModeChoices.choices, default=ModeChoices.NORMAL, db_index=True)

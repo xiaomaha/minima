@@ -17,10 +17,7 @@ export const CourseDetail = () => {
   const [courseDetail] = createCachedStore(
     'courseV1GetDetail',
     () => ({ path: { id: s().course.id } }),
-    async (options) => {
-      const { data } = await courseV1GetDetail(options)
-      return data
-    },
+    async (options) => (await courseV1GetDetail(options)).data,
   )
 
   return (

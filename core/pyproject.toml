@@ -64,6 +64,7 @@ dev = [
   "openpyxl",
   "django-stubs",
   "typing-extensions",
+  "celery-types>=0.24.0",
 ]
 
 [tool.django-stubs]

@@ -179,7 +179,7 @@ async def save_assignment(
 @editor_required()
 @track_editing(Assignment, id_field="id")
 async def delete_assignment(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(assignment_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Attempt.objects.filter(assignment_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Assignment.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -246,7 +246,7 @@ async def save_assignment_questions(
 @track_editing(Assignment, id_field="id")
 async def delete_assignment_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        assignment_id=id, question=question_id, assignment__owner_id=request.auth
+        assignment_id=id, question=question_id, assignment__owner_id=request.auth, mode=ModeChoices.NORMAL
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 

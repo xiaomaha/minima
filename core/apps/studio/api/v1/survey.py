@@ -122,7 +122,7 @@ async def save_survey(
 @editor_required()
 @track_editing(Survey, id_field="id")
 async def delete_survey(request: HttpRequest, id: str):
-    if await Submission.objects.filter(survey_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Submission.objects.filter(survey_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Survey.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 

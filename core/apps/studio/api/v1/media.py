@@ -119,7 +119,7 @@ async def save_media(
 @editor_required()
 @track_editing(Media, id_field="id")
 async def delete_media(request: HttpRequest, id: str):
-    if await Watch.objects.filter(media_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Watch.objects.filter(media_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Media.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 

@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 import pghistory
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -5,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import CASCADE, CharField, DateTimeField, ForeignKey, Model, TextField, UniqueConstraint
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from PIL.GifImagePlugin import TYPE_CHECKING
 
 User = get_user_model()
 

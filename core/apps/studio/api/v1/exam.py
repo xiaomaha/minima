@@ -152,7 +152,7 @@ async def save_exam(
 @editor_required()
 @track_editing(Exam, id_field="id")
 async def delete_exam(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(exam_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Attempt.objects.filter(exam_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Exam.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -224,7 +224,9 @@ async def save_exam_questions(
 @editor_required()
 @track_editing(Exam, id_field="id")
 async def delete_exam_quesion(request: HttpRequest, id: str, question_id: int):
-    if await Attempt.objects.filter(exam_id=id, questions=question_id, exam__owner_id=request.auth).aexists():
+    if await Attempt.objects.filter(
+        exam_id=id, questions=question_id, exam__owner_id=request.auth, mode=ModeChoices.NORMAL
+    ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
     count, _ = await Question.objects.filter(id=question_id, pool__exam__id=id).adelete()

@@ -18,10 +18,7 @@ function RouteComponent() {
   const [devices, { setStore }] = createCachedStore(
     'operationV1GetDevices',
     () => ({}),
-    async () => {
-      const { data } = await operationV1GetDevices()
-      return data
-    },
+    async () => (await operationV1GetDevices()).data,
   )
 
   const deleteDevice = async (deviceId: number) => {

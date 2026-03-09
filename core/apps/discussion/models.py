@@ -223,7 +223,7 @@ class Attempt(AttemptMixin):
         max_attempts: int  # annotated
 
     @classmethod
-    async def start(cls, *, discussion_id: str, learner_id: str, context: str, mode: ModeChoices):
+    async def start(cls, *, discussion_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
         discussion = await Discussion.objects.aget(id=discussion_id)
 
         if discussion.verification_required:
@@ -237,6 +237,7 @@ class Attempt(AttemptMixin):
             attempt = await Attempt.objects.acreate(
                 discussion=discussion,
                 learner_id=learner_id,
+                lock=lock,
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
@@ -438,24 +439,33 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         pk: int
         pgh_event_model: type[Model]
 
-    async def grade(self, grader_id: str | None = None):
+    async def grade(self, earned_existing: dict[str, int | None] | None = None, grader_id: str | None = None):
         question = self.attempt.question
         post_count = await self.attempt.post_count()
 
-        # existing grade
-        tutor_assessment_point = (self.earned_details or {}).get("tutor_assessment", 0)
-
-        # update grade
-        self.earned_details = {
+        default_details: dict[str, int | None] = {
             "post": min(post_count["valid_post"], question.post_point),
             "reply": min(post_count["valid_reply"], question.reply_point),
-            "tutor_assessment": min(tutor_assessment_point, question.tutor_assessment_point),
+            "tutor_assessment": None,
         }
 
+        # existing grade
+        tutor_assessment_point = (self.earned_details or {}).get("tutor_assessment", 0)
+        default_details["tutor_assessment"] = (
+            min(tutor_assessment_point, question.tutor_assessment_point) if tutor_assessment_point is not None else None
+        )
+        self.earned_details = default_details
+
+        if earned_existing is not None:
+            valid_keys = set(self.earned_details.keys())
+            self.earned_details.update({k: v for k, v in earned_existing.items() if k in valid_keys})
+
         self.possible_point = question.point
-        self.earned_point = sum(self.earned_details.values())
+        self.earned_point = sum(v for v in self.earned_details.values() if v is not None)
         self.score = self.earned_point * 100.0 / self.possible_point if self.possible_point else 0.0
         self.passed = self.score >= (self.attempt.discussion.passing_point or 0)
+        if not self.completed:
+            self.completed = None if None in self.earned_details.values() else timezone.now()
         self.grader_id = grader_id
         await self.asave()
 

@@ -21,10 +21,7 @@ function RouteComponent() {
   const [announcements, setObserverEl, { setStore, refetch }] = createCachedInfiniteStore(
     'operationV1GetAnnouncements',
     () => ({}),
-    async (options, page) => {
-      const { data } = await operationV1GetAnnouncements({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await operationV1GetAnnouncements({ ...options, query: { page } })).data,
   )
 
   const { setRefreshHandler } = useDashboard()

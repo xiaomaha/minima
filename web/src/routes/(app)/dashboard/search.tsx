@@ -44,10 +44,7 @@ function RouteComponent() {
   const [medias, setObserverEl] = createCachedInfiniteStore(
     'contentV1Search',
     () => ({ query: { q: q() ?? '', filter: filter() } }),
-    async (options, page) => {
-      const { data } = await contentV1Search({ ...options, query: { ...options.query, page } })
-      return data
-    },
+    async (options, page) => (await contentV1Search({ ...options, query: { ...options.query, page } })).data,
   )
 
   const goToMedia = (media: SearchedMediaSchema) => {

@@ -25,10 +25,7 @@ function RouteComponent() {
   const store = createCachedStore(
     'discussionV1GetSession',
     () => ({ path: { id: params().id }, query: accessContextParam() }),
-    async (options) => {
-      const { data } = await discussionV1GetSession(options)
-      return data
-    },
+    async (options) => (await discussionV1GetSession(options)).data,
   )
 
   const s = () => store[0].data

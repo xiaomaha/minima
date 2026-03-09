@@ -27,10 +27,7 @@ export const Note = (props: Props) => {
   const [note, { setStore }] = createCachedStore(
     'contentV1GetMediaNote',
     () => ({ path: { id: props.mediaId }, query: accessContextParam() }),
-    async (options) => {
-      const { data } = await contentV1GetMediaNote(options)
-      return data
-    },
+    async (options) => (await contentV1GetMediaNote(options)).data,
   )
 
   createEffect(() => {

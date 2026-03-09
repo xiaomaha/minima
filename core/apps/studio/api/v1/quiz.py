@@ -135,7 +135,7 @@ async def save_quiz(
 @editor_required()
 @track_editing(Quiz, id_field="id")
 async def delete_quiz(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(quiz_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Attempt.objects.filter(quiz_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Quiz.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -207,7 +207,9 @@ async def save_quiz_questions(
 @editor_required()
 @track_editing(Quiz, id_field="id")
 async def delete_quiz_quesion(request: HttpRequest, id: str, question_id: int):
-    if await Attempt.objects.filter(quiz_id=id, questions=question_id, quiz__owner_id=request.auth).aexists():
+    if await Attempt.objects.filter(
+        quiz_id=id, questions=question_id, quiz__owner_id=request.auth, mode=ModeChoices.NORMAL
+    ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
     count, _ = await Question.objects.filter(id=question_id, pool__quiz__id=id).adelete()

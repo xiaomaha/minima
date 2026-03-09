@@ -29,10 +29,7 @@ function RouteComponent() {
   const [accounts, { setStore }] = createCachedStore(
     'ssoV1GetAccounts',
     () => ({}),
-    async () => {
-      const { data } = await ssoV1GetAccounts()
-      return data
-    },
+    async () => (await ssoV1GetAccounts()).data,
   )
 
   const accountMap = createMemo(

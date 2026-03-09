@@ -7,7 +7,7 @@ from mimesis.plugins.factory import FactoryField
 
 from apps.account.tests.factories import UserFactory
 from apps.assignment.tests.factories import AssignmentFactory
-from apps.common.tests.factories import LearningObjectFactory
+from apps.common.tests.factories import GradeWorkflowFactory, LearningObjectFactory
 from apps.competency.tests.factories import CertificateFactory
 from apps.content.tests.factories import MediaFactory
 from apps.course.models import (
@@ -44,7 +44,7 @@ class MessagePresetFactory(DjangoModelFactory[MessagePreset]):
         skip_postgeneration_save = True
 
 
-class CourseFactory(LearningObjectFactory[Course]):
+class CourseFactory(LearningObjectFactory[Course], GradeWorkflowFactory[Course]):
     passing_point = FactoryField("choice", items=[60, 80])
     max_attempts = FactoryField("choice", items=[1, 2])
     verification_required = True

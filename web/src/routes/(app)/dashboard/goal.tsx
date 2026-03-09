@@ -20,10 +20,7 @@ function RouteComponent() {
   const [goals, { setStore }] = createCachedStore(
     'competencyV1GetCompetencyGoals',
     () => ({}),
-    async () => {
-      const { data } = await competencyV1GetCompetencyGoals()
-      return data
-    },
+    async () => (await competencyV1GetCompetencyGoals()).data,
   )
 
   const existingGoalClassIds = () => goals.data?.map((g) => g.classification.id)
@@ -32,7 +29,7 @@ function RouteComponent() {
 
   return (
     <div class="max-w-5xl mx-auto space-y-8 flex flex-col">
-      <div class="label text-sm">{t('Competency goals')}</div>
+      <div class="label text-tm">{t('Competency goals')}</div>
 
       <div class="bg-base-300 p-8 rounded-lg space-y-4 mb-2">
         <CategorySelect setClassIdForSkills={setClassIdForSkills} />
@@ -77,7 +74,7 @@ function RouteComponent() {
                           {formatDistanceToNow(item.modified, { addSuffix: true })}
                         </td>
                         <td>
-                          <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
+                          <label class="swap swap-rotate btn btn-ghost btn-circle btn-tm">
                             <input
                               type="checkbox"
                               checked={classIdForSkills() === item.classification.id}

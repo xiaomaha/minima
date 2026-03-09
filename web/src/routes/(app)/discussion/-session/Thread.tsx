@@ -1,4 +1,4 @@
-import { IconEdit, IconHelpCircleFilled, IconMessage, IconPlus } from '@tabler/icons-solidjs'
+import { IconCornerDownRightDouble, IconEdit, IconHelpCircleFilled, IconMessage, IconPlus } from '@tabler/icons-solidjs'
 import { formatDistanceToNow } from 'date-fns'
 import { createSignal, For, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
@@ -36,10 +36,7 @@ export const Thread = () => {
   const [posts, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'discussionV1GetPosts',
     () => ({ path: { id: s().discussion.id }, query: accessContextParam() }),
-    async (options, page) => {
-      const { data } = await discussionV1GetPosts({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await discussionV1GetPosts({ ...options, query: { page } })).data,
   )
 
   const selectedPost = () => posts.items.find((item) => item.id === selectedPostID())
@@ -277,7 +274,10 @@ const PostThread = (props: PostThreadProps) => {
                     </Show>
                   </div>
 
-                  <h3 class="font-semibold">{reply.title}</h3>
+                  <h3 class="font-semibold flex items-center gap-2">
+                    <IconCornerDownRightDouble size={20} />
+                    {reply.title}
+                  </h3>
                   <ContentViewer content={reply.body} />
                 </article>
               </>

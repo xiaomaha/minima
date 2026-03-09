@@ -1,5 +1,6 @@
 import mimesis
 from django.conf import settings
+from django.utils import timezone
 from factory.declarations import Iterator, LazyFunction, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import lazy_attribute, post_generation
@@ -84,6 +85,7 @@ class SurveyFactory(LearningObjectFactory[Survey]):
 class SubmissionFactory(DjangoModelFactory[Submission]):
     survey = SubFactory(SurveyFactory)
     respondent = SubFactory(UserFactory)
+    lock = LazyFunction(timezone.now)
     active = True
     context = ""
 

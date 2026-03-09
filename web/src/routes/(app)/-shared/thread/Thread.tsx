@@ -19,10 +19,7 @@ export const Thread = (props: ThreadContextValue['context']) => {
   const threadStore = createCachedStore(
     'operationV1GetThread',
     () => ({ path: { app_label: appLabel, model, subject_id: subjectId } }),
-    async (options) => {
-      const { data } = await operationV1GetThread(options)
-      return data
-    },
+    async (options) => (await operationV1GetThread(options)).data,
   )
 
   const thread = () => threadStore[0].data
@@ -30,10 +27,7 @@ export const Thread = (props: ThreadContextValue['context']) => {
   const commentStore = createCachedInfiniteStore(
     'operationV1GetThreadComments',
     () => (thread() ? { path: { id: thread()!.id } } : undefined),
-    async (options, page) => {
-      const { data } = await operationV1GetThreadComments({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await operationV1GetThreadComments({ ...options, query: { page } })).data,
   )
 
   const disabled = () => props.options?.readOnly || !!thread()?.closed

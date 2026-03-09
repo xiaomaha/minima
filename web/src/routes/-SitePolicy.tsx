@@ -1,3 +1,4 @@
+import { useRouter } from '@tanstack/solid-router'
 import { createEffect, For, Show } from 'solid-js'
 import type * as v from 'valibot'
 import { operationV1AgreePolicies, operationV1EffectivePolicies } from '@/api'
@@ -19,14 +20,12 @@ interface SitePolicyProps {
 
 export const SitePolicy = (props: SitePolicyProps) => {
   const { t } = useTranslation()
+  const router = useRouter()
 
   const [policies, { setStore }] = createCachedStore(
     'operationV1EffectivePolicies',
     () => (props.open ? (accountStore.user ? { query: { userId: accountStore.user.id } } : {}) : undefined),
-    async (options) => {
-      const { data } = await operationV1EffectivePolicies(options)
-      return data
-    },
+    async (options) => (await operationV1EffectivePolicies(options)).data,
   )
 
   const [formState, { Form, Field, setValues, reset }] = createForm<v.InferInput<typeof vPolicyVersionAgreementSchema>>(
@@ -66,6 +65,7 @@ export const SitePolicy = (props: SitePolicyProps) => {
   const close = async () => {
     if (accountStore.user?.agreementRequired) {
       await logout()
+      router.invalidate()
     }
     props.setOpen(false)
   }

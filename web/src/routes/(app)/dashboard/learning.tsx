@@ -24,10 +24,7 @@ function RouteComponent() {
   const [enrollments, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'learningV1GetEnrolled',
     () => ({ query: {} }),
-    async (options, page) => {
-      const { data } = await learningV1GetEnrolled({ ...options, query: { page } })
-      return data
-    },
+    async (options, page) => (await learningV1GetEnrolled({ ...options, query: { page } })).data,
   )
 
   const { newEnrollments } = useDashboard()

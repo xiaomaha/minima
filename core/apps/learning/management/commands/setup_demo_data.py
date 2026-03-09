@@ -16,14 +16,18 @@ from django.utils.translation import gettext as _
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.models import User
+from apps.assignment.models import Assignment
 from apps.content.models import Media, MediaQuiz, PublicAccessMedia
-from apps.content.tests.factories import MediaFactory
+from apps.content.tests.factories import _REAL_DATA, MediaFactory
+from apps.discussion.models import Discussion
+from apps.exam.models import Exam
 from apps.learning.models import CatalogItem
 from apps.learning.tests.factories import CatalogFactory, CohortCatalogFactory, UserCatalogFactory
 from apps.operation.tests.factories import AnnouncementFactory, InquiryFactory, PolicyFactory
 from apps.partner.models import CohortMember, Group
 from apps.partner.tests.factories import CohortFactory, MemberFactory, PartnerFactory
 from apps.quiz.models import Quiz
+from apps.tutor.models import Allocation
 
 
 class Command(BaseCommand):
@@ -78,8 +82,6 @@ class Command(BaseCommand):
         self.create_public_catalog(f"{_('Demo Public Catalog')} 2", 24)
 
         # all the rest video content
-
-        from apps.content.tests.factories import _REAL_DATA
 
         remains = len(_REAL_DATA) - Media.objects.filter(format=Media.MediaFormatChoices.VIDEO).count()
         if remains > 0:
@@ -136,6 +138,12 @@ class Command(BaseCommand):
         # site policy
         with FactoryField.override_locale(settings.DEFAULT_LANGUAGE):
             PolicyFactory.create_batch(5)
+
+        # tutor allocation
+        exams = [Allocation(tutor=test_user, content=exam) for exam in Exam.objects.all()]
+        assignments = [Allocation(tutor=test_user, content=assignment) for assignment in Assignment.objects.all()]
+        discussions = [Allocation(tutor=test_user, content=discussion) for discussion in Discussion.objects.all()]
+        Allocation.objects.bulk_create(exams + assignments + discussions, ignore_conflicts=True)
 
     @staticmethod
     def create_public_catalog(name: str, media_size: int):

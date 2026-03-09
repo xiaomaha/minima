@@ -173,7 +173,6 @@ export const vAppealSchema = v.object({
     questionId: v.pipe(v.number(), v.integer()),
     explanation: v.string(),
     review: v.string(),
-    closed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     path: v.string()
 });
 
@@ -877,6 +876,7 @@ export const vCourseSchema = v.object({
  */
 export const vCourseSessionSchema = v.object({
     accessDate: vAccessDateSchema,
+    gradingDate: vGradingDateSchema,
     course: vCourseSchema,
     engagement: v.optional(vCourseEngagementSchema),
     otpToken: v.optional(v.string()),
@@ -1011,14 +1011,14 @@ export const vCourseCertificateRequestSchema = v.object({
 export const vDiscussionEarnedDetailsSchema = v.object({
     post: v.pipe(v.number(), v.integer()),
     reply: v.pipe(v.number(), v.integer()),
-    tutorAssessment: v.pipe(v.number(), v.integer())
+    tutorAssessment: v.nullable(v.pipe(v.number(), v.integer()))
 });
 
 /**
  * DiscussionFeedbackSchema
  */
 export const vDiscussionFeedbackSchema = v.object({
-    tutorAssessment: v.string()
+    tutorAssessment: v.optional(v.string(), '')
 });
 
 /**
@@ -2633,6 +2633,9 @@ export const vCourseAssetsSpec = v.object({
  * CourseSpec
  */
 export const vCourseSpec = v.object({
+    gradeDueDays: v.pipe(v.number(), v.integer()),
+    appealDeadlineDays: v.pipe(v.number(), v.integer()),
+    confirmDueDays: v.pipe(v.number(), v.integer()),
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
     title: v.string(),
@@ -2673,6 +2676,9 @@ export const vCourseSaveSpec = v.object({
     previewUrl: v.pipe(v.string(), v.url(), v.minLength(1), v.maxLength(2083)),
     effortHours: v.pipe(v.number(), v.integer()),
     level: vLevelChoices,
+    gradeDueDays: v.pipe(v.number(), v.integer()),
+    appealDeadlineDays: v.pipe(v.number(), v.integer()),
+    confirmDueDays: v.pipe(v.number(), v.integer()),
     honorCodeId: v.pipe(v.number(), v.integer()),
     faqId: v.pipe(v.number(), v.integer()),
     gradingPolicy: vGradingPolicySpec
@@ -2827,6 +2833,228 @@ export const vSurveySchema = v.object({
  */
 export const vSurveyAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
 
+/**
+ * TutorContentSchema
+ */
+export const vTutorContentSchema = v.object({
+    id: v.string(),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    title: v.string(),
+    lastGrading: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    submissionCount: v.pipe(v.number(), v.integer()),
+    gradeCompletedCount: v.pipe(v.number(), v.integer()),
+    gradeConfirmedCount: v.pipe(v.number(), v.integer()),
+    appealCount: v.pipe(v.number(), v.integer()),
+    appealOpenCount: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * AllocationSchema
+ */
+export const vAllocationSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    content: vTutorContentSchema,
+    contentType: vContentTypeSchema
+});
+
+/**
+ * PaginatedResponse[AllocationSchema]
+ */
+export const vPaginatedResponseAllocationSchema = v.object({
+    items: v.array(vAllocationSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * AllocationStatsSchema
+ */
+export const vAllocationStatsSchema = v.object({
+    allocationCount: v.pipe(v.number(), v.integer()),
+    submissionCount: v.pipe(v.number(), v.integer()),
+    gradeCompletedCount: v.pipe(v.number(), v.integer()),
+    gradeConfirmedCount: v.pipe(v.number(), v.integer()),
+    appealCount: v.pipe(v.number(), v.integer()),
+    appealOpenCount: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * GradingDate
+ */
+export const vGradingDate = v.object({
+    gradeDue: v.pipe(v.string(), v.isoTimestamp()),
+    appealDeadline: v.pipe(v.string(), v.isoTimestamp()),
+    confirmDue: v.pipe(v.string(), v.isoTimestamp())
+});
+
+/**
+ * TutorExamGradeSchema
+ */
+export const vTutorExamGradeSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    score: v.number(),
+    passed: v.boolean(),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    attemptRetry: v.pipe(v.number(), v.integer()),
+    gradingDate: vGradingDate
+});
+
+/**
+ * PagedTutorExamGradeSchema
+ */
+export const vPagedTutorExamGradeSchema = v.object({
+    items: v.array(vTutorExamGradeSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * TutorExamQuestionSchema
+ */
+export const vTutorExamQuestionSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    format: vExamQuestionFormatChoices,
+    options: v.array(v.string()),
+    question: v.string(),
+    supplement: v.string(),
+    point: v.pipe(v.number(), v.integer()),
+    solution: v.nullable(vExamSolutionSchema)
+});
+
+/**
+ * TutorExamGradePaperSchema
+ */
+export const vTutorExamGradePaperSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    earnedDetails: v.object({}),
+    answers: v.record(v.string(), v.string()),
+    feedback: v.record(v.string(), v.string()),
+    grader: v.nullable(vOwnerSchema),
+    questions: v.array(vTutorExamQuestionSchema),
+    analysis: v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer())))
+});
+
+/**
+ * TutorGraeCompleteSchema
+ */
+export const vTutorGraeCompleteSchema = v.object({
+    score: v.number(),
+    passed: v.boolean(),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
+});
+
+/**
+ * TutorGradeSaveSchema
+ */
+export const vTutorGradeSaveSchema = v.object({
+    earnedDetails: v.object({}),
+    feedback: v.record(v.string(), v.string())
+});
+
+/**
+ * TutorAssignmentGradeSchema
+ */
+export const vTutorAssignmentGradeSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    score: v.number(),
+    passed: v.boolean(),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    attemptRetry: v.pipe(v.number(), v.integer()),
+    gradingDate: vGradingDate
+});
+
+/**
+ * PagedTutorAssignmentGradeSchema
+ */
+export const vPagedTutorAssignmentGradeSchema = v.object({
+    items: v.array(vTutorAssignmentGradeSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * TutorAssignmentGradePaperSchema
+ */
+export const vTutorAssignmentGradePaperSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    earnedDetails: v.object({}),
+    answer: v.string(),
+    feedback: v.record(v.string(), v.string()),
+    grader: v.nullable(vOwnerSchema),
+    question: vAssignmentQuestionSchema,
+    analysis: v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer()))),
+    similarAnswer: v.nullable(v.string())
+});
+
+/**
+ * TutorDiscussionGradeSchema
+ */
+export const vTutorDiscussionGradeSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    score: v.number(),
+    passed: v.boolean(),
+    completed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+    attemptRetry: v.pipe(v.number(), v.integer()),
+    gradingDate: vGradingDate
+});
+
+/**
+ * PagedTutorDiscussionGradeSchema
+ */
+export const vPagedTutorDiscussionGradeSchema = v.object({
+    items: v.array(vTutorDiscussionGradeSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * TutorDiscussionGradePaperSchema
+ */
+export const vTutorDiscussionGradePaperSchema = v.object({
+    id: v.pipe(v.number(), v.integer()),
+    earnedDetails: vDiscussionEarnedDetailsSchema,
+    feedback: vDiscussionFeedbackSchema,
+    grader: v.nullable(vOwnerSchema),
+    question: vDiscussionQuestionSchema,
+    posts: v.array(vDiscussionOwnPostSchema)
+});
+
+/**
+ * DiscussionEarnedDetailsSaveSchema
+ */
+export const vDiscussionEarnedDetailsSaveSchema = v.object({
+    tutorAssessment: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DiscussionFeedbackSaveSchema
+ */
+export const vDiscussionFeedbackSaveSchema = v.object({
+    tutorAssessment: v.string()
+});
+
+/**
+ * TutorDiscussionGradeSaveSchema
+ */
+export const vTutorDiscussionGradeSaveSchema = v.object({
+    earnedDetails: vDiscussionEarnedDetailsSaveSchema,
+    feedback: vDiscussionFeedbackSaveSchema
+});
+
 export const vMinimaApiHealthData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
@@ -2974,6 +3202,7 @@ export const vAssignmentV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -2990,8 +3219,8 @@ export const vAssignmentV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string()),
         mode: v.optional(v.string()),
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3010,6 +3239,7 @@ export const vAssignmentV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3026,6 +3256,7 @@ export const vAssignmentV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3186,6 +3417,7 @@ export const vContentV1GetMediaData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3201,6 +3433,7 @@ export const vContentV1GetSubtitlesData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3218,6 +3451,7 @@ export const vContentV1DeleteMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3229,6 +3463,7 @@ export const vContentV1GetMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3245,8 +3480,8 @@ export const vContentV1UpdateMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string()),
         mode: v.optional(v.string()),
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3257,6 +3492,7 @@ export const vContentV1GetMediaNoteData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3276,6 +3512,7 @@ export const vContentV1SaveMediaNoteData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3340,6 +3577,7 @@ export const vCourseV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3355,8 +3593,8 @@ export const vCourseV1StartEngagementData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string()),
-        mode: v.optional(v.string())
+        mode: v.optional(v.string()),
+        media: v.optional(v.string())
     }))
 });
 
@@ -3397,6 +3635,7 @@ export const vDiscussionV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3413,8 +3652,8 @@ export const vDiscussionV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string()),
         mode: v.optional(v.string()),
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3430,6 +3669,7 @@ export const vDiscussionV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3443,6 +3683,7 @@ export const vDiscussionV1GetPostsData = v.object({
     query: v.optional(v.object({
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24),
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3464,6 +3705,7 @@ export const vDiscussionV1CreatePostData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3480,6 +3722,7 @@ export const vDiscussionV1GetOwnPostsData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3499,6 +3742,7 @@ export const vDiscussionV1DeletePostData = v.object({
         post_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3516,6 +3760,7 @@ export const vDiscussionV1UpdatePostData = v.object({
         post_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3532,6 +3777,7 @@ export const vExamV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3548,8 +3794,8 @@ export const vExamV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string()),
         mode: v.optional(v.string()),
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -3565,6 +3811,7 @@ export const vExamV1SaveAnswersData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3576,6 +3823,7 @@ export const vExamV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3592,6 +3840,7 @@ export const vExamV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3978,6 +4227,7 @@ export const vQuizV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3994,9 +4244,9 @@ export const vQuizV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
-        course: v.optional(v.string()),
-        mode: v.optional(v.string())
+        course: v.optional(v.string())
     }))
 });
 
@@ -4011,6 +4261,7 @@ export const vQuizV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -4027,6 +4278,7 @@ export const vQuizV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -4871,6 +5123,7 @@ export const vSurveyV1GetSurveyData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -4886,8 +5139,8 @@ export const vSurveyV1SubmitData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        media: v.optional(v.string()),
         mode: v.optional(v.string()),
+        media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
 });
@@ -4898,6 +5151,7 @@ export const vSurveyV1ResultsData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
+        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -4946,3 +5200,173 @@ export const vSurveyV1ResultsAnonymousData = v.object({
  * OK
  */
 export const vSurveyV1ResultsAnonymousResponse = v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer())));
+
+export const vTutorV1GetAllocationData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetAllocationResponse = vPaginatedResponseAllocationSchema;
+
+export const vTutorV1GetAllocationStatsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetAllocationStatsResponse = vAllocationStatsSchema;
+
+export const vTutorV1GetExamGradesData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetExamGradesResponse = vPagedTutorExamGradeSchema;
+
+export const vTutorV1GetExamGradePaperData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        grade_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetExamGradePaperResponse = vTutorExamGradePaperSchema;
+
+export const vTutorV1CompleteExamGradeData = v.object({
+    body: vTutorGradeSaveSchema,
+    path: v.object({
+        id: v.string(),
+        grade_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1CompleteExamGradeResponse = vTutorGraeCompleteSchema;
+
+export const vTutorV1GetAssignmentGradesData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetAssignmentGradesResponse = vPagedTutorAssignmentGradeSchema;
+
+export const vTutorV1GetAssignmentGradePaperData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        grade_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetAssignmentGradePaperResponse = vTutorAssignmentGradePaperSchema;
+
+export const vTutorV1CompleteAssignmentGradeData = v.object({
+    body: vTutorGradeSaveSchema,
+    path: v.object({
+        id: v.string(),
+        grade_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1CompleteAssignmentGradeResponse = vTutorGraeCompleteSchema;
+
+export const vTutorV1GetAssignmentRubricData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetAssignmentRubricResponse = vRubricSchema;
+
+export const vTutorV1GetDiscussionGradesData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetDiscussionGradesResponse = vPagedTutorDiscussionGradeSchema;
+
+export const vTutorV1GetDiscussionGradePaperData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string(),
+        grade_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetDiscussionGradePaperResponse = vTutorDiscussionGradePaperSchema;
+
+export const vTutorV1CompleteDiscussionGradeData = v.object({
+    body: vTutorDiscussionGradeSaveSchema,
+    path: v.object({
+        id: v.string(),
+        grade_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1CompleteDiscussionGradeResponse = vTutorGraeCompleteSchema;

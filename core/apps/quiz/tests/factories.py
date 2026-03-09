@@ -93,6 +93,7 @@ class AttemptFactory(DjangoModelFactory[Attempt]):
     quiz = SubFactory(QuizFactory)
     learner = SubFactory(UserFactory)
     started = LazyFunction(lambda: timezone.now())
+    lock = LazyFunction(timezone.now)
     active = True
 
     class Meta:

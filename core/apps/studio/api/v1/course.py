@@ -18,6 +18,7 @@ from apps.common.schema import (
     ContentTypeSchema,
     FileSizeValidator,
     FileTypeValidator,
+    GradeWorkflowMixinSchema,
     LearningObjectMixinSchema,
     Schema,
 )
@@ -115,7 +116,7 @@ class CourseAssetsSpec(Schema):
     course_instructors: list[CourseInstructorSpec]
 
 
-class CourseSpec(LearningObjectMixinSchema):
+class CourseSpec(LearningObjectMixinSchema, GradeWorkflowMixinSchema):
     id: str
     objective: str
     preview_url: str | None
@@ -152,6 +153,9 @@ class CourseSaveSpec(Schema):
     preview_url: HttpUrl
     effort_hours: int
     level: Course.LevelChoices
+    grade_due_days: int
+    appeal_deadline_days: int
+    confirm_due_days: int
     honor_code_id: int
     faq_id: int
     grading_policy: GradingPolicySpec
@@ -243,7 +247,7 @@ async def save_course(
 @editor_required()
 @track_editing(Course, id_field="id")
 async def delete_course(request: HttpRequest, id: str):
-    if await Engagement.objects.filter(course_id=id).exclude(mode=ModeChoices.PREVIEW).aexists():
+    if await Engagement.objects.filter(course_id=id, mode=ModeChoices.NORMAL).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Course.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 

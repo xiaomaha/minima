@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
+import { createFileRoute, Outlet } from '@tanstack/solid-router'
 import { createEffect, onMount, Suspense } from 'solid-js'
 import * as v from 'valibot'
 import { learningV1GetRecords, operationV1RegisterDevice } from '@/api'
@@ -10,6 +10,7 @@ import { NavbarLogo } from '@/shared/NavbarLogo'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { getDeviceName } from '@/shared/utils'
+import { protectedRoute } from '../protected'
 import { currentDevice, setCurrentDevice } from './-device'
 import { AccountButton } from './-shared/AccountButton'
 import { Chat } from './-shared/aichat/Chat'
@@ -21,23 +22,11 @@ const searchSchema = v.object({
 
 export const Route = createFileRoute('/(app)')({
   validateSearch: searchSchema,
-  beforeLoad: async () => {
-    if (!accountStore.user) {
-      const nextPath = location.pathname + location.search
-      const shouldIgnoreNext = location.search.includes('token=')
-
-      throw redirect({
-        to: '/login',
-        search: shouldIgnoreNext ? undefined : { next: nextPath },
-      })
-    }
-  },
+  beforeLoad: protectedRoute,
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const navigate = Route.useNavigate()
-
   // local database
   onMount(async () => {
     createCachedStore(
@@ -49,19 +38,6 @@ function RouteComponent() {
         return data
       },
     )
-  })
-
-  // protected route
-  createEffect(() => {
-    if (!accountStore.user && !location.pathname.startsWith('/login')) {
-      const nextPath = location.pathname + location.search
-      const shouldIgnoreNext = location.search.includes('token=')
-
-      navigate({
-        to: '/login',
-        search: shouldIgnoreNext ? undefined : { next: nextPath },
-      })
-    }
   })
 
   createEffect(async () => {
@@ -90,6 +66,7 @@ function RouteComponent() {
       <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
         <div class="flex-1 flex items-center">
           <NavbarLogo />
+          <span class="text-md font-semibold hidden md:block">Minima</span>
         </div>
 
         <SearchBox />
