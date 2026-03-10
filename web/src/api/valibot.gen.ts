@@ -2881,6 +2881,38 @@ export const vAllocationStatsSchema = v.object({
 });
 
 /**
+ * GradeAppealSchema
+ */
+export const vGradeAppealSchema = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    questionId: v.pipe(v.number(), v.integer()),
+    explanation: v.string(),
+    review: v.string(),
+    path: v.string(),
+    gradeId: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * PaginatedResponse[GradeAppealSchema]
+ */
+export const vPaginatedResponseGradeAppealSchema = v.object({
+    items: v.array(vGradeAppealSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * AppealReviewSchema
+ */
+export const vAppealReviewSchema = v.object({
+    review: v.pipe(v.string(), v.minLength(1))
+});
+
+/**
  * GradingDate
  */
 export const vGradingDate = v.object({
@@ -5226,6 +5258,40 @@ export const vTutorV1GetAllocationStatsData = v.object({
  */
 export const vTutorV1GetAllocationStatsResponse = vAllocationStatsSchema;
 
+export const vTutorV1GetAppealsData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        app_label: v.picklist([
+            'exam',
+            'assignment',
+            'discussion'
+        ]),
+        model: v.picklist([
+            'exam',
+            'assignment',
+            'discussion'
+        ]),
+        id: v.string()
+    }),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetAppealsResponse = vPaginatedResponseGradeAppealSchema;
+
+export const vTutorV1ReviewAppealData = v.object({
+    body: vAppealReviewSchema,
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
 export const vTutorV1GetExamGradesData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -5248,7 +5314,9 @@ export const vTutorV1GetExamGradePaperData = v.object({
         id: v.string(),
         grade_id: v.pipe(v.number(), v.integer())
     }),
-    query: v.optional(v.never())
+    query: v.optional(v.object({
+        questionId: v.nullish(v.pipe(v.number(), v.integer()))
+    }))
 });
 
 /**

@@ -6,7 +6,7 @@ import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { AccountButton } from '../(app)/-shared/AccountButton'
 import { protectedRoute } from '../protected'
-import { AllocationProvider } from './-context'
+import { AllocationProvider } from './-tutor/context'
 
 export const Route = createFileRoute('/tutor')({
   beforeLoad: protectedRoute,
@@ -24,8 +24,9 @@ function RouteComponent() {
     <div class="flex flex-col">
       <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
         <div class="flex-1 flex items-center">
-          <NavbarLogo />
-          <span class="text-md font-semibold">Minima Tutor</span>
+          <NavbarLogo to="/tutor">
+            <span class="text-md font-semibold">Minima Tutor</span>
+          </NavbarLogo>
         </div>
 
         <div class="flex gap-2 md:gap-6 px-4">

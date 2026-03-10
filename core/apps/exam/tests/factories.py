@@ -32,8 +32,7 @@ class QuestionPoolFactory(DjangoModelFactory[QuestionPool]):
     @lazy_attribute
     def composition(self):
         option = generic.random.choice([(20, 3, 0, 1), (20, 5, 0, 1), (25, 0, 0, 1), (15, 5, 5, 1), (20, 0, 3, 1)])
-        composed = {"single_choice": option[0], "text_input": option[1], "number_input": option[2], "essay": option[3]}
-        return {k: v for k, v in composed.items() if v != 0}
+        return {"single_choice": option[0], "text_input": option[1], "number_input": option[2], "essay": option[3]}
 
     @post_generation
     def post_generation(self: QuestionPool, create: bool, extracted: object, **kwargs: object):

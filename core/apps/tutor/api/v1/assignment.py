@@ -52,7 +52,7 @@ class TutorAssignmentGradePaperSchema(Schema):
 
     @staticmethod
     def resolve_answer(grade: Grade):
-        return grade.attempt.submission.answer
+        return grade.attempt.submission.cleaned_answer
 
 
 @router.get("/assignment/{id}/grade/{grade_id}", response=TutorAssignmentGradePaperSchema)
@@ -61,7 +61,7 @@ class TutorAssignmentGradePaperSchema(Schema):
 async def get_assignment_grade_paper(request: HttpRequest, id: str, grade_id: int):
     grade = await aget_object_or_404(
         Grade.objects.select_related("attempt__submission", "attempt__question", "grader").prefetch_related(
-            "attempt__question__attachments"
+            "attempt__question__attachments", "attempt__submission__attachments"
         ),
         id=grade_id,
         attempt__assignment_id=id,

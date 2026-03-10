@@ -119,7 +119,7 @@ export const GradingReview = () => {
       >
         <Appeal
           appeal={appeal()}
-          appLabel="assignment"
+          appLabel="discussion"
           model="question"
           questionId={question.id}
           onCreate={onCreateAppeal}

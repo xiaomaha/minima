@@ -1,10 +1,11 @@
-import { IconPlus, IconRefresh, IconSearch } from '@tabler/icons-solidjs'
+import { IconPlus, IconSearch } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
 import { createRoot, createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import { type StudioContentSpec, studioV1Content } from '@/api'
 import { NoContent } from '@/shared/NoContent'
+import { RefreshButton } from '@/shared/RefreshButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
@@ -67,14 +68,7 @@ function RouteComponent() {
             <input type="search" placeholder={t('Title search')} onChange={(e) => setSearch(e.target.value)} />
           </label>
 
-          <button
-            type="button"
-            class="btn btn-ghost btn-sm btn-circle"
-            onClick={() => refetch()}
-            disabled={contents.loading}
-          >
-            <IconRefresh class="shrink-0" />
-          </button>
+          <RefreshButton refresh={refetch} loading={contents.loading} size={24} />
 
           <div class="dropdown dropdown-end">
             <button type="button" tabindex="0" class="btn btn-sm btn-ghost btn-circle">

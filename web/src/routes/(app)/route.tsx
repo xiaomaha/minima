@@ -65,8 +65,9 @@ function RouteComponent() {
       {/* Navbar */}
       <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
         <div class="flex-1 flex items-center">
-          <NavbarLogo />
-          <span class="text-md font-semibold hidden md:block">Minima</span>
+          <NavbarLogo>
+            <span class="text-md font-semibold hidden md:block">Minima</span>
+          </NavbarLogo>
         </div>
 
         <SearchBox />

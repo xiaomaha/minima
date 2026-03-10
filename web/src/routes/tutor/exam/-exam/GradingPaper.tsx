@@ -11,6 +11,7 @@ import { Question } from './Question'
 interface Props {
   examId: string
   gradingId: number
+  questionId?: number
 }
 
 export const GradingPaper = (props: Props) => {
@@ -18,7 +19,7 @@ export const GradingPaper = (props: Props) => {
 
   const [grading, { setStore }] = createCachedStore(
     'tutorV1GetExamGradePaper',
-    () => ({ path: { id: props.examId, grade_id: props.gradingId } }),
+    () => ({ path: { id: props.examId, grade_id: props.gradingId }, query: { questionId: props.questionId } }),
     async (options) => (await tutorV1GetExamGradePaper(options)).data,
   )
 
@@ -37,7 +38,7 @@ export const GradingPaper = (props: Props) => {
     reset({ initialValues: flatFields })
   })
 
-  const [gradingStore, , { setStore: setGradingStore }] = useGrading()
+  const gradingContext = useGrading()
 
   const saveGrade = async (values: Record<string, string | number>) => {
     const earnedDetails: Record<string, number> = {}
@@ -58,8 +59,11 @@ export const GradingPaper = (props: Props) => {
 
     // cache
     setStore('data', reconcile({ ...grading.data!, ...data, feedback, earnedDetails }))
-    const idx = gradingStore.items!.findIndex((g) => g.id === props.gradingId)
-    if (idx !== -1) setGradingStore('items', idx, data)
+
+    if (gradingContext) {
+      const idx = gradingContext[0].items!.findIndex((g) => g.id === props.gradingId)
+      if (idx !== -1) gradingContext[2].setStore('items', idx, data)
+    }
 
     // form reset
     reset({ initialValues: { ...values } })
@@ -68,90 +72,97 @@ export const GradingPaper = (props: Props) => {
   return (
     <Show when={grading.data}>
       <Form onSubmit={saveGrade}>
-        <SubmitButton
-          label={t('Complete Grade')}
-          isPending={formState.submitting}
-          disabled={!formState.dirty}
-          class="btn btn-primary sticky top-20 z-10 block min-w-40 ml-auto mr-9 mt-8 rounded-full"
-        />
-        <div class="text-left space-y-8 p-8">
-          <For each={grading.data!.questions}>
-            {(question) => (
-              <div class="px-8 py-8 bg-base-100 rounded">
-                <Question
-                  question={question}
-                  solution={question.solution}
-                  analysis={grading.data!.analysis[question.id]}
-                />
+        <For each={grading.data!.questions}>
+          {(question) => (
+            <div class="text-left m-8 p-8 bg-base-100 rounded">
+              <Question
+                question={question}
+                solution={question.solution}
+                analysis={grading.data!.analysis[question.id]}
+              />
 
-                <div class="divider" />
+              <div class="divider" />
 
-                <fieldset disabled={!!gradingStore.items.find((g) => g.id === props.gradingId)?.confirmed}>
-                  <table class="table table-sm">
-                    <tbody>
-                      <tr>
-                        <th class="w-0 whitespace-nowrap">{t("Learner's Answer")}</th>
-                        <td>{grading.data!.answers[question.id]}</td>
-                      </tr>
-                      <tr>
-                        <th>{t('Points')}</th>
-                        <td>
-                          <Field
-                            name={`earnedDetails.${question.id}`}
-                            validate={(v) => (v === '' ? t('Points is required') : '')}
-                          >
-                            {(field, props) => (
-                              <div>
-                                <input
-                                  {...props}
-                                  value={field.value ?? ''}
-                                  type="number"
-                                  class="input bg-amber-100 border-0 w-xs validator"
-                                  placeholder={`0 ~ ${question.point}`}
-                                  required
-                                  min={0}
-                                  max={question.point}
-                                />
-                                <div class="text-error font-normal">{field.error}</div>
-                              </div>
-                            )}
-                          </Field>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>{t('Feedback')}</th>
-                        <td>
-                          <Field
-                            name={`feedback.${question.id}`}
-                            validate={(v) => {
-                              if (question.format === 'essay' && String(v).trim().length === 0) {
-                                return t('Feedback is required')
-                              }
-                              return ''
-                            }}
-                          >
-                            {(field, props) => (
-                              <div>
-                                <textarea
-                                  {...props}
-                                  value={field.value ?? ''}
-                                  class="bg-amber-100 textarea w-full field-sizing-content border-0 validator"
-                                  required={question.format === 'essay'}
-                                  minLength={question.format === 'essay' ? 1 : 0}
-                                />
-                                <div class="text-error">{field.error}</div>
-                              </div>
-                            )}
-                          </Field>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </fieldset>
-              </div>
-            )}
-          </For>
-        </div>
+              <fieldset
+                disabled={!gradingContext || !!gradingContext[0].items.find((g) => g.id === props.gradingId)?.confirmed}
+              >
+                <table class="table table-sm">
+                  <tbody>
+                    <tr>
+                      <th class="w-0 whitespace-nowrap">{t("Learner's Answer")}</th>
+                      <td>{grading.data!.answers[question.id]}</td>
+                    </tr>
+                    <tr>
+                      <th>{t('Points')}</th>
+                      <td>
+                        <Field
+                          name={`earnedDetails.${question.id}`}
+                          validate={(v) =>
+                            !String(v) || Number(v) < 0 || Number(v) > question.point ? t('Invalid point') : ''
+                          }
+                        >
+                          {(field, props) => (
+                            <div>
+                              <input
+                                {...props}
+                                value={field.value ?? ''}
+                                type="number"
+                                class="input bg-amber-100 border-0 w-xs validator"
+                                placeholder={`0 ~ ${question.point}`}
+                                required
+                                min={0}
+                                max={question.point}
+                              />
+                              <div class="text-error font-normal">{field.error}</div>
+                            </div>
+                          )}
+                        </Field>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>{t('Feedback')}</th>
+                      <td>
+                        <Field
+                          name={`feedback.${question.id}`}
+                          validate={(v) => {
+                            if (question.format === 'essay' && String(v).trim().length === 0) {
+                              return t('Feedback is required')
+                            }
+                            return ''
+                          }}
+                        >
+                          {(field, props) => (
+                            <div>
+                              <textarea
+                                {...props}
+                                value={field.value ?? ''}
+                                class="bg-amber-100 textarea w-full field-sizing-content border-0 validator"
+                                required={question.format === 'essay'}
+                                minLength={question.format === 'essay' ? 1 : 0}
+                                placeholder={question.format === 'essay' ? t('required *') : ''}
+                              />
+                              <div class="text-error">{field.error}</div>
+                            </div>
+                          )}
+                        </Field>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+            </div>
+          )}
+        </For>
+        <Show when={gradingContext}>
+          <div class="text-center mb-8 mr-8">
+            <SubmitButton
+              label={t('Complete Grade')}
+              isPending={formState.submitting}
+              disabled={!formState.dirty}
+              class="btn btn-primary min-w-40"
+            />
+          </div>
+        </Show>
       </Form>
     </Show>
   )

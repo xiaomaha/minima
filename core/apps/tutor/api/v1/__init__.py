@@ -2,11 +2,12 @@ from datetime import datetime
 from typing import Annotated, Literal
 
 from django.conf import settings
-from ninja import Router
+from ninja import Field, Router
 from ninja.params import functions
 
 from apps.common.schema import ContentTypeSchema, Schema
 from apps.common.util import HttpRequest, PaginatedResponse
+from apps.operation.api.schema import AppealSchema
 from apps.tutor.api.v1.assignment import router as assignment_router
 from apps.tutor.api.v1.discussion import router as discussion_router
 from apps.tutor.api.v1.exam import router as exam_router
@@ -14,9 +15,6 @@ from apps.tutor.decorator import tutor_required
 from apps.tutor.models import Allocation
 
 router = Router(by_alias=True)
-
-
-TutoringModel = Literal["exam", "assignment", "discussion"]
 
 
 class AllocationSchema(Schema):
@@ -63,6 +61,39 @@ class AllocationStatsSchema(Schema):
 @tutor_required()
 async def get_allocation_stats(request: HttpRequest):
     return await Allocation.get_stats(tutor_id=request.auth)
+
+
+AppealAppLabel = Literal["exam", "assignment", "discussion"]
+AppealModel = Literal["exam", "assignment", "discussion"]
+
+
+class GradeAppealSchema(AppealSchema):
+    grade_id: int
+
+
+@router.get("/{app_label}/{model}/{id}/appeal", response=PaginatedResponse[GradeAppealSchema])
+@tutor_required()
+async def get_appeals(
+    request: HttpRequest,
+    app_label: AppealAppLabel,
+    model: AppealModel,
+    id: str,
+    page: Annotated[int, functions.Query(1, ge=1)],
+    size: Annotated[int, functions.Query(settings.DEFAULT_PAGINATION_SIZE, gte=1, le=100)],
+):
+    return await Allocation.get_appeals(
+        tutor_id=request.auth, app_label=app_label, model=model, content_id=id, page=page, size=size
+    )
+
+
+class AppealReviewSchema(Schema):
+    review: Annotated[str, Field(min_length=1)]
+
+
+@router.post("/appeal/{id}")
+@tutor_required()
+async def review_appeal(request: HttpRequest, id: int, review: AppealReviewSchema):
+    await Allocation.review_appeal(tutor_id=request.auth, appeal_id=id, review=review.review, reviewer_id=request.auth)
 
 
 router.add_router("", exam_router, tags=["tutor"])

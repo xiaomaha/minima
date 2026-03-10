@@ -151,9 +151,14 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
 
     @classmethod
     async def get_session(cls, *, assignment_id: str, learner_id: str, context: str, access_date: AccessDate):
-        assignment = await Assignment.objects.select_related("owner", "honor_code", "question_pool").aget(
-            id=assignment_id
+        assignment = (
+            await Assignment.objects
+            .select_related("owner", "honor_code", "question_pool")
+            .prefetch_related("rubric__rubric_criteria__performance_levels")
+            .aget(id=assignment_id)
         )
+        assignment.rubric_data = await assignment.get_rubric_data()
+
         session = SessionDict(
             access_date=access_date,
             grading_date=assignment.get_grading_date(access_date),
@@ -177,14 +182,6 @@ class Assignment(LearningObjectMixin, GradeWorkflowMixin):
                     )
                 )
             return session
-
-        await aprefetch_related_objects(
-            [assignment],
-            Prefetch(
-                "rubric__rubric_criteria__performance_levels", queryset=PerformanceLevel.objects.order_by("point")
-            ),
-        )
-        assignment.rubric_data = await assignment.get_rubric_data()
 
         session["attempt"] = attempt
 
@@ -297,14 +294,6 @@ class Attempt(AttemptMixin):
         if assignment.verification_required:
             if not await OtpLog.check_otp_verification(user_id=learner_id, consumer=assignment):
                 raise ValueError(ErrorCode.OTP_VERIFICATION_REQUIRED)
-
-        await aprefetch_related_objects(
-            [assignment],
-            Prefetch(
-                "rubric__rubric_criteria__performance_levels", queryset=PerformanceLevel.objects.order_by("point")
-            ),
-        )
-        assignment.rubric_data = await assignment.get_rubric_data()
 
         question = await QuestionPool(id=assignment.question_pool_id).select_question()
         await aprefetch_related_objects([question], "attachments")

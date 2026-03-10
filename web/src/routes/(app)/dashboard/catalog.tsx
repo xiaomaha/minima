@@ -1,4 +1,4 @@
-import { IconHelp, IconRefresh } from '@tabler/icons-solidjs'
+import { IconHelp } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Match, Show, Switch } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
@@ -13,6 +13,7 @@ import { Avatar } from '@/shared/Avatar'
 import { Dialog } from '@/shared/Diaglog'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { NoContent } from '@/shared/NoContent'
+import { RefreshButton } from '@/shared/RefreshButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
@@ -152,9 +153,7 @@ const ItemList = (props: ItemListProps) => {
       <div class="p-8 pt-2">
         <div class="label text-sm mb-6 flex items-center justify-between">
           {t('Enrolled content will be displayed Learning tab.')}
-          <button type="button" class="btn btn-sm btn-ghost btn-circle" onClick={refetch}>
-            <IconRefresh size={20} />
-          </button>
+          <RefreshButton refresh={refetch} loading={items.loading} />
         </div>
         <div class="max-w-5xl mx-auto flex flex-col gap-6">
           <For each={items.items}>

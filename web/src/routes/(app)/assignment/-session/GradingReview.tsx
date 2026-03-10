@@ -90,7 +90,7 @@ export const GradingReview = () => {
                       <td rowspan={row.rowSpan}>
                         {row.criterionName}
                         <Show when={row.feedback}>
-                          <div class="mt-2 alert alert-soft alert-info">{row.feedback}</div>
+                          <div class="mt-2 alert">{row.feedback}</div>
                         </Show>
                       </td>
                     </Show>

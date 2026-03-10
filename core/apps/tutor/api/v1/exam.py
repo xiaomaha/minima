@@ -2,6 +2,7 @@ from django.db.models import F, Prefetch, Q
 from django.shortcuts import aget_object_or_404
 from ninja import Router
 from ninja.pagination import paginate
+from ninja.params import functions
 
 from apps.account.api.schema import OwnerSchema
 from apps.common.schema import Schema
@@ -48,13 +49,15 @@ class TutorExamGradePaperSchema(Schema):
 
     @staticmethod
     def resolve_answers(grade: Grade):
-        question_ids = [q.id for q in grade.attempt.questions.all()]
-        return {k: v for k, v in grade.attempt.submission.answers.items() if int(k) in question_ids}
+        return {k: v for k, v in grade.attempt.submission.answers.items() if int(k) in grade.question_ids}
 
     @staticmethod
     def resolve_earned_details(grade: Grade):
-        question_ids = [q.id for q in grade.attempt.questions.all()]
-        return {k: v for k, v in grade.earned_details.items() if int(k) in question_ids}
+        return {k: v for k, v in grade.earned_details.items() if int(k) in grade.question_ids}
+
+    @staticmethod
+    def resolve_feedback(grade: Grade):
+        return {k: v for k, v in grade.feedback.items() if int(k) in grade.question_ids}
 
     @staticmethod
     def resolve_questions(grade: Grade):
@@ -64,7 +67,16 @@ class TutorExamGradePaperSchema(Schema):
 @router.get("/exam/{id}/grade/{grade_id}", response=TutorExamGradePaperSchema)
 @tutor_required()
 @allocation_required("exam", "exam")
-async def get_exam_grade_paper(request: HttpRequest, id: str, grade_id: int):
+async def get_exam_grade_paper(
+    request: HttpRequest, id: str, grade_id: int, question_id: int | None = functions.Query(None, alias="questionId")
+):
+    if question_id:
+        q = Q(id=question_id)
+    else:
+        q = Q(solution__correct_answers=[]) | Q(
+            format__in=[Question.ExamQuestionFormatChoices.ESSAY, Question.ExamQuestionFormatChoices.TEXT_INPUT]
+        )
+
     grade = await aget_object_or_404(
         Grade.objects.select_related("attempt__submission", "grader").prefetch_related(
             Prefetch(
@@ -72,15 +84,7 @@ async def get_exam_grade_paper(request: HttpRequest, id: str, grade_id: int):
                 queryset=Question.objects
                 .select_related("solution")
                 .prefetch_related("attachments")
-                .filter(
-                    Q(solution__correct_answers=[])
-                    | Q(
-                        format__in=[
-                            Question.ExamQuestionFormatChoices.ESSAY,
-                            Question.ExamQuestionFormatChoices.TEXT_INPUT,
-                        ]
-                    )
-                )
+                .filter(q)
                 .order_by("id"),
             )
         ),
@@ -89,6 +93,7 @@ async def get_exam_grade_paper(request: HttpRequest, id: str, grade_id: int):
         attempt__active=True,
     )
     grade.analysis = await Exam().analyze_answers([q.id for q in grade.attempt.questions.all()])
+    grade.question_ids = [q.id for q in grade.attempt.questions.all()]
 
     return grade
 

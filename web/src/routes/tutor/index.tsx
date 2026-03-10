@@ -4,10 +4,11 @@ import { formatDistanceToNow } from 'date-fns'
 import { For, Match, Show, Switch } from 'solid-js'
 import { tutorV1GetAllocationStats } from '@/api'
 import { NoContent } from '@/shared/NoContent'
+import { RefreshButton } from '@/shared/RefreshButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
-import { useAllocation } from './-context'
+import { useAllocation } from './-tutor/context'
 
 export const Route = createFileRoute('/tutor/')({
   component: RouteComponent,
@@ -17,20 +18,20 @@ function RouteComponent() {
   const { t } = useTranslation()
   const navigate = Route.useNavigate()
 
-  const [stats] = createCachedStore(
+  const [stats, { refetch: refetchStats }] = createCachedStore(
     'tutorV1GetAllocationStats',
     () => ({}),
     async () => (await tutorV1GetAllocationStats()).data,
   )
 
-  const [allocations, setObserverEl] = useAllocation()
-
-  const previewContent = (model: string, id: string) => {
-    navigate({ to: `/${model}/${id}/session?mode=preview` })
-  }
+  const [allocations, setObserverEl, { refetch: refetchAllocations }] = useAllocation()
 
   const goToGradingList = (model: string, id: string) => {
     navigate({ to: `/tutor/${model}/${id}/grading` })
+  }
+
+  const goToAppealList = (model: string, id: string) => {
+    navigate({ to: `/tutor/${model}/${id}/appeal` })
   }
 
   const statsData = () => [
@@ -38,36 +39,50 @@ function RouteComponent() {
     { title: 'Submissions', value: (stats.data?.submissionCount ?? '').toLocaleString() },
     { title: 'Completed', value: (stats.data?.gradeCompletedCount ?? '').toLocaleString() },
     { title: 'Confirmed', value: (stats.data?.gradeConfirmedCount ?? '').toLocaleString() },
-    {
-      title: 'Appeals',
-      value: `${stats.data?.appealOpenCount ?? ''} / ${stats.data?.appealCount ?? ''}`.toLocaleString(),
-    },
+    { title: 'Open appeals', value: (stats.data?.appealOpenCount ?? '').toLocaleString() },
   ]
+
+  const refresh = async () => {
+    await refetchAllocations()
+    await refetchStats()
+  }
 
   return (
     <div class="space-y-8">
-      <div class="breadcrumbs text-sm mb-8 **:text-base-content/60">
+      <div class="breadcrumbs mb-8">
         <ul>
-          <li>
+          <li class="flex items-center gap-4">
             <IconHome size={20} />
+            {t('Tutor')}
           </li>
         </ul>
       </div>
 
       <div class="text-center">
-        <div class="stats shadow mb-8 text-base-content/80">
+        <div class="stats shadow text-base-content/80">
           <For each={statsData()}>
             {(item) => (
               <div class="stat place-items-center">
                 <div class="stat-title">{item.title}</div>
-                <div class="stat-value min-h-12 min-w-20">{item.value}</div>
+                <div
+                  class="stat-value min-h-12 min-w-20"
+                  classList={{
+                    'text-error': item.title === 'Open appeals' && stats.data?.appealOpenCount !== 0,
+                  }}
+                >
+                  {item.value}
+                </div>
               </div>
             )}
           </For>
         </div>
       </div>
 
-      <Show when={!allocations.loading}>
+      <div class="text-right">
+        <RefreshButton refresh={refresh} loading={allocations.loading || stats.loading} />
+      </div>
+
+      <Show when={!allocations.loading || allocations.items.length > 0}>
         <table class="table text-center text-base">
           <thead>
             <tr class="[&_th]:font-normal [&_th]:px-1">
@@ -102,17 +117,7 @@ function RouteComponent() {
                 >
                   <td>{allocations.count - i()}</td>
                   <td>{t(capitalize(item.contentType.model))}</td>
-                  <td class="text-left">
-                    <span
-                      class="link decoration-base-content/30"
-                      onclick={(e) => {
-                        e.stopPropagation()
-                        previewContent(item.contentType.model, item.content.id)
-                      }}
-                    >
-                      {item.content.title}
-                    </span>
-                  </td>
+                  <td class="text-left">{item.content.title}</td>
                   <td class="text-sm">
                     {item.content.lastGrading
                       ? formatDistanceToNow(new Date(item.content.lastGrading), { addSuffix: true })
@@ -126,7 +131,15 @@ function RouteComponent() {
                     {item.content.gradeConfirmedCount}
                   </td>
                   <td>
-                    {item.content.appealOpenCount} / {item.content.appealCount}
+                    <span
+                      class="link link-primary link-hover decoration-base-content/30 flex items-center gap-2"
+                      onclick={(e) => {
+                        e.stopPropagation()
+                        goToAppealList(item.contentType.model, item.content.id)
+                      }}
+                    >
+                      {item.content.appealOpenCount} / {item.content.appealCount}
+                    </span>
                   </td>
                   <td>
                     <Switch>
