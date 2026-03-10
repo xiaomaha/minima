@@ -49,29 +49,33 @@ export const AccountButton = () => {
 
           <Show when={accountStore.user?.roles.includes('editor')}>
             <li>
-              <button
-                type="button"
+              <a
+                href="/studio"
+                target="_blank"
+                rel="noreferrer"
                 class="btn btn-ghost justify-start gap-4 border-0 font-normal"
-                onClick={() => goTo('/studio')}
+                onClick={closeDropdown}
               >
                 <IconPuzzle2 />
                 <span class="flex-1 text-left">{t('Studio')}</span>
                 <span class="badge badge-primary badge-xs">{t('Editor')}</span>
-              </button>
+              </a>
             </li>
           </Show>
 
           <Show when={accountStore.user?.roles.includes('tutor')}>
             <li>
-              <button
-                type="button"
+              <a
+                href="/tutor"
+                target="_blank"
+                rel="noreferrer"
                 class="btn btn-ghost justify-start gap-4 border-0 font-normal"
-                onClick={() => goTo('/tutor')}
+                onClick={closeDropdown}
               >
                 <IconListDetails />
                 <span class="flex-1 text-left">{t('Tutor')}</span>
-                <span class="badge badge-primary badge-xs">{t('tutor')}</span>
-              </button>
+                <span class="badge badge-primary badge-xs">{t('Tutor')}</span>
+              </a>
             </li>
           </Show>
 

@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.assignment.models import Assignment
 from apps.assignment.models import Attempt as AssignmentAttempt
 from apps.assignment.models import Grade as AssignmentGrade
+from apps.common.error import ErrorCode
 from apps.common.models import TimeStampedMixin
 from apps.common.util import offset_paginate
 from apps.discussion.models import Attempt as DiscussionAttempt
@@ -30,6 +31,9 @@ User = get_user_model()
 
 TUTORING_MODELS = {"exam": Exam, "assignment": Assignment, "discussion": Discussion}
 TUTORING_MODEL_MAP = {(m._meta.app_label.lower(), m._meta.model_name): m for m in TUTORING_MODELS.values()}
+
+ATTEMPT_MODELS = {"exam": ExamAttempt, "assignment": AssignmentAttempt, "discussion": DiscussionAttempt}
+GRADING_MODELS = {"exam": ExamGrade, "assignment": AssignmentGrade, "discussion": DiscussionGrade}
 
 
 @pghistory.track()
@@ -111,6 +115,100 @@ class Allocation(TimeStampedMixin):
 
         return {"allocation_count": allocation_count, **grade_stats, **appeal_stats}
 
+    @classmethod
+    async def get_appeals(cls, *, tutor_id: str, app_label: str, model: str, content_id: str, page: int, size: int):
+        content_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
+        allocated = await cls.objects.filter(
+            tutor_id=tutor_id, active=True, content_type=content_type, content_id=content_id
+        ).aexists()
+        if not allocated:
+            raise ValueError(ErrorCode.PERMISSION_DENIED)
+
+        question_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, "question")
+
+        if app_label == "exam":
+            question_ids = ExamAttempt.objects.filter(exam_id=content_id).values("questions").distinct()
+        elif app_label == "assignment":
+            question_ids = AssignmentAttempt.objects.filter(assignment_id=content_id).values("question_id").distinct()
+        elif app_label == "discussion":
+            question_ids = DiscussionAttempt.objects.filter(discussion_id=content_id).values("question_id").distinct()
+        else:
+            raise ValueError(ErrorCode.UNKNOWN_CONTENT)
+
+        qs = (
+            Appeal.objects
+            .filter(question_type=question_type, question_id__in=question_ids)
+            .select_related("learner")
+            .prefetch_related("attachments")
+            .order_by("-created")
+        )
+
+        paginated = await offset_paginate(qs, page=page, size=size)
+        if not paginated["items"]:
+            return paginated
+
+        items = paginated["items"]
+        question_id_list = [a.question_id for a in items]
+        learner_id_list = [a.learner_id for a in items]
+
+        if app_label == "exam":
+            grade_qs = (
+                ExamGrade.objects
+                .select_related("attempt")
+                .prefetch_related("attempt__questions")
+                .filter(
+                    attempt__questions__id__in=question_id_list,
+                    attempt__learner_id__in=learner_id_list,
+                    attempt__active=True,
+                )
+            )
+            grade_map = {(q.id, g.attempt.learner_id): g.id async for g in grade_qs for q in g.attempt.questions.all()}
+
+        elif app_label == "assignment":
+            grade_qs = AssignmentGrade.objects.select_related("attempt").filter(
+                attempt__question_id__in=question_id_list, attempt__learner_id__in=learner_id_list, attempt__active=True
+            )
+            grade_map = {(g.attempt.question_id, g.attempt.learner_id): g.id async for g in grade_qs}
+
+        elif app_label == "discussion":
+            grade_qs = DiscussionGrade.objects.select_related("attempt").filter(
+                attempt__question_id__in=question_id_list, attempt__learner_id__in=learner_id_list, attempt__active=True
+            )
+            grade_map = {(g.attempt.question_id, g.attempt.learner_id): g.id async for g in grade_qs}
+        else:
+            raise ValueError(ErrorCode.UNKNOWN_CONTENT)
+
+        for appeal in items:
+            appeal.grade_id = grade_map.get((appeal.question_id, appeal.learner_id))
+
+        return paginated
+
+    @classmethod
+    async def review_appeal(cls, *, tutor_id: str, appeal_id: int, review: str, reviewer_id: str):
+        appeal = await Appeal.objects.select_related("question_type").aget(id=appeal_id)
+
+        app_label = appeal.question_type.app_label
+        if app_label == "exam":
+            content_id_qs = ExamAttempt.objects.filter(questions__id=appeal.question_id).values("exam_id")
+        elif app_label == "assignment":
+            content_id_qs = AssignmentAttempt.objects.filter(question_id=appeal.question_id).values("assignment_id")
+        elif app_label == "discussion":
+            content_id_qs = DiscussionAttempt.objects.filter(question_id=appeal.question_id).values("discussion_id")
+        else:
+            raise ValueError(ErrorCode.UNKNOWN_CONTENT)
+
+        allocated = await Allocation.objects.filter(
+            tutor_id=tutor_id, active=True, content_type__app_label=app_label, content_id__in=content_id_qs
+        ).aexists()
+
+        if not allocated:
+            raise ValueError(ErrorCode.PERMISSION_DENIED)
+
+        appeal.review = review
+        appeal.reviewer_id = reviewer_id
+
+        await appeal.asave(update_fields=["review"])
+
 
 async def _fetch_allocatable_contents(content_ids_by_type: dict):
     union_qs = []
@@ -176,18 +274,22 @@ async def _fetch_appeal_counts(content_ids_by_type: dict[tuple[str, str], set[st
     discussion_ids = list(content_ids_by_type.get(("discussion", "discussion"), set()))
 
     sql = f"""
-        SELECT ea.exam_id AS content_id, op.review
+        SELECT DISTINCT ON (op.id) ea.exam_id AS content_id, op.review
         FROM {appeal_table} op
         JOIN {exam_m2m_table} aq ON aq.question_id = op.question_id
         JOIN {exam_attempt_table} ea ON ea.id = aq.attempt_id AND ea.active = TRUE
         WHERE op.question_type_id = %s AND ea.exam_id = ANY(%s)
+
         UNION ALL
-        SELECT ea.assignment_id AS content_id, op.review
+
+        SELECT DISTINCT ON (op.id) ea.assignment_id AS content_id, op.review
         FROM {appeal_table} op
         JOIN {assignment_attempt_table} ea ON ea.question_id = op.question_id AND ea.active = TRUE
         WHERE op.question_type_id = %s AND ea.assignment_id = ANY(%s)
+
         UNION ALL
-        SELECT ea.discussion_id AS content_id, op.review
+
+        SELECT DISTINCT ON (op.id) ea.discussion_id AS content_id, op.review
         FROM {appeal_table} op
         JOIN {discussion_attempt_table} ea ON ea.question_id = op.question_id AND ea.active = TRUE
         WHERE op.question_type_id = %s AND ea.discussion_id = ANY(%s)
@@ -304,7 +406,7 @@ async def _fetch_appeal_stats(exam_ids: list, assignment_ids: list, discussion_i
             COUNT(*)                                     AS appeal_count,
             COUNT(*) FILTER (WHERE review = '')          AS appeal_open_count
         FROM (
-            SELECT op.review
+            SELECT DISTINCT ON (op.id) op.review
             FROM {appeal_table} op
             JOIN {exam_m2m_table} aq ON aq.question_id = op.question_id
             JOIN {exam_attempt_table} ea ON ea.id = aq.attempt_id AND ea.active = TRUE
@@ -312,14 +414,14 @@ async def _fetch_appeal_stats(exam_ids: list, assignment_ids: list, discussion_i
 
             UNION ALL
 
-            SELECT op.review
+            SELECT DISTINCT ON (op.id) op.review
             FROM {appeal_table} op
             JOIN {assignment_attempt_table} aa ON aa.question_id = op.question_id AND aa.active = TRUE
             WHERE op.question_type_id = %s AND aa.assignment_id = ANY(%s)
 
             UNION ALL
 
-            SELECT op.review
+            SELECT DISTINCT ON (op.id) op.review
             FROM {appeal_table} op
             JOIN {discussion_attempt_table} da ON da.question_id = op.question_id AND da.active = TRUE
             WHERE op.question_type_id = %s AND da.discussion_id = ANY(%s)

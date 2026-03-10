@@ -478,7 +478,8 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
     learner = ForeignKey(User, CASCADE, verbose_name=_("Learner"), related_name="+")
     explanation = TextField(_("Explanation"))
     review = TextField(_("Review"), blank=True, default="")
-    path = CharField(_("Path"), max_length=500, default="", blank=True)
+    reviewer = ForeignKey(User, CASCADE, verbose_name=_("Reviewer"), null=True, related_name="+")
+    path = CharField(_("Path"), max_length=500, default="", blank=True, db_index=True)
 
     limit_choices_to = {"model__in": ["question"]}
     question_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Question Type"), limit_choices_to=limit_choices_to)
@@ -497,6 +498,7 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
 
     if TYPE_CHECKING:
         learner_id: str
+        reviewer_id: str
 
     @property
     def cleaned_explanation(self):

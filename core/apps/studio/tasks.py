@@ -7,6 +7,7 @@ from apps.assignment.models import Attempt as AssignmentAttempt
 from apps.course.models import Engagement as CourseEngagement
 from apps.discussion.models import Attempt as DiscussionAttempt
 from apps.exam.models import Attempt as ExamAttempt
+from apps.operation.models import Appeal
 from apps.quiz.models import Attempt as QuizAttempt
 from apps.survey.models import Submission as SurveySubmission
 
@@ -31,5 +32,7 @@ def cleanup_preview_data():
     for M in PREVIEW_DATA_MODELS:
         num, model_num = M.objects.filter(mode="preview", started__lte=threshold).delete()
         deleted[M._meta.model_name] = num, model_num
+
+    Appeal.objects.filter(started__lte=threshold, path__contains="mode=preview").delete()
 
     return deleted

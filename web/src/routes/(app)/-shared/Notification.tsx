@@ -1,10 +1,11 @@
-import { IconBell, IconRefresh } from '@tabler/icons-solidjs'
+import { IconBell } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
 import { createEffect, createSignal, For, onMount, Show } from 'solid-js'
 import { type MessageSchema, operationV1GetUnreadMessages, operationV1ReadMessage } from '@/api'
 import { accountStore } from '@/routes/(app)/account/-store'
 import { NoContent } from '@/shared/NoContent'
+import { RefreshButton } from '@/shared/RefreshButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
@@ -97,9 +98,7 @@ export const Notification = () => {
         >
           <div class="border-b border-base-content/10 text-sm px-4 py-2 flex items-center justify-between">
             {t('Notification')}
-            <button type="button" class="btn btn-ghost btn-xs btn-circle" onClick={refetch}>
-              <IconRefresh size={20} />
-            </button>
+            <RefreshButton refresh={refetch} loading={messages.loading} class="loading-xs" buttonClass="btn-xs" />
           </div>
           <div class="max-h-150 overflow-auto">
             <div class="[&>div+div]:border-t [&>div+div]:border-base-content/5">

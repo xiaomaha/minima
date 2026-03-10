@@ -1,11 +1,12 @@
-import { IconCheck, IconHome } from '@tabler/icons-solidjs'
+import { IconCheck } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createSignal, For, Match, Show, Switch } from 'solid-js'
 import { tutorV1GetDiscussionGrades } from '@/api'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
-import { useAllocation } from '../-context'
+import { Breadcrumb } from '../-tutor/Breadcrumb'
+import { useAllocation } from '../-tutor/context'
 import { GradingProvider } from './-discussion/context'
 import { GradingPaper } from './-discussion/GradingPaper'
 
@@ -16,10 +17,9 @@ export const Route = createFileRoute('/tutor/discussion/$id/grading')({
 function RouteComponent() {
   const { t } = useTranslation()
   const params = Route.useParams()
-  const navigate = Route.useNavigate()
 
   const [allocations] = useAllocation()
-  const currentGrading = () => allocations.items.find((item) => item.content.id === params().id)
+  const currentAllocation = () => allocations.items.find((item) => item.content.id === params().id)
 
   const gradingStore = createCachedInfiniteStore(
     'tutorV1GetDiscussionGrades',
@@ -35,18 +35,13 @@ function RouteComponent() {
     <GradingProvider value={gradingStore}>
       <div class="space-y-8">
         <div>
-          <div class="breadcrumbs text-sm mb-8 **:text-base-content/60">
-            <ul>
-              <li>
-                <span onclick={() => navigate({ to: '/tutor' })}>
-                  <IconHome size={20} />
-                </span>
-              </li>
-              <li>{currentGrading()?.content.title}</li>
-            </ul>
-          </div>
+          <Breadcrumb
+            id={params().id}
+            path={['Grading', 'Discussion', currentAllocation()?.content.title ?? '']}
+            link={`/discussion/${params().id}/session?mode=preview`}
+          />
 
-          <Show when={!gradings.loading}>
+          <Show when={gradings.items.length > 0}>
             <table class="table text-center text-base">
               <thead>
                 <tr class="[&_th]:font-normal [&_th]:px-1">

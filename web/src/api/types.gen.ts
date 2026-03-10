@@ -6647,6 +6647,80 @@ export type AllocationStatsSchema = {
 };
 
 /**
+ * GradeAppealSchema
+ */
+export type GradeAppealSchema = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Questionid
+     */
+    questionId: number;
+    /**
+     * Explanation
+     */
+    explanation: string;
+    /**
+     * Review
+     */
+    review: string;
+    /**
+     * Path
+     */
+    path: string;
+    /**
+     * Gradeid
+     */
+    gradeId: number;
+};
+
+/**
+ * PaginatedResponse[GradeAppealSchema]
+ */
+export type PaginatedResponseGradeAppealSchema = {
+    /**
+     * Items
+     */
+    items: Array<GradeAppealSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * AppealReviewSchema
+ */
+export type AppealReviewSchema = {
+    /**
+     * Review
+     */
+    review: string;
+};
+
+/**
  * GradingDate
  */
 export type GradingDate = {
@@ -10977,6 +11051,63 @@ export type TutorV1GetAllocationStatsResponses = {
 
 export type TutorV1GetAllocationStatsResponse = TutorV1GetAllocationStatsResponses[keyof TutorV1GetAllocationStatsResponses];
 
+export type TutorV1GetAppealsData = {
+    body?: never;
+    path: {
+        /**
+         * App Label
+         */
+        app_label: 'exam' | 'assignment' | 'discussion';
+        /**
+         * Model
+         */
+        model: 'exam' | 'assignment' | 'discussion';
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/tutor/{app_label}/{model}/{id}/appeal';
+};
+
+export type TutorV1GetAppealsResponses = {
+    /**
+     * OK
+     */
+    200: PaginatedResponseGradeAppealSchema;
+};
+
+export type TutorV1GetAppealsResponse = TutorV1GetAppealsResponses[keyof TutorV1GetAppealsResponses];
+
+export type TutorV1ReviewAppealData = {
+    body: AppealReviewSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/tutor/appeal/{id}';
+};
+
+export type TutorV1ReviewAppealResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
 export type TutorV1GetExamGradesData = {
     body?: never;
     path: {
@@ -11019,7 +11150,12 @@ export type TutorV1GetExamGradePaperData = {
          */
         grade_id: number;
     };
-    query?: never;
+    query?: {
+        /**
+         * Questionid
+         */
+        questionId?: number | null;
+    };
     url: '/api/v1/tutor/exam/{id}/grade/{grade_id}';
 };
 
