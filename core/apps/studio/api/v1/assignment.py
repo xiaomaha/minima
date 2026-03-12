@@ -26,7 +26,7 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest, ModeChoices
+from apps.common.util import HttpRequest, RealmChoices
 from apps.studio.decorator import editor_required, track_editing
 
 
@@ -179,7 +179,7 @@ async def save_assignment(
 @editor_required()
 @track_editing(Assignment, id_field="id")
 async def delete_assignment(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(assignment_id=id, mode=ModeChoices.NORMAL).aexists():
+    if await Attempt.objects.filter(assignment_id=id, realm=RealmChoices.STUDENT).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Assignment.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -246,7 +246,7 @@ async def save_assignment_questions(
 @track_editing(Assignment, id_field="id")
 async def delete_assignment_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        assignment_id=id, question=question_id, assignment__owner_id=request.auth, mode=ModeChoices.NORMAL
+        assignment_id=id, question=question_id, assignment__owner_id=request.auth, realm=RealmChoices.STUDENT
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 

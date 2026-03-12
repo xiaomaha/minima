@@ -1,5 +1,5 @@
 import { IconExternalLink } from '@tabler/icons-solidjs'
-import { useNavigate } from '@tanstack/solid-router'
+import { Link, useNavigate } from '@tanstack/solid-router'
 import { createSignal, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import type * as v from 'valibot'
@@ -39,7 +39,7 @@ export const Assignment = (props: Props) => {
     props.onSave(id)
 
     if (staging.id === EMPTY_CONTENT_ID) {
-      navigate({ to: `/studio/assignment/${id}`, replace: true })
+      navigate({ to: '/studio/$app/$id', params: { app: 'assignment', id }, replace: true })
     } else {
       modifyMutable(
         source,
@@ -115,8 +115,9 @@ export const Assignment = (props: Props) => {
 
             <div class="flex gap-2 items-center justify-end">
               <Show when={source.id !== EMPTY_CONTENT_ID}>
-                <a
-                  href={`/assignment/${source.id}/session?mode=preview`}
+                <Link
+                  to="/student/assignment/$id/session"
+                  params={{ id: source.id }}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="btn btn-primary btn-sm btn-link mr-auto no-underline"
@@ -126,7 +127,7 @@ export const Assignment = (props: Props) => {
                   <IconExternalLink size={20} />
                   {t('Preview')}
                   <span class="text-base-content/40">{new Date(source.modified).toLocaleString()}</span>
-                </a>
+                </Link>
               </Show>
 
               <actions.Import />

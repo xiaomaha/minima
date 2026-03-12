@@ -25,8 +25,6 @@ export const GradingPaper = (props: Props) => {
 
   const [formState, { Form, Field, reset }] = createForm<Record<string, string | number>>({
     initialValues: {},
-    validateOn: 'input',
-    revalidateOn: 'input',
   })
 
   createEffect(() => {

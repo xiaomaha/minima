@@ -56,7 +56,20 @@ SECRET_KEY = "django-insecure-session-debug-key" if DEBUG else os.environ["SECRE
 
 PERSONAL_ID_SALT = "minima" if DEBUG else os.environ["PERSONAL_ID_SALT"]
 
-ALLOWED_HOSTS = ["localhost", "minima"] if DEBUG else json.loads(os.environ["ALLOWED_HOSTS"])
+ALLOWED_HOSTS = (
+    [
+        "localhost",
+        "minima",
+        "student.localhost",
+        "studio.localhost",
+        "tutor.localhost",
+        "student.testserver",
+        "studio.testserver",
+        "tutor.testserver",
+    ]
+    if DEBUG
+    else json.loads(os.environ["ALLOWED_HOSTS"])
+)
 
 INSTALLED_APPS = [
     # unfold
@@ -340,7 +353,10 @@ CELERY_BEAT_SCHEDULE = {
     "sync-hot-events": {"task": "apps.tracking.tasks.sync_hot_event", "schedule": 300.0},
     "cleanup-hot-events": {"task": "apps.tracking.tasks.cleanup_hot_event", "schedule": crontab(hour=2, minute=0)},
     "collect-daily-data": {"task": "apps.warehouse.tasks.collect_daily_data", "schedule": crontab(hour=1, minute=5)},
-    "cleanup-preview-data": {"task": "apps.studio.tasks.cleanup_preview_data", "schedule": crontab(hour=1, minute=10)},
+    "cleanup-preview-data": {
+        "task": "apps.learning.tasks.cleanup_testing_data",
+        "schedule": crontab(hour=1, minute=10),
+    },
 }
 
 # assistant

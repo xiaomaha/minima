@@ -26,12 +26,18 @@ function RouteComponent() {
 
   const [allocations, setObserverEl, { refetch: refetchAllocations }] = useAllocation()
 
-  const goToGradingList = (model: string, id: string) => {
-    navigate({ to: `/tutor/${model}/${id}/grading` })
+  const goToGradingList = (app: 'exam' | 'assignment' | 'discussion', id: string) => {
+    if (app === 'exam') {
+      navigate({ to: '/tutor/exam/$id/grading', params: { id } })
+    } else if (app === 'assignment') {
+      navigate({ to: '/tutor/assignment/$id/grading', params: { id } })
+    } else if (app === 'discussion') {
+      navigate({ to: '/tutor/discussion/$id/grading', params: { id } })
+    }
   }
 
-  const goToAppealList = (model: string, id: string) => {
-    navigate({ to: `/tutor/${model}/${id}/appeal` })
+  const goToAppealList = (app: string, id: string) => {
+    navigate({ to: '/tutor/$app/$id/appeal', params: { app, id } })
   }
 
   const statsData = () => [

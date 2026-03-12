@@ -383,10 +383,6 @@ export type AssignmentAttemptSchema = {
      */
     context: string;
     /**
-     * Mode
-     */
-    mode: string;
-    /**
      * Id
      */
     id: number;
@@ -1666,10 +1662,6 @@ export type CourseEngagementSchema = {
      */
     context: string;
     /**
-     * Mode
-     */
-    mode: string;
-    /**
      * Id
      */
     id: number;
@@ -1872,11 +1864,11 @@ export type GradingCriterionSchema = {
     /**
      * Applabel
      */
-    appLabel: string;
+    appLabel: 'completion' | 'exam' | 'assignment' | 'discussion';
     /**
      * Model
      */
-    model: string;
+    model: 'completion' | 'exam' | 'assignment' | 'discussion';
     /**
      * Passingpoint
      */
@@ -2244,10 +2236,6 @@ export type DiscussionAttemptSchema = {
      * Context
      */
     context: string;
-    /**
-     * Mode
-     */
-    mode: string;
     /**
      * Id
      */
@@ -2650,10 +2638,6 @@ export type ExamAttemptSchema = {
      * Context
      */
     context: string;
-    /**
-     * Mode
-     */
-    mode: string;
     /**
      * Id
      */
@@ -4300,10 +4284,6 @@ export type QuizAttemptSchema = {
      * Context
      */
     context: string;
-    /**
-     * Mode
-     */
-    mode: string;
     /**
      * Id
      */
@@ -6545,7 +6525,7 @@ export type AllocationSchema = {
      */
     id: number;
     content: TutorContentSchema;
-    contentType: ContentTypeSchema;
+    contentType: TutorContentTypeSchema;
 };
 
 /**
@@ -6614,6 +6594,20 @@ export type TutorContentSchema = {
      * Appealopencount
      */
     appealOpenCount: number;
+};
+
+/**
+ * TutorContentTypeSchema
+ */
+export type TutorContentTypeSchema = {
+    /**
+     * Applabel
+     */
+    appLabel: 'exam' | 'assignment' | 'discussion';
+    /**
+     * Model
+     */
+    model: 'exam' | 'assignment' | 'discussion';
 };
 
 /**
@@ -7385,7 +7379,6 @@ export type AssignmentV1GetSessionData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7410,7 +7403,6 @@ export type AssignmentV1StartAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7449,7 +7441,6 @@ export type AssignmentV1SubmitAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7474,7 +7465,6 @@ export type AssignmentV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7773,7 +7763,6 @@ export type ContentV1GetMediaData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
     };
     url: '/api/v1/content/media/{id}';
@@ -7797,7 +7786,6 @@ export type ContentV1GetSubtitlesData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
     };
     url: '/api/v1/content/media/{id}/subtitle';
@@ -7823,7 +7811,6 @@ export type ContentV1DeleteMediaWatchData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7846,7 +7833,6 @@ export type ContentV1GetMediaWatchData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7871,7 +7857,6 @@ export type ContentV1UpdateMediaWatchData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7894,7 +7879,6 @@ export type ContentV1GetMediaNoteData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7933,7 +7917,6 @@ export type ContentV1SaveMediaNoteData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -7949,7 +7932,7 @@ export type ContentV1SaveMediaNoteResponses = {
 
 export type ContentV1SaveMediaNoteResponse = ContentV1SaveMediaNoteResponses[keyof ContentV1SaveMediaNoteResponses];
 
-export type ContentV1GetWatchMediasData = {
+export type ContentV1GetWatchedPublicMediasData = {
     body?: never;
     path?: never;
     query?: {
@@ -7973,14 +7956,14 @@ export type ContentV1GetWatchMediasData = {
     url: '/api/v1/content/watch';
 };
 
-export type ContentV1GetWatchMediasResponses = {
+export type ContentV1GetWatchedPublicMediasResponses = {
     /**
      * OK
      */
     200: PagedWatchedMediaSchema;
 };
 
-export type ContentV1GetWatchMediasResponse = ContentV1GetWatchMediasResponses[keyof ContentV1GetWatchMediasResponses];
+export type ContentV1GetWatchedPublicMediasResponse = ContentV1GetWatchedPublicMediasResponses[keyof ContentV1GetWatchedPublicMediasResponses];
 
 export type ContentV1SearchSuggestionData = {
     body?: never;
@@ -8051,7 +8034,6 @@ export type CourseV1GetSessionData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
     };
     url: '/api/v1/course/{id}/session';
@@ -8075,7 +8057,6 @@ export type CourseV1StartEngagementData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
     };
     url: '/api/v1/course/{id}/engage';
@@ -8141,7 +8122,6 @@ export type DiscussionV1GetSessionData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8166,7 +8146,6 @@ export type DiscussionV1StartAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8191,7 +8170,6 @@ export type DiscussionV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8222,7 +8200,6 @@ export type DiscussionV1GetPostsData = {
          * Size
          */
         size?: number;
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8269,7 +8246,6 @@ export type DiscussionV1CreatePostData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8294,7 +8270,6 @@ export type DiscussionV1GetOwnPostsData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8325,7 +8300,6 @@ export type DiscussionV1DeletePostData = {
         post_id: number;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8374,7 +8348,6 @@ export type DiscussionV1UpdatePostData = {
         post_id: number;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8399,7 +8372,6 @@ export type ExamV1GetSessionData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8424,7 +8396,6 @@ export type ExamV1StartAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8449,7 +8420,6 @@ export type ExamV1SaveAnswersData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8472,7 +8442,6 @@ export type ExamV1SubmitAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -8497,7 +8466,6 @@ export type ExamV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -9249,7 +9217,6 @@ export type QuizV1GetSessionData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -9274,7 +9241,6 @@ export type QuizV1StartAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -9299,7 +9265,6 @@ export type QuizV1SubmitAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -9324,7 +9289,6 @@ export type QuizV1DeactivateAttemptData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -10873,7 +10837,6 @@ export type SurveyV1GetSurveyData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
     };
     url: '/api/v1/survey/{id}';
@@ -10897,7 +10860,6 @@ export type SurveyV1SubmitData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
         course?: string;
     };
@@ -10920,7 +10882,6 @@ export type SurveyV1ResultsData = {
         id: string;
     };
     query?: {
-        mode?: string;
         media?: string;
     };
     url: '/api/v1/survey/{id}/results';
@@ -10970,9 +10931,7 @@ export type SurveyV1SubmitAnonymousData = {
          */
         id: string;
     };
-    query?: {
-        mode?: string;
-    };
+    query?: never;
     url: '/api/v1/survey/{id}/anonymous/submit';
 };
 

@@ -4,10 +4,10 @@ import * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
 import { accountV1Join, operationV1EffectivePolicies } from '@/api'
 import { vJoinSchema } from '@/api/valibot.gen'
-import { BASE_URL, TEST_MAILER_URL } from '@/config'
+import { TEST_MAILER_URL } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
-import { handleFormErrors } from '@/shared/error'
+import { handleFormErrors } from '@/shared/error/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -40,7 +40,7 @@ function RouteComponent() {
       agreements: [],
       password: '',
       passwordConfirm: '',
-      callbackUrl: `${BASE_URL}/activate`,
+      callbackUrl: `${window.location.origin}/activate`,
     },
     validate: valiForm(vJoinSchema),
   })

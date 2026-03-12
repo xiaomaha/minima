@@ -35,8 +35,8 @@ export const Menu = (props: Props) => {
   const [searchOpen, setSearchOpen] = createSignal(false)
 
   const select = (key: string) => {
-    const id = suggestionMap()[key]
-    navigate({ to: `/studio/${params().app}/${id}` })
+    const id = suggestionMap()[key]!
+    navigate({ to: '/studio/$app/$id', params: { app: params().app, id } })
   }
 
   return (
@@ -73,7 +73,7 @@ export const Menu = (props: Props) => {
         <button
           type="button"
           class="btn btn-sm btn-ghost btn-circle"
-          onClick={() => navigate({ to: `/studio/${params().app}/new` })}
+          onClick={() => navigate({ to: '/studio/$app/$id', params: { app: params().app, id: EMPTY_CONTENT_ID } })}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >

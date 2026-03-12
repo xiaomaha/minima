@@ -3,8 +3,7 @@ import { createResource, Show } from 'solid-js'
 import * as v from 'valibot'
 import { accountV1Activate, accountV1RequestActivation } from '@/api'
 import { vRequestActivationSchema } from '@/api/valibot.gen'
-import { BASE_URL } from '@/config'
-import { handleFormErrors } from '@/shared/error'
+import { handleFormErrors } from '@/shared/error/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createForm, valiForm } from '@/shared/solid/form'
@@ -36,7 +35,7 @@ const RequestActivation = () => {
   const navigate = Route.useNavigate()
 
   const form = createForm<v.InferInput<typeof vRequestActivationSchema>>({
-    initialValues: { email: '', callbackUrl: `${BASE_URL}${Route.fullPath}` },
+    initialValues: { email: '', callbackUrl: `${window.location.origin}${Route.fullPath}` },
     validate: valiForm(vRequestActivationSchema),
   })
 

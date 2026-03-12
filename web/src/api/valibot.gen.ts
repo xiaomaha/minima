@@ -212,7 +212,6 @@ export const vAssignmentAttemptSchema = v.object({
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
     context: v.string(),
-    mode: v.string(),
     id: v.pipe(v.number(), v.integer()),
     question: vAssignmentQuestionSchema,
     retry: v.pipe(v.number(), v.integer())
@@ -767,7 +766,6 @@ export const vCourseEngagementSchema = v.object({
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
     context: v.string(),
-    mode: v.string(),
     id: v.pipe(v.number(), v.integer()),
     gradebook: v.optional(vCourseGradebookSchema)
 });
@@ -796,8 +794,18 @@ export const vCourseSurveySchema = v.object({
  */
 export const vGradingCriterionSchema = v.object({
     label: v.string(),
-    appLabel: v.string(),
-    model: v.string(),
+    appLabel: v.picklist([
+        'completion',
+        'exam',
+        'assignment',
+        'discussion'
+    ]),
+    model: v.picklist([
+        'completion',
+        'exam',
+        'assignment',
+        'discussion'
+    ]),
     passingPoint: v.pipe(v.number(), v.integer()),
     weight: v.number(),
     normalizedWeight: v.number(),
@@ -1069,7 +1077,6 @@ export const vDiscussionAttemptSchema = v.object({
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
     context: v.string(),
-    mode: v.string(),
     id: v.pipe(v.number(), v.integer()),
     question: vDiscussionQuestionSchema,
     retry: v.pipe(v.number(), v.integer())
@@ -1237,7 +1244,6 @@ export const vExamAttemptSchema = v.object({
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
     context: v.string(),
-    mode: v.string(),
     id: v.pipe(v.number(), v.integer()),
     savedAnswers: v.nullable(v.record(v.string(), v.string())),
     questions: v.array(vExamQuestionSchema),
@@ -1909,7 +1915,6 @@ export const vQuizAttemptSchema = v.object({
     started: v.pipe(v.string(), v.isoTimestamp()),
     active: v.boolean(),
     context: v.string(),
-    mode: v.string(),
     id: v.pipe(v.number(), v.integer()),
     questions: v.array(vQuizQuestionSchema),
     retry: v.pipe(v.number(), v.integer())
@@ -2849,12 +2854,28 @@ export const vTutorContentSchema = v.object({
 });
 
 /**
+ * TutorContentTypeSchema
+ */
+export const vTutorContentTypeSchema = v.object({
+    appLabel: v.picklist([
+        'exam',
+        'assignment',
+        'discussion'
+    ]),
+    model: v.picklist([
+        'exam',
+        'assignment',
+        'discussion'
+    ])
+});
+
+/**
  * AllocationSchema
  */
 export const vAllocationSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     content: vTutorContentSchema,
-    contentType: vContentTypeSchema
+    contentType: vTutorContentTypeSchema
 });
 
 /**
@@ -3234,7 +3255,6 @@ export const vAssignmentV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3251,7 +3271,6 @@ export const vAssignmentV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3271,7 +3290,6 @@ export const vAssignmentV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3288,7 +3306,6 @@ export const vAssignmentV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3449,7 +3466,6 @@ export const vContentV1GetMediaData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3465,7 +3481,6 @@ export const vContentV1GetSubtitlesData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3483,7 +3498,6 @@ export const vContentV1DeleteMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3495,7 +3509,6 @@ export const vContentV1GetMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3512,7 +3525,6 @@ export const vContentV1UpdateMediaWatchData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3524,7 +3536,6 @@ export const vContentV1GetMediaNoteData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3544,7 +3555,6 @@ export const vContentV1SaveMediaNoteData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3555,7 +3565,7 @@ export const vContentV1SaveMediaNoteData = v.object({
  */
 export const vContentV1SaveMediaNoteResponse = vNoteSchema;
 
-export const vContentV1GetWatchMediasData = v.object({
+export const vContentV1GetWatchedPublicMediasData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
@@ -3569,7 +3579,7 @@ export const vContentV1GetWatchMediasData = v.object({
 /**
  * OK
  */
-export const vContentV1GetWatchMediasResponse = vPagedWatchedMediaSchema;
+export const vContentV1GetWatchedPublicMediasResponse = vPagedWatchedMediaSchema;
 
 export const vContentV1SearchSuggestionData = v.object({
     body: v.optional(v.never()),
@@ -3609,7 +3619,6 @@ export const vCourseV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3625,7 +3634,6 @@ export const vCourseV1StartEngagementData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -3667,7 +3675,6 @@ export const vDiscussionV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3684,7 +3691,6 @@ export const vDiscussionV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3701,7 +3707,6 @@ export const vDiscussionV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3715,7 +3720,6 @@ export const vDiscussionV1GetPostsData = v.object({
     query: v.optional(v.object({
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24),
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3737,7 +3741,6 @@ export const vDiscussionV1CreatePostData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3754,7 +3757,6 @@ export const vDiscussionV1GetOwnPostsData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3774,7 +3776,6 @@ export const vDiscussionV1DeletePostData = v.object({
         post_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3792,7 +3793,6 @@ export const vDiscussionV1UpdatePostData = v.object({
         post_id: v.pipe(v.number(), v.integer())
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3809,7 +3809,6 @@ export const vExamV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3826,7 +3825,6 @@ export const vExamV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3843,7 +3841,6 @@ export const vExamV1SaveAnswersData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3855,7 +3852,6 @@ export const vExamV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -3872,7 +3868,6 @@ export const vExamV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -4259,7 +4254,6 @@ export const vQuizV1GetSessionData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -4276,7 +4270,6 @@ export const vQuizV1StartAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -4293,7 +4286,6 @@ export const vQuizV1SubmitAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -4310,7 +4302,6 @@ export const vQuizV1DeactivateAttemptData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -5155,7 +5146,6 @@ export const vSurveyV1GetSurveyData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -5171,7 +5161,6 @@ export const vSurveyV1SubmitData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string()),
         course: v.optional(v.string())
     }))
@@ -5183,7 +5172,6 @@ export const vSurveyV1ResultsData = v.object({
         id: v.string()
     }),
     query: v.optional(v.object({
-        mode: v.optional(v.string()),
         media: v.optional(v.string())
     }))
 });
@@ -5213,9 +5201,7 @@ export const vSurveyV1SubmitAnonymousData = v.object({
     path: v.object({
         id: v.string()
     }),
-    query: v.optional(v.object({
-        mode: v.optional(v.string())
-    }))
+    query: v.optional(v.never())
 });
 
 export const vSurveyV1ResultsAnonymousData = v.object({

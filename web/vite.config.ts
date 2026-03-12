@@ -28,8 +28,8 @@ export default defineConfig({
         target: 'http://minima:8000',
         changeOrigin: true,
         configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.setHeader('Host', 'localhost:8000')
+          proxy.on('proxyReq', (proxyReq, req) => {
+            proxyReq.setHeader('Host', req.headers.host ?? 'localhost:8000')
           })
         },
       },

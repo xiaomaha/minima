@@ -42,8 +42,8 @@ from apps.common.util import (
     AccessDate,
     GradingDate,
     LearningSessionStep,
-    ModeChoices,
     OtpTokenDict,
+    RealmChoices,
     ScoreStatsDict,
     get_score_stats,
 )
@@ -282,7 +282,7 @@ class Attempt(AttemptMixin):
             return self.tempanswer.answers
 
     @classmethod
-    async def start(cls, *, exam_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
+    async def start(cls, *, exam_id: str, learner_id: str, lock: datetime, context: str, realm: RealmChoices):
         exam = await Exam.objects.prefetch_related("question_pool__questions").aget(id=exam_id)
 
         if exam.verification_required:
@@ -300,7 +300,7 @@ class Attempt(AttemptMixin):
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
-                mode=mode,
+                realm=realm,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

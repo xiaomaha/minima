@@ -8,7 +8,7 @@ import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { useTranslation } from '@/shared/solid/i18n'
 import { createPersistentSignal } from '@/shared/solid/persistent-signal'
 import { showToast } from '@/shared/toast/store'
-import { setUser } from '../(app)/account/-store'
+import { setUser } from '../account/-store'
 
 interface Props {
   search: Accessor<{ next?: string | undefined; sso?: boolean | undefined; error?: string | undefined }>

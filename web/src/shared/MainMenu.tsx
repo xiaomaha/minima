@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/solid-router'
+import { type NavigateOptions, useNavigate } from '@tanstack/solid-router'
 import { For } from 'solid-js'
 
 interface Props {
@@ -6,7 +6,7 @@ interface Props {
   active: (path: string) => boolean
   readonly menu: {
     label: string
-    to: string
+    to: NavigateOptions['to']
   }[]
 }
 
@@ -21,7 +21,7 @@ export const MainMenu = (props: Props) => {
             <button
               type="button"
               class="min-w-16 justify-center"
-              classList={{ 'menu-active': props.active(item.to) }}
+              classList={{ 'menu-active': item.to ? props.active(item.to) : false }}
               onClick={() => navigate({ to: item.to })}
             >
               {item.label}

@@ -4,14 +4,14 @@ import type * as v from 'valibot'
 import { operationV1AgreePolicies, operationV1EffectivePolicies } from '@/api'
 import type { vPolicyVersionAgreementSchema } from '@/api/valibot.gen'
 import { PLATFORM_NAME } from '@/config'
-import { accountStore, setStore as setUserStore } from '@/routes/(app)/account/-store'
+import { accountStore, setStore as setUserStore } from '@/routes/account/-store'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { createForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
-import { logout } from './(app)/-shared/logout'
+import { logout } from './account/-account/logout'
 
 interface SitePolicyProps {
   open: boolean

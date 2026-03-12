@@ -43,8 +43,8 @@ from apps.common.util import (
     AccessDate,
     GradingDate,
     LearningSessionStep,
-    ModeChoices,
     OtpTokenDict,
+    RealmChoices,
     ScoreStatsDict,
     get_score_stats,
 )
@@ -288,7 +288,7 @@ class Attempt(AttemptMixin):
         submission: "Submission"
 
     @classmethod
-    async def start(cls, *, assignment_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
+    async def start(cls, *, assignment_id: str, learner_id: str, lock: datetime, context: str, realm: RealmChoices):
         assignment = await Assignment.objects.aget(id=assignment_id)
 
         if assignment.verification_required:
@@ -307,7 +307,7 @@ class Attempt(AttemptMixin):
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
                 question=question,
-                mode=mode,
+                realm=realm,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

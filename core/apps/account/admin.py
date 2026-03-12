@@ -92,7 +92,7 @@ class UserAdmin(ModelAdmin[User]):
 
 
 @admin.register(Token)
-class TokenAdmin(ReadOnlyHiddenModelAdmin[Token]):
+class TokenAdmin(HiddenModelAdmin[Token]):
     pass
 
 

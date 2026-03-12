@@ -7,7 +7,7 @@ from celery.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from apps.common.error import ErrorCode
-from apps.common.util import AccessDate, HttpRequest, ModeChoices, openapi_query_param
+from apps.common.util import AccessDate, HttpRequest, RealmChoices, get_realm, openapi_query_param
 from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
 from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
@@ -23,7 +23,6 @@ SPECIAL_ACCESS_TIME = timedelta(hours=1)
 def access_date(app_label, model, *, id_field: str = "id"):
     def decorator(func):
         # openapi query param
-        openapi_query_param(func=func, name="mode", schema_type="string", required=False, nullable=False)
         openapi_query_param(func=func, name="media", schema_type="string", required=False, nullable=False)
 
         # currently only quiz is allowed to be inlined
@@ -64,32 +63,36 @@ def access_date(app_label, model, *, id_field: str = "id"):
             elif media_id:
                 public_access = await PublicAccessMedia.get_access_date(media_id=media_id)
 
+            # Check special access
             if not (enrollment or public_access):
-                # Check preview and special access
-                if "preview" == request.GET.get("mode"):
-                    has_special_access = False
+                has_special_access = False
+                realm = get_realm(request)
 
-                    # editor requires ownership
-                    if "editor" in request.roles:
-                        ContentModel = ENROLLABLE_MODEL_MAP[(app_label, model)]
-                        if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
-                            has_special_access = True
+                # editor requires ownership
+                if realm == RealmChoices.STUDIO and "editor" in request.roles:
+                    ContentModel = ENROLLABLE_MODEL_MAP.get((app_label, model))
+                    if not ContentModel:
+                        raise ValueError(ErrorCode.UNKNOWN_CONTENT)
 
-                    # tutor rquires allocations
-                    elif "tutor" in request.roles:
-                        ContentModel = TUTORING_MODEL_MAP[(app_label, model)]
-                        if await Allocation.objects.filter(
-                            tutor_id=user_id, active=True, content_id=content_id
-                        ).aexists():
-                            has_special_access = True
+                    if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
+                        has_special_access = True
 
-                    if has_special_access:
-                        # grant temporary access to tutor
-                        now = timezone.now()
-                        expire = now + SPECIAL_ACCESS_TIME
-                        accessible = AccessDate(start=now, end=expire, archive=expire)
-                        request.access_date = accessible
-                        return await func(request, *args, **kwargs)
+                # tutor rquires allocations
+                elif realm == RealmChoices.TUTOR and "tutor" in request.roles:
+                    ContentModel = TUTORING_MODEL_MAP.get((app_label, model))
+                    if not ContentModel:
+                        raise ValueError(ErrorCode.UNKNOWN_CONTENT)
+
+                    if await Allocation.objects.filter(tutor_id=user_id, active=True, content_id=content_id).aexists():
+                        has_special_access = True
+
+                if has_special_access:
+                    # grant temporary access to tutor
+                    now = timezone.now()
+                    expire = now + SPECIAL_ACCESS_TIME
+                    accessible = AccessDate(start=now, end=expire, archive=expire)
+                    request.access_date = accessible
+                    return await func(request, *args, **kwargs)
 
             # more favorable access date between enrollment and public access
             accessible = _get_favorable_date(enrollment, public_access)
@@ -178,17 +181,15 @@ def active_context():
     return decorator
 
 
-def access_mode():
+def access_realm():
     def decorator(func):
-        openapi_query_param(func=func, name="mode", schema_type="string", required=False, nullable=False)
-
         @wraps(func)
         async def wrapper(request: HttpRequest, *args, **kwargs):
-            mode = request.GET.get("mode", ModeChoices.NORMAL)
-            if mode not in ModeChoices:
-                raise ValueError(ErrorCode.INVALID_ACCESS_MODE)
+            realm = get_realm(request) or RealmChoices.STUDENT
+            if realm not in RealmChoices:
+                raise ValueError(ErrorCode.INVALID_ACCESS_REALM)
 
-            request.access_mode = cast(ModeChoices, mode)
+            request.access_realm = cast(RealmChoices, realm)
 
             return await func(request, *args, **kwargs)
 

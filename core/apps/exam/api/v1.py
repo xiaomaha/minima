@@ -4,7 +4,7 @@ from ninja.router import Router
 from apps.common.util import HttpRequest
 from apps.exam.api.schema import ExamAttemptAnswersSchema, ExamAttemptSchema, ExamSessionSchema, ExamSubmissionSchema
 from apps.exam.models import Attempt, Exam
-from apps.learning.api.access_control import access_date, access_mode, active_context
+from apps.learning.api.access_control import access_date, access_realm, active_context
 
 router = Router(by_alias=True)
 
@@ -20,7 +20,7 @@ async def get_session(request: HttpRequest, id: str):
 
 @router.post("/{id}/attempt", response=ExamAttemptSchema)
 @active_context()
-@access_mode()
+@access_realm()
 @access_date("exam", "exam")
 async def start_attempt(request: HttpRequest, id: str):
     return await Attempt.start(
@@ -28,7 +28,7 @@ async def start_attempt(request: HttpRequest, id: str):
         learner_id=request.auth,
         lock=request.access_date["end"],
         context=request.active_context,
-        mode=request.access_mode,
+        realm=request.access_realm,
     )
 
 

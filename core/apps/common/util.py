@@ -96,10 +96,14 @@ class GradingDate(TypedDict):
     confirm_due: datetime
 
 
-class ModeChoices(TextChoices):
-    NORMAL = "", ""
-    PREVIEW = "preview", _("Preview")
-    AUDIT = "audit", _("Audit")
+class RealmChoices(TextChoices):
+    STUDENT = "student", _("Student")
+    STUDIO = "studio", _("Studio")
+    TUTOR = "tutor", _("Tutor")
+
+    @classmethod
+    def non_student_realms(cls):
+        return [cls.STUDIO, cls.TUTOR]
 
 
 class HttpRequest(DjangoHttpRequest):
@@ -107,7 +111,13 @@ class HttpRequest(DjangoHttpRequest):
     roles: list[str]  # from auth middleware
     access_date: "AccessDate"  # set by access_date decorator
     active_context: str  # set by active_context decorator
-    access_mode: ModeChoices  # set by access_mode decorator
+    access_realm: RealmChoices  # set by access_realm decorator
+
+
+def get_realm(request):
+    host = request.get_host()
+    subdomain = host.split(".")[0]
+    return subdomain
 
 
 class OtpTokenDict(TypedDict):

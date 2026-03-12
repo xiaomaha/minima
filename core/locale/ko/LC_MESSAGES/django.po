@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-09 19:06+0900\n"
+"POT-Creation-Date: 2026-03-12 02:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -227,8 +227,8 @@ msgstr ""
 msgid "Email"
 msgstr "이메일"
 
-#: apps/account/models.py:114 apps/assignment/models.py:533
-#: apps/assignment/models.py:551 apps/assignment/models.py:570
+#: apps/account/models.py:114 apps/assignment/models.py:523
+#: apps/assignment/models.py:541 apps/assignment/models.py:560
 #: apps/competency/certificate.py:274 apps/competency/models.py:61
 #: apps/competency/models.py:102 apps/competency/models.py:122
 #: apps/competency/models.py:140 apps/competency/models.py:170
@@ -272,9 +272,9 @@ msgstr "환경설정"
 #: apps/common/models.py:154 apps/competency/models.py:173
 #: apps/competency/models.py:241 apps/learning/models.py:80
 #: apps/learning/models.py:335 apps/operation/models.py:176
-#: apps/operation/models.py:224 apps/operation/models.py:619
-#: apps/operation/models.py:638 apps/store/models.py:107
-#: apps/store/models.py:148 apps/tutor/models.py:38
+#: apps/operation/models.py:224 apps/operation/models.py:621
+#: apps/operation/models.py:640 apps/store/models.py:107
+#: apps/store/models.py:148 apps/tutor/models.py:42
 msgid "Active"
 msgstr "활성"
 
@@ -290,10 +290,10 @@ msgstr "최고 관리자"
 #: apps/account/models.py:560 apps/account/models.py:583
 #: apps/assistant/models.py:27 apps/assistant/models.py:40
 #: apps/competency/models.py:139 apps/content/models.py:308
-#: apps/content/models.py:476 apps/learning/models.py:79
+#: apps/content/models.py:482 apps/learning/models.py:79
 #: apps/learning/models.py:497 apps/operation/models.py:159
-#: apps/operation/models.py:544 apps/operation/models.py:615
-#: apps/operation/models.py:731 apps/partner/admin.py:56
+#: apps/operation/models.py:546 apps/operation/models.py:617
+#: apps/operation/models.py:733 apps/partner/admin.py:56
 #: apps/partner/models.py:96 apps/partner/models.py:211 apps/sso/models.py:29
 #: apps/sso/models.py:49 apps/store/models.py:147
 msgid "User"
@@ -334,7 +334,7 @@ msgid "Temporary Passwords"
 msgstr "임시 비밀번호"
 
 #: apps/account/models.py:561 apps/account/models.py:567
-#: apps/account/models.py:573 apps/operation/models.py:616
+#: apps/account/models.py:573 apps/operation/models.py:618
 msgid "Token"
 msgstr "토큰"
 
@@ -426,7 +426,7 @@ msgstr "&copy; %(year)s %(platform_name)s. 모든 권리 보유."
 #: apps/course/templates/course/mail/grade_completed_email.html:50
 #: apps/course/templates/course/mail/start_today_email.html:52
 #: apps/course/templates/course/mail/weekly_progress_email.html:51
-#: apps/operation/models.py:630
+#: apps/operation/models.py:632
 msgid "Privacy Policy"
 msgstr "개인정보처리방침"
 
@@ -440,7 +440,7 @@ msgstr "개인정보처리방침"
 #: apps/course/templates/course/mail/grade_completed_email.html:51
 #: apps/course/templates/course/mail/start_today_email.html:53
 #: apps/course/templates/course/mail/weekly_progress_email.html:52
-#: apps/operation/models.py:629
+#: apps/operation/models.py:631
 msgid "Terms of Service"
 msgstr "이용약관"
 
@@ -470,25 +470,25 @@ msgstr "채점 기록"
 msgid "Grading Histories"
 msgstr "채점 기록"
 
-#: apps/assignment/admin.py:148 apps/assignment/models.py:436
+#: apps/assignment/admin.py:148 apps/assignment/models.py:425
 #: apps/course/admin.py:132 apps/course/admin.py:149
 #: apps/discussion/admin.py:103 apps/discussion/models.py:435
 #: apps/exam/admin.py:133 apps/exam/models.py:412 apps/quiz/models.py:361
 msgid "Grade"
 msgstr "채점"
 
-#: apps/assignment/admin.py:166 apps/common/models.py:164
+#: apps/assignment/admin.py:166 apps/common/models.py:166
 #: apps/discussion/admin.py:122 apps/exam/admin.py:152
 msgid "Earned Details"
 msgstr "득점 세부사항"
 
-#: apps/assignment/admin.py:171 apps/common/models.py:169
+#: apps/assignment/admin.py:171 apps/common/models.py:171
 #: apps/discussion/admin.py:132 apps/exam/admin.py:157
 msgid "Feedback"
 msgstr "피드백"
 
 #: apps/assignment/apps.py:8 apps/assignment/models.py:131
-#: apps/assignment/models.py:268 apps/warehouse/models.py:144
+#: apps/assignment/models.py:265 apps/warehouse/models.py:144
 #: apps/warehouse/views.py:53
 msgid "Assignment"
 msgstr "과제"
@@ -498,18 +498,18 @@ msgstr "과제"
 #: apps/discussion/models.py:79 apps/discussion/models.py:326
 #: apps/exam/models.py:76 apps/operation/models.py:128
 #: apps/operation/models.py:192 apps/operation/models.py:376
-#: apps/operation/models.py:545 apps/operation/models.py:636
-#: apps/operation/models.py:758 apps/quiz/models.py:72 apps/survey/models.py:38
+#: apps/operation/models.py:547 apps/operation/models.py:638
+#: apps/operation/models.py:760 apps/quiz/models.py:72 apps/survey/models.py:38
 msgid "Title"
 msgstr "제목"
 
-#: apps/assignment/models.py:82 apps/assignment/models.py:534
-#: apps/assignment/models.py:552 apps/assignment/models.py:571
+#: apps/assignment/models.py:82 apps/assignment/models.py:524
+#: apps/assignment/models.py:542 apps/assignment/models.py:561
 #: apps/common/models.py:122 apps/competency/models.py:141
 #: apps/competency/models.py:171 apps/competency/models.py:237
 #: apps/course/models.py:92 apps/discussion/models.py:80 apps/exam/models.py:77
 #: apps/learning/models.py:333 apps/operation/models.py:206
-#: apps/operation/models.py:637 apps/operation/models.py:759
+#: apps/operation/models.py:639 apps/operation/models.py:761
 #: apps/partner/models.py:44 apps/partner/models.py:67
 #: apps/partner/models.py:177 apps/quiz/models.py:73 apps/store/models.py:56
 #: apps/store/models.py:103 apps/survey/models.py:39
@@ -540,7 +540,7 @@ msgid "Question Pools"
 msgstr "문제 은행"
 
 #: apps/assignment/models.py:107 apps/assignment/models.py:114
-#: apps/assignment/models.py:270 apps/discussion/models.py:114
+#: apps/assignment/models.py:267 apps/discussion/models.py:114
 #: apps/discussion/models.py:204 apps/exam/admin.py:76 apps/exam/models.py:112
 #: apps/exam/models.py:118 apps/exam/models.py:135 apps/operation/admin.py:131
 #: apps/operation/models.py:222 apps/operation/models.py:377
@@ -579,8 +579,8 @@ msgstr "문제"
 msgid "Honor Code"
 msgstr "윤리 서약"
 
-#: apps/assignment/models.py:127 apps/assignment/models.py:537
-#: apps/assignment/models.py:550
+#: apps/assignment/models.py:127 apps/assignment/models.py:527
+#: apps/assignment/models.py:540
 msgid "Rubric"
 msgstr "평가 척도"
 
@@ -592,19 +592,19 @@ msgstr "샘플 첨부파일"
 msgid "Assignments"
 msgstr "과제"
 
-#: apps/assignment/models.py:269 apps/course/models.py:572
+#: apps/assignment/models.py:266 apps/course/models.py:572
 #: apps/discussion/models.py:203 apps/exam/models.py:257
 #: apps/operation/models.py:478 apps/quiz/models.py:242
 msgid "Learner"
 msgstr "학습자"
 
-#: apps/assignment/models.py:271 apps/discussion/models.py:205
+#: apps/assignment/models.py:268 apps/discussion/models.py:205
 #: apps/exam/models.py:259 apps/quiz/models.py:244
 msgid "Retry"
 msgstr "재응시"
 
-#: apps/assignment/models.py:274 apps/assignment/models.py:399
-#: apps/assignment/models.py:432 apps/assignment/models.py:496
+#: apps/assignment/models.py:271 apps/assignment/models.py:388
+#: apps/assignment/models.py:421 apps/assignment/models.py:486
 #: apps/discussion/models.py:208 apps/discussion/models.py:324
 #: apps/discussion/models.py:431 apps/exam/models.py:262
 #: apps/exam/models.py:382 apps/exam/models.py:392 apps/exam/models.py:408
@@ -612,114 +612,114 @@ msgstr "재응시"
 msgid "Attempt"
 msgstr "응시"
 
-#: apps/assignment/models.py:275 apps/discussion/models.py:209
+#: apps/assignment/models.py:272 apps/discussion/models.py:209
 #: apps/exam/models.py:263 apps/quiz/models.py:248
 msgid "Attempts"
 msgstr "응시"
 
-#: apps/assignment/models.py:400 apps/operation/models.py:223
+#: apps/assignment/models.py:389 apps/operation/models.py:223
 #: apps/operation/models.py:450
 msgid "Answer"
 msgstr "답변"
 
-#: apps/assignment/models.py:401
+#: apps/assignment/models.py:390
 msgid "Extracted Text"
 msgstr "추출된 텍스트"
 
-#: apps/assignment/models.py:404 apps/exam/models.py:396
+#: apps/assignment/models.py:393 apps/exam/models.py:396
 #: apps/quiz/models.py:352 apps/survey/models.py:125
 msgid "Submission"
 msgstr "제출"
 
-#: apps/assignment/models.py:405 apps/exam/models.py:397
+#: apps/assignment/models.py:394 apps/exam/models.py:397
 #: apps/quiz/models.py:353 apps/survey/models.py:126
 msgid "Submissions"
 msgstr "제출"
 
-#: apps/assignment/models.py:433 apps/course/models.py:779
+#: apps/assignment/models.py:422 apps/course/models.py:779
 #: apps/discussion/models.py:432 apps/exam/models.py:409
 msgid "Grader"
 msgstr "채점자"
 
-#: apps/assignment/models.py:437 apps/discussion/models.py:436
+#: apps/assignment/models.py:426 apps/discussion/models.py:436
 #: apps/exam/models.py:413 apps/quiz/models.py:362
 msgid "Grades"
 msgstr "채점"
 
-#: apps/assignment/models.py:491
+#: apps/assignment/models.py:481
 msgid "Not Detected"
 msgstr "없음"
 
-#: apps/assignment/models.py:492
+#: apps/assignment/models.py:482
 msgid "Detected"
 msgstr "탐지됨"
 
-#: apps/assignment/models.py:493
+#: apps/assignment/models.py:483
 msgid "Excused"
 msgstr "면제됨"
 
-#: apps/assignment/models.py:494
+#: apps/assignment/models.py:484
 msgid "Not Resolved"
 msgstr "알 수 없음"
 
-#: apps/assignment/models.py:497 apps/store/models.py:54
+#: apps/assignment/models.py:487 apps/store/models.py:54
 #: apps/store/models.py:184 apps/store/models.py:361 apps/store/models.py:381
 msgid "Status"
 msgstr "상태"
 
-#: apps/assignment/models.py:498
+#: apps/assignment/models.py:488
 msgid "Similarity Percentage"
 msgstr "유사도"
 
-#: apps/assignment/models.py:499
+#: apps/assignment/models.py:489
 msgid "Flagged Text"
 msgstr "검토 텍스트"
 
-#: apps/assignment/models.py:500
+#: apps/assignment/models.py:490
 msgid "Source Text"
 msgstr "소스 텍스트"
 
-#: apps/assignment/models.py:501
+#: apps/assignment/models.py:491
 msgid "Source User ID"
 msgstr "소스 사용자 ID"
 
-#: apps/assignment/models.py:502 apps/store/models.py:385
+#: apps/assignment/models.py:492 apps/store/models.py:385
 msgid "Reason"
 msgstr "사유"
 
-#: apps/assignment/models.py:505
+#: apps/assignment/models.py:495
 msgid "Plagiarism Check"
 msgstr "표절 검사"
 
-#: apps/assignment/models.py:506
+#: apps/assignment/models.py:496
 msgid "Plagiarism Checks"
 msgstr "표절 검사"
 
-#: apps/assignment/models.py:538
+#: apps/assignment/models.py:528
 msgid "Rubrics"
 msgstr "평가 척도"
 
-#: apps/assignment/models.py:555
+#: apps/assignment/models.py:545
 msgid "Rubric Criterion"
 msgstr "평가 항목"
 
-#: apps/assignment/models.py:556
+#: apps/assignment/models.py:546
 msgid "Rubric Criteria"
 msgstr "평가 항목"
 
-#: apps/assignment/models.py:569
+#: apps/assignment/models.py:559
 msgid "Criterion"
 msgstr "평가 기준"
 
-#: apps/assignment/models.py:572 apps/exam/models.py:115 apps/quiz/models.py:98
+#: apps/assignment/models.py:562 apps/exam/models.py:115 apps/quiz/models.py:98
 msgid "Point"
 msgstr "배점"
 
-#: apps/assignment/models.py:575
+#: apps/assignment/models.py:565
 msgid "Performance Level"
 msgstr "성취 수준"
 
-#: apps/assignment/models.py:576
+#: apps/assignment/models.py:566
 msgid "Performance Levels"
 msgstr "성취 수준"
 
@@ -732,8 +732,8 @@ msgstr "대화 메시지"
 msgid "AI Assistant"
 msgstr "AI 어시스턴트"
 
-#: apps/assistant/models.py:28 apps/content/models.py:478
-#: apps/content/models.py:483 apps/course/models.py:778
+#: apps/assistant/models.py:28 apps/content/models.py:484
+#: apps/content/models.py:492 apps/course/models.py:778
 #: apps/learning/models.py:500 apps/learning/models.py:528
 msgid "Note"
 msgstr "노트"
@@ -762,8 +762,8 @@ msgstr "대화"
 msgid "Chats"
 msgstr "대화"
 
-#: apps/assistant/models.py:64 apps/operation/models.py:551
-#: apps/operation/models.py:567 apps/warehouse/models.py:111
+#: apps/assistant/models.py:64 apps/operation/models.py:553
+#: apps/operation/models.py:569 apps/warehouse/models.py:111
 msgid "Message"
 msgstr "메시지"
 
@@ -772,11 +772,11 @@ msgid "Response"
 msgstr "응답"
 
 #: apps/assistant/models.py:66 apps/operation/models.py:382
-#: apps/operation/models.py:481 apps/operation/models.py:768
+#: apps/operation/models.py:482 apps/operation/models.py:770
 msgid "Path"
 msgstr "경로"
 
-#: apps/assistant/models.py:67 apps/common/models.py:170
+#: apps/assistant/models.py:67 apps/common/models.py:172
 #: apps/store/models.py:357 apps/store/models.py:378
 msgid "Completed"
 msgstr "완료됨"
@@ -785,7 +785,7 @@ msgstr "완료됨"
 msgid "Bookmarked"
 msgstr "북마크"
 
-#: apps/assistant/models.py:69 apps/operation/models.py:789
+#: apps/assistant/models.py:69 apps/operation/models.py:791
 msgid "Rating"
 msgstr "평점"
 
@@ -842,7 +842,7 @@ msgid "ordering_group must be defined in subclass"
 msgstr "서브클래스에서 ordering_group를 정의해야 합니다."
 
 #: apps/common/models.py:112 apps/operation/models.py:240
-#: apps/operation/models.py:788
+#: apps/operation/models.py:790
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -894,48 +894,49 @@ msgid "Lock"
 msgstr "잠김"
 
 #: apps/common/models.py:155 apps/content/models.py:314
-#: apps/content/models.py:479
+#: apps/content/models.py:485
 msgid "Context Key"
 msgstr "컨텍스트 키"
 
-#: apps/common/models.py:156 apps/content/models.py:315
-msgid "Mode"
-msgstr "모드"
+#: apps/common/models.py:157 apps/content/models.py:316
+#: apps/content/models.py:487
+msgid "Realm"
+msgstr "영역"
 
-#: apps/common/models.py:165
+#: apps/common/models.py:167
 msgid "Possible Point"
 msgstr "배점"
 
-#: apps/common/models.py:166
+#: apps/common/models.py:168
 msgid "Earned Point"
 msgstr "득점"
 
-#: apps/common/models.py:167 apps/course/models.py:774
+#: apps/common/models.py:169 apps/course/models.py:774
 msgid "Score"
 msgstr "점수"
 
-#: apps/common/models.py:168 apps/content/models.py:313
+#: apps/common/models.py:170 apps/content/models.py:313
 #: apps/course/models.py:776
 msgid "Passed"
 msgstr "합격"
 
-#: apps/common/models.py:171 apps/course/models.py:777
+#: apps/common/models.py:173 apps/course/models.py:777
 msgid "Confirmed"
 msgstr "확정됨"
 
-#: apps/common/models.py:178
+#: apps/common/models.py:180
 msgid "Cannot confirm without completion"
 msgstr "완료 처리 전 승인 할 수 없습니다."
 
-#: apps/common/models.py:183
+#: apps/common/models.py:185
 msgid "Grading Due Days"
 msgstr "채점 마감 예정 (일)"
 
-#: apps/common/models.py:184
+#: apps/common/models.py:186
 msgid "Appeal Deadline Days"
 msgstr "이의 신청 기한 (일)"
 
-#: apps/common/models.py:185
+#: apps/common/models.py:187
 msgid "Confirm Due Days"
 msgstr "성적 확정 예정 (일)"
 
@@ -1349,13 +1350,17 @@ msgstr "예약"
 msgid "Please correct the errors below."
 msgstr "오류를 수정하세요."
 
-#: apps/common/util.py:101
-msgid "Preview"
-msgstr "미리보기"
+#: apps/common/util.py:100
+msgid "Student"
+msgstr "학습자"
 
-#: apps/common/util.py:102
-msgid "Audit"
-msgstr "감사"
+#: apps/common/util.py:101
+msgid "Studio"
+msgstr "스튜디오"
+
+#: apps/common/util.py:102 apps/tutor/apps.py:8 apps/tutor/models.py:41
+msgid "Tutor"
+msgstr "튜터"
 
 #: apps/competency/apps.py:8 apps/warehouse/views.py:44
 msgid "Competency"
@@ -1543,7 +1548,7 @@ msgstr "수신 주소"
 msgid "PDF"
 msgstr "PDF"
 
-#: apps/competency/models.py:299 apps/operation/models.py:548
+#: apps/competency/models.py:299 apps/operation/models.py:550
 #: apps/tracking/models.py:29
 msgid "Data"
 msgstr "데이터"
@@ -1555,7 +1560,7 @@ msgstr "콘텐츠 유형"
 
 #: apps/competency/models.py:305 apps/learning/models.py:91
 #: apps/learning/models.py:474 apps/operation/models.py:380
-#: apps/studio/models.py:21 apps/tutor/models.py:42
+#: apps/studio/models.py:21 apps/tutor/models.py:46
 msgid "Content ID"
 msgstr "콘텐츠 ID"
 
@@ -1685,7 +1690,7 @@ msgstr "퀴즈"
 
 #: apps/content/models.py:92 apps/content/models.py:226
 #: apps/content/models.py:238 apps/content/models.py:255
-#: apps/content/models.py:309 apps/content/models.py:477
+#: apps/content/models.py:309 apps/content/models.py:483
 #: apps/course/models.py:381 apps/warehouse/models.py:125
 msgid "Media"
 msgstr "미디어"
@@ -1723,8 +1728,8 @@ msgid "Public Access Medias"
 msgstr "공개 접근"
 
 #: apps/content/models.py:257 apps/discussion/models.py:327
-#: apps/operation/models.py:129 apps/operation/models.py:546
-#: apps/operation/models.py:698
+#: apps/operation/models.py:129 apps/operation/models.py:548
+#: apps/operation/models.py:700
 msgid "Body"
 msgstr "본문"
 
@@ -1752,15 +1757,15 @@ msgstr "시청 비트"
 msgid "Watch Rate"
 msgstr "시청률"
 
-#: apps/content/models.py:319 apps/warehouse/models.py:127
+#: apps/content/models.py:321 apps/warehouse/models.py:127
 msgid "Watch"
 msgstr "시청"
 
-#: apps/content/models.py:320
+#: apps/content/models.py:322
 msgid "Watches"
 msgstr "시청"
 
-#: apps/content/models.py:484
+#: apps/content/models.py:493
 msgid "Notes"
 msgstr "노트"
 
@@ -2393,7 +2398,7 @@ msgstr "댓글 최소 글자수"
 msgid "Discussions"
 msgstr "토론"
 
-#: apps/discussion/models.py:325 apps/operation/models.py:785
+#: apps/discussion/models.py:325 apps/operation/models.py:787
 msgid "Parent"
 msgstr "부모"
 
@@ -2643,7 +2648,7 @@ msgstr "태그된 항목"
 msgid "Tagged Items"
 msgstr "태그된 항목"
 
-#: apps/operation/models.py:131 apps/operation/models.py:787
+#: apps/operation/models.py:131 apps/operation/models.py:789
 msgid "Pinned"
 msgstr "고정됨"
 
@@ -2655,7 +2660,7 @@ msgstr "공지사항"
 msgid "Announcements"
 msgstr "공지사항"
 
-#: apps/operation/models.py:161 apps/operation/models.py:568
+#: apps/operation/models.py:161 apps/operation/models.py:570
 msgid "Read at"
 msgstr "읽음"
 
@@ -2704,7 +2709,7 @@ msgid "Attachment"
 msgstr "첨부파일"
 
 #: apps/operation/models.py:378 apps/operation/models.py:451
-#: apps/operation/models.py:790
+#: apps/operation/models.py:792
 msgid "Writer"
 msgstr "작성자"
 
@@ -2729,154 +2734,158 @@ msgstr "문의 응답"
 msgid "Review"
 msgstr "검토"
 
-#: apps/operation/models.py:484
+#: apps/operation/models.py:481
+msgid "Reviewer"
+msgstr "검토자"
+
+#: apps/operation/models.py:485
 msgid "Question Type"
 msgstr "문제 유형"
 
-#: apps/operation/models.py:485
+#: apps/operation/models.py:486
 msgid "Question ID"
 msgstr "문제 ID"
 
-#: apps/operation/models.py:489
+#: apps/operation/models.py:490
 msgid "Grade Appeal"
 msgstr "채점 이의"
 
-#: apps/operation/models.py:490
+#: apps/operation/models.py:491
 msgid "Grade Appeals"
 msgstr "채점 이의"
 
-#: apps/operation/models.py:547 apps/partner/models.py:71
+#: apps/operation/models.py:549 apps/partner/models.py:71
 #: apps/partner/models.py:85
 msgid "Group"
 msgstr "그룹"
 
-#: apps/operation/models.py:552
+#: apps/operation/models.py:554
 msgid "Messages"
 msgstr "메시지"
 
-#: apps/operation/models.py:571
+#: apps/operation/models.py:573
 msgid "Message Read"
 msgstr "메시지 읽음"
 
-#: apps/operation/models.py:572
+#: apps/operation/models.py:574
 msgid "Message Reads"
 msgstr "메시지 읽음"
 
-#: apps/operation/models.py:617
+#: apps/operation/models.py:619
 msgid "Platform"
 msgstr "플랫폼"
 
-#: apps/operation/models.py:618
+#: apps/operation/models.py:620
 msgid "Device Name"
 msgstr "기기 이름"
 
-#: apps/operation/models.py:631
+#: apps/operation/models.py:633
 msgid "Cookie Policy"
 msgstr "쿠키 정책"
 
-#: apps/operation/models.py:632
+#: apps/operation/models.py:634
 msgid "Marketing Policy"
 msgstr "마케팅 정책"
 
-#: apps/operation/models.py:633
+#: apps/operation/models.py:635
 msgid "Data Retention Policy"
 msgstr "데이터 보존 정책"
 
-#: apps/operation/models.py:635 apps/store/models.py:100
+#: apps/operation/models.py:637 apps/store/models.py:100
 #: apps/tracking/admin.py:35
 msgid "Kind"
 msgstr "유형"
 
-#: apps/operation/models.py:639 apps/survey/models.py:63
+#: apps/operation/models.py:641 apps/survey/models.py:63
 msgid "Mandatory"
 msgstr "필수"
 
-#: apps/operation/models.py:640
+#: apps/operation/models.py:642
 msgid "Priority"
 msgstr "우선순위"
 
-#: apps/operation/models.py:643 apps/operation/models.py:697
+#: apps/operation/models.py:645 apps/operation/models.py:699
 msgid "Policy"
 msgstr "정책"
 
-#: apps/operation/models.py:644
+#: apps/operation/models.py:646
 msgid "Policies"
 msgstr "정책"
 
-#: apps/operation/models.py:699
+#: apps/operation/models.py:701
 msgid "Data Category"
 msgstr "데이터 카테고리"
 
-#: apps/operation/models.py:700
+#: apps/operation/models.py:702
 msgid "Version"
 msgstr "버전"
 
-#: apps/operation/models.py:701
+#: apps/operation/models.py:703
 msgid "Effective Date"
 msgstr "시행일"
 
-#: apps/operation/models.py:704 apps/operation/models.py:732
+#: apps/operation/models.py:706 apps/operation/models.py:734
 msgid "Policy Version"
 msgstr "정책 버전"
 
-#: apps/operation/models.py:705
+#: apps/operation/models.py:707
 msgid "Policy Versions"
 msgstr "정책 버전"
 
-#: apps/operation/models.py:733
+#: apps/operation/models.py:735
 msgid "Accepted"
 msgstr "동의함"
 
-#: apps/operation/models.py:736
+#: apps/operation/models.py:738
 msgid "Policy Agreement"
 msgstr "정책 동의"
 
-#: apps/operation/models.py:737
+#: apps/operation/models.py:739
 msgid "Policy Agreements"
 msgstr "정책 동의"
 
-#: apps/operation/models.py:760
+#: apps/operation/models.py:762
 msgid "Subject Type"
 msgstr "주제 유형"
 
-#: apps/operation/models.py:761
+#: apps/operation/models.py:763
 msgid "Subject ID"
 msgstr "주제 ID"
 
-#: apps/operation/models.py:763
+#: apps/operation/models.py:765
 msgid "Comment Count"
 msgstr "댓글 수"
 
-#: apps/operation/models.py:764
+#: apps/operation/models.py:766
 msgid "Rating Count"
 msgstr "평점 수"
 
-#: apps/operation/models.py:765
+#: apps/operation/models.py:767
 msgid "Rating Sum"
 msgstr "평점 합계"
 
-#: apps/operation/models.py:766
+#: apps/operation/models.py:768
 msgid "Rating Average"
 msgstr "평점 평균"
 
-#: apps/operation/models.py:767
+#: apps/operation/models.py:769
 msgid "Closed"
 msgstr "종료"
 
-#: apps/operation/models.py:771 apps/operation/models.py:784
+#: apps/operation/models.py:773 apps/operation/models.py:786
 msgid "Thread"
 msgstr "스레드"
 
-#: apps/operation/models.py:772
+#: apps/operation/models.py:774
 msgid "Threads"
 msgstr "스레드"
 
-#: apps/operation/models.py:786 apps/operation/models.py:793
+#: apps/operation/models.py:788 apps/operation/models.py:795
 #: apps/warehouse/models.py:112
 msgid "Comment"
 msgstr "댓글"
 
-#: apps/operation/models.py:794
+#: apps/operation/models.py:796
 msgid "Comments"
 msgstr "댓글"
 
@@ -3308,7 +3317,7 @@ msgstr "수정"
 msgid "Action"
 msgstr "작업"
 
-#: apps/studio/models.py:20 apps/tutor/models.py:41
+#: apps/studio/models.py:20 apps/tutor/models.py:45
 msgid "Content type"
 msgstr "콘텐츠 유형"
 
@@ -3424,15 +3433,11 @@ msgstr "담당 기록"
 msgid "Allocation Histories"
 msgstr "담당 기록"
 
-#: apps/tutor/apps.py:8 apps/tutor/models.py:37
-msgid "Tutor"
-msgstr "튜터"
-
-#: apps/tutor/models.py:46
+#: apps/tutor/models.py:50
 msgid "Tutor Allocation"
 msgstr "튜터 담당"
 
-#: apps/tutor/models.py:47
+#: apps/tutor/models.py:51
 msgid "Tutor Allocations"
 msgstr "튜터 담당"
 
@@ -3575,6 +3580,15 @@ msgstr "과정 수료"
 #: minima/settings.py:266
 msgid "Storage"
 msgstr "저장소"
+
+#~ msgid "Mode"
+#~ msgstr "모드"
+
+#~ msgid "Preview"
+#~ msgstr "미리보기"
+
+#~ msgid "Audit"
+#~ msgstr "감사"
 
 #~ msgid "Draft History"
 #~ msgstr "수정 기록"

@@ -21,10 +21,10 @@ sh dev.sh up
 
 Access with username `admin@example.com` and password `1111`
 
-- web: [http://localhost:5173](http://localhost:5173)
-- admin: [http://localhost:8000](http://localhost:8000/admin/)
-- studio: [http://localhost:5173/studio](http://localhost:5173/studio)
-- tutor: [http://localhost:5173/tutor](http://localhost:5173/tutor)
+- Student: [http://student.localhost:5173](http://student.localhost:5173)
+- Studio: [http://studio.localhost:5173](http://studio.localhost:5173)
+- Tutor: [http://tutor.localhost:5173](http://tutor.localhost:5173)
+- Admin: [http://localhost:8000](http://localhost:8000/admin/)
 
 ## Screenshots
 

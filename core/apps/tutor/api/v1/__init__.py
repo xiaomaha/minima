@@ -5,7 +5,7 @@ from django.conf import settings
 from ninja import Field, Router
 from ninja.params import functions
 
-from apps.common.schema import ContentTypeSchema, Schema
+from apps.common.schema import Schema
 from apps.common.util import HttpRequest, PaginatedResponse
 from apps.operation.api.schema import AppealSchema
 from apps.tutor.api.v1.assignment import router as assignment_router
@@ -29,9 +29,13 @@ class AllocationSchema(Schema):
         appeal_count: int
         appeal_open_count: int
 
+    class TutorContentTypeSchema(Schema):
+        app_label: Literal["exam", "assignment", "discussion"]
+        model: Literal["exam", "assignment", "discussion"]
+
     id: int
     content: TutorContentSchema
-    content_type: ContentTypeSchema
+    content_type: TutorContentTypeSchema
 
     @staticmethod
     def resolve_content(allocation: Allocation):

@@ -46,7 +46,7 @@ from apps.assignment.models import Assignment
 from apps.assignment.models import Grade as AssignmentGrade
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeWorkflowMixin, LearningObjectMixin, OrderableMixin, TimeStampedMixin
-from apps.common.util import AccessDate, GradingDate, ModeChoices, OtpTokenDict, issue_active_context, track_fields
+from apps.common.util import AccessDate, GradingDate, OtpTokenDict, RealmChoices, issue_active_context, track_fields
 from apps.competency.models import Certificate, CertificateAward, CertificateAwardDataDict
 from apps.content.models import Media
 from apps.course.trigger import course_create_grading_policy, lesson_media_unifier
@@ -462,7 +462,7 @@ class GradingPolicy(Model):
             criteria.append(
                 GradingCriterionDict(
                     label="Completion",
-                    app_label="",
+                    app_label="completion",  # fake app label
                     model="completion",  # fake model name
                     weight=self.completion_weight,
                     passing_point=self.completion_passing_point,
@@ -591,7 +591,7 @@ class Engagement(AttemptMixin):
         return issue_active_context("course", self.course_id, self.pk)
 
     @classmethod
-    async def start(cls, *, course_id: str, learner_id: str, lock: datetime, mode: ModeChoices):
+    async def start(cls, *, course_id: str, learner_id: str, lock: datetime, realm: RealmChoices):
         course = await Course.objects.aget(id=course_id)
 
         if course.verification_required:
@@ -600,7 +600,7 @@ class Engagement(AttemptMixin):
 
         try:
             engagement = await Engagement.objects.acreate(
-                course_id=course_id, learner_id=learner_id, active=True, lock=lock, mode=mode
+                course_id=course_id, learner_id=learner_id, active=True, lock=lock, realm=realm
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ALREADY_EXISTS)
