@@ -179,8 +179,8 @@ async def generate_certificate(
     thumbnail_buffer = await generate_thumbnail_from_pdf(pdf_bytes)
 
     return (
-        ContentFile(pdf_bytes, name=f"{data['document_number']}.pdf"),
-        ContentFile(thumbnail_buffer.getvalue(), name=f"{data['document_number']}.png"),
+        ContentFile(pdf_bytes, name=f"{data['document_number']}.pdf"),  # type: ignore
+        ContentFile(thumbnail_buffer.getvalue(), name=f"{data['document_number']}.png"),  # type: ignore
     )
 
 

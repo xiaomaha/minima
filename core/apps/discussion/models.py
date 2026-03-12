@@ -357,6 +357,10 @@ class Post(TimeStampedMixin, AttachmentMixin):
         post = await Post.objects.acreate(attempt=attempt, title=title, parent_id=parent_id, body=body)
         await post.update_attachments(files=files, owner_id=learner_id, content=post.body)
         post._state.fields_cache["attempt"] = attempt  # type: ignore
+
+        grade = await Grade.objects.select_related("attempt__question", "attempt__discussion").aget(attempt=attempt)
+        await grade.grade()
+
         post.post_count = await post.attempt.post_count()
         return post
 
