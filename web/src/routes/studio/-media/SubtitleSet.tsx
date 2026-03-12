@@ -1,7 +1,15 @@
 import { IconPlus } from '@tabler/icons-solidjs'
 import { batch, createSignal, For, Show } from 'solid-js'
 import { unwrap } from 'solid-js/store'
-import { type MediaSpec, studioV1CreateMediaQuiz, studioV1DeleteMediaSubtitle, studioV1SaveMediaSubtitle } from '@/api'
+import {
+  type MediaSpec,
+  studioV1ContentSuggestions,
+  studioV1CreateMediaQuiz,
+  studioV1DeleteMediaSubtitle,
+  studioV1SaveMediaSubtitle,
+} from '@/api'
+import { LANGUAGES } from '@/config'
+import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { type State, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -83,16 +91,27 @@ const Subtitle = (props: { index: number }) => {
   const subtitleDirty = () => state()?.dirty ?? false
 
   const [inCreating, setInCreating] = createSignal(false)
+
+  // quiz suggestions cache
+  const [quizSuggestions, { setStore: setQuizSuggestions }] = createCachedStore(
+    'studioV1ContentSuggestions',
+    () => ({ query: { kind: 'quiz' as const } }),
+    async (options) => (await studioV1ContentSuggestions(options)).data,
+  )
+
   const createQuiz = async () => {
     setInCreating(true)
     const lang = staging.subtitles[props.index]!.lang
     try {
-      const { data, error } = await studioV1CreateMediaQuiz({ path: { id: staging.id, lang }, throwOnError: false })
-      if (!error) {
+      const { data: id, error } = await studioV1CreateMediaQuiz({ path: { id: staging.id, lang }, throwOnError: false })
+      if (!error && id) {
+        // add entry to quiz suggestions
+        const label = `${staging.title} - ${LANGUAGES.find((l) => l.value === lang)?.label ?? lang}`
+        setQuizSuggestions('data', quizSuggestions.data!.length, { id, label })
         // error will be handled in global error handler
         batch(() => {
-          source.quizzes.push(data!)
-          staging.quizzes.push(data!)
+          source.quizzes.push(id)
+          staging.quizzes.push(id)
         })
       }
     } finally {
