@@ -3,13 +3,13 @@ import * as v from 'valibot'
 import { accountV1Login } from '@/api/sdk.gen'
 import { vLoginSchema } from '@/api/valibot.gen'
 import { LOGIN_REDIRECT_PATH } from '@/config'
-import { handleFormErrors } from '@/shared/error'
+import { handleFormErrors } from '@/shared/error/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
-import { setUser } from '../(app)/account/-store'
 import { SSOButtons } from '../(auth)/-SSOButtons'
+import { setUser } from '../account/-store'
 
 const searchSchema = v.object({
   next: v.optional(v.pipe(v.string(), v.startsWith('/'))),

@@ -11,7 +11,7 @@ from pydantic import RootModel
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest, ModeChoices
+from apps.common.util import HttpRequest, RealmChoices
 from apps.quiz.models import Attempt, Question, QuestionPool, Quiz, Solution
 from apps.studio.decorator import editor_required, track_editing
 
@@ -135,7 +135,7 @@ async def save_quiz(
 @editor_required()
 @track_editing(Quiz, id_field="id")
 async def delete_quiz(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(quiz_id=id, mode=ModeChoices.NORMAL).aexists():
+    if await Attempt.objects.filter(quiz_id=id, realm=RealmChoices.STUDENT).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Quiz.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -208,7 +208,7 @@ async def save_quiz_questions(
 @track_editing(Quiz, id_field="id")
 async def delete_quiz_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        quiz_id=id, questions=question_id, quiz__owner_id=request.auth, mode=ModeChoices.NORMAL
+        quiz_id=id, questions=question_id, quiz__owner_id=request.auth, realm=RealmChoices.STUDENT
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 

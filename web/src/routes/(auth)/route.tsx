@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
-import { accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/account/-store'
+import { NotFound } from '@/shared/error/NotFound'
 import { NavbarLogo } from '@/shared/NavbarLogo'
 import { ThemeButton } from '@/shared/ThemeButton'
 
@@ -7,11 +8,12 @@ export const Route = createFileRoute('/(auth)')({
   beforeLoad: async () => {
     if (accountStore.user) {
       throw redirect({
-        to: '/dashboard',
+        to: '/',
       })
     }
   },
   component: RouteComponent,
+  notFoundComponent: NotFound,
 })
 
 function RouteComponent() {

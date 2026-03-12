@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic.fields import Field
 
@@ -112,8 +112,8 @@ class CourseSchema(LearningObjectMixinSchema):
 
     class GradingCriterionSchema(Schema):
         label: str
-        app_label: str
-        model: str
+        app_label: Literal["completion", "exam", "assignment", "discussion"]
+        model: Literal["completion", "exam", "assignment", "discussion"]
         passing_point: int
         weight: float
         normalized_weight: float

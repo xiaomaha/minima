@@ -8,7 +8,7 @@ import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
-import { capitalize, extractText } from '@/shared/utils'
+import { extractText } from '@/shared/utils'
 import { Breadcrumb } from './-tutor/Breadcrumb'
 import { useAllocation } from './-tutor/context'
 import { GradingPaper as AssignmentGradingPaper } from './assignment/-assignment/GradingPaper'
@@ -65,9 +65,10 @@ function RouteComponent() {
       <div class="space-y-8">
         <div>
           <Breadcrumb
-            id={params().id}
-            path={['Appeal', t(capitalize(params().app)), currentAllocation()?.content.title ?? '']}
-            link={`/${params().app}/${params().id}/session?mode=preview`}
+            app={params().app}
+            id={params().id!}
+            title={currentAllocation()?.content.title ?? ''}
+            kind="appeal"
           />
 
           <Show when={appeals.items.length > 0}>

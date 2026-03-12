@@ -9,6 +9,7 @@ import { RefreshButton } from '@/shared/RefreshButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
+import { EMPTY_CONTENT_ID } from './-context/editing'
 
 const models = ['survey', 'quiz', 'exam', 'assignment', 'discussion', 'media', 'course'] as const
 
@@ -35,7 +36,7 @@ function RouteComponent() {
   )
 
   const goToContent = (model: StudioContentSpec['model'], contentId: string) => {
-    navigate({ to: `/studio/${model}/${contentId}` })
+    navigate({ to: '/studio/$app/$id', params: { app: model, id: contentId } })
   }
 
   const selectFilter = (filter: StudioContentSpec['model'] | 'all') => {
@@ -85,7 +86,9 @@ function RouteComponent() {
                     <li>
                       <button
                         type="button"
-                        onClick={() => navigate({ to: `/studio/${model}/new` })}
+                        onClick={() =>
+                          navigate({ to: '/studio/$app/$id', params: { app: model, id: EMPTY_CONTENT_ID } })
+                        }
                         onMouseDown={(e) => e.preventDefault()}
                         tabIndex={-1}
                       >

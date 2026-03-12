@@ -48,7 +48,6 @@ class AttemptMixinSchema(Schema):
     started: datetime
     active: bool
     context: str
-    mode: str
 
 
 class GradeWorkflowMixinSchema(Schema):

@@ -1,12 +1,16 @@
-export const PLATFORM_NAME = import.meta.env.VITE_PLATFORM_NAME || 'Minima'
+import type { NavigateOptions } from '@tanstack/solid-router'
 
-export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5173'
+export const PLATFORM_NAME = import.meta.env.VITE_PLATFORM_NAME || 'Minima'
 
 export const DEFAULT_LANGUAGE = import.meta.env.VITE_DEFAULT_LANGUAGE || 'en'
 
 export const TEST_MAILER_URL = import.meta.env.VITE_TEST_MAILER_URL || 'http://localhost:8025'
 
-export const LOGIN_REDIRECT_PATH = '/dashboard'
+export const LOGIN_REDIRECT_PATH = '/' as const satisfies NavigateOptions['to']
+
+export const SUBDOMAINS = ['student', 'studio', 'tutor'] as const
+
+export const MARKETING_SITE_URL = import.meta.env.VITE_MARKETING_SITE_URL || ''
 
 export const ATTACHMENT_MAX_SIZE = 1024 * 1024 * 3
 

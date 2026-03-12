@@ -52,7 +52,7 @@ from webvtt.errors import MalformedFileError
 
 from apps.common.error import ErrorCode
 from apps.common.models import LearningObjectMixin, TimeStampedMixin
-from apps.common.util import ModeChoices, PaginationDict, offset_paginate
+from apps.common.util import PaginationDict, RealmChoices, offset_paginate
 from apps.operation.models import AttachmentMixin
 from apps.quiz.models import Quiz
 
@@ -312,7 +312,9 @@ class Watch(TimeStampedMixin):
     rate = FloatField(_("Watch Rate"))
     passed = BooleanField(_("Passed"), default=False)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
-    mode = CharField(_("Mode"), max_length=30, choices=ModeChoices.choices, default=ModeChoices.NORMAL, db_index=True)
+    realm = CharField(
+        _("Realm"), max_length=30, choices=RealmChoices.choices, default=RealmChoices.STUDENT, db_index=True
+    )
 
     class Meta(TimeStampedMixin.Meta):
         constraints = [UniqueConstraint(fields=["user", "media", "context"], name="content_watch_us_me_co_ke_uniq")]
@@ -334,7 +336,7 @@ class Watch(TimeStampedMixin):
         media_id: str,
         user_id: str,
         context: str,
-        mode: ModeChoices,
+        realm: RealmChoices,
         last_position: float,
         watch_bits: str | None,
     ):
@@ -344,7 +346,7 @@ class Watch(TimeStampedMixin):
                     media_id=media_id,
                     user_id=user_id,
                     context=context,
-                    defaults={"mode": mode, "last_position": last_position},
+                    defaults={"realm": realm, "last_position": last_position},
                 )
                 return
 
@@ -387,13 +389,13 @@ class Watch(TimeStampedMixin):
                     SELECT bits, BIT_COUNT(bits) AS bit_count FROM merged
                 )
                 INSERT INTO {table} (
-                    user_id, media_id, context, mode, watch_bits, rate, passed, last_position, created, modified
+                    user_id, media_id, context, realm, watch_bits, rate, passed, last_position, created, modified
                 )
                 VALUES (
                     %(user_id)s,
                     %(media_id)s,
                     %(context)s,
-                    %(mode)s,
+                    %(realm)s,
                     (SELECT bits FROM input_bits),
                     %(rate)s,
                     %(rate)s >= (SELECT passing_point FROM media_info),
@@ -406,7 +408,7 @@ class Watch(TimeStampedMixin):
                     watch_bits = (SELECT bits FROM final),
                     rate = (SELECT bit_count FROM final) * 100.0 / %(bit_length)s,
                     passed = ((SELECT bit_count FROM final) * 100.0 / %(bit_length)s) >= (SELECT passing_point FROM media_info),
-                    mode = EXCLUDED.mode,
+                    realm = CASE WHEN {table}.realm = '{RealmChoices.STUDENT}' THEN {table}.realm ELSE EXCLUDED.realm END,
                     last_position = EXCLUDED.last_position,
                     modified = NOW();
             """
@@ -415,7 +417,7 @@ class Watch(TimeStampedMixin):
                 "media_id": media_id,
                 "user_id": user_id,
                 "context": context,
-                "mode": mode,
+                "realm": realm,
                 "last_position": last_position,
                 # "watch_bits": watch_bits, # large data, to avoid repeating leteral data, use f-string
                 "rate": bit_count * 100.0 / bit_length,
@@ -428,8 +430,12 @@ class Watch(TimeStampedMixin):
         await sync_to_async(_execute_update, thread_sensitive=True)()
 
     @classmethod
-    async def get_watched_medias(cls, *, user_id: str, start: date | None = None, end: date | None = None):
-        qs = Watch.objects.filter(user_id=user_id)
+    async def get_watched_public_medias(cls, *, user_id: str, start: date | None = None, end: date | None = None):
+        now = timezone.now()
+        # limit to public accessible
+        qs = Watch.objects.filter(
+            user_id=user_id, media__public_access__start__lte=now, media__public_access__archive__gte=now
+        )
         if start and end:
             start_dt = timezone.make_aware(datetime.combine(start, time.min))
             end_dt = timezone.make_aware(datetime.combine(end, time.max))
@@ -477,6 +483,9 @@ class Note(TimeStampedMixin, AttachmentMixin):
     media = ForeignKey(Media, CASCADE, verbose_name=_("Media"))
     note = TextField(verbose_name=_("Note"))
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
+    realm = CharField(
+        _("Realm"), max_length=30, choices=RealmChoices.choices, default=RealmChoices.STUDENT, db_index=True
+    )
 
     class Meta(TimeStampedMixin.Meta, AttachmentMixin.Meta):
         constraints = [UniqueConstraint(fields=["user", "media", "context"], name="content_note_us_me_co_keuniq")]
@@ -491,9 +500,17 @@ class Note(TimeStampedMixin, AttachmentMixin):
         return self.update_attachment_urls(content=self.note)
 
     @classmethod
-    async def upsert(cls, *, user_id: str, media_id: str, context: str, note: str, files: Sequence[File] | None):
-        note_, created = await cls.objects.aupdate_or_create(
-            user_id=user_id, media_id=media_id, context=context, defaults={"note": note}
+    async def upsert(
+        cls, *, user_id: str, media_id: str, context: str, realm: RealmChoices, note: str, files: Sequence[File] | None
+    ):
+        note_, created = await cls.objects.aget_or_create(
+            user_id=user_id, media_id=media_id, context=context, defaults={"note": note, "realm": realm}
         )
+        if not created:
+            note_.note = note
+            # realm promotion rule: student realm is never overwritten
+            if note_.realm != RealmChoices.STUDENT:
+                note_.realm = realm
+            await note_.asave(update_fields=["note", "realm"])
         await note_.update_attachments(files=files, owner_id=user_id, content=note_.note)
         return note_

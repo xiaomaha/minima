@@ -10,7 +10,11 @@ npm install
 docker compose up -d
 ```
 
-Access: [http://localhost:5173](http://localhost:5173)
+Student: [http://student.localhost:5173](http://student.localhost:5173)
+Studio: [http://studio.localhost:5173](http://studio.localhost:5173)
+Tutor: [http://tutor.localhost:5173](http://tutor.localhost:5173)
+
+test accout: `admin@example.com` / `1111`
 
 ## Requirements
 

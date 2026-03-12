@@ -1,10 +1,10 @@
 import { IconExternalLink } from '@tabler/icons-solidjs'
 import { useNavigate } from '@tanstack/solid-router'
-import { createEffect, createSignal, on, Show } from 'solid-js'
+import { createSignal, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import type * as v from 'valibot'
 import { type QuizSpec, studioV1SaveQuiz } from '@/api'
-import { QuizDialog } from '@/routes/(app)/-shared/quiz/QuizDialog'
+import { QuizDialog } from '@/routes/student/-shared/quiz/QuizDialog'
 import { clearCachedStoreBy } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
@@ -39,7 +39,7 @@ export const Quiz = (props: Props) => {
     props.onSave(id)
 
     if (staging.id === EMPTY_CONTENT_ID) {
-      navigate({ to: `/studio/quiz/${id}`, replace: true })
+      navigate({ to: '/studio/$app/$id', params: { app: 'quiz', id }, replace: true })
     } else {
       modifyMutable(source, reconcile(structuredClone(unwrap({ ...staging, questions: source.questions }))))
     }
@@ -47,20 +47,7 @@ export const Quiz = (props: Props) => {
 
   const [preview, setPreview] = createSignal(false)
 
-  createEffect(
-    on(preview, (mode, prev) => {
-      if (mode === prev) return
-      navigate({
-        to: '.',
-        search: (prev) => ({ ...prev, mode: mode ? 'preview' : undefined }),
-        replace: true,
-        resetScroll: false,
-      })
-    }),
-  )
-
   const previewQuiz = () => {
-    // cache clear
     clearCachedStoreBy(new RegExp(`quizV1GetSession.*${staging.id}`))
     setPreview(true)
   }

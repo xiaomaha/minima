@@ -36,9 +36,10 @@ function RouteComponent() {
       <div class="space-y-8">
         <div>
           <Breadcrumb
+            app="assignment"
             id={params().id}
-            path={['Grading', 'Assignment', currentAllocation()?.content.title ?? '']}
-            link={`/assignment/${params().id}/session?mode=preview`}
+            title={currentAllocation()?.content.title ?? ''}
+            kind="grading"
           />
 
           <Show when={gradings.items.length > 0}>
@@ -72,7 +73,7 @@ function RouteComponent() {
                           </div>
                         </td>
                         <td>
-                          <div>
+                          <div class="text-sm space-y-1">
                             <div>
                               {t('Grading')}: {new Date(item.gradingDate.gradeDue).toLocaleDateString()}
                             </div>

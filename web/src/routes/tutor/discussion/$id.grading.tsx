@@ -36,9 +36,10 @@ function RouteComponent() {
       <div class="space-y-8">
         <div>
           <Breadcrumb
-            id={params().id}
-            path={['Grading', 'Discussion', currentAllocation()?.content.title ?? '']}
-            link={`/discussion/${params().id}/session?mode=preview`}
+            app="discussion"
+            id={params().id!}
+            title={currentAllocation()?.content.title ?? ''}
+            kind="grading"
           />
 
           <Show when={gradings.items.length > 0}>
@@ -72,7 +73,7 @@ function RouteComponent() {
                           </div>
                         </td>
                         <td>
-                          <div>
+                          <div class="text-sm space-y-1">
                             <div>
                               {t('Grading')}: {new Date(item.gradingDate.gradeDue).toLocaleDateString()}
                             </div>

@@ -40,8 +40,8 @@ from apps.common.util import (
     AccessDate,
     GradingDate,
     LearningSessionStep,
-    ModeChoices,
     OtpTokenDict,
+    RealmChoices,
     ScoreStatsDict,
     get_score_stats,
 )
@@ -223,7 +223,7 @@ class Attempt(AttemptMixin):
         max_attempts: int  # annotated
 
     @classmethod
-    async def start(cls, *, discussion_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
+    async def start(cls, *, discussion_id: str, learner_id: str, lock: datetime, context: str, realm: RealmChoices):
         discussion = await Discussion.objects.aget(id=discussion_id)
 
         if discussion.verification_required:
@@ -242,7 +242,7 @@ class Attempt(AttemptMixin):
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
                 question=question,
-                mode=mode,
+                realm=realm,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)
@@ -357,6 +357,10 @@ class Post(TimeStampedMixin, AttachmentMixin):
         post = await Post.objects.acreate(attempt=attempt, title=title, parent_id=parent_id, body=body)
         await post.update_attachments(files=files, owner_id=learner_id, content=post.body)
         post._state.fields_cache["attempt"] = attempt  # type: ignore
+
+        grade = await Grade.objects.select_related("attempt__question", "attempt__discussion").aget(attempt=attempt)
+        await grade.grade()
+
         post.post_count = await post.attempt.post_count()
         return post
 

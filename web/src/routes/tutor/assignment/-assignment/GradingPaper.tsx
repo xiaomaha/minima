@@ -31,8 +31,6 @@ export const GradingPaper = (props: Props) => {
 
   const [formState, { Form, Field, reset, getValue }] = createForm<Record<string, string | number>>({
     initialValues: {},
-    validateOn: 'input',
-    revalidateOn: 'input',
   })
 
   createEffect(() => {
@@ -41,7 +39,7 @@ export const GradingPaper = (props: Props) => {
     const flatFields = Object.entries(grading.data!.earnedDetails).reduce(
       (acc, [key, value]) => {
         acc.feedback[`feedback.${key}`] = grading.data!.feedback[key] ?? ''
-        acc.earnedDetails[key] = value ?? ''
+        acc.earnedDetails[key] = String(value) ?? ''
         return acc
       },
       { earnedDetails: {} as Record<string, string | number>, feedback: {} as Record<string, string> },
@@ -163,7 +161,7 @@ export const GradingPaper = (props: Props) => {
                                         type="radio"
                                         class="radio"
                                         value={level.point}
-                                        checked={Number(field.value) === Number(level.point)}
+                                        checked={String(field.value) === String(level.point)}
                                         classList={{ 'radio-error': !!field.error }}
                                       />
                                     </div>

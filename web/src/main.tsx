@@ -1,11 +1,12 @@
 import { createRouter, RouterProvider } from '@tanstack/solid-router'
 import { render } from 'solid-js/web'
 import { routeTree } from './routeTree.gen'
+import { UnKnown } from './shared/error/UnKnown'
 import './styles.css'
 import { client } from './api/client.gen'
 import { accessContextParam } from './context'
-import { getUserLanguage } from './routes/(app)/account/-store'
-import { handleApiError } from './shared/error'
+import { getUserLanguage } from './routes/account/-store'
+import { handleApiError } from './shared/error/error'
 
 const router = createRouter({
   routeTree,
@@ -14,8 +15,7 @@ const router = createRouter({
   defaultPreloadStaleTime: 0,
   defaultErrorComponent: ({ error }) => {
     console.error(error)
-    // TODO
-    return <div>Error: {error.stack}</div>
+    return <UnKnown error={error} />
   },
 })
 

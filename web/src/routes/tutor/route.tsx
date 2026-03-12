@@ -1,16 +1,22 @@
-import { createFileRoute, Outlet } from '@tanstack/solid-router'
+import { createFileRoute, notFound, Outlet } from '@tanstack/solid-router'
 import { tutorV1GetAllocation } from '@/api'
+import { NotFound } from '@/shared/error/NotFound'
 import { GoToTop } from '@/shared/GoToTop'
 import { NavbarLogo } from '@/shared/NavbarLogo'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { ThemeButton } from '@/shared/ThemeButton'
-import { AccountButton } from '../(app)/-shared/AccountButton'
-import { protectedRoute } from '../protected'
+import { protectedRoute } from '../-protected'
+import { AccountButton } from '../account/-account/AccountButton'
 import { AllocationProvider } from './-tutor/context'
 
 export const Route = createFileRoute('/tutor')({
-  beforeLoad: protectedRoute,
+  beforeLoad: () => {
+    protectedRoute()
+
+    if (location.hostname.split('.')[0] !== 'tutor') throw notFound()
+  },
   component: RouteComponent,
+  notFoundComponent: NotFound,
 })
 
 function RouteComponent() {

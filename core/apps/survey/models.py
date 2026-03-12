@@ -27,7 +27,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, LearningObjectMixin, OrderableMixin
-from apps.common.util import ModeChoices
+from apps.common.util import RealmChoices
 from apps.operation.models import AttachmentMixin
 
 User = get_user_model()
@@ -144,7 +144,7 @@ class Submission(AttemptMixin):
         survey_id: str,
         answers: dict[str, str],
         lock: datetime,
-        mode: ModeChoices,
+        realm: RealmChoices,
         respondent_id: str | None = None,
         context: str = "",
         anonymous: bool = False,
@@ -152,7 +152,7 @@ class Submission(AttemptMixin):
         survey = await Survey.objects.aget(id=survey_id)
 
         if survey.anonymous:
-            await Submission.objects.acreate(survey=survey, answers=answers, lock=lock, mode=mode)
+            await Submission.objects.acreate(survey=survey, answers=answers, lock=lock, realm=realm)
         else:
             if anonymous:
                 raise ValueError(ErrorCode.ANONYMOUS_NOT_ALLOWED)
@@ -162,5 +162,5 @@ class Submission(AttemptMixin):
                 survey=survey,
                 respondent_id=respondent_id,
                 context=context,
-                defaults={"answers": answers, "lock": lock, "active": True, "mode": mode},
+                defaults={"answers": answers, "lock": lock, "active": True, "realm": realm},
             )

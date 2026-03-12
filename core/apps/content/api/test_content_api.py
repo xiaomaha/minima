@@ -15,6 +15,11 @@ UNWATCH = "0"
 WATCH = "1"
 
 
+@pytest.fixture
+def client():
+    return Client(SERVER_NAME="student.testserver")
+
+
 @pytest.mark.e2e
 @pytest.mark.django_db
 def test_media_flow(client: Client, admin_user: AdminUser, mimesis: Generic):

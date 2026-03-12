@@ -1,8 +1,9 @@
 import { IconHelpCircle } from '@tabler/icons-solidjs'
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/solid-router'
 import { Show, Suspense } from 'solid-js'
+import * as v from 'valibot'
 import { type SurveySchema, surveyV1GetAnonymousSurvey, surveyV1GetSurvey } from '@/api'
-import { accountStore } from '@/routes/(app)/account/-store'
+import { accountStore } from '@/routes/account/-store'
 import { Avatar } from '@/shared/Avatar'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { createCachedStore } from '@/shared/solid/cached-store'
@@ -10,7 +11,12 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { WindowButton } from '@/shared/WindowButtion'
 import { SurveyForm } from './-SurveyForm'
 
+const searchSchema = v.object({
+  course: v.optional(v.pipe(v.string())),
+})
+
 export const Route = createFileRoute('/(public)/survey/$id')({
+  validateSearch: searchSchema,
   component: RouteComponent,
 })
 

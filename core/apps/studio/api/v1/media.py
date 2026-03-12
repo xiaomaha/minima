@@ -11,7 +11,7 @@ from ninja.params import functions
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest, ModeChoices
+from apps.common.util import HttpRequest, RealmChoices
 from apps.content.models import Media, Subtitle, Watch
 from apps.quiz.models import Quiz
 from apps.studio.decorator import editor_required, track_editing
@@ -119,7 +119,7 @@ async def save_media(
 @editor_required()
 @track_editing(Media, id_field="id")
 async def delete_media(request: HttpRequest, id: str):
-    if await Watch.objects.filter(media_id=id, mode=ModeChoices.NORMAL).aexists():
+    if await Watch.objects.filter(media_id=id, realm=RealmChoices.STUDENT).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Media.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 

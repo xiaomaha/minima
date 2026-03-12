@@ -1,13 +1,19 @@
-import { createFileRoute, Outlet } from '@tanstack/solid-router'
+import { createFileRoute, notFound, Outlet } from '@tanstack/solid-router'
+import { NotFound } from '@/shared/error/NotFound'
 import { GoToTop } from '@/shared/GoToTop'
 import { NavbarLogo } from '@/shared/NavbarLogo'
 import { ThemeButton } from '@/shared/ThemeButton'
-import { AccountButton } from '../(app)/-shared/AccountButton'
-import { protectedRoute } from '../protected'
+import { protectedRoute } from '../-protected'
+import { AccountButton } from '../account/-account/AccountButton'
 
 export const Route = createFileRoute('/studio')({
-  beforeLoad: protectedRoute,
+  beforeLoad: () => {
+    protectedRoute()
+
+    if (location.hostname.split('.')[0] !== 'studio') throw notFound()
+  },
   component: RouteComponent,
+  notFoundComponent: NotFound,
 })
 
 function RouteComponent() {

@@ -27,8 +27,6 @@ export const GradingPaper = (props: Props) => {
 
   const [formState, { Form, Field, reset, getValue }] = createForm<{ point: string | number; feedback: string }>({
     initialValues: { point: '', feedback: '' },
-    validateOn: 'input',
-    revalidateOn: 'input',
   })
 
   createEffect(() => {

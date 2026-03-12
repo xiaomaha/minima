@@ -32,7 +32,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.assistant.plugin.quiz import QuizMaker
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import AccessDate, LearningSessionStep, ModeChoices, ScoreStatsDict, get_score_stats
+from apps.common.util import AccessDate, LearningSessionStep, RealmChoices, ScoreStatsDict, get_score_stats
 from apps.operation.models import AttachmentMixin
 from apps.quiz.trigger import attempt_retry_count
 
@@ -260,7 +260,7 @@ class Attempt(AttemptMixin):
         _prefetched_objects_cache: dict[str, QuerySet[Question]]
 
     @classmethod
-    async def start(cls, *, quiz_id: str, learner_id: str, lock: datetime, context: str, mode: ModeChoices):
+    async def start(cls, *, quiz_id: str, learner_id: str, lock: datetime, context: str, realm: RealmChoices):
         quiz = await Quiz.objects.prefetch_related("question_pool__questions").aget(id=quiz_id)
         questions = await quiz.question_pool.select_questions()
         await aprefetch_related_objects(questions, "attachments")  # type: ignore
@@ -273,7 +273,7 @@ class Attempt(AttemptMixin):
                 context=context,
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
-                mode=mode,
+                realm=realm,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

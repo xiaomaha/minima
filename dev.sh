@@ -38,9 +38,9 @@ up)
 	echo "Elapsed: $((SECONDS - _start_time))s"
 	echo ""
 	echo "Admin:    http://localhost:8000/admin"
-	echo "Web:      http://localhost:5173"
-	echo "Studio:   http://localhost:5173/studio"
-	echo "Ttutor:   http://localhost:5173/tutor"
+	echo "Web:      http://student.localhost:5173"
+	echo "Studio:   http://studio.localhost:5173"
+	echo "Tutor:   http://tutor.localhost:5173"
 	echo ""
 	;;
 

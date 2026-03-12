@@ -22,7 +22,7 @@ from apps.content.api.schema import (
 )
 from apps.content.documents import get_search_suggestion
 from apps.content.models import Media, Note, Subtitle, Watch
-from apps.learning.api.access_control import access_date, access_mode, active_context
+from apps.learning.api.access_control import access_date, access_realm, active_context
 
 router = Router(by_alias=True)
 
@@ -57,14 +57,14 @@ async def delete_media_watch(request: HttpRequest, id: str):
 
 @router.post("/media/{id}/watch")
 @active_context()
-@access_mode()
+@access_realm()
 @access_date("content", "media")
 async def update_media_watch(request: HttpRequest, id: str, data: WatchInSchema):
     await Watch.update_media_watch(
         media_id=id,
         user_id=request.auth,
         context=request.active_context,
-        mode=request.access_mode,
+        realm=request.access_realm,
         last_position=data.last_position,
         watch_bits=data.watch_bits,
     )
@@ -81,6 +81,7 @@ async def get_media_note(request: HttpRequest, id: str):
 
 @router.post("/media/{id}/note", response=NoteSchema)
 @active_context()
+@access_realm()
 @access_date("content", "media")
 async def save_media_note(
     request: HttpRequest,
@@ -92,14 +93,19 @@ async def save_media_note(
     ],
 ):
     return await Note.upsert(
-        media_id=id, user_id=request.auth, context=request.active_context, note=data.note, files=files
+        media_id=id,
+        user_id=request.auth,
+        context=request.active_context,
+        realm=request.access_realm,
+        note=data.note,
+        files=files,
     )
 
 
 @router.get("/watch", response=list[WatchedMediaSchema])
 @paginate(Pagination)
-async def get_watch_medias(request: HttpRequest, start: date | None = None, end: date | None = None):
-    return await Watch.get_watched_medias(user_id=request.auth, start=start, end=end)
+async def get_watched_public_medias(request: HttpRequest, start: date | None = None, end: date | None = None):
+    return await Watch.get_watched_public_medias(user_id=request.auth, start=start, end=end)
 
 
 @router.get("/searchsuggestion", response=list[str])

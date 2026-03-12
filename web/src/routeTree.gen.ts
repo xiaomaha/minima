@@ -11,42 +11,42 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TutorRouteRouteImport } from './routes/tutor/route'
 import { Route as StudioRouteRouteImport } from './routes/studio/route'
+import { Route as StudentRouteRouteImport } from './routes/student/route'
+import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
-import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TutorIndexRouteImport } from './routes/tutor/index'
 import { Route as StudioIndexRouteImport } from './routes/studio/index'
+import { Route as AccountProfileRouteImport } from './routes/account/profile'
+import { Route as AccountLinkRouteImport } from './routes/account/link'
+import { Route as AccountGroupRouteImport } from './routes/account/group'
+import { Route as AccountEmailChangeRouteImport } from './routes/account/email-change'
+import { Route as AccountDeviceRouteImport } from './routes/account/device'
 import { Route as authPasswordChangeRouteImport } from './routes/(auth)/password-change'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authJoinRouteImport } from './routes/(auth)/join'
 import { Route as authActivateRouteImport } from './routes/(auth)/activate'
-import { Route as appDashboardRouteRouteImport } from './routes/(app)/dashboard/route'
-import { Route as appAccountRouteRouteImport } from './routes/(app)/account/route'
-import { Route as appDashboardIndexRouteImport } from './routes/(app)/dashboard/index'
+import { Route as StudentdashboardRouteRouteImport } from './routes/student/(dashboard)/route'
+import { Route as StudentdashboardIndexRouteImport } from './routes/student/(dashboard)/index'
 import { Route as StudioAppIdRouteImport } from './routes/studio/$app.$id'
+import { Route as StudentMediaIdRouteImport } from './routes/student/media/$id'
+import { Route as StudentdashboardSearchRouteImport } from './routes/student/(dashboard)/search'
+import { Route as StudentdashboardReportRouteImport } from './routes/student/(dashboard)/report'
+import { Route as StudentdashboardLearningRouteImport } from './routes/student/(dashboard)/learning'
+import { Route as StudentdashboardInquiryRouteImport } from './routes/student/(dashboard)/inquiry'
+import { Route as StudentdashboardGoalRouteImport } from './routes/student/(dashboard)/goal'
+import { Route as StudentdashboardCatalogRouteImport } from './routes/student/(dashboard)/catalog'
+import { Route as StudentdashboardAnnouncementRouteImport } from './routes/student/(dashboard)/announcement'
+import { Route as StudentdashboardAchievementRouteImport } from './routes/student/(dashboard)/achievement'
 import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
-import { Route as appMediaIdRouteImport } from './routes/(app)/media/$id'
-import { Route as appDashboardSearchRouteImport } from './routes/(app)/dashboard/search'
-import { Route as appDashboardReportRouteImport } from './routes/(app)/dashboard/report'
-import { Route as appDashboardLearningRouteImport } from './routes/(app)/dashboard/learning'
-import { Route as appDashboardInquiryRouteImport } from './routes/(app)/dashboard/inquiry'
-import { Route as appDashboardGoalRouteImport } from './routes/(app)/dashboard/goal'
-import { Route as appDashboardCatalogRouteImport } from './routes/(app)/dashboard/catalog'
-import { Route as appDashboardAnnouncementRouteImport } from './routes/(app)/dashboard/announcement'
-import { Route as appDashboardAchievementRouteImport } from './routes/(app)/dashboard/achievement'
-import { Route as appAccountProfileRouteImport } from './routes/(app)/account/profile'
-import { Route as appAccountLinkRouteImport } from './routes/(app)/account/link'
-import { Route as appAccountGroupRouteImport } from './routes/(app)/account/group'
-import { Route as appAccountEmailChangeRouteImport } from './routes/(app)/account/email-change'
-import { Route as appAccountDeviceRouteImport } from './routes/(app)/account/device'
 import { Route as TutorExamIdGradingRouteImport } from './routes/tutor/exam/$id.grading'
 import { Route as TutorDiscussionIdGradingRouteImport } from './routes/tutor/discussion/$id.grading'
 import { Route as TutorAssignmentIdGradingRouteImport } from './routes/tutor/assignment/$id.grading'
 import { Route as TutorAppIdAppealRouteImport } from './routes/tutor/$app.$id.appeal'
-import { Route as appExamIdSessionRouteImport } from './routes/(app)/exam/$id.session'
-import { Route as appDiscussionIdSessionRouteImport } from './routes/(app)/discussion/$id.session'
-import { Route as appCourseIdSessionRouteImport } from './routes/(app)/course/$id.session'
-import { Route as appAssignmentIdSessionRouteImport } from './routes/(app)/assignment/$id.session'
+import { Route as StudentExamIdSessionRouteImport } from './routes/student/exam/$id.session'
+import { Route as StudentDiscussionIdSessionRouteImport } from './routes/student/discussion/$id.session'
+import { Route as StudentCourseIdSessionRouteImport } from './routes/student/course/$id.session'
+import { Route as StudentAssignmentIdSessionRouteImport } from './routes/student/assignment/$id.session'
 
 const TutorRouteRoute = TutorRouteRouteImport.update({
   id: '/tutor',
@@ -58,12 +58,18 @@ const StudioRouteRoute = StudioRouteRouteImport.update({
   path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authRouteRoute = authRouteRouteImport.update({
-  id: '/(auth)',
+const StudentRouteRoute = StudentRouteRouteImport.update({
+  id: '/student',
+  path: '/student',
   getParentRoute: () => rootRouteImport,
 } as any)
-const appRouteRoute = appRouteRouteImport.update({
-  id: '/(app)',
+const AccountRouteRoute = AccountRouteRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -80,6 +86,31 @@ const StudioIndexRoute = StudioIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => StudioRouteRoute,
+} as any)
+const AccountProfileRoute = AccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountLinkRoute = AccountLinkRouteImport.update({
+  id: '/link',
+  path: '/link',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountGroupRoute = AccountGroupRouteImport.update({
+  id: '/group',
+  path: '/group',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountEmailChangeRoute = AccountEmailChangeRouteImport.update({
+  id: '/email-change',
+  path: '/email-change',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountDeviceRoute = AccountDeviceRouteImport.update({
+  id: '/device',
+  path: '/device',
+  getParentRoute: () => AccountRouteRoute,
 } as any)
 const authPasswordChangeRoute = authPasswordChangeRouteImport.update({
   id: '/password-change',
@@ -101,101 +132,72 @@ const authActivateRoute = authActivateRouteImport.update({
   path: '/activate',
   getParentRoute: () => authRouteRoute,
 } as any)
-const appDashboardRouteRoute = appDashboardRouteRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => appRouteRoute,
+const StudentdashboardRouteRoute = StudentdashboardRouteRouteImport.update({
+  id: '/(dashboard)',
+  getParentRoute: () => StudentRouteRoute,
 } as any)
-const appAccountRouteRoute = appAccountRouteRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => appRouteRoute,
-} as any)
-const appDashboardIndexRoute = appDashboardIndexRouteImport.update({
+const StudentdashboardIndexRoute = StudentdashboardIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => appDashboardRouteRoute,
+  getParentRoute: () => StudentdashboardRouteRoute,
 } as any)
 const StudioAppIdRoute = StudioAppIdRouteImport.update({
   id: '/$app/$id',
   path: '/$app/$id',
   getParentRoute: () => StudioRouteRoute,
 } as any)
+const StudentMediaIdRoute = StudentMediaIdRouteImport.update({
+  id: '/media/$id',
+  path: '/media/$id',
+  getParentRoute: () => StudentRouteRoute,
+} as any)
+const StudentdashboardSearchRoute = StudentdashboardSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => StudentdashboardRouteRoute,
+} as any)
+const StudentdashboardReportRoute = StudentdashboardReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => StudentdashboardRouteRoute,
+} as any)
+const StudentdashboardLearningRoute =
+  StudentdashboardLearningRouteImport.update({
+    id: '/learning',
+    path: '/learning',
+    getParentRoute: () => StudentdashboardRouteRoute,
+  } as any)
+const StudentdashboardInquiryRoute = StudentdashboardInquiryRouteImport.update({
+  id: '/inquiry',
+  path: '/inquiry',
+  getParentRoute: () => StudentdashboardRouteRoute,
+} as any)
+const StudentdashboardGoalRoute = StudentdashboardGoalRouteImport.update({
+  id: '/goal',
+  path: '/goal',
+  getParentRoute: () => StudentdashboardRouteRoute,
+} as any)
+const StudentdashboardCatalogRoute = StudentdashboardCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => StudentdashboardRouteRoute,
+} as any)
+const StudentdashboardAnnouncementRoute =
+  StudentdashboardAnnouncementRouteImport.update({
+    id: '/announcement',
+    path: '/announcement',
+    getParentRoute: () => StudentdashboardRouteRoute,
+  } as any)
+const StudentdashboardAchievementRoute =
+  StudentdashboardAchievementRouteImport.update({
+    id: '/achievement',
+    path: '/achievement',
+    getParentRoute: () => StudentdashboardRouteRoute,
+  } as any)
 const publicSurveyIdRoute = publicSurveyIdRouteImport.update({
   id: '/(public)/survey/$id',
   path: '/survey/$id',
   getParentRoute: () => rootRouteImport,
-} as any)
-const appMediaIdRoute = appMediaIdRouteImport.update({
-  id: '/media/$id',
-  path: '/media/$id',
-  getParentRoute: () => appRouteRoute,
-} as any)
-const appDashboardSearchRoute = appDashboardSearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appDashboardReportRoute = appDashboardReportRouteImport.update({
-  id: '/report',
-  path: '/report',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appDashboardLearningRoute = appDashboardLearningRouteImport.update({
-  id: '/learning',
-  path: '/learning',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appDashboardInquiryRoute = appDashboardInquiryRouteImport.update({
-  id: '/inquiry',
-  path: '/inquiry',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appDashboardGoalRoute = appDashboardGoalRouteImport.update({
-  id: '/goal',
-  path: '/goal',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appDashboardCatalogRoute = appDashboardCatalogRouteImport.update({
-  id: '/catalog',
-  path: '/catalog',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appDashboardAnnouncementRoute =
-  appDashboardAnnouncementRouteImport.update({
-    id: '/announcement',
-    path: '/announcement',
-    getParentRoute: () => appDashboardRouteRoute,
-  } as any)
-const appDashboardAchievementRoute = appDashboardAchievementRouteImport.update({
-  id: '/achievement',
-  path: '/achievement',
-  getParentRoute: () => appDashboardRouteRoute,
-} as any)
-const appAccountProfileRoute = appAccountProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => appAccountRouteRoute,
-} as any)
-const appAccountLinkRoute = appAccountLinkRouteImport.update({
-  id: '/link',
-  path: '/link',
-  getParentRoute: () => appAccountRouteRoute,
-} as any)
-const appAccountGroupRoute = appAccountGroupRouteImport.update({
-  id: '/group',
-  path: '/group',
-  getParentRoute: () => appAccountRouteRoute,
-} as any)
-const appAccountEmailChangeRoute = appAccountEmailChangeRouteImport.update({
-  id: '/email-change',
-  path: '/email-change',
-  getParentRoute: () => appAccountRouteRoute,
-} as any)
-const appAccountDeviceRoute = appAccountDeviceRouteImport.update({
-  id: '/device',
-  path: '/device',
-  getParentRoute: () => appAccountRouteRoute,
 } as any)
 const TutorExamIdGradingRoute = TutorExamIdGradingRouteImport.update({
   id: '/exam/$id/grading',
@@ -219,60 +221,62 @@ const TutorAppIdAppealRoute = TutorAppIdAppealRouteImport.update({
   path: '/$app/$id/appeal',
   getParentRoute: () => TutorRouteRoute,
 } as any)
-const appExamIdSessionRoute = appExamIdSessionRouteImport.update({
+const StudentExamIdSessionRoute = StudentExamIdSessionRouteImport.update({
   id: '/exam/$id/session',
   path: '/exam/$id/session',
-  getParentRoute: () => appRouteRoute,
+  getParentRoute: () => StudentRouteRoute,
 } as any)
-const appDiscussionIdSessionRoute = appDiscussionIdSessionRouteImport.update({
-  id: '/discussion/$id/session',
-  path: '/discussion/$id/session',
-  getParentRoute: () => appRouteRoute,
-} as any)
-const appCourseIdSessionRoute = appCourseIdSessionRouteImport.update({
+const StudentDiscussionIdSessionRoute =
+  StudentDiscussionIdSessionRouteImport.update({
+    id: '/discussion/$id/session',
+    path: '/discussion/$id/session',
+    getParentRoute: () => StudentRouteRoute,
+  } as any)
+const StudentCourseIdSessionRoute = StudentCourseIdSessionRouteImport.update({
   id: '/course/$id/session',
   path: '/course/$id/session',
-  getParentRoute: () => appRouteRoute,
+  getParentRoute: () => StudentRouteRoute,
 } as any)
-const appAssignmentIdSessionRoute = appAssignmentIdSessionRouteImport.update({
-  id: '/assignment/$id/session',
-  path: '/assignment/$id/session',
-  getParentRoute: () => appRouteRoute,
-} as any)
+const StudentAssignmentIdSessionRoute =
+  StudentAssignmentIdSessionRouteImport.update({
+    id: '/assignment/$id/session',
+    path: '/assignment/$id/session',
+    getParentRoute: () => StudentRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteRouteWithChildren
+  '/student': typeof StudentdashboardRouteRouteWithChildren
   '/studio': typeof StudioRouteRouteWithChildren
   '/tutor': typeof TutorRouteRouteWithChildren
-  '/account': typeof appAccountRouteRouteWithChildren
-  '/dashboard': typeof appDashboardRouteRouteWithChildren
   '/activate': typeof authActivateRoute
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
+  '/account/device': typeof AccountDeviceRoute
+  '/account/email-change': typeof AccountEmailChangeRoute
+  '/account/group': typeof AccountGroupRoute
+  '/account/link': typeof AccountLinkRoute
+  '/account/profile': typeof AccountProfileRoute
   '/studio/': typeof StudioIndexRoute
   '/tutor/': typeof TutorIndexRoute
-  '/account/device': typeof appAccountDeviceRoute
-  '/account/email-change': typeof appAccountEmailChangeRoute
-  '/account/group': typeof appAccountGroupRoute
-  '/account/link': typeof appAccountLinkRoute
-  '/account/profile': typeof appAccountProfileRoute
-  '/dashboard/achievement': typeof appDashboardAchievementRoute
-  '/dashboard/announcement': typeof appDashboardAnnouncementRoute
-  '/dashboard/catalog': typeof appDashboardCatalogRoute
-  '/dashboard/goal': typeof appDashboardGoalRoute
-  '/dashboard/inquiry': typeof appDashboardInquiryRoute
-  '/dashboard/learning': typeof appDashboardLearningRoute
-  '/dashboard/report': typeof appDashboardReportRoute
-  '/dashboard/search': typeof appDashboardSearchRoute
-  '/media/$id': typeof appMediaIdRoute
   '/survey/$id': typeof publicSurveyIdRoute
+  '/student/achievement': typeof StudentdashboardAchievementRoute
+  '/student/announcement': typeof StudentdashboardAnnouncementRoute
+  '/student/catalog': typeof StudentdashboardCatalogRoute
+  '/student/goal': typeof StudentdashboardGoalRoute
+  '/student/inquiry': typeof StudentdashboardInquiryRoute
+  '/student/learning': typeof StudentdashboardLearningRoute
+  '/student/report': typeof StudentdashboardReportRoute
+  '/student/search': typeof StudentdashboardSearchRoute
+  '/student/media/$id': typeof StudentMediaIdRoute
   '/studio/$app/$id': typeof StudioAppIdRoute
-  '/dashboard/': typeof appDashboardIndexRoute
-  '/assignment/$id/session': typeof appAssignmentIdSessionRoute
-  '/course/$id/session': typeof appCourseIdSessionRoute
-  '/discussion/$id/session': typeof appDiscussionIdSessionRoute
-  '/exam/$id/session': typeof appExamIdSessionRoute
+  '/student/': typeof StudentdashboardIndexRoute
+  '/student/assignment/$id/session': typeof StudentAssignmentIdSessionRoute
+  '/student/course/$id/session': typeof StudentCourseIdSessionRoute
+  '/student/discussion/$id/session': typeof StudentDiscussionIdSessionRoute
+  '/student/exam/$id/session': typeof StudentExamIdSessionRoute
   '/tutor/$app/$id/appeal': typeof TutorAppIdAppealRoute
   '/tutor/assignment/$id/grading': typeof TutorAssignmentIdGradingRoute
   '/tutor/discussion/$id/grading': typeof TutorDiscussionIdGradingRoute
@@ -280,34 +284,34 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof appAccountRouteRouteWithChildren
+  '/account': typeof AccountRouteRouteWithChildren
+  '/student': typeof StudentdashboardIndexRoute
   '/activate': typeof authActivateRoute
   '/join': typeof authJoinRoute
   '/login': typeof authLoginRoute
   '/password-change': typeof authPasswordChangeRoute
+  '/account/device': typeof AccountDeviceRoute
+  '/account/email-change': typeof AccountEmailChangeRoute
+  '/account/group': typeof AccountGroupRoute
+  '/account/link': typeof AccountLinkRoute
+  '/account/profile': typeof AccountProfileRoute
   '/studio': typeof StudioIndexRoute
   '/tutor': typeof TutorIndexRoute
-  '/account/device': typeof appAccountDeviceRoute
-  '/account/email-change': typeof appAccountEmailChangeRoute
-  '/account/group': typeof appAccountGroupRoute
-  '/account/link': typeof appAccountLinkRoute
-  '/account/profile': typeof appAccountProfileRoute
-  '/dashboard/achievement': typeof appDashboardAchievementRoute
-  '/dashboard/announcement': typeof appDashboardAnnouncementRoute
-  '/dashboard/catalog': typeof appDashboardCatalogRoute
-  '/dashboard/goal': typeof appDashboardGoalRoute
-  '/dashboard/inquiry': typeof appDashboardInquiryRoute
-  '/dashboard/learning': typeof appDashboardLearningRoute
-  '/dashboard/report': typeof appDashboardReportRoute
-  '/dashboard/search': typeof appDashboardSearchRoute
-  '/media/$id': typeof appMediaIdRoute
   '/survey/$id': typeof publicSurveyIdRoute
+  '/student/achievement': typeof StudentdashboardAchievementRoute
+  '/student/announcement': typeof StudentdashboardAnnouncementRoute
+  '/student/catalog': typeof StudentdashboardCatalogRoute
+  '/student/goal': typeof StudentdashboardGoalRoute
+  '/student/inquiry': typeof StudentdashboardInquiryRoute
+  '/student/learning': typeof StudentdashboardLearningRoute
+  '/student/report': typeof StudentdashboardReportRoute
+  '/student/search': typeof StudentdashboardSearchRoute
+  '/student/media/$id': typeof StudentMediaIdRoute
   '/studio/$app/$id': typeof StudioAppIdRoute
-  '/dashboard': typeof appDashboardIndexRoute
-  '/assignment/$id/session': typeof appAssignmentIdSessionRoute
-  '/course/$id/session': typeof appCourseIdSessionRoute
-  '/discussion/$id/session': typeof appDiscussionIdSessionRoute
-  '/exam/$id/session': typeof appExamIdSessionRoute
+  '/student/assignment/$id/session': typeof StudentAssignmentIdSessionRoute
+  '/student/course/$id/session': typeof StudentCourseIdSessionRoute
+  '/student/discussion/$id/session': typeof StudentDiscussionIdSessionRoute
+  '/student/exam/$id/session': typeof StudentExamIdSessionRoute
   '/tutor/$app/$id/appeal': typeof TutorAppIdAppealRoute
   '/tutor/assignment/$id/grading': typeof TutorAssignmentIdGradingRoute
   '/tutor/discussion/$id/grading': typeof TutorDiscussionIdGradingRoute
@@ -316,39 +320,39 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
+  '/account': typeof AccountRouteRouteWithChildren
+  '/student': typeof StudentRouteRouteWithChildren
   '/studio': typeof StudioRouteRouteWithChildren
   '/tutor': typeof TutorRouteRouteWithChildren
-  '/(app)/account': typeof appAccountRouteRouteWithChildren
-  '/(app)/dashboard': typeof appDashboardRouteRouteWithChildren
+  '/student/(dashboard)': typeof StudentdashboardRouteRouteWithChildren
   '/(auth)/activate': typeof authActivateRoute
   '/(auth)/join': typeof authJoinRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/password-change': typeof authPasswordChangeRoute
+  '/account/device': typeof AccountDeviceRoute
+  '/account/email-change': typeof AccountEmailChangeRoute
+  '/account/group': typeof AccountGroupRoute
+  '/account/link': typeof AccountLinkRoute
+  '/account/profile': typeof AccountProfileRoute
   '/studio/': typeof StudioIndexRoute
   '/tutor/': typeof TutorIndexRoute
-  '/(app)/account/device': typeof appAccountDeviceRoute
-  '/(app)/account/email-change': typeof appAccountEmailChangeRoute
-  '/(app)/account/group': typeof appAccountGroupRoute
-  '/(app)/account/link': typeof appAccountLinkRoute
-  '/(app)/account/profile': typeof appAccountProfileRoute
-  '/(app)/dashboard/achievement': typeof appDashboardAchievementRoute
-  '/(app)/dashboard/announcement': typeof appDashboardAnnouncementRoute
-  '/(app)/dashboard/catalog': typeof appDashboardCatalogRoute
-  '/(app)/dashboard/goal': typeof appDashboardGoalRoute
-  '/(app)/dashboard/inquiry': typeof appDashboardInquiryRoute
-  '/(app)/dashboard/learning': typeof appDashboardLearningRoute
-  '/(app)/dashboard/report': typeof appDashboardReportRoute
-  '/(app)/dashboard/search': typeof appDashboardSearchRoute
-  '/(app)/media/$id': typeof appMediaIdRoute
   '/(public)/survey/$id': typeof publicSurveyIdRoute
+  '/student/(dashboard)/achievement': typeof StudentdashboardAchievementRoute
+  '/student/(dashboard)/announcement': typeof StudentdashboardAnnouncementRoute
+  '/student/(dashboard)/catalog': typeof StudentdashboardCatalogRoute
+  '/student/(dashboard)/goal': typeof StudentdashboardGoalRoute
+  '/student/(dashboard)/inquiry': typeof StudentdashboardInquiryRoute
+  '/student/(dashboard)/learning': typeof StudentdashboardLearningRoute
+  '/student/(dashboard)/report': typeof StudentdashboardReportRoute
+  '/student/(dashboard)/search': typeof StudentdashboardSearchRoute
+  '/student/media/$id': typeof StudentMediaIdRoute
   '/studio/$app/$id': typeof StudioAppIdRoute
-  '/(app)/dashboard/': typeof appDashboardIndexRoute
-  '/(app)/assignment/$id/session': typeof appAssignmentIdSessionRoute
-  '/(app)/course/$id/session': typeof appCourseIdSessionRoute
-  '/(app)/discussion/$id/session': typeof appDiscussionIdSessionRoute
-  '/(app)/exam/$id/session': typeof appExamIdSessionRoute
+  '/student/(dashboard)/': typeof StudentdashboardIndexRoute
+  '/student/assignment/$id/session': typeof StudentAssignmentIdSessionRoute
+  '/student/course/$id/session': typeof StudentCourseIdSessionRoute
+  '/student/discussion/$id/session': typeof StudentDiscussionIdSessionRoute
+  '/student/exam/$id/session': typeof StudentExamIdSessionRoute
   '/tutor/$app/$id/appeal': typeof TutorAppIdAppealRoute
   '/tutor/assignment/$id/grading': typeof TutorAssignmentIdGradingRoute
   '/tutor/discussion/$id/grading': typeof TutorDiscussionIdGradingRoute
@@ -358,37 +362,37 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
+    | '/student'
     | '/studio'
     | '/tutor'
-    | '/account'
-    | '/dashboard'
     | '/activate'
     | '/join'
     | '/login'
     | '/password-change'
-    | '/studio/'
-    | '/tutor/'
     | '/account/device'
     | '/account/email-change'
     | '/account/group'
     | '/account/link'
     | '/account/profile'
-    | '/dashboard/achievement'
-    | '/dashboard/announcement'
-    | '/dashboard/catalog'
-    | '/dashboard/goal'
-    | '/dashboard/inquiry'
-    | '/dashboard/learning'
-    | '/dashboard/report'
-    | '/dashboard/search'
-    | '/media/$id'
+    | '/studio/'
+    | '/tutor/'
     | '/survey/$id'
+    | '/student/achievement'
+    | '/student/announcement'
+    | '/student/catalog'
+    | '/student/goal'
+    | '/student/inquiry'
+    | '/student/learning'
+    | '/student/report'
+    | '/student/search'
+    | '/student/media/$id'
     | '/studio/$app/$id'
-    | '/dashboard/'
-    | '/assignment/$id/session'
-    | '/course/$id/session'
-    | '/discussion/$id/session'
-    | '/exam/$id/session'
+    | '/student/'
+    | '/student/assignment/$id/session'
+    | '/student/course/$id/session'
+    | '/student/discussion/$id/session'
+    | '/student/exam/$id/session'
     | '/tutor/$app/$id/appeal'
     | '/tutor/assignment/$id/grading'
     | '/tutor/discussion/$id/grading'
@@ -397,33 +401,33 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/student'
     | '/activate'
     | '/join'
     | '/login'
     | '/password-change'
-    | '/studio'
-    | '/tutor'
     | '/account/device'
     | '/account/email-change'
     | '/account/group'
     | '/account/link'
     | '/account/profile'
-    | '/dashboard/achievement'
-    | '/dashboard/announcement'
-    | '/dashboard/catalog'
-    | '/dashboard/goal'
-    | '/dashboard/inquiry'
-    | '/dashboard/learning'
-    | '/dashboard/report'
-    | '/dashboard/search'
-    | '/media/$id'
+    | '/studio'
+    | '/tutor'
     | '/survey/$id'
+    | '/student/achievement'
+    | '/student/announcement'
+    | '/student/catalog'
+    | '/student/goal'
+    | '/student/inquiry'
+    | '/student/learning'
+    | '/student/report'
+    | '/student/search'
+    | '/student/media/$id'
     | '/studio/$app/$id'
-    | '/dashboard'
-    | '/assignment/$id/session'
-    | '/course/$id/session'
-    | '/discussion/$id/session'
-    | '/exam/$id/session'
+    | '/student/assignment/$id/session'
+    | '/student/course/$id/session'
+    | '/student/discussion/$id/session'
+    | '/student/exam/$id/session'
     | '/tutor/$app/$id/appeal'
     | '/tutor/assignment/$id/grading'
     | '/tutor/discussion/$id/grading'
@@ -431,39 +435,39 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/(app)'
     | '/(auth)'
+    | '/account'
+    | '/student'
     | '/studio'
     | '/tutor'
-    | '/(app)/account'
-    | '/(app)/dashboard'
+    | '/student/(dashboard)'
     | '/(auth)/activate'
     | '/(auth)/join'
     | '/(auth)/login'
     | '/(auth)/password-change'
+    | '/account/device'
+    | '/account/email-change'
+    | '/account/group'
+    | '/account/link'
+    | '/account/profile'
     | '/studio/'
     | '/tutor/'
-    | '/(app)/account/device'
-    | '/(app)/account/email-change'
-    | '/(app)/account/group'
-    | '/(app)/account/link'
-    | '/(app)/account/profile'
-    | '/(app)/dashboard/achievement'
-    | '/(app)/dashboard/announcement'
-    | '/(app)/dashboard/catalog'
-    | '/(app)/dashboard/goal'
-    | '/(app)/dashboard/inquiry'
-    | '/(app)/dashboard/learning'
-    | '/(app)/dashboard/report'
-    | '/(app)/dashboard/search'
-    | '/(app)/media/$id'
     | '/(public)/survey/$id'
+    | '/student/(dashboard)/achievement'
+    | '/student/(dashboard)/announcement'
+    | '/student/(dashboard)/catalog'
+    | '/student/(dashboard)/goal'
+    | '/student/(dashboard)/inquiry'
+    | '/student/(dashboard)/learning'
+    | '/student/(dashboard)/report'
+    | '/student/(dashboard)/search'
+    | '/student/media/$id'
     | '/studio/$app/$id'
-    | '/(app)/dashboard/'
-    | '/(app)/assignment/$id/session'
-    | '/(app)/course/$id/session'
-    | '/(app)/discussion/$id/session'
-    | '/(app)/exam/$id/session'
+    | '/student/(dashboard)/'
+    | '/student/assignment/$id/session'
+    | '/student/course/$id/session'
+    | '/student/discussion/$id/session'
+    | '/student/exam/$id/session'
     | '/tutor/$app/$id/appeal'
     | '/tutor/assignment/$id/grading'
     | '/tutor/discussion/$id/grading'
@@ -472,8 +476,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
+  AccountRouteRoute: typeof AccountRouteRouteWithChildren
+  StudentRouteRoute: typeof StudentRouteRouteWithChildren
   StudioRouteRoute: typeof StudioRouteRouteWithChildren
   TutorRouteRoute: typeof TutorRouteRouteWithChildren
   publicSurveyIdRoute: typeof publicSurveyIdRoute
@@ -495,18 +500,25 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof StudioRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student': {
+      id: '/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(app)': {
-      id: '/(app)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -529,6 +541,41 @@ declare module '@tanstack/solid-router' {
       fullPath: '/studio/'
       preLoaderRoute: typeof StudioIndexRouteImport
       parentRoute: typeof StudioRouteRoute
+    }
+    '/account/profile': {
+      id: '/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AccountProfileRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/link': {
+      id: '/account/link'
+      path: '/link'
+      fullPath: '/account/link'
+      preLoaderRoute: typeof AccountLinkRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/group': {
+      id: '/account/group'
+      path: '/group'
+      fullPath: '/account/group'
+      preLoaderRoute: typeof AccountGroupRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/email-change': {
+      id: '/account/email-change'
+      path: '/email-change'
+      fullPath: '/account/email-change'
+      preLoaderRoute: typeof AccountEmailChangeRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/device': {
+      id: '/account/device'
+      path: '/device'
+      fullPath: '/account/device'
+      preLoaderRoute: typeof AccountDeviceRouteImport
+      parentRoute: typeof AccountRouteRoute
     }
     '/(auth)/password-change': {
       id: '/(auth)/password-change'
@@ -558,26 +605,19 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof authActivateRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(app)/dashboard': {
-      id: '/(app)/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof appDashboardRouteRouteImport
-      parentRoute: typeof appRouteRoute
+    '/student/(dashboard)': {
+      id: '/student/(dashboard)'
+      path: ''
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentdashboardRouteRouteImport
+      parentRoute: typeof StudentRouteRoute
     }
-    '/(app)/account': {
-      id: '/(app)/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof appAccountRouteRouteImport
-      parentRoute: typeof appRouteRoute
-    }
-    '/(app)/dashboard/': {
-      id: '/(app)/dashboard/'
+    '/student/(dashboard)/': {
+      id: '/student/(dashboard)/'
       path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof appDashboardIndexRouteImport
-      parentRoute: typeof appDashboardRouteRoute
+      fullPath: '/student/'
+      preLoaderRoute: typeof StudentdashboardIndexRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
     }
     '/studio/$app/$id': {
       id: '/studio/$app/$id'
@@ -586,110 +626,75 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof StudioAppIdRouteImport
       parentRoute: typeof StudioRouteRoute
     }
+    '/student/media/$id': {
+      id: '/student/media/$id'
+      path: '/media/$id'
+      fullPath: '/student/media/$id'
+      preLoaderRoute: typeof StudentMediaIdRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
+    '/student/(dashboard)/search': {
+      id: '/student/(dashboard)/search'
+      path: '/search'
+      fullPath: '/student/search'
+      preLoaderRoute: typeof StudentdashboardSearchRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/report': {
+      id: '/student/(dashboard)/report'
+      path: '/report'
+      fullPath: '/student/report'
+      preLoaderRoute: typeof StudentdashboardReportRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/learning': {
+      id: '/student/(dashboard)/learning'
+      path: '/learning'
+      fullPath: '/student/learning'
+      preLoaderRoute: typeof StudentdashboardLearningRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/inquiry': {
+      id: '/student/(dashboard)/inquiry'
+      path: '/inquiry'
+      fullPath: '/student/inquiry'
+      preLoaderRoute: typeof StudentdashboardInquiryRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/goal': {
+      id: '/student/(dashboard)/goal'
+      path: '/goal'
+      fullPath: '/student/goal'
+      preLoaderRoute: typeof StudentdashboardGoalRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/catalog': {
+      id: '/student/(dashboard)/catalog'
+      path: '/catalog'
+      fullPath: '/student/catalog'
+      preLoaderRoute: typeof StudentdashboardCatalogRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/announcement': {
+      id: '/student/(dashboard)/announcement'
+      path: '/announcement'
+      fullPath: '/student/announcement'
+      preLoaderRoute: typeof StudentdashboardAnnouncementRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
+    '/student/(dashboard)/achievement': {
+      id: '/student/(dashboard)/achievement'
+      path: '/achievement'
+      fullPath: '/student/achievement'
+      preLoaderRoute: typeof StudentdashboardAchievementRouteImport
+      parentRoute: typeof StudentdashboardRouteRoute
+    }
     '/(public)/survey/$id': {
       id: '/(public)/survey/$id'
       path: '/survey/$id'
       fullPath: '/survey/$id'
       preLoaderRoute: typeof publicSurveyIdRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/(app)/media/$id': {
-      id: '/(app)/media/$id'
-      path: '/media/$id'
-      fullPath: '/media/$id'
-      preLoaderRoute: typeof appMediaIdRouteImport
-      parentRoute: typeof appRouteRoute
-    }
-    '/(app)/dashboard/search': {
-      id: '/(app)/dashboard/search'
-      path: '/search'
-      fullPath: '/dashboard/search'
-      preLoaderRoute: typeof appDashboardSearchRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/report': {
-      id: '/(app)/dashboard/report'
-      path: '/report'
-      fullPath: '/dashboard/report'
-      preLoaderRoute: typeof appDashboardReportRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/learning': {
-      id: '/(app)/dashboard/learning'
-      path: '/learning'
-      fullPath: '/dashboard/learning'
-      preLoaderRoute: typeof appDashboardLearningRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/inquiry': {
-      id: '/(app)/dashboard/inquiry'
-      path: '/inquiry'
-      fullPath: '/dashboard/inquiry'
-      preLoaderRoute: typeof appDashboardInquiryRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/goal': {
-      id: '/(app)/dashboard/goal'
-      path: '/goal'
-      fullPath: '/dashboard/goal'
-      preLoaderRoute: typeof appDashboardGoalRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/catalog': {
-      id: '/(app)/dashboard/catalog'
-      path: '/catalog'
-      fullPath: '/dashboard/catalog'
-      preLoaderRoute: typeof appDashboardCatalogRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/announcement': {
-      id: '/(app)/dashboard/announcement'
-      path: '/announcement'
-      fullPath: '/dashboard/announcement'
-      preLoaderRoute: typeof appDashboardAnnouncementRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/dashboard/achievement': {
-      id: '/(app)/dashboard/achievement'
-      path: '/achievement'
-      fullPath: '/dashboard/achievement'
-      preLoaderRoute: typeof appDashboardAchievementRouteImport
-      parentRoute: typeof appDashboardRouteRoute
-    }
-    '/(app)/account/profile': {
-      id: '/(app)/account/profile'
-      path: '/profile'
-      fullPath: '/account/profile'
-      preLoaderRoute: typeof appAccountProfileRouteImport
-      parentRoute: typeof appAccountRouteRoute
-    }
-    '/(app)/account/link': {
-      id: '/(app)/account/link'
-      path: '/link'
-      fullPath: '/account/link'
-      preLoaderRoute: typeof appAccountLinkRouteImport
-      parentRoute: typeof appAccountRouteRoute
-    }
-    '/(app)/account/group': {
-      id: '/(app)/account/group'
-      path: '/group'
-      fullPath: '/account/group'
-      preLoaderRoute: typeof appAccountGroupRouteImport
-      parentRoute: typeof appAccountRouteRoute
-    }
-    '/(app)/account/email-change': {
-      id: '/(app)/account/email-change'
-      path: '/email-change'
-      fullPath: '/account/email-change'
-      preLoaderRoute: typeof appAccountEmailChangeRouteImport
-      parentRoute: typeof appAccountRouteRoute
-    }
-    '/(app)/account/device': {
-      id: '/(app)/account/device'
-      path: '/device'
-      fullPath: '/account/device'
-      preLoaderRoute: typeof appAccountDeviceRouteImport
-      parentRoute: typeof appAccountRouteRoute
     }
     '/tutor/exam/$id/grading': {
       id: '/tutor/exam/$id/grading'
@@ -719,107 +724,36 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof TutorAppIdAppealRouteImport
       parentRoute: typeof TutorRouteRoute
     }
-    '/(app)/exam/$id/session': {
-      id: '/(app)/exam/$id/session'
+    '/student/exam/$id/session': {
+      id: '/student/exam/$id/session'
       path: '/exam/$id/session'
-      fullPath: '/exam/$id/session'
-      preLoaderRoute: typeof appExamIdSessionRouteImport
-      parentRoute: typeof appRouteRoute
+      fullPath: '/student/exam/$id/session'
+      preLoaderRoute: typeof StudentExamIdSessionRouteImport
+      parentRoute: typeof StudentRouteRoute
     }
-    '/(app)/discussion/$id/session': {
-      id: '/(app)/discussion/$id/session'
+    '/student/discussion/$id/session': {
+      id: '/student/discussion/$id/session'
       path: '/discussion/$id/session'
-      fullPath: '/discussion/$id/session'
-      preLoaderRoute: typeof appDiscussionIdSessionRouteImport
-      parentRoute: typeof appRouteRoute
+      fullPath: '/student/discussion/$id/session'
+      preLoaderRoute: typeof StudentDiscussionIdSessionRouteImport
+      parentRoute: typeof StudentRouteRoute
     }
-    '/(app)/course/$id/session': {
-      id: '/(app)/course/$id/session'
+    '/student/course/$id/session': {
+      id: '/student/course/$id/session'
       path: '/course/$id/session'
-      fullPath: '/course/$id/session'
-      preLoaderRoute: typeof appCourseIdSessionRouteImport
-      parentRoute: typeof appRouteRoute
+      fullPath: '/student/course/$id/session'
+      preLoaderRoute: typeof StudentCourseIdSessionRouteImport
+      parentRoute: typeof StudentRouteRoute
     }
-    '/(app)/assignment/$id/session': {
-      id: '/(app)/assignment/$id/session'
+    '/student/assignment/$id/session': {
+      id: '/student/assignment/$id/session'
       path: '/assignment/$id/session'
-      fullPath: '/assignment/$id/session'
-      preLoaderRoute: typeof appAssignmentIdSessionRouteImport
-      parentRoute: typeof appRouteRoute
+      fullPath: '/student/assignment/$id/session'
+      preLoaderRoute: typeof StudentAssignmentIdSessionRouteImport
+      parentRoute: typeof StudentRouteRoute
     }
   }
 }
-
-interface appAccountRouteRouteChildren {
-  appAccountDeviceRoute: typeof appAccountDeviceRoute
-  appAccountEmailChangeRoute: typeof appAccountEmailChangeRoute
-  appAccountGroupRoute: typeof appAccountGroupRoute
-  appAccountLinkRoute: typeof appAccountLinkRoute
-  appAccountProfileRoute: typeof appAccountProfileRoute
-}
-
-const appAccountRouteRouteChildren: appAccountRouteRouteChildren = {
-  appAccountDeviceRoute: appAccountDeviceRoute,
-  appAccountEmailChangeRoute: appAccountEmailChangeRoute,
-  appAccountGroupRoute: appAccountGroupRoute,
-  appAccountLinkRoute: appAccountLinkRoute,
-  appAccountProfileRoute: appAccountProfileRoute,
-}
-
-const appAccountRouteRouteWithChildren = appAccountRouteRoute._addFileChildren(
-  appAccountRouteRouteChildren,
-)
-
-interface appDashboardRouteRouteChildren {
-  appDashboardAchievementRoute: typeof appDashboardAchievementRoute
-  appDashboardAnnouncementRoute: typeof appDashboardAnnouncementRoute
-  appDashboardCatalogRoute: typeof appDashboardCatalogRoute
-  appDashboardGoalRoute: typeof appDashboardGoalRoute
-  appDashboardInquiryRoute: typeof appDashboardInquiryRoute
-  appDashboardLearningRoute: typeof appDashboardLearningRoute
-  appDashboardReportRoute: typeof appDashboardReportRoute
-  appDashboardSearchRoute: typeof appDashboardSearchRoute
-  appDashboardIndexRoute: typeof appDashboardIndexRoute
-}
-
-const appDashboardRouteRouteChildren: appDashboardRouteRouteChildren = {
-  appDashboardAchievementRoute: appDashboardAchievementRoute,
-  appDashboardAnnouncementRoute: appDashboardAnnouncementRoute,
-  appDashboardCatalogRoute: appDashboardCatalogRoute,
-  appDashboardGoalRoute: appDashboardGoalRoute,
-  appDashboardInquiryRoute: appDashboardInquiryRoute,
-  appDashboardLearningRoute: appDashboardLearningRoute,
-  appDashboardReportRoute: appDashboardReportRoute,
-  appDashboardSearchRoute: appDashboardSearchRoute,
-  appDashboardIndexRoute: appDashboardIndexRoute,
-}
-
-const appDashboardRouteRouteWithChildren =
-  appDashboardRouteRoute._addFileChildren(appDashboardRouteRouteChildren)
-
-interface appRouteRouteChildren {
-  appAccountRouteRoute: typeof appAccountRouteRouteWithChildren
-  appDashboardRouteRoute: typeof appDashboardRouteRouteWithChildren
-  appMediaIdRoute: typeof appMediaIdRoute
-  appAssignmentIdSessionRoute: typeof appAssignmentIdSessionRoute
-  appCourseIdSessionRoute: typeof appCourseIdSessionRoute
-  appDiscussionIdSessionRoute: typeof appDiscussionIdSessionRoute
-  appExamIdSessionRoute: typeof appExamIdSessionRoute
-}
-
-const appRouteRouteChildren: appRouteRouteChildren = {
-  appAccountRouteRoute: appAccountRouteRouteWithChildren,
-  appDashboardRouteRoute: appDashboardRouteRouteWithChildren,
-  appMediaIdRoute: appMediaIdRoute,
-  appAssignmentIdSessionRoute: appAssignmentIdSessionRoute,
-  appCourseIdSessionRoute: appCourseIdSessionRoute,
-  appDiscussionIdSessionRoute: appDiscussionIdSessionRoute,
-  appExamIdSessionRoute: appExamIdSessionRoute,
-}
-
-const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
-  appRouteRouteChildren,
-)
 
 interface authRouteRouteChildren {
   authActivateRoute: typeof authActivateRoute
@@ -837,6 +771,77 @@ const authRouteRouteChildren: authRouteRouteChildren = {
 
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
+)
+
+interface AccountRouteRouteChildren {
+  AccountDeviceRoute: typeof AccountDeviceRoute
+  AccountEmailChangeRoute: typeof AccountEmailChangeRoute
+  AccountGroupRoute: typeof AccountGroupRoute
+  AccountLinkRoute: typeof AccountLinkRoute
+  AccountProfileRoute: typeof AccountProfileRoute
+}
+
+const AccountRouteRouteChildren: AccountRouteRouteChildren = {
+  AccountDeviceRoute: AccountDeviceRoute,
+  AccountEmailChangeRoute: AccountEmailChangeRoute,
+  AccountGroupRoute: AccountGroupRoute,
+  AccountLinkRoute: AccountLinkRoute,
+  AccountProfileRoute: AccountProfileRoute,
+}
+
+const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
+  AccountRouteRouteChildren,
+)
+
+interface StudentdashboardRouteRouteChildren {
+  StudentdashboardAchievementRoute: typeof StudentdashboardAchievementRoute
+  StudentdashboardAnnouncementRoute: typeof StudentdashboardAnnouncementRoute
+  StudentdashboardCatalogRoute: typeof StudentdashboardCatalogRoute
+  StudentdashboardGoalRoute: typeof StudentdashboardGoalRoute
+  StudentdashboardInquiryRoute: typeof StudentdashboardInquiryRoute
+  StudentdashboardLearningRoute: typeof StudentdashboardLearningRoute
+  StudentdashboardReportRoute: typeof StudentdashboardReportRoute
+  StudentdashboardSearchRoute: typeof StudentdashboardSearchRoute
+  StudentdashboardIndexRoute: typeof StudentdashboardIndexRoute
+}
+
+const StudentdashboardRouteRouteChildren: StudentdashboardRouteRouteChildren = {
+  StudentdashboardAchievementRoute: StudentdashboardAchievementRoute,
+  StudentdashboardAnnouncementRoute: StudentdashboardAnnouncementRoute,
+  StudentdashboardCatalogRoute: StudentdashboardCatalogRoute,
+  StudentdashboardGoalRoute: StudentdashboardGoalRoute,
+  StudentdashboardInquiryRoute: StudentdashboardInquiryRoute,
+  StudentdashboardLearningRoute: StudentdashboardLearningRoute,
+  StudentdashboardReportRoute: StudentdashboardReportRoute,
+  StudentdashboardSearchRoute: StudentdashboardSearchRoute,
+  StudentdashboardIndexRoute: StudentdashboardIndexRoute,
+}
+
+const StudentdashboardRouteRouteWithChildren =
+  StudentdashboardRouteRoute._addFileChildren(
+    StudentdashboardRouteRouteChildren,
+  )
+
+interface StudentRouteRouteChildren {
+  StudentdashboardRouteRoute: typeof StudentdashboardRouteRouteWithChildren
+  StudentMediaIdRoute: typeof StudentMediaIdRoute
+  StudentAssignmentIdSessionRoute: typeof StudentAssignmentIdSessionRoute
+  StudentCourseIdSessionRoute: typeof StudentCourseIdSessionRoute
+  StudentDiscussionIdSessionRoute: typeof StudentDiscussionIdSessionRoute
+  StudentExamIdSessionRoute: typeof StudentExamIdSessionRoute
+}
+
+const StudentRouteRouteChildren: StudentRouteRouteChildren = {
+  StudentdashboardRouteRoute: StudentdashboardRouteRouteWithChildren,
+  StudentMediaIdRoute: StudentMediaIdRoute,
+  StudentAssignmentIdSessionRoute: StudentAssignmentIdSessionRoute,
+  StudentCourseIdSessionRoute: StudentCourseIdSessionRoute,
+  StudentDiscussionIdSessionRoute: StudentDiscussionIdSessionRoute,
+  StudentExamIdSessionRoute: StudentExamIdSessionRoute,
+}
+
+const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
+  StudentRouteRouteChildren,
 )
 
 interface StudioRouteRouteChildren {
@@ -875,8 +880,9 @@ const TutorRouteRouteWithChildren = TutorRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
+  AccountRouteRoute: AccountRouteRouteWithChildren,
+  StudentRouteRoute: StudentRouteRouteWithChildren,
   StudioRouteRoute: StudioRouteRouteWithChildren,
   TutorRouteRoute: TutorRouteRouteWithChildren,
   publicSurveyIdRoute: publicSurveyIdRoute,

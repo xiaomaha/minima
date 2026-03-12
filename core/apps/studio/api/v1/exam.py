@@ -17,7 +17,7 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest, ModeChoices
+from apps.common.util import HttpRequest, RealmChoices
 from apps.exam.models import Attempt, Exam, Question, QuestionPool, Solution
 from apps.studio.decorator import editor_required, track_editing
 
@@ -152,7 +152,7 @@ async def save_exam(
 @editor_required()
 @track_editing(Exam, id_field="id")
 async def delete_exam(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(exam_id=id, mode=ModeChoices.NORMAL).aexists():
+    if await Attempt.objects.filter(exam_id=id, realm=RealmChoices.STUDENT).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Exam.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -225,7 +225,7 @@ async def save_exam_questions(
 @track_editing(Exam, id_field="id")
 async def delete_exam_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        exam_id=id, questions=question_id, exam__owner_id=request.auth, mode=ModeChoices.NORMAL
+        exam_id=id, questions=question_id, exam__owner_id=request.auth, realm=RealmChoices.STUDENT
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 

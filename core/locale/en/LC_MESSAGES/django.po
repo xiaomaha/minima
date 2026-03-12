@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-09 19:06+0900\n"
+"POT-Creation-Date: 2026-03-12 02:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -206,8 +206,8 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: apps/account/models.py:114 apps/assignment/models.py:533
-#: apps/assignment/models.py:551 apps/assignment/models.py:570
+#: apps/account/models.py:114 apps/assignment/models.py:523
+#: apps/assignment/models.py:541 apps/assignment/models.py:560
 #: apps/competency/certificate.py:274 apps/competency/models.py:61
 #: apps/competency/models.py:102 apps/competency/models.py:122
 #: apps/competency/models.py:140 apps/competency/models.py:170
@@ -251,9 +251,9 @@ msgstr ""
 #: apps/common/models.py:154 apps/competency/models.py:173
 #: apps/competency/models.py:241 apps/learning/models.py:80
 #: apps/learning/models.py:335 apps/operation/models.py:176
-#: apps/operation/models.py:224 apps/operation/models.py:619
-#: apps/operation/models.py:638 apps/store/models.py:107
-#: apps/store/models.py:148 apps/tutor/models.py:38
+#: apps/operation/models.py:224 apps/operation/models.py:621
+#: apps/operation/models.py:640 apps/store/models.py:107
+#: apps/store/models.py:148 apps/tutor/models.py:42
 msgid "Active"
 msgstr ""
 
@@ -269,10 +269,10 @@ msgstr ""
 #: apps/account/models.py:560 apps/account/models.py:583
 #: apps/assistant/models.py:27 apps/assistant/models.py:40
 #: apps/competency/models.py:139 apps/content/models.py:308
-#: apps/content/models.py:476 apps/learning/models.py:79
+#: apps/content/models.py:482 apps/learning/models.py:79
 #: apps/learning/models.py:497 apps/operation/models.py:159
-#: apps/operation/models.py:544 apps/operation/models.py:615
-#: apps/operation/models.py:731 apps/partner/admin.py:56
+#: apps/operation/models.py:546 apps/operation/models.py:617
+#: apps/operation/models.py:733 apps/partner/admin.py:56
 #: apps/partner/models.py:96 apps/partner/models.py:211 apps/sso/models.py:29
 #: apps/sso/models.py:49 apps/store/models.py:147
 msgid "User"
@@ -313,7 +313,7 @@ msgid "Temporary Passwords"
 msgstr ""
 
 #: apps/account/models.py:561 apps/account/models.py:567
-#: apps/account/models.py:573 apps/operation/models.py:616
+#: apps/account/models.py:573 apps/operation/models.py:618
 msgid "Token"
 msgstr ""
 
@@ -403,7 +403,7 @@ msgstr ""
 #: apps/course/templates/course/mail/grade_completed_email.html:50
 #: apps/course/templates/course/mail/start_today_email.html:52
 #: apps/course/templates/course/mail/weekly_progress_email.html:51
-#: apps/operation/models.py:630
+#: apps/operation/models.py:632
 msgid "Privacy Policy"
 msgstr ""
 
@@ -417,7 +417,7 @@ msgstr ""
 #: apps/course/templates/course/mail/grade_completed_email.html:51
 #: apps/course/templates/course/mail/start_today_email.html:53
 #: apps/course/templates/course/mail/weekly_progress_email.html:52
-#: apps/operation/models.py:629
+#: apps/operation/models.py:631
 msgid "Terms of Service"
 msgstr ""
 
@@ -447,25 +447,25 @@ msgstr ""
 msgid "Grading Histories"
 msgstr ""
 
-#: apps/assignment/admin.py:148 apps/assignment/models.py:436
+#: apps/assignment/admin.py:148 apps/assignment/models.py:425
 #: apps/course/admin.py:132 apps/course/admin.py:149
 #: apps/discussion/admin.py:103 apps/discussion/models.py:435
 #: apps/exam/admin.py:133 apps/exam/models.py:412 apps/quiz/models.py:361
 msgid "Grade"
 msgstr ""
 
-#: apps/assignment/admin.py:166 apps/common/models.py:164
+#: apps/assignment/admin.py:166 apps/common/models.py:166
 #: apps/discussion/admin.py:122 apps/exam/admin.py:152
 msgid "Earned Details"
 msgstr ""
 
-#: apps/assignment/admin.py:171 apps/common/models.py:169
+#: apps/assignment/admin.py:171 apps/common/models.py:171
 #: apps/discussion/admin.py:132 apps/exam/admin.py:157
 msgid "Feedback"
 msgstr ""
 
 #: apps/assignment/apps.py:8 apps/assignment/models.py:131
-#: apps/assignment/models.py:268 apps/warehouse/models.py:144
+#: apps/assignment/models.py:265 apps/warehouse/models.py:144
 #: apps/warehouse/views.py:53
 msgid "Assignment"
 msgstr ""
@@ -475,18 +475,18 @@ msgstr ""
 #: apps/discussion/models.py:79 apps/discussion/models.py:326
 #: apps/exam/models.py:76 apps/operation/models.py:128
 #: apps/operation/models.py:192 apps/operation/models.py:376
-#: apps/operation/models.py:545 apps/operation/models.py:636
-#: apps/operation/models.py:758 apps/quiz/models.py:72 apps/survey/models.py:38
+#: apps/operation/models.py:547 apps/operation/models.py:638
+#: apps/operation/models.py:760 apps/quiz/models.py:72 apps/survey/models.py:38
 msgid "Title"
 msgstr ""
 
-#: apps/assignment/models.py:82 apps/assignment/models.py:534
-#: apps/assignment/models.py:552 apps/assignment/models.py:571
+#: apps/assignment/models.py:82 apps/assignment/models.py:524
+#: apps/assignment/models.py:542 apps/assignment/models.py:561
 #: apps/common/models.py:122 apps/competency/models.py:141
 #: apps/competency/models.py:171 apps/competency/models.py:237
 #: apps/course/models.py:92 apps/discussion/models.py:80 apps/exam/models.py:77
 #: apps/learning/models.py:333 apps/operation/models.py:206
-#: apps/operation/models.py:637 apps/operation/models.py:759
+#: apps/operation/models.py:639 apps/operation/models.py:761
 #: apps/partner/models.py:44 apps/partner/models.py:67
 #: apps/partner/models.py:177 apps/quiz/models.py:73 apps/store/models.py:56
 #: apps/store/models.py:103 apps/survey/models.py:39
@@ -517,7 +517,7 @@ msgid "Question Pools"
 msgstr ""
 
 #: apps/assignment/models.py:107 apps/assignment/models.py:114
-#: apps/assignment/models.py:270 apps/discussion/models.py:114
+#: apps/assignment/models.py:267 apps/discussion/models.py:114
 #: apps/discussion/models.py:204 apps/exam/admin.py:76 apps/exam/models.py:112
 #: apps/exam/models.py:118 apps/exam/models.py:135 apps/operation/admin.py:131
 #: apps/operation/models.py:222 apps/operation/models.py:377
@@ -556,8 +556,8 @@ msgstr ""
 msgid "Honor Code"
 msgstr ""
 
-#: apps/assignment/models.py:127 apps/assignment/models.py:537
-#: apps/assignment/models.py:550
+#: apps/assignment/models.py:127 apps/assignment/models.py:527
+#: apps/assignment/models.py:540
 msgid "Rubric"
 msgstr ""
 
@@ -569,19 +569,19 @@ msgstr ""
 msgid "Assignments"
 msgstr ""
 
-#: apps/assignment/models.py:269 apps/course/models.py:572
+#: apps/assignment/models.py:266 apps/course/models.py:572
 #: apps/discussion/models.py:203 apps/exam/models.py:257
 #: apps/operation/models.py:478 apps/quiz/models.py:242
 msgid "Learner"
 msgstr ""
 
-#: apps/assignment/models.py:271 apps/discussion/models.py:205
+#: apps/assignment/models.py:268 apps/discussion/models.py:205
 #: apps/exam/models.py:259 apps/quiz/models.py:244
 msgid "Retry"
 msgstr ""
 
-#: apps/assignment/models.py:274 apps/assignment/models.py:399
-#: apps/assignment/models.py:432 apps/assignment/models.py:496
+#: apps/assignment/models.py:271 apps/assignment/models.py:388
+#: apps/assignment/models.py:421 apps/assignment/models.py:486
 #: apps/discussion/models.py:208 apps/discussion/models.py:324
 #: apps/discussion/models.py:431 apps/exam/models.py:262
 #: apps/exam/models.py:382 apps/exam/models.py:392 apps/exam/models.py:408
@@ -589,114 +589,114 @@ msgstr ""
 msgid "Attempt"
 msgstr ""
 
-#: apps/assignment/models.py:275 apps/discussion/models.py:209
+#: apps/assignment/models.py:272 apps/discussion/models.py:209
 #: apps/exam/models.py:263 apps/quiz/models.py:248
 msgid "Attempts"
 msgstr ""
 
-#: apps/assignment/models.py:400 apps/operation/models.py:223
+#: apps/assignment/models.py:389 apps/operation/models.py:223
 #: apps/operation/models.py:450
 msgid "Answer"
 msgstr ""
 
-#: apps/assignment/models.py:401
+#: apps/assignment/models.py:390
 msgid "Extracted Text"
 msgstr ""
 
-#: apps/assignment/models.py:404 apps/exam/models.py:396
+#: apps/assignment/models.py:393 apps/exam/models.py:396
 #: apps/quiz/models.py:352 apps/survey/models.py:125
 msgid "Submission"
 msgstr ""
 
-#: apps/assignment/models.py:405 apps/exam/models.py:397
+#: apps/assignment/models.py:394 apps/exam/models.py:397
 #: apps/quiz/models.py:353 apps/survey/models.py:126
 msgid "Submissions"
 msgstr ""
 
-#: apps/assignment/models.py:433 apps/course/models.py:779
+#: apps/assignment/models.py:422 apps/course/models.py:779
 #: apps/discussion/models.py:432 apps/exam/models.py:409
 msgid "Grader"
 msgstr ""
 
-#: apps/assignment/models.py:437 apps/discussion/models.py:436
+#: apps/assignment/models.py:426 apps/discussion/models.py:436
 #: apps/exam/models.py:413 apps/quiz/models.py:362
 msgid "Grades"
 msgstr ""
 
-#: apps/assignment/models.py:491
+#: apps/assignment/models.py:481
 msgid "Not Detected"
 msgstr ""
 
-#: apps/assignment/models.py:492
+#: apps/assignment/models.py:482
 msgid "Detected"
 msgstr ""
 
-#: apps/assignment/models.py:493
+#: apps/assignment/models.py:483
 msgid "Excused"
 msgstr ""
 
-#: apps/assignment/models.py:494
+#: apps/assignment/models.py:484
 msgid "Not Resolved"
 msgstr ""
 
-#: apps/assignment/models.py:497 apps/store/models.py:54
+#: apps/assignment/models.py:487 apps/store/models.py:54
 #: apps/store/models.py:184 apps/store/models.py:361 apps/store/models.py:381
 msgid "Status"
 msgstr ""
 
-#: apps/assignment/models.py:498
+#: apps/assignment/models.py:488
 msgid "Similarity Percentage"
 msgstr ""
 
-#: apps/assignment/models.py:499
+#: apps/assignment/models.py:489
 msgid "Flagged Text"
 msgstr ""
 
-#: apps/assignment/models.py:500
+#: apps/assignment/models.py:490
 msgid "Source Text"
 msgstr ""
 
-#: apps/assignment/models.py:501
+#: apps/assignment/models.py:491
 msgid "Source User ID"
 msgstr ""
 
-#: apps/assignment/models.py:502 apps/store/models.py:385
+#: apps/assignment/models.py:492 apps/store/models.py:385
 msgid "Reason"
 msgstr ""
 
-#: apps/assignment/models.py:505
+#: apps/assignment/models.py:495
 msgid "Plagiarism Check"
 msgstr ""
 
-#: apps/assignment/models.py:506
+#: apps/assignment/models.py:496
 msgid "Plagiarism Checks"
 msgstr ""
 
-#: apps/assignment/models.py:538
+#: apps/assignment/models.py:528
 msgid "Rubrics"
 msgstr ""
 
-#: apps/assignment/models.py:555
+#: apps/assignment/models.py:545
 msgid "Rubric Criterion"
 msgstr ""
 
-#: apps/assignment/models.py:556
+#: apps/assignment/models.py:546
 msgid "Rubric Criteria"
 msgstr ""
 
-#: apps/assignment/models.py:569
+#: apps/assignment/models.py:559
 msgid "Criterion"
 msgstr ""
 
-#: apps/assignment/models.py:572 apps/exam/models.py:115 apps/quiz/models.py:98
+#: apps/assignment/models.py:562 apps/exam/models.py:115 apps/quiz/models.py:98
 msgid "Point"
 msgstr ""
 
-#: apps/assignment/models.py:575
+#: apps/assignment/models.py:565
 msgid "Performance Level"
 msgstr ""
 
-#: apps/assignment/models.py:576
+#: apps/assignment/models.py:566
 msgid "Performance Levels"
 msgstr ""
 
@@ -709,8 +709,8 @@ msgstr ""
 msgid "AI Assistant"
 msgstr ""
 
-#: apps/assistant/models.py:28 apps/content/models.py:478
-#: apps/content/models.py:483 apps/course/models.py:778
+#: apps/assistant/models.py:28 apps/content/models.py:484
+#: apps/content/models.py:492 apps/course/models.py:778
 #: apps/learning/models.py:500 apps/learning/models.py:528
 msgid "Note"
 msgstr ""
@@ -739,8 +739,8 @@ msgstr ""
 msgid "Chats"
 msgstr ""
 
-#: apps/assistant/models.py:64 apps/operation/models.py:551
-#: apps/operation/models.py:567 apps/warehouse/models.py:111
+#: apps/assistant/models.py:64 apps/operation/models.py:553
+#: apps/operation/models.py:569 apps/warehouse/models.py:111
 msgid "Message"
 msgstr ""
 
@@ -749,11 +749,11 @@ msgid "Response"
 msgstr ""
 
 #: apps/assistant/models.py:66 apps/operation/models.py:382
-#: apps/operation/models.py:481 apps/operation/models.py:768
+#: apps/operation/models.py:482 apps/operation/models.py:770
 msgid "Path"
 msgstr ""
 
-#: apps/assistant/models.py:67 apps/common/models.py:170
+#: apps/assistant/models.py:67 apps/common/models.py:172
 #: apps/store/models.py:357 apps/store/models.py:378
 msgid "Completed"
 msgstr ""
@@ -762,7 +762,7 @@ msgstr ""
 msgid "Bookmarked"
 msgstr ""
 
-#: apps/assistant/models.py:69 apps/operation/models.py:789
+#: apps/assistant/models.py:69 apps/operation/models.py:791
 msgid "Rating"
 msgstr ""
 
@@ -819,7 +819,7 @@ msgid "ordering_group must be defined in subclass"
 msgstr ""
 
 #: apps/common/models.py:112 apps/operation/models.py:240
-#: apps/operation/models.py:788
+#: apps/operation/models.py:790
 msgid "Deleted"
 msgstr ""
 
@@ -871,48 +871,49 @@ msgid "Lock"
 msgstr ""
 
 #: apps/common/models.py:155 apps/content/models.py:314
-#: apps/content/models.py:479
+#: apps/content/models.py:485
 msgid "Context Key"
 msgstr ""
 
-#: apps/common/models.py:156 apps/content/models.py:315
-msgid "Mode"
+#: apps/common/models.py:157 apps/content/models.py:316
+#: apps/content/models.py:487
+msgid "Realm"
 msgstr ""
 
-#: apps/common/models.py:165
+#: apps/common/models.py:167
 msgid "Possible Point"
 msgstr ""
 
-#: apps/common/models.py:166
+#: apps/common/models.py:168
 msgid "Earned Point"
 msgstr ""
 
-#: apps/common/models.py:167 apps/course/models.py:774
+#: apps/common/models.py:169 apps/course/models.py:774
 msgid "Score"
 msgstr ""
 
-#: apps/common/models.py:168 apps/content/models.py:313
+#: apps/common/models.py:170 apps/content/models.py:313
 #: apps/course/models.py:776
 msgid "Passed"
 msgstr ""
 
-#: apps/common/models.py:171 apps/course/models.py:777
+#: apps/common/models.py:173 apps/course/models.py:777
 msgid "Confirmed"
 msgstr ""
 
-#: apps/common/models.py:178
+#: apps/common/models.py:180
 msgid "Cannot confirm without completion"
 msgstr ""
 
-#: apps/common/models.py:183
+#: apps/common/models.py:185
 msgid "Grading Due Days"
 msgstr ""
 
-#: apps/common/models.py:184
+#: apps/common/models.py:186
 msgid "Appeal Deadline Days"
 msgstr ""
 
-#: apps/common/models.py:185
+#: apps/common/models.py:187
 msgid "Confirm Due Days"
 msgstr ""
 
@@ -1315,12 +1316,16 @@ msgstr ""
 msgid "Please correct the errors below."
 msgstr ""
 
-#: apps/common/util.py:101
-msgid "Preview"
+#: apps/common/util.py:100
+msgid "Student"
 msgstr ""
 
-#: apps/common/util.py:102
-msgid "Audit"
+#: apps/common/util.py:101
+msgid "Studio"
+msgstr ""
+
+#: apps/common/util.py:102 apps/tutor/apps.py:8 apps/tutor/models.py:41
+msgid "Tutor"
 msgstr ""
 
 #: apps/competency/apps.py:8 apps/warehouse/views.py:44
@@ -1509,7 +1514,7 @@ msgstr ""
 msgid "PDF"
 msgstr ""
 
-#: apps/competency/models.py:299 apps/operation/models.py:548
+#: apps/competency/models.py:299 apps/operation/models.py:550
 #: apps/tracking/models.py:29
 msgid "Data"
 msgstr ""
@@ -1521,7 +1526,7 @@ msgstr ""
 
 #: apps/competency/models.py:305 apps/learning/models.py:91
 #: apps/learning/models.py:474 apps/operation/models.py:380
-#: apps/studio/models.py:21 apps/tutor/models.py:42
+#: apps/studio/models.py:21 apps/tutor/models.py:46
 msgid "Content ID"
 msgstr ""
 
@@ -1649,7 +1654,7 @@ msgstr ""
 
 #: apps/content/models.py:92 apps/content/models.py:226
 #: apps/content/models.py:238 apps/content/models.py:255
-#: apps/content/models.py:309 apps/content/models.py:477
+#: apps/content/models.py:309 apps/content/models.py:483
 #: apps/course/models.py:381 apps/warehouse/models.py:125
 msgid "Media"
 msgstr ""
@@ -1687,8 +1692,8 @@ msgid "Public Access Medias"
 msgstr ""
 
 #: apps/content/models.py:257 apps/discussion/models.py:327
-#: apps/operation/models.py:129 apps/operation/models.py:546
-#: apps/operation/models.py:698
+#: apps/operation/models.py:129 apps/operation/models.py:548
+#: apps/operation/models.py:700
 msgid "Body"
 msgstr ""
 
@@ -1716,15 +1721,15 @@ msgstr ""
 msgid "Watch Rate"
 msgstr ""
 
-#: apps/content/models.py:319 apps/warehouse/models.py:127
+#: apps/content/models.py:321 apps/warehouse/models.py:127
 msgid "Watch"
 msgstr ""
 
-#: apps/content/models.py:320
+#: apps/content/models.py:322
 msgid "Watches"
 msgstr ""
 
-#: apps/content/models.py:484
+#: apps/content/models.py:493
 msgid "Notes"
 msgstr ""
 
@@ -2342,7 +2347,7 @@ msgstr ""
 msgid "Discussions"
 msgstr ""
 
-#: apps/discussion/models.py:325 apps/operation/models.py:785
+#: apps/discussion/models.py:325 apps/operation/models.py:787
 msgid "Parent"
 msgstr ""
 
@@ -2586,7 +2591,7 @@ msgstr ""
 msgid "Tagged Items"
 msgstr ""
 
-#: apps/operation/models.py:131 apps/operation/models.py:787
+#: apps/operation/models.py:131 apps/operation/models.py:789
 msgid "Pinned"
 msgstr ""
 
@@ -2598,7 +2603,7 @@ msgstr ""
 msgid "Announcements"
 msgstr ""
 
-#: apps/operation/models.py:161 apps/operation/models.py:568
+#: apps/operation/models.py:161 apps/operation/models.py:570
 msgid "Read at"
 msgstr ""
 
@@ -2647,7 +2652,7 @@ msgid "Attachment"
 msgstr ""
 
 #: apps/operation/models.py:378 apps/operation/models.py:451
-#: apps/operation/models.py:790
+#: apps/operation/models.py:792
 msgid "Writer"
 msgstr ""
 
@@ -2672,154 +2677,158 @@ msgstr ""
 msgid "Review"
 msgstr ""
 
-#: apps/operation/models.py:484
-msgid "Question Type"
+#: apps/operation/models.py:481
+msgid "Reviewer"
 msgstr ""
 
 #: apps/operation/models.py:485
+msgid "Question Type"
+msgstr ""
+
+#: apps/operation/models.py:486
 msgid "Question ID"
 msgstr ""
 
-#: apps/operation/models.py:489
+#: apps/operation/models.py:490
 msgid "Grade Appeal"
 msgstr ""
 
-#: apps/operation/models.py:490
+#: apps/operation/models.py:491
 msgid "Grade Appeals"
 msgstr ""
 
-#: apps/operation/models.py:547 apps/partner/models.py:71
+#: apps/operation/models.py:549 apps/partner/models.py:71
 #: apps/partner/models.py:85
 msgid "Group"
 msgstr ""
 
-#: apps/operation/models.py:552
+#: apps/operation/models.py:554
 msgid "Messages"
 msgstr ""
 
-#: apps/operation/models.py:571
+#: apps/operation/models.py:573
 msgid "Message Read"
 msgstr ""
 
-#: apps/operation/models.py:572
+#: apps/operation/models.py:574
 msgid "Message Reads"
 msgstr ""
 
-#: apps/operation/models.py:617
+#: apps/operation/models.py:619
 msgid "Platform"
 msgstr ""
 
-#: apps/operation/models.py:618
+#: apps/operation/models.py:620
 msgid "Device Name"
 msgstr ""
 
-#: apps/operation/models.py:631
+#: apps/operation/models.py:633
 msgid "Cookie Policy"
 msgstr ""
 
-#: apps/operation/models.py:632
+#: apps/operation/models.py:634
 msgid "Marketing Policy"
 msgstr ""
 
-#: apps/operation/models.py:633
+#: apps/operation/models.py:635
 msgid "Data Retention Policy"
 msgstr ""
 
-#: apps/operation/models.py:635 apps/store/models.py:100
+#: apps/operation/models.py:637 apps/store/models.py:100
 #: apps/tracking/admin.py:35
 msgid "Kind"
 msgstr ""
 
-#: apps/operation/models.py:639 apps/survey/models.py:63
+#: apps/operation/models.py:641 apps/survey/models.py:63
 msgid "Mandatory"
 msgstr ""
 
-#: apps/operation/models.py:640
+#: apps/operation/models.py:642
 msgid "Priority"
 msgstr ""
 
-#: apps/operation/models.py:643 apps/operation/models.py:697
+#: apps/operation/models.py:645 apps/operation/models.py:699
 msgid "Policy"
 msgstr ""
 
-#: apps/operation/models.py:644
+#: apps/operation/models.py:646
 msgid "Policies"
 msgstr ""
 
-#: apps/operation/models.py:699
+#: apps/operation/models.py:701
 msgid "Data Category"
 msgstr ""
 
-#: apps/operation/models.py:700
+#: apps/operation/models.py:702
 msgid "Version"
 msgstr ""
 
-#: apps/operation/models.py:701
+#: apps/operation/models.py:703
 msgid "Effective Date"
 msgstr ""
 
-#: apps/operation/models.py:704 apps/operation/models.py:732
+#: apps/operation/models.py:706 apps/operation/models.py:734
 msgid "Policy Version"
 msgstr ""
 
-#: apps/operation/models.py:705
+#: apps/operation/models.py:707
 msgid "Policy Versions"
 msgstr ""
 
-#: apps/operation/models.py:733
+#: apps/operation/models.py:735
 msgid "Accepted"
 msgstr ""
 
-#: apps/operation/models.py:736
+#: apps/operation/models.py:738
 msgid "Policy Agreement"
 msgstr ""
 
-#: apps/operation/models.py:737
+#: apps/operation/models.py:739
 msgid "Policy Agreements"
 msgstr ""
 
-#: apps/operation/models.py:760
+#: apps/operation/models.py:762
 msgid "Subject Type"
 msgstr ""
 
-#: apps/operation/models.py:761
+#: apps/operation/models.py:763
 msgid "Subject ID"
 msgstr ""
 
-#: apps/operation/models.py:763
+#: apps/operation/models.py:765
 msgid "Comment Count"
 msgstr ""
 
-#: apps/operation/models.py:764
+#: apps/operation/models.py:766
 msgid "Rating Count"
 msgstr ""
 
-#: apps/operation/models.py:765
+#: apps/operation/models.py:767
 msgid "Rating Sum"
 msgstr ""
 
-#: apps/operation/models.py:766
+#: apps/operation/models.py:768
 msgid "Rating Average"
 msgstr ""
 
-#: apps/operation/models.py:767
+#: apps/operation/models.py:769
 msgid "Closed"
 msgstr ""
 
-#: apps/operation/models.py:771 apps/operation/models.py:784
+#: apps/operation/models.py:773 apps/operation/models.py:786
 msgid "Thread"
 msgstr ""
 
-#: apps/operation/models.py:772
+#: apps/operation/models.py:774
 msgid "Threads"
 msgstr ""
 
-#: apps/operation/models.py:786 apps/operation/models.py:793
+#: apps/operation/models.py:788 apps/operation/models.py:795
 #: apps/warehouse/models.py:112
 msgid "Comment"
 msgstr ""
 
-#: apps/operation/models.py:794
+#: apps/operation/models.py:796
 msgid "Comments"
 msgstr ""
 
@@ -3248,7 +3257,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: apps/studio/models.py:20 apps/tutor/models.py:41
+#: apps/studio/models.py:20 apps/tutor/models.py:45
 msgid "Content type"
 msgstr ""
 
@@ -3364,15 +3373,11 @@ msgstr ""
 msgid "Allocation Histories"
 msgstr ""
 
-#: apps/tutor/apps.py:8 apps/tutor/models.py:37
-msgid "Tutor"
-msgstr ""
-
-#: apps/tutor/models.py:46
+#: apps/tutor/models.py:50
 msgid "Tutor Allocation"
 msgstr ""
 
-#: apps/tutor/models.py:47
+#: apps/tutor/models.py:51
 msgid "Tutor Allocations"
 msgstr ""
 
