@@ -47,7 +47,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div class="mx-auto max-w-lg py-4 mt-14">
+      <div class="mx-auto max-w-lg py-4 mt-14 w-full">
         <div class="flex items-center gap-4 justify-center mb-8">
           <MainMenu menu={tabs()} active={(path) => location().pathname.startsWith(path)} />
         </div>

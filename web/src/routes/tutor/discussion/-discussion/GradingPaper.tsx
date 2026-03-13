@@ -72,7 +72,7 @@ export const GradingPaper = (props: Props) => {
   return (
     <Show when={grading.data}>
       <Form onSubmit={saveGrade}>
-        <div class="text-let m-8 p-8 bg-base-100 rounded space-y-8">
+        <div class="text-left m-8 p-8 bg-base-100 rounded space-y-8">
           <Question question={grading.data!.question} />
 
           <div class="divider" />
