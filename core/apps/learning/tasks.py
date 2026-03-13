@@ -46,25 +46,28 @@ def cleanup_testing_data():
                 SELECT ct.id, a.question_id, a.learner_id
                 FROM {assignment_attempt_table} a
                 CROSS JOIN (SELECT id FROM django_content_type WHERE app_label='assignment' AND model='question') ct
-                WHERE a.realm IN %s AND a.started <= %s
-
+                WHERE a.realm = ANY(%s) AND a.started <= %s
                 UNION
-
                 SELECT ct.id, a.question_id, a.learner_id
                 FROM {discussion_attempt_table} a
                 CROSS JOIN (SELECT id FROM django_content_type WHERE app_label='discussion' AND model='question') ct
-                WHERE a.realm IN %s AND a.started <= %s
-
+                WHERE a.realm = ANY(%s) AND a.started <= %s
                 UNION
-
                 SELECT ct.id, eq.question_id, a.learner_id
                 FROM {exam_attempt_table} a
                 JOIN {exam_attempt_questions_table} eq ON eq.attempt_id = a.id
                 CROSS JOIN (SELECT id FROM django_content_type WHERE app_label='exam' AND model='question') ct
-                WHERE a.realm IN %s AND a.started <= %s
+                WHERE a.realm = ANY(%s) AND a.started <= %s
             )
         """,
-            [non_student_realms, threshold, non_student_realms, threshold, non_student_realms, threshold],
+            [
+                list(non_student_realms),
+                threshold,
+                list(non_student_realms),
+                threshold,
+                list(non_student_realms),
+                threshold,
+            ],
         )
         deleted[Appeal._meta.model.__name__.lower()] = cursor.rowcount
 

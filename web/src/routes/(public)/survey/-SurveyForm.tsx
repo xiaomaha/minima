@@ -97,15 +97,16 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
 
                     if (question.format === 'single_choice') {
                       const questionId = String(question.id)
-                      const selectionData = results.data?.[questionId] ?? {}
-                      const totalSubmissions = Object.values(selectionData).reduce((sum, count) => sum + count, 0)
+                      const selectionData = () => results.data?.[questionId] ?? {}
+                      const totalSubmissions = () =>
+                        Object.values(selectionData()).reduce((sum, count) => sum + count, 0)
 
-                      const selectionRates =
-                        totalSubmissions > 0
+                      const selectionRates = () =>
+                        totalSubmissions() > 0
                           ? Object.fromEntries(
-                              Object.entries(selectionData).map(([option, count]) => [
+                              Object.entries(selectionData()).map(([option, count]) => [
                                 option,
-                                Math.round((count / totalSubmissions) * 100),
+                                Math.round((count / totalSubmissions()) * 100),
                               ]),
                             )
                           : {}
@@ -127,12 +128,12 @@ export const SurveyForm = (props: { survey: SurveySchema }) => {
                                   <span class="text-base-content/70">{option}</span>
                                 </label>
 
-                                <Show when={totalSubmissions > 0}>
+                                <Show when={totalSubmissions() > 0}>
                                   <div class="flex flex-col items-end gap-1">
-                                    <span class="text-xs label">{selectionRates[String(j() + 1)] ?? 0}%</span>
+                                    <span class="text-xs label">{selectionRates()[String(j() + 1)] ?? 0}%</span>
                                     <progress
                                       class="progress progress-accent w-24"
-                                      value={selectionRates[String(j() + 1)] ?? 0}
+                                      value={selectionRates()[String(j() + 1)] ?? 0}
                                       max="100"
                                     ></progress>
                                   </div>
