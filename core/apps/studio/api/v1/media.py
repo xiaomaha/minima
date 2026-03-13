@@ -102,7 +102,11 @@ async def save_media(
             quiz_ids = None
 
     else:
-        media = await Media.objects.acreate(**media_dict, owner_id=request.auth)
+        try:
+            media = await Media.objects.acreate(**media_dict, owner_id=request.auth)
+        except IntegrityError:
+            raise ValueError(ErrorCode.URL_ALREADY_EXISTS)
+
         if not quiz_ids:
             quiz_ids = None
 

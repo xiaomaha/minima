@@ -106,7 +106,7 @@ class Survey(LearningObjectMixin):
         from apps.survey.documents import SubmissionDocument
 
         qs = cls.objects.filter(anonymous=True) if anonymous else cls.objects.all()
-        qs = qs.annotate(question_ids=ArrayAgg("question_pool"))
+        qs = qs.annotate(question_ids=ArrayAgg("question_pool__questions"))
         survey = await qs.aget(id=id)
 
         if not survey.show_results:
