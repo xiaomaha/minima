@@ -11,9 +11,9 @@ from pydantic import RootModel
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest, RealmChoices
+from apps.common.util import HttpRequest
 from apps.quiz.models import Attempt, Question, QuestionPool, Quiz, Solution
-from apps.studio.decorator import editor_required, track_editing
+from apps.studio.decorator import track_editing
 
 
 class QuizQuestionSaveSpec(Schema):
@@ -75,7 +75,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/quiz/{id}", response=QuizSpec)
-@editor_required()
 async def get_quiz(request: HttpRequest, id: str):
     return (
         await Quiz.objects
@@ -91,7 +90,6 @@ async def get_quiz(request: HttpRequest, id: str):
 
 
 @router.post("/quiz", response=str)
-@editor_required()
 @track_editing(Quiz)
 async def save_quiz(
     request: HttpRequest,
@@ -132,16 +130,14 @@ async def save_quiz(
 
 
 @router.delete("/quiz/{id}")
-@editor_required()
 @track_editing(Quiz, id_field="id")
 async def delete_quiz(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(quiz_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Attempt.objects.filter(quiz_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Quiz.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/quiz/{id}/question", response=list[QuizQuestionSpec])
-@editor_required()
 async def get_quiz_questions(request: HttpRequest, id: str):
     return [
         q
@@ -153,7 +149,6 @@ async def get_quiz_questions(request: HttpRequest, id: str):
 
 
 @router.post("/quiz/{id}/question", response=list[int])
-@editor_required()
 @track_editing(Quiz, id_field="id")
 async def save_quiz_questions(
     request: HttpRequest,
@@ -204,12 +199,9 @@ async def save_quiz_questions(
 
 
 @router.delete("/quiz/{id}/question/{question_id}")
-@editor_required()
 @track_editing(Quiz, id_field="id")
 async def delete_quiz_quesion(request: HttpRequest, id: str, question_id: int):
-    if await Attempt.objects.filter(
-        quiz_id=id, questions=question_id, quiz__owner_id=request.auth, realm=RealmChoices.STUDENT
-    ).aexists():
+    if await Attempt.objects.filter(quiz_id=id, questions=question_id, quiz__owner_id=request.auth).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
     count, _ = await Question.objects.filter(id=question_id, pool__quiz__id=id).adelete()

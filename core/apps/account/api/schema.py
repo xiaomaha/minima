@@ -35,6 +35,7 @@ class UserSchema(TimeStampedMixinSchema):
     token_expires: datetime | None
     agreement_required: bool | None
     roles: list[str]
+    realms: list[str]
 
     @staticmethod
     def resolve_phone(obj):

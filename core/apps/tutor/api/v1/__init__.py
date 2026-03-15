@@ -11,7 +11,6 @@ from apps.operation.api.schema import AppealSchema
 from apps.tutor.api.v1.assignment import router as assignment_router
 from apps.tutor.api.v1.discussion import router as discussion_router
 from apps.tutor.api.v1.exam import router as exam_router
-from apps.tutor.decorator import tutor_required
 from apps.tutor.models import Allocation
 
 router = Router(by_alias=True)
@@ -43,7 +42,6 @@ class AllocationSchema(Schema):
 
 
 @router.get("/allocation", response=PaginatedResponse[AllocationSchema])
-@tutor_required()
 async def get_allocation(
     request: HttpRequest,
     page: Annotated[int, functions.Query(1, ge=1)],
@@ -62,7 +60,6 @@ class AllocationStatsSchema(Schema):
 
 
 @router.get("/allocation/stats", response=AllocationStatsSchema)
-@tutor_required()
 async def get_allocation_stats(request: HttpRequest):
     return await Allocation.get_stats(tutor_id=request.auth)
 
@@ -76,7 +73,6 @@ class GradeAppealSchema(AppealSchema):
 
 
 @router.get("/{app_label}/{model}/{id}/appeal", response=PaginatedResponse[GradeAppealSchema])
-@tutor_required()
 async def get_appeals(
     request: HttpRequest,
     app_label: AppealAppLabel,
@@ -95,7 +91,6 @@ class AppealReviewSchema(Schema):
 
 
 @router.post("/appeal/{id}")
-@tutor_required()
 async def review_appeal(request: HttpRequest, id: int, review: AppealReviewSchema):
     await Allocation.review_appeal(tutor_id=request.auth, appeal_id=id, review=review.review, reviewer_id=request.auth)
 

@@ -11,10 +11,10 @@ from ninja.params import functions
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest, RealmChoices
+from apps.common.util import HttpRequest
 from apps.content.models import Media, Subtitle, Watch
 from apps.quiz.models import Quiz
-from apps.studio.decorator import editor_required, track_editing
+from apps.studio.decorator import track_editing
 
 
 class SubtitleSpec(Schema):
@@ -59,7 +59,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/media/{id}", response=MediaSpec)
-@editor_required()
 async def get_media(request: HttpRequest, id: str):
     return (
         await Media.objects
@@ -70,7 +69,6 @@ async def get_media(request: HttpRequest, id: str):
 
 
 @router.post("/media", response=str)
-@editor_required()
 @track_editing(Media)
 async def save_media(
     request: HttpRequest,
@@ -120,16 +118,14 @@ async def save_media(
 
 
 @router.delete("/media/{id}")
-@editor_required()
 @track_editing(Media, id_field="id")
 async def delete_media(request: HttpRequest, id: str):
-    if await Watch.objects.filter(media_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Watch.objects.filter(media_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Media.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.post("/media/{id}/subtitle")
-@editor_required()
 @track_editing(Media, id_field="id")
 async def save_media_subtitle(request, id: str, data: SubtitleSpec):
     media = await aget_object_or_404(Media, id=id, owner_id=request.auth)
@@ -137,7 +133,6 @@ async def save_media_subtitle(request, id: str, data: SubtitleSpec):
 
 
 @router.delete("/media/{id}/subtitle/{lang}")
-@editor_required()
 @track_editing(Media, id_field="id")
 async def delete_media_subtitle(request: HttpRequest, id: str, lang: str):
     count, _ = await Subtitle.objects.filter(lang=lang, media_id=id, media__owner_id=request.auth).adelete()
@@ -146,7 +141,6 @@ async def delete_media_subtitle(request: HttpRequest, id: str, lang: str):
 
 
 @router.post("/media/{id}/subtitle/{lang}/quiz", response=str)
-@editor_required()
 @track_editing(Media, id_field="id")
 async def create_media_quiz(request, id: str, lang: str):
     media = await aget_object_or_404(Media, id=id, owner_id=request.auth)

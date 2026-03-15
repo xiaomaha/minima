@@ -39,15 +39,7 @@ from apps.account.models import OtpLog
 from apps.assignment.trigger import attempt_retry_count
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import (
-    AccessDate,
-    GradingDate,
-    LearningSessionStep,
-    OtpTokenDict,
-    RealmChoices,
-    ScoreStatsDict,
-    get_score_stats,
-)
+from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
 from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
 User = get_user_model()
@@ -288,7 +280,7 @@ class Attempt(AttemptMixin):
         submission: "Submission"
 
     @classmethod
-    async def start(cls, *, assignment_id: str, learner_id: str, lock: datetime, context: str, realm: RealmChoices):
+    async def start(cls, *, assignment_id: str, learner_id: str, lock: datetime, context: str):
         assignment = await Assignment.objects.aget(id=assignment_id)
 
         if assignment.verification_required:
@@ -307,7 +299,6 @@ class Attempt(AttemptMixin):
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
                 question=question,
-                realm=realm,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

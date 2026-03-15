@@ -26,8 +26,8 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest, RealmChoices
-from apps.studio.decorator import editor_required, track_editing
+from apps.common.util import HttpRequest
+from apps.studio.decorator import track_editing
 
 
 class AssignmentQuestionSaveSpec(Schema):
@@ -105,7 +105,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/assignment/{id}", response=AssignmentSpec)
-@editor_required()
 async def get_assignment(request: HttpRequest, id: str):
     assignment = (
         await Assignment.objects
@@ -125,7 +124,6 @@ async def get_assignment(request: HttpRequest, id: str):
 
 
 @router.post("/assignment", response=str)
-@editor_required()
 @track_editing(Assignment)
 async def save_assignment(
     request: HttpRequest,
@@ -176,16 +174,14 @@ async def save_assignment(
 
 
 @router.delete("/assignment/{id}")
-@editor_required()
 @track_editing(Assignment, id_field="id")
 async def delete_assignment(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(assignment_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Attempt.objects.filter(assignment_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Assignment.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/assignment/{id}/question", response=list[AssignmentQuestionSpec])
-@editor_required()
 async def get_assignment_questions(request: HttpRequest, id: str):
     return [
         q
@@ -196,7 +192,6 @@ async def get_assignment_questions(request: HttpRequest, id: str):
 
 
 @router.post("/assignment/{id}/question", response=list[int])
-@editor_required()
 @track_editing(Assignment, id_field="id")
 async def save_assignment_questions(
     request: HttpRequest,
@@ -242,11 +237,10 @@ async def save_assignment_questions(
 
 
 @router.delete("/assignment/{id}/question/{question_id}")
-@editor_required()
 @track_editing(Assignment, id_field="id")
 async def delete_assignment_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        assignment_id=id, question=question_id, assignment__owner_id=request.auth, realm=RealmChoices.STUDENT
+        assignment_id=id, question=question_id, assignment__owner_id=request.auth
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
@@ -256,7 +250,6 @@ async def delete_assignment_quesion(request: HttpRequest, id: str, question_id: 
 
 
 @router.get("/assignment/{id}/rubric", response=list[RubricCriterionSpec])
-@editor_required()
 async def get_assignment_rubric(request: HttpRequest, id: str):
     assignment = await aget_object_or_404(
         Assignment.objects.prefetch_related("rubric__rubric_criteria__performance_levels"), id=id, owner_id=request.auth
@@ -265,7 +258,6 @@ async def get_assignment_rubric(request: HttpRequest, id: str):
 
 
 @router.post("/assignment/{id}/rubric")
-@editor_required()
 @track_editing(Assignment, id_field="id")
 async def save_assignment_rubric(request: HttpRequest, id: str, data: RootModel[list[RubricCriterionSpec]]):
     assignment = await aget_object_or_404(Assignment, id=id, owner_id=request.auth)

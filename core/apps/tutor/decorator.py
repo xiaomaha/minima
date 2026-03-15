@@ -8,19 +8,6 @@ from apps.common.util import HttpRequest
 from apps.tutor.models import Allocation
 
 
-def tutor_required():
-    def decorator(func):
-        @wraps(func)
-        async def wrapper(request: HttpRequest, *args, **kwargs):
-            if "tutor" not in request.roles:
-                raise ValueError(ErrorCode.PERMISSION_DENIED)
-            return await func(request, *args, **kwargs)
-
-        return wrapper
-
-    return decorator
-
-
 def allocation_required(app_label: str, model: str, id_field: str = "id"):
     def decorator(func):
         @wraps(func)

@@ -3,6 +3,5 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ExamConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
     name = "apps.exam"
     verbose_name = _("Exam")

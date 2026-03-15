@@ -41,7 +41,7 @@ class Allocation(TimeStampedMixin):
     tutor = ForeignKey(User, CASCADE, verbose_name=_("Tutor"))
     active = BooleanField(_("Active"), default=True)
 
-    limit_choices_to = {"model__in": TUTORING_MODELS.keys()}
+    limit_choices_to = {"model__in": list(TUTORING_MODELS.keys())}
     content_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Content type"), limit_choices_to=limit_choices_to)
     content_id = CharField(_("Content ID"), max_length=36)
     content = GenericForeignKey("content_type", "content_id")

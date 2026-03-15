@@ -1,3 +1,4 @@
+import re
 import secrets
 from datetime import timedelta
 from typing import TYPE_CHECKING
@@ -62,7 +63,9 @@ class SSOSession(TuidMixin, TimeStampedMixin):
     @classmethod
     async def authorization_url(cls, *, provider: str, redirect_to: str, redirect_uri: str, user_id: str | None = None):
         parsed = urlparse(redirect_to)
-        if f"{parsed.scheme}://{parsed.netloc}" not in settings.ALLOWED_REDIRECT_ORIGINS:
+        if not any(
+            re.match(pattern, f"{parsed.scheme}://{parsed.netloc}") for pattern in settings.ALLOWED_ORIGIN_REGEXES
+        ):
             raise ValueError(ErrorCode.INVALID_REDIRECT_URL)
 
         session = await cls.objects.acreate(

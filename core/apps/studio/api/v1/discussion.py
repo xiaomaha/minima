@@ -17,9 +17,9 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest, RealmChoices
+from apps.common.util import HttpRequest
 from apps.discussion.models import Attempt, Discussion, Question, QuestionPool
-from apps.studio.decorator import editor_required, track_editing
+from apps.studio.decorator import track_editing
 
 
 class DiscussionQuestionSaveSpec(Schema):
@@ -80,7 +80,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/discussion/{id}", response=DiscussionSpec)
-@editor_required()
 async def get_discussion(request: HttpRequest, id: str):
     return await Discussion.objects.prefetch_related(
         Prefetch("question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id"))
@@ -88,7 +87,6 @@ async def get_discussion(request: HttpRequest, id: str):
 
 
 @router.post("/discussion", response=str)
-@editor_required()
 @track_editing(Discussion)
 async def save_discussion(
     request: HttpRequest,
@@ -129,16 +127,14 @@ async def save_discussion(
 
 
 @router.delete("/discussion/{id}")
-@editor_required()
 @track_editing(Discussion, id_field="id")
 async def delete_discussion(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(discussion_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Attempt.objects.filter(discussion_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Discussion.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/discussion/{id}/question", response=list[DiscussionQuestionSpec])
-@editor_required()
 async def get_discussion_questions(request: HttpRequest, id: str):
     return [
         q
@@ -149,7 +145,6 @@ async def get_discussion_questions(request: HttpRequest, id: str):
 
 
 @router.post("/discussion/{id}/question", response=list[int])
-@editor_required()
 @track_editing(Discussion, id_field="id")
 async def save_discussion_questions(
     request: HttpRequest,
@@ -197,11 +192,10 @@ async def save_discussion_questions(
 
 
 @router.delete("/discussion/{id}/question/{question_id}")
-@editor_required()
 @track_editing(Discussion, id_field="id")
 async def delete_discussion_quesion(request: HttpRequest, id: str, question_id: int):
     if await Attempt.objects.filter(
-        discussion_id=id, question_id=question_id, discussion__owner_id=request.auth, realm=RealmChoices.STUDENT
+        discussion_id=id, question_id=question_id, discussion__owner_id=request.auth
     ).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
