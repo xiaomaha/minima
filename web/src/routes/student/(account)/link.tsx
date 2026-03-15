@@ -3,7 +3,7 @@ import { createMemo, For, Match, onMount, Show, Switch } from 'solid-js'
 import * as v from 'valibot'
 import { type SsoAccountSchema, ssoV1DeleteAccount, ssoV1GetAccounts, ssoV1Link } from '@/api'
 import { SSO_PROVIDERS } from '@/config'
-import { accountStore } from '@/routes/account/-store'
+import { accountStore } from '@/routes/student/(account)/-store'
 import { GitHubIcon } from '@/shared/GitHubIcon'
 import { GoogleIcon } from '@/shared/icon/GoogleIcon'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
@@ -17,7 +17,7 @@ const searchSchema = v.object({
   error: v.optional(v.pipe(v.string())),
 })
 
-export const Route = createFileRoute('/account/link')({
+export const Route = createFileRoute('/student/(account)/link')({
   validateSearch: searchSchema,
   component: RouteComponent,
 })

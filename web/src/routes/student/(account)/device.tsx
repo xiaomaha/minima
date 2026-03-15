@@ -8,7 +8,7 @@ import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { currentDevice, setCurrentDevice } from './-device'
 
-export const Route = createFileRoute('/account/device')({
+export const Route = createFileRoute('/student/(account)/device')({
   component: RouteComponent,
 })
 

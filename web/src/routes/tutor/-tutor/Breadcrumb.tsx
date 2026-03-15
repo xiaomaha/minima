@@ -1,6 +1,7 @@
-import { IconExternalLink, IconHome } from '@tabler/icons-solidjs'
-import { Link, useNavigate } from '@tanstack/solid-router'
+import { IconHome } from '@tabler/icons-solidjs'
+import { type NavigateOptions, useNavigate } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
+import { PreviewButton } from '@/routes/preview/-PreviewButton'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
 
@@ -16,15 +17,18 @@ export const Breadcrumb = (props: Props) => {
   const navigate = useNavigate()
 
   const toContent = () => {
+    let to: NavigateOptions['to']
+
     if (props.app === 'exam') {
-      return '/student/exam/$id/session'
+      to = '/student/exam/$id/session'
     } else if (props.app === 'assignment') {
-      return '/student/assignment/$id/session'
+      to = '/student/assignment/$id/session'
     } else if (props.app === 'discussion') {
-      return '/student/discussion/$id/session'
+      to = '/student/discussion/$id/session'
     } else {
       throw new Error('Invalid app')
     }
+    return { to, params: { id: props.id } }
   }
 
   const goToSibling = () => {
@@ -51,10 +55,7 @@ export const Breadcrumb = (props: Props) => {
         </li>
         <li>{t(capitalize(props.app))}</li>
         <li>
-          <Link to={toContent()} params={{ id: props.id }} class="link link-hover" target="_blank" rel="noreferrer">
-            {props.title}
-            <IconExternalLink size={20} />
-          </Link>
+          <PreviewButton link={toContent()} title={props.title} class="mr-auto text-base/tight h-auto" />
         </li>
         <Show when={props.title}>
           <li class="space-x-2">

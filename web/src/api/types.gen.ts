@@ -78,6 +78,10 @@ export type UserSchema = {
      * Roles
      */
     roles: Array<string>;
+    /**
+     * Realms
+     */
+    realms: Array<string>;
 };
 
 /**
@@ -2218,6 +2222,32 @@ export type CourseCertificateRequestSchema = {
      * Certificateid
      */
     certificateId: number;
+};
+
+/**
+ * PagedUserSchema
+ */
+export type PagedUserSchema = {
+    /**
+     * Items
+     */
+    items: Array<UserSchema>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
 };
 
 /**
@@ -8113,6 +8143,31 @@ export type CourseV1RequestCertificateResponses = {
 
 export type CourseV1RequestCertificateResponse = CourseV1RequestCertificateResponses[keyof CourseV1RequestCertificateResponses];
 
+export type DeskV1GetUsersData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/account/user';
+};
+
+export type DeskV1GetUsersResponses = {
+    /**
+     * OK
+     */
+    200: PagedUserSchema;
+};
+
+export type DeskV1GetUsersResponse = DeskV1GetUsersResponses[keyof DeskV1GetUsersResponses];
+
 export type DiscussionV1GetSessionData = {
     body?: never;
     path: {
@@ -9207,6 +9262,45 @@ export type PartnerV1MemberInfosResponses = {
 };
 
 export type PartnerV1MemberInfosResponse = PartnerV1MemberInfosResponses[keyof PartnerV1MemberInfosResponses];
+
+export type PreviewV1CreatePreviewSessionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/preview/preview/session';
+};
+
+export type PreviewV1CreatePreviewSessionResponses = {
+    /**
+     * Response
+     *
+     * OK
+     */
+    200: string;
+};
+
+export type PreviewV1CreatePreviewSessionResponse = PreviewV1CreatePreviewSessionResponses[keyof PreviewV1CreatePreviewSessionResponses];
+
+export type PreviewV1ExchangePreviewSessionData = {
+    body?: never;
+    path: {
+        /**
+         * Ott
+         */
+        ott: string;
+    };
+    query?: never;
+    url: '/api/v1/preview/preview/exchange/{ott}';
+};
+
+export type PreviewV1ExchangePreviewSessionResponses = {
+    /**
+     * OK
+     */
+    200: UserSchema;
+};
+
+export type PreviewV1ExchangePreviewSessionResponse = PreviewV1ExchangePreviewSessionResponses[keyof PreviewV1ExchangePreviewSessionResponses];
 
 export type QuizV1GetSessionData = {
     body?: never;

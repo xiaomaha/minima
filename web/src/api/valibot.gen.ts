@@ -26,7 +26,8 @@ export const vUserSchema = v.object({
     otpEnabled: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     tokenExpires: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
     agreementRequired: v.nullable(v.boolean()),
-    roles: v.array(v.string())
+    roles: v.array(v.string()),
+    realms: v.array(v.string())
 });
 
 /**
@@ -1011,6 +1012,17 @@ export const vCourseDetailSchema = v.object({
  */
 export const vCourseCertificateRequestSchema = v.object({
     certificateId: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * PagedUserSchema
+ */
+export const vPagedUserSchema = v.object({
+    items: v.array(vUserSchema),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -3669,6 +3681,20 @@ export const vCourseV1RequestCertificateData = v.object({
  */
 export const vCourseV1RequestCertificateResponse = vCertificateAwardSchema;
 
+export const vDeskV1GetUsersData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetUsersResponse = vPagedUserSchema;
+
 export const vDiscussionV1GetSessionData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -4247,6 +4273,32 @@ export const vPartnerV1MemberInfosData = v.object({
  * OK
  */
 export const vPartnerV1MemberInfosResponse = v.array(vPartnerGroupMemberSchema);
+
+export const vPreviewV1CreatePreviewSessionData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.never())
+});
+
+/**
+ * Response
+ *
+ * OK
+ */
+export const vPreviewV1CreatePreviewSessionResponse = v.string();
+
+export const vPreviewV1ExchangePreviewSessionData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        ott: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vPreviewV1ExchangePreviewSessionResponse = vUserSchema;
 
 export const vQuizV1GetSessionData = v.object({
     body: v.optional(v.never()),

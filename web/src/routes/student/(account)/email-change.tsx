@@ -15,7 +15,7 @@ const searchSchema = v.object({
   token: v.optional(v.pipe(v.string(), v.minLength(32))),
 })
 
-export const Route = createFileRoute('/account/email-change')({
+export const Route = createFileRoute('/student/(account)/email-change')({
   validateSearch: searchSchema,
   component: RouteComponent,
 })
@@ -55,7 +55,7 @@ const RequestEmailChange = () => {
       type: 'success',
       duration: 1000 * 5,
     })
-    navigate({ to: '/account/profile', replace: true })
+    navigate({ to: '/student/profile', replace: true })
   }
 
   const [formState, { Form, Field }] = form
@@ -94,7 +94,7 @@ const RequestEmailChange = () => {
           />
 
           <div class="text-center">
-            <Link to="/account/profile" class="ml-1 link">
+            <Link to="/student/profile" class="ml-1 link">
               {t('Back to profile')}
             </Link>
           </div>
@@ -111,7 +111,7 @@ const ApplyEmailChange = (props: { token: string }) => {
   createResource(async () => {
     const { error } = await accountV1ApplyEmailChange({ body: { token: props.token }, throwOnError: false })
     if (error) {
-      navigate({ to: '/account/profile', replace: true })
+      navigate({ to: '/student/profile', replace: true })
       return
     }
 
@@ -121,7 +121,7 @@ const ApplyEmailChange = (props: { token: string }) => {
       type: 'success',
       duration: 1000 * 60,
     })
-    navigate({ to: '/account/profile', replace: true })
+    navigate({ to: '/student/profile', replace: true })
     setUser(null)
   })
 

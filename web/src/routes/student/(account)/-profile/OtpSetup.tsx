@@ -2,7 +2,7 @@ import { IconAlertCircle, IconCheck, IconDownload, IconInfoCircle } from '@table
 import { createEffect, createResource, createSignal, For, Match, Show, Switch } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { accountV1CompleteOtpSetup, accountV1ResetOtp, accountV1SetupOtp, type OtpSetupSchema } from '@/api'
-import { accountStore, setStore as setAccountStore } from '@/routes/account/-store'
+import { accountStore, setStore as setAccountStore } from '@/routes/student/(account)/-store'
 import { Dialog } from '@/shared/Diaglog'
 import { PinInput } from '@/shared/PinInput'
 import { useTranslation } from '@/shared/solid/i18n'

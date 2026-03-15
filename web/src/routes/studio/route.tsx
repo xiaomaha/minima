@@ -4,12 +4,11 @@ import { GoToTop } from '@/shared/GoToTop'
 import { NavbarLogo } from '@/shared/NavbarLogo'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { protectedRoute } from '../-protected'
-import { AccountButton } from '../account/-account/AccountButton'
+import { LogoutButton } from '../auth/-auth/LogoutButtion'
 
 export const Route = createFileRoute('/studio')({
   beforeLoad: () => {
     protectedRoute()
-
     if (location.hostname.split('.')[0] !== 'studio') throw notFound()
   },
   component: RouteComponent,
@@ -44,7 +43,7 @@ function RouteComponent() {
 
           <div class="flex gap-2 md:gap-6 px-4">
             <ThemeButton />
-            <AccountButton />
+            <LogoutButton />
           </div>
         </div>
 

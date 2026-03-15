@@ -4,7 +4,7 @@ import type * as v from 'valibot'
 import { accountV1UpdateMe } from '@/api'
 import { vUserUpdateSchema } from '@/api/valibot.gen'
 import { LANGUAGES } from '@/config'
-import { accountStore, setUser } from '@/routes/account/-store'
+import { accountStore, setUser } from '@/routes/student/(account)/-store'
 import { handleFormErrors } from '@/shared/error/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
@@ -13,7 +13,7 @@ import { useTranslation } from '@/shared/solid/i18n'
 import { AvatarEdit } from './-profile/AvatarEdit'
 import { OtpSetup } from './-profile/OtpSetup'
 
-export const Route = createFileRoute('/account/profile')({
+export const Route = createFileRoute('/student/(account)/profile')({
   component: RouteComponent,
 })
 
@@ -120,7 +120,7 @@ function RouteComponent() {
                 <button
                   type="button"
                   class="btn btn-link btn-sm"
-                  onClick={() => navigate({ to: '/account/email-change' })}
+                  onClick={() => navigate({ to: '/student/email-change' })}
                 >
                   {t('Change Email')}
                 </button>

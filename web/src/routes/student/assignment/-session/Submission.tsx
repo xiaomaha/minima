@@ -104,7 +104,12 @@ export const Submission = () => {
                 </li>
                 <Show when={assignment.sampleAttachment}>
                   <li>
-                    <a class="link link-primary text-sm" href={assignment.sampleAttachment!} target="_blank">
+                    <a
+                      class="link link-primary text-sm"
+                      href={assignment.sampleAttachment!}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       {t('View sample file')}
                     </a>
                   </li>

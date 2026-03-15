@@ -6,7 +6,7 @@ import { NoContent } from '@/shared/NoContent'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 
-export const Route = createFileRoute('/account/group')({
+export const Route = createFileRoute('/student/(account)/group')({
   component: RouteComponent,
 })
 
@@ -38,7 +38,7 @@ function RouteComponent() {
                   <div class="space-y-1">
                     <div class="text-xs label flex items-center gap-2">
                       {info.group.partner.name}
-                      <a href={info.group.partner.website} target="_blank" class="link link-info">
+                      <a href={info.group.partner.website} target="_blank" rel="noreferrer" class="link link-info">
                         {info.group.partner.website}
                       </a>
                     </div>

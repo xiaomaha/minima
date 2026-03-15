@@ -2,13 +2,13 @@ import { useNavigate } from '@tanstack/solid-router'
 import { type Accessor, onMount, Show } from 'solid-js'
 import { accountV1GetMe, ssoV1Authorize } from '@/api'
 import { LOGIN_REDIRECT_PATH, SSO_PROVIDERS } from '@/config'
+import { setUser } from '@/routes/student/(account)/-store'
 import { GitHubIcon } from '@/shared/GitHubIcon'
 import { GoogleIcon } from '@/shared/icon/GoogleIcon'
 import { LoadingOverlay } from '@/shared/LoadingOverlay'
 import { useTranslation } from '@/shared/solid/i18n'
 import { createPersistentSignal } from '@/shared/solid/persistent-signal'
 import { showToast } from '@/shared/toast/store'
-import { setUser } from '../account/-store'
 
 interface Props {
   search: Accessor<{ next?: string | undefined; sso?: boolean | undefined; error?: string | undefined }>
@@ -34,7 +34,7 @@ export const SSOButtons = (props: Props) => {
         message: search.error,
         type: 'error',
       })
-      navigate({ to: '/login', replace: true })
+      navigate({ to: '/auth/login', replace: true })
       return
     }
 

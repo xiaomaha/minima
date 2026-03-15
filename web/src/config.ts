@@ -8,7 +8,7 @@ export const TEST_MAILER_URL = import.meta.env.VITE_TEST_MAILER_URL || 'http://l
 
 export const LOGIN_REDIRECT_PATH = '/' as const satisfies NavigateOptions['to']
 
-export const SUBDOMAINS = ['student', 'studio', 'tutor'] as const
+export const PLATFORM_REALMS = ['studio', 'tutor', 'desk', 'preview'] as const
 
 export const MARKETING_SITE_URL = import.meta.env.VITE_MARKETING_SITE_URL || ''
 

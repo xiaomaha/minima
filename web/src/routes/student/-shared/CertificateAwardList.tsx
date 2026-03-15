@@ -19,6 +19,7 @@ export const CertificateAwardList = (props: Props) => {
               <a
                 href={cert.pdf}
                 target="_blank"
+                rel="noreferrer"
                 class="relative block h-100 rounded-2xl overflow-hidden shadow-md hover:scale-101 transition-transform"
               >
                 <div

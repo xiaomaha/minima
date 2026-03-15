@@ -5,14 +5,14 @@ interface Props {
   class?: string
 }
 
-export const ActivationLink = (props: Props) => {
+export const LoginLink = (props: Props) => {
   const { t } = useTranslation()
 
   return (
     <div class={`label justify-center ${props.class ?? ''}`}>
-      {t('Lost activation email?')}
-      <Link to="/activate" class="ml-1 link link-hover">
-        {t('Request activation email')}
+      {t('Already have an account?')}
+      <Link to="/auth/login" class="ml-1 link link-hover">
+        {t('Login here')}
       </Link>
     </div>
   )

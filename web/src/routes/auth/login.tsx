@@ -1,15 +1,16 @@
 import { createFileRoute, Link, useLocation } from '@tanstack/solid-router'
+import { Show } from 'solid-js'
 import * as v from 'valibot'
 import { accountV1Login } from '@/api/sdk.gen'
 import { vLoginSchema } from '@/api/valibot.gen'
-import { LOGIN_REDIRECT_PATH } from '@/config'
+import { LOGIN_REDIRECT_PATH, PLATFORM_REALMS } from '@/config'
+import { setUser } from '@/routes/student/(account)/-store'
 import { handleFormErrors } from '@/shared/error/error'
 import { FormInput } from '@/shared/FormInput'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
-import { SSOButtons } from '../(auth)/-SSOButtons'
-import { setUser } from '../account/-store'
+import { SSOButtons } from '../auth/-auth/SSOButtons'
 
 const searchSchema = v.object({
   next: v.optional(v.pipe(v.string(), v.startsWith('/'))),
@@ -17,7 +18,7 @@ const searchSchema = v.object({
   error: v.optional(v.string()),
 })
 
-export const Route = createFileRoute('/(auth)/login')({
+export const Route = createFileRoute('/auth/login')({
   validateSearch: searchSchema,
   component: RouteComponent,
 })
@@ -32,6 +33,8 @@ function RouteComponent() {
     initialValues: { email: location().state?.email ?? '', password: '' },
     validate: valiForm(vLoginSchema),
   })
+
+  const realm = window.location.hostname.split('.')[0]
 
   const login = async (values: v.InferInput<typeof vLoginSchema>) => {
     const { data: user, error } = await accountV1Login({ body: values, throwOnError: false })
@@ -63,24 +66,25 @@ function RouteComponent() {
             </FormInput>
           )}
         </Field>
-        <Link to={'/password-change'} class="label link link-hover">
+        <Link to={'/auth/password-change'} class="label link link-hover">
           {t('Forgot Password?')}
         </Link>
         <SubmitButton
           label={t('Login')}
           isPending={formState.submitting}
           disabled={!formState.dirty}
-          class="btn btn-neutral mt-4"
+          class="btn btn-neutral my-4"
         />
 
-        <SSOButtons search={search} />
-
-        <div class="justify-center label">
-          {t("Haven't account?")}
-          <Link to="/join" class="ml-1 link link-hover">
-            {t('Join here')}
-          </Link>
-        </div>
+        <Show when={!PLATFORM_REALMS.includes(realm as (typeof PLATFORM_REALMS)[number])}>
+          <SSOButtons search={search} />
+          <div class="justify-center label">
+            {t("Haven't account?")}
+            <Link to="/auth/join" class="ml-1 link link-hover">
+              {t('Join here')}
+            </Link>
+          </div>
+        </Show>
       </fieldset>
     </Form>
   )

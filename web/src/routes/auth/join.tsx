@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/solid-router'
+import { createFileRoute, notFound } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
 import { accountV1Join, operationV1EffectivePolicies } from '@/api'
 import { vJoinSchema } from '@/api/valibot.gen'
-import { TEST_MAILER_URL } from '@/config'
+import { PLATFORM_REALMS, TEST_MAILER_URL } from '@/config'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { handleFormErrors } from '@/shared/error/error'
@@ -14,18 +14,24 @@ import { createCachedStore } from '@/shared/solid/cached-store'
 import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
-import { ActivationLink } from './-ActivationLink'
-import { LoginLink } from './-LoginLink'
-import { SSOButtons } from './-SSOButtons'
+import { ActivationLink } from './-auth/ActivationLink'
+import { LoginLink } from './-auth/LoginLink'
+import { SSOButtons } from './-auth/SSOButtons'
 
 const searchSchema = v.object({
   sso: v.optional(v.boolean()),
   error: v.optional(v.string()),
 })
 
-export const Route = createFileRoute('/(auth)/join')({
+export const Route = createFileRoute('/auth/join')({
   validateSearch: searchSchema,
   component: RouteComponent,
+  beforeLoad: async () => {
+    const realm = location.hostname.split('.')[0]
+    if (PLATFORM_REALMS.includes(realm as (typeof PLATFORM_REALMS)[number])) {
+      throw notFound()
+    }
+  },
 })
 
 function RouteComponent() {
@@ -72,7 +78,7 @@ function RouteComponent() {
       type: 'success',
       duration: 1000 * 60,
     })
-    navigate({ to: '/login' })
+    navigate({ to: '/auth/login' })
 
     if (import.meta.env.DEV) {
       window.open(TEST_MAILER_URL, '_blank')
@@ -89,7 +95,7 @@ function RouteComponent() {
       <Dialog boxClass="max-w-xl" open={!!selectedPolicy()} onClose={() => setSelectedPolicy()}>
         <Show when={selectedPolicy()}>
           {(policy) => (
-            <div class="p-4">
+            <div class="p-6">
               <h3>{policy().title}</h3>
               <p class="py-2 text-sm">
                 <span class="label block">{policy().description}</span>
@@ -97,8 +103,7 @@ function RouteComponent() {
                   {new Date(policy().effectiveVersion.effectiveDate).toLocaleDateString()}
                 </span>
               </p>
-              <ContentViewer content={policy().effectiveVersion.body} />
-              <p class="text-xs label mt-8">{t('End')}</p>
+              <ContentViewer content={policy().effectiveVersion.body} class="text-sm" />
             </div>
           )}
         </Show>

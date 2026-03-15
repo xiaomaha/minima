@@ -9,13 +9,13 @@ import { SubmitButton } from '@/shared/SubmitButton'
 import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
-import { LoginLink } from './-LoginLink'
+import { LoginLink } from './-auth/LoginLink'
 
 const searchSchema = v.object({
   token: v.optional(v.pipe(v.string(), v.minLength(32))),
 })
 
-export const Route = createFileRoute('/(auth)/password-change')({
+export const Route = createFileRoute('/auth/password-change')({
   validateSearch: searchSchema,
   component: RouteComponent,
 })
@@ -55,7 +55,7 @@ const RequestPasswordChange = () => {
       type: 'success',
       duration: 1000 * 5,
     })
-    navigate({ to: '/login', replace: true })
+    navigate({ to: '/auth/login', replace: true })
   }
 
   const [formState, { Form, Field }] = form
@@ -112,7 +112,7 @@ const ApplyPasswordChange = (props: { token: string }) => {
       type: 'success',
       duration: 1000 * 5,
     })
-    navigate({ to: '/login', replace: true })
+    navigate({ to: '/auth/login', replace: true })
   }
 
   const [formState, { Form, Field, getValue }] = form
@@ -156,7 +156,7 @@ const ApplyPasswordChange = (props: { token: string }) => {
         />
 
         <div class="text-center">
-          <Link to="/login" class="ml-1 link">
+          <Link to="/auth/login" class="ml-1 link">
             {t('Login')}
           </Link>
         </div>

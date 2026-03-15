@@ -9,13 +9,13 @@ import { SubmitButton } from '@/shared/SubmitButton'
 import { createForm, valiForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { showToast } from '@/shared/toast/store'
-import { LoginLink } from './-LoginLink'
+import { LoginLink } from './-auth/LoginLink'
 
 const searchSchema = v.object({
   token: v.optional(v.pipe(v.string(), v.minLength(32))),
 })
 
-export const Route = createFileRoute('/(auth)/activate')({
+export const Route = createFileRoute('/auth/activate')({
   validateSearch: searchSchema,
   component: RouteComponent,
 })
@@ -55,7 +55,7 @@ const RequestActivation = () => {
       type: 'success',
       duration: 1000 * 5,
     })
-    navigate({ to: '/login', replace: true })
+    navigate({ to: '/auth/login', replace: true })
   }
 
   const [formState, { Form, Field }] = form
@@ -97,7 +97,7 @@ const Activate = (props: { token: string }) => {
   createResource(async () => {
     const { data, error } = await accountV1Activate({ body: { token: props.token }, throwOnError: false })
     if (error) {
-      navigate({ to: '/login', replace: true })
+      navigate({ to: '/auth/login', replace: true })
       return
     }
 
@@ -107,7 +107,7 @@ const Activate = (props: { token: string }) => {
       type: 'success',
       duration: 1000 * 5,
     })
-    navigate({ to: '/login', replace: true, state: { email: data?.email } })
+    navigate({ to: '/auth/login', replace: true, state: { email: data?.email } })
   })
 
   return null
