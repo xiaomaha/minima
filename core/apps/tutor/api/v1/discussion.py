@@ -14,7 +14,7 @@ from apps.discussion.api.schema import (
 )
 from apps.discussion.models import Grade, Post
 from apps.tutor.api.v1.schema import TutorGradeSchema, TutorGraeCompleteSchema
-from apps.tutor.decorator import allocation_required, tutor_required
+from apps.tutor.decorator import allocation_required
 
 router = Router(by_alias=True)
 
@@ -26,7 +26,6 @@ class TutorDiscussionGradeSchema(TutorGradeSchema):
 
 
 @router.get("/discussion/{id}/grade", response=list[TutorDiscussionGradeSchema])
-@tutor_required()
 @allocation_required("discussion", "discussion")
 @paginate(Pagination)
 async def get_discussion_grades(request: HttpRequest, id: str):
@@ -57,7 +56,6 @@ class TutorDiscussionGradePaperSchema(Schema):
 
 
 @router.get("/discussion/{id}/grade/{grade_id}", response=TutorDiscussionGradePaperSchema)
-@tutor_required()
 @allocation_required("discussion", "discussion")
 async def get_discussion_grade_paper(request: HttpRequest, id: str, grade_id: int):
     grade = await aget_object_or_404(
@@ -85,7 +83,6 @@ class TutorDiscussionGradeSaveSchema(Schema):
 
 
 @router.post("/discussion/{id}/grade/{grade_id}", response=TutorGraeCompleteSchema)
-@tutor_required()
 @allocation_required("discussion", "discussion")
 async def complete_discussion_grade(request: HttpRequest, id: str, grade_id: int, data: TutorDiscussionGradeSaveSchema):
     grade = await aget_object_or_404(

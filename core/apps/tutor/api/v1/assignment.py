@@ -11,7 +11,7 @@ from apps.assignment.models import Assignment, Grade
 from apps.common.schema import Schema
 from apps.common.util import HttpRequest, Pagination
 from apps.tutor.api.v1.schema import TutorGradeSaveSchema, TutorGradeSchema, TutorGraeCompleteSchema
-from apps.tutor.decorator import allocation_required, tutor_required
+from apps.tutor.decorator import allocation_required
 
 router = Router(by_alias=True)
 
@@ -23,7 +23,6 @@ class TutorAssignmentGradeSchema(TutorGradeSchema):
 
 
 @router.get("/assignment/{id}/grade", response=list[TutorAssignmentGradeSchema])
-@tutor_required()
 @allocation_required("assignment", "assignment")
 @paginate(Pagination)
 async def get_assignment_grades(request: HttpRequest, id: str):
@@ -56,7 +55,6 @@ class TutorAssignmentGradePaperSchema(Schema):
 
 
 @router.get("/assignment/{id}/grade/{grade_id}", response=TutorAssignmentGradePaperSchema)
-@tutor_required()
 @allocation_required("assignment", "assignment")
 async def get_assignment_grade_paper(request: HttpRequest, id: str, grade_id: int):
     grade = await aget_object_or_404(
@@ -80,7 +78,6 @@ async def get_assignment_grade_paper(request: HttpRequest, id: str, grade_id: in
 
 
 @router.get("assignment/{id}/rubric", response=RubricSchema)
-@tutor_required()
 @allocation_required("assignment", "assignment")
 async def get_assignment_rubric(request: HttpRequest, id: str):
     assignment = await aget_object_or_404(
@@ -90,7 +87,6 @@ async def get_assignment_rubric(request: HttpRequest, id: str):
 
 
 @router.post("/assignment/{id}/grade/{grade_id}", response=TutorGraeCompleteSchema)
-@tutor_required()
 @allocation_required("assignment", "assignment")
 async def complete_assignment_grade(request: HttpRequest, id: str, grade_id: int, data: TutorGradeSaveSchema):
     grade = await aget_object_or_404(

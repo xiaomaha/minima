@@ -27,6 +27,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedMixin
+from apps.common.policy import PlatformRealm
 from apps.common.util import track_fields
 from apps.operation.models import MessageType, user_message_created
 
@@ -41,8 +42,9 @@ PERSONAL_ID_SALT = settings.PERSONAL_ID_SALT
 @pghistory.track()
 class Partner(TimeStampedMixin):
     name = CharField(_("Name"), max_length=50, unique=True)
+    realm = CharField(_("Realm"), max_length=50, unique=True)
     description = TextField(_("Description"), blank=True, default="")
-    phone = CharField(_("Phone"), max_length=20)  # char field
+    phone = CharField(_("Phone"), max_length=20)  # not PhoneNumberField
     email = EmailField(_("Email"))
     address = TextField(_("Address"), blank=True, default="")
     logo = ImageField(_("Logo"), null=True, blank=True)
@@ -58,6 +60,11 @@ class Partner(TimeStampedMixin):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.realm in PlatformRealm:
+            raise ValueError(_("This realm is reserved."))
+        super().save(*args, **kwargs)
 
 
 @pghistory.track()
@@ -93,7 +100,7 @@ class Member(TimeStampedMixin):
     job_title = CharField(_("Job Title"), blank=True, default="", max_length=50)
     employment_status = CharField(_("Employment Status"), blank=True, default="", max_length=50)
     employment_type = CharField(_("Employment Type"), blank=True, default="", max_length=50)
-    user = ForeignKey(User, SET_NULL, null=True, blank=True, verbose_name=_("User"))
+    user = ForeignKey(User, SET_NULL, related_name="members", null=True, blank=True, verbose_name=_("User"))
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Member")

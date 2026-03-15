@@ -20,8 +20,9 @@ class Command(BaseCommand):
             logo = ContentFile(f.read(), name="logo.png")
 
         partner, created = Partner.objects.get_or_create(
-            name=settings.PLATFORM_NAME,
+            realm=settings.PLATFORM_STUDENT_REALM,
             defaults={
+                "name": settings.PLATFORM_NAME,
                 "description": _("%s is a LMS for micro learning") % settings.PLATFORM_NAME,
                 "phone": settings.PLATFORM_PHONE_NUMBER,
                 "email": settings.DEFAULT_FROM_EMAIL,

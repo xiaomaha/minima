@@ -5,6 +5,7 @@ from django.conf import settings
 from factory.declarations import LazyFunction, SubFactory
 from factory.django import DjangoModelFactory
 from factory.helpers import post_generation
+from mimesis import Locale
 from mimesis.plugins.factory import FactoryField
 
 from apps.account.models import User
@@ -17,6 +18,7 @@ generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
 
 class PartnerFactory(DjangoModelFactory[Partner]):
     name = FactoryField("company")
+    realm = LazyFunction(lambda: f"{mimesis.Generic(Locale.DEFAULT).food.fruit()}-{tuid()[-4:]}")
     description = FactoryField("sentence")
     phone = FactoryField("phone_number")
     email = FactoryField("email")

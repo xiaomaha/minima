@@ -2,7 +2,7 @@ from django.utils import timezone
 from ninja.router import Router
 
 from apps.common.util import HttpRequest
-from apps.learning.api.access_control import access_date, access_realm, active_context
+from apps.learning.api.access_control import access_date, active_context
 from apps.survey.api.schema import SurveyAnswersSchema, SurveySchema
 from apps.survey.models import Submission, Survey
 
@@ -17,7 +17,6 @@ async def get_survey(request: HttpRequest, id: str):
 
 @router.post("/{id}/submit")
 @active_context()
-@access_realm()
 @access_date("survey", "survey")
 async def submit(request: HttpRequest, id: str, data: SurveyAnswersSchema):
     await Submission.submit(
@@ -26,7 +25,6 @@ async def submit(request: HttpRequest, id: str, data: SurveyAnswersSchema):
         context=request.active_context,
         answers=data.model_dump(),
         lock=request.access_date["end"],
-        realm=request.access_realm,
     )
 
 
@@ -42,11 +40,8 @@ async def get_anonymous_survey(request: HttpRequest, id: str):
 
 
 @router.post("/{id}/anonymous/submit", auth=None)
-@access_realm()
 async def submit_anonymous(request: HttpRequest, id: str, data: SurveyAnswersSchema):
-    await Submission.submit(
-        survey_id=id, answers=data.model_dump(), lock=timezone.now(), anonymous=True, realm=request.access_realm
-    )
+    await Submission.submit(survey_id=id, answers=data.model_dump(), lock=timezone.now(), anonymous=True)
 
 
 @router.get("/{id}/anonymous/results", auth=None, response=dict[str, dict[str, int]])

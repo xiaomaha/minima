@@ -46,7 +46,7 @@ class UserAdmin(ModelAdmin[User]):
 
     inlines = (UserEventInline, TokenInline, OtpLogInline)
 
-    list_filter = (("is_staff", BooleanRadioFilter), ("is_superuser", BooleanRadioFilter))
+    list_filter = (("is_superuser", BooleanRadioFilter),)
 
     actions_submit_line = ["create_temp_password"]
 

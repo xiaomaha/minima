@@ -17,9 +17,9 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest, RealmChoices
+from apps.common.util import HttpRequest
 from apps.exam.models import Attempt, Exam, Question, QuestionPool, Solution
-from apps.studio.decorator import editor_required, track_editing
+from apps.studio.decorator import track_editing
 
 
 class ExamQuestionSaveSpec(Schema):
@@ -90,7 +90,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/exam/{id}", response=ExamSpec)
-@editor_required()
 async def get_exam(request: HttpRequest, id: str):
     return (
         await Exam.objects
@@ -106,7 +105,6 @@ async def get_exam(request: HttpRequest, id: str):
 
 
 @router.post("/exam", response=str)
-@editor_required()
 @track_editing(Exam)
 async def save_exam(
     request: HttpRequest,
@@ -149,16 +147,14 @@ async def save_exam(
 
 
 @router.delete("/exam/{id}")
-@editor_required()
 @track_editing(Exam, id_field="id")
 async def delete_exam(request: HttpRequest, id: str):
-    if await Attempt.objects.filter(exam_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Attempt.objects.filter(exam_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Exam.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/exam/{id}/question", response=list[ExamQuestionSpec])
-@editor_required()
 async def get_exam_questions(request: HttpRequest, id: str):
     return [
         q
@@ -170,7 +166,6 @@ async def get_exam_questions(request: HttpRequest, id: str):
 
 
 @router.post("/exam/{id}/question", response=list[int])
-@editor_required()
 @track_editing(Exam, id_field="id")
 async def save_exam_questions(
     request: HttpRequest,
@@ -221,12 +216,9 @@ async def save_exam_questions(
 
 
 @router.delete("/exam/{id}/question/{question_id}")
-@editor_required()
 @track_editing(Exam, id_field="id")
 async def delete_exam_quesion(request: HttpRequest, id: str, question_id: int):
-    if await Attempt.objects.filter(
-        exam_id=id, questions=question_id, exam__owner_id=request.auth, realm=RealmChoices.STUDENT
-    ).aexists():
+    if await Attempt.objects.filter(exam_id=id, questions=question_id, exam__owner_id=request.auth).aexists():
         raise ValueError(ErrorCode.IN_USE)
 
     count, _ = await Question.objects.filter(id=question_id, pool__exam__id=id).adelete()
