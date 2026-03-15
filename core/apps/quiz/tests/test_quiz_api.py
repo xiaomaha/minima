@@ -11,11 +11,6 @@ from apps.quiz.tests.factories import QuizFactory
 from conftest import AdminUser
 
 
-@pytest.fixture
-def client():
-    return Client(SERVER_NAME="student.testserver")
-
-
 @pytest.mark.e2e
 @pytest.mark.django_db
 def test_quiz_flow(client: Client, mimesis: Generic, admin_user: AdminUser):

@@ -22,7 +22,7 @@ from apps.common.schema import (
     LearningObjectMixinSchema,
     Schema,
 )
-from apps.common.util import HttpRequest, RealmChoices
+from apps.common.util import HttpRequest
 from apps.course.models import (
     ASSESSIBLE_MODELS,
     Assessment,
@@ -37,7 +37,7 @@ from apps.course.models import (
     Lesson,
     LessonMedia,
 )
-from apps.studio.decorator import editor_required, track_editing
+from apps.studio.decorator import track_editing
 
 log = logging.getLogger(__name__)
 
@@ -165,7 +165,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/course/{id}", response=CourseSpec)
-@editor_required()
 async def get_course(request: HttpRequest, id: str):
     return (
         await Course.objects
@@ -201,7 +200,6 @@ async def get_course(request: HttpRequest, id: str):
 
 
 @router.post("/course", response=str)
-@editor_required()
 @track_editing(Course)
 async def save_course(
     request: HttpRequest,
@@ -244,10 +242,9 @@ async def save_course(
 
 
 @router.delete("/course/{id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def delete_course(request: HttpRequest, id: str):
-    if await Engagement.objects.filter(course_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Engagement.objects.filter(course_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Course.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
@@ -257,7 +254,6 @@ class CourseSurveySaveSpec(CourseSurveySpec):
 
 
 @router.post("/course/{id}/survey", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_surveys(request: HttpRequest, id: str, data: RootModel[list[CourseSurveySaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -274,7 +270,6 @@ async def save_course_surveys(request: HttpRequest, id: str, data: RootModel[lis
 
 
 @router.delete("/course/{id}/survey/{course_survey_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_survey(request: HttpRequest, id: str, course_survey_id: int):
     count, _ = await CourseSurvey.objects.filter(
@@ -289,7 +284,6 @@ class AssessmentSaveSpec(AssessmentSpec):
 
 
 @router.post("/course/{id}/assessment", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_assessments(request: HttpRequest, id: str, data: RootModel[list[AssessmentSaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -322,7 +316,6 @@ async def save_course_assessments(request: HttpRequest, id: str, data: RootModel
 
 
 @router.delete("/course/{id}/assessment/{assessment_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_assessment(request: HttpRequest, id: str, assessment_id: int):
     count, _ = await Assessment.objects.filter(course_id=id, id=assessment_id, course__owner_id=request.auth).adelete()
@@ -335,7 +328,6 @@ class LessonSaveSpec(LessonSpec):
 
 
 @router.post("/course/{id}/lesson", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_lessons(request: HttpRequest, id: str, data: RootModel[list[LessonSaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -379,7 +371,6 @@ async def save_course_lessons(request: HttpRequest, id: str, data: RootModel[lis
 
 
 @router.delete("/course/{id}/lesson/{lesson_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_lesson(request: HttpRequest, id: str, lesson_id: int):
     count, _ = await Lesson.objects.filter(course_id=id, id=lesson_id, course__owner_id=request.auth).adelete()
@@ -392,7 +383,6 @@ class CourseCertificateSaveSpec(CourseCertificateSpec):
 
 
 @router.post("/course/{id}/certificate", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_certificates(request: HttpRequest, id: str, data: RootModel[list[CourseCertificateSaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -409,7 +399,6 @@ async def save_course_certificates(request: HttpRequest, id: str, data: RootMode
 
 
 @router.delete("/course/{id}/certificate/{course_certificate_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_certificate(request: HttpRequest, id: str, course_certificate_id: int):
     count, _ = await CourseCertificate.objects.filter(
@@ -424,7 +413,6 @@ class CourseRelationSaveSpec(CourseRelationSpec):
 
 
 @router.post("/course/{id}/relation", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_relations(request: HttpRequest, id: str, data: RootModel[list[CourseRelationSaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -441,7 +429,6 @@ async def save_course_relations(request: HttpRequest, id: str, data: RootModel[l
 
 
 @router.delete("/course/{id}/relation/{course_relation_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_relation(request: HttpRequest, id: str, course_relation_id: int):
     count, _ = await CourseRelation.objects.filter(
@@ -456,7 +443,6 @@ class CourseCategorySaveSpec(CourseCategorySpec):
 
 
 @router.post("/course/{id}/category", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_categories(request: HttpRequest, id: str, data: RootModel[list[CourseCategorySaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -473,7 +459,6 @@ async def save_course_categories(request: HttpRequest, id: str, data: RootModel[
 
 
 @router.delete("/course/{id}/category/{course_category_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_category(request: HttpRequest, id: str, course_category_id: int):
     count, _ = await CourseCategory.objects.filter(
@@ -488,7 +473,6 @@ class CourseInstructorSaveSpec(CourseInstructorSpec):
 
 
 @router.post("/course/{id}/instructor", response=list[int])
-@editor_required()
 @track_editing(Course, id_field="id")
 async def save_course_instructors(request: HttpRequest, id: str, data: RootModel[list[CourseInstructorSaveSpec]]):
     course = await aget_object_or_404(Course, id=id, owner_id=request.auth)
@@ -505,7 +489,6 @@ async def save_course_instructors(request: HttpRequest, id: str, data: RootModel
 
 
 @router.delete("/course/{id}/instructor/{course_instructor_id}")
-@editor_required()
 @track_editing(Course, id_field="id")
 async def remove_course_instructor(request: HttpRequest, id: str, course_instructor_id: int):
     count, _ = await CourseInstructor.objects.filter(

@@ -8,13 +8,15 @@ from pathlib import Path
 import msgspec
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpRequest
 from django.http.response import Http404
 from ninja import NinjaAPI
+from ninja.errors import AuthenticationError
 from ninja.parser import Parser
 from ninja.renderers import BaseRenderer
 
 from apps.assignment.models import PlagiarismDetectedException
+from apps.common.error import ErrorCode
+from apps.common.util import HttpRequest
 
 log = logging.getLogger(__name__)
 
@@ -41,9 +43,8 @@ class MsgSpecParser(Parser):
         return msgspec.json.decode(request.body)
 
 
-def cookie_auth(request):
-    # from middleware
-    return getattr(request, "auth", "")
+def cookie_auth(request: HttpRequest):
+    return request.auth or ""
 
 
 class MinimaAPI(NinjaAPI):
@@ -100,6 +101,11 @@ def plagiarism_detected(request, exc):
 def value_error(request, exc):
     log.error(f"ValueError in {request.path}: {exc}", exc_info=settings.DEBUG)
     return api.create_response(request, {"detail": str(exc)}, status=400)
+
+
+@api.exception_handler(AuthenticationError)
+def auth_error(request, exc):
+    return api.create_response(request, {"detail": ErrorCode.NOT_LOGGED_IN}, status=401)
 
 
 @api.exception_handler(ObjectDoesNotExist)

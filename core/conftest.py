@@ -34,6 +34,11 @@ test_user_email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "admin@example.com")
 test_user_password = os.environ.get("DJANGO_SUPERUSER_PASSWORD", "1111")
 
 
+@pytest.fixture
+def client():
+    return Client(SERVER_NAME="student.testserver")
+
+
 class AdminUser:
     def __init__(self, client: Client):
         self.client = client

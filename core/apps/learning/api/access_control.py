@@ -1,16 +1,17 @@
 import logging
 from datetime import timedelta
 from functools import wraps
-from typing import cast
 
 from celery.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from apps.common.error import ErrorCode
-from apps.common.util import AccessDate, HttpRequest, RealmChoices, get_realm, openapi_query_param
+from apps.common.policy import PlatformRealm
+from apps.common.util import AccessDate, HttpRequest, get_realm, openapi_query_param
 from apps.content.models import Media, PublicAccessMedia
 from apps.course.models import Course
 from apps.learning.models import ENROLLABLE_MODEL_MAP, Enrollment
+from apps.preview.models import PreviewUser
 from apps.quiz.models import Quiz
 from apps.tutor.models import TUTORING_MODEL_MAP, Allocation
 
@@ -69,7 +70,7 @@ def access_date(app_label, model, *, id_field: str = "id"):
                 realm = get_realm(request)
 
                 # editor requires ownership
-                if realm == RealmChoices.STUDIO and "editor" in request.roles:
+                if realm == PlatformRealm.STUDIO:
                     ContentModel = ENROLLABLE_MODEL_MAP.get((app_label, model))
                     if not ContentModel:
                         raise ValueError(ErrorCode.UNKNOWN_CONTENT)
@@ -77,13 +78,18 @@ def access_date(app_label, model, *, id_field: str = "id"):
                     if await ContentModel.objects.filter(id=content_id, owner_id=user_id).aexists():
                         has_special_access = True
 
-                # tutor rquires allocations
-                elif realm == RealmChoices.TUTOR and "tutor" in request.roles:
+                # tutor rquires allocation
+                elif realm == PlatformRealm.TUTOR:
                     ContentModel = TUTORING_MODEL_MAP.get((app_label, model))
                     if not ContentModel:
                         raise ValueError(ErrorCode.UNKNOWN_CONTENT)
 
                     if await Allocation.objects.filter(tutor_id=user_id, active=True, content_id=content_id).aexists():
+                        has_special_access = True
+
+                # preview requires preview worker
+                elif realm == PlatformRealm.PREVIEW:
+                    if await PreviewUser.objects.filter(user_id=user_id).aexists():
                         has_special_access = True
 
                 if has_special_access:
@@ -174,23 +180,6 @@ def active_context():
                 active_context = await Course.issue_context(course_id=course_id, user_id=user_id)
 
             request.active_context = active_context
-            return await func(request, *args, **kwargs)
-
-        return wrapper
-
-    return decorator
-
-
-def access_realm():
-    def decorator(func):
-        @wraps(func)
-        async def wrapper(request: HttpRequest, *args, **kwargs):
-            realm = get_realm(request) or RealmChoices.STUDENT
-            if realm not in RealmChoices:
-                raise ValueError(ErrorCode.INVALID_ACCESS_REALM)
-
-            request.access_realm = cast(RealmChoices, realm)
-
             return await func(request, *args, **kwargs)
 
         return wrapper

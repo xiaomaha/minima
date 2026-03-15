@@ -12,7 +12,7 @@ from apps.sso.models import SSOAccount
 
 @pytest.mark.e2e
 @pytest.mark.django_db
-@override_settings(ALLOWED_REDIRECT_ORIGINS=["http://localhost:3000", "http://testserver"])
+@override_settings(ALLOWED_ORIGIN_REGEXES=["http://localhost:3000", "http://testserver"])
 def test_sso_flow(client: Client, mimesis):
     redirect_to = "http://localhost:3000/auth/callback"
 

@@ -1,9 +1,9 @@
-import { IconExternalLink } from '@tabler/icons-solidjs'
-import { Link, useNavigate } from '@tanstack/solid-router'
-import { createSignal, Show } from 'solid-js'
+import { useNavigate } from '@tanstack/solid-router'
+import { createSignal } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import type * as v from 'valibot'
 import { type DiscussionSpec, studioV1InlineSuggestions, studioV1SaveDiscussion } from '@/api'
+import { PreviewButton } from '@/routes/preview/-PreviewButton'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -93,21 +93,11 @@ export const Discussion = (props: Props) => {
             <div class="divider" />
 
             <div class="flex gap-2 items-center justify-end">
-              <Show when={source.id !== EMPTY_CONTENT_ID}>
-                <Link
-                  to="/student/discussion/$id/session"
-                  params={{ id: source.id }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn btn-primary btn-sm btn-link mr-auto no-underline"
-                  onMouseDown={(e) => e.preventDefault()}
-                  tabIndex={-1}
-                >
-                  <IconExternalLink size={20} />
-                  {t('Preview')}
-                  <span class="text-base-content/40">{new Date(source.modified).toLocaleString()}</span>
-                </Link>
-              </Show>
+              <PreviewButton
+                link={{ to: '/student/discussion/$id/session', params: { id: source.id } }}
+                modified={source.modified}
+                class="mr-auto"
+              />
 
               <actions.Import />
               <actions.Export />

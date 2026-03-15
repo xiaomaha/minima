@@ -57,18 +57,7 @@ SECRET_KEY = "django-insecure-session-debug-key" if DEBUG else os.environ["SECRE
 PERSONAL_ID_SALT = "minima" if DEBUG else os.environ["PERSONAL_ID_SALT"]
 
 ALLOWED_HOSTS = (
-    [
-        "localhost",
-        "minima",
-        "student.localhost",
-        "studio.localhost",
-        "tutor.localhost",
-        "student.testserver",
-        "studio.testserver",
-        "tutor.testserver",
-    ]
-    if DEBUG
-    else json.loads(os.environ["ALLOWED_HOSTS"])
+    ["localhost", "minima", ".localhost", ".testserver"] if DEBUG else json.loads(os.environ["ALLOWED_HOSTS"])
 )
 
 INSTALLED_APPS = [
@@ -118,6 +107,7 @@ INSTALLED_APPS = [
     "apps.assistant",
     "apps.studio",
     "apps.tutor",
+    "apps.preview",
     "apps.tracking",
     "apps.warehouse",
 ]
@@ -227,7 +217,11 @@ SSO_PROVIDERS = {
     },
 }
 SSO_SESSION_EXPIRE_SECONDS = 600
-ALLOWED_REDIRECT_ORIGINS = ["http://localhost:5173"] if DEBUG else json.loads(os.environ["ALLOWED_REDIRECT_ORIGINS"])
+ALLOWED_ORIGIN_REGEXES = (
+    ["http://(?!tutor|studio|desk)[^.]+\\.localhost:5173"]
+    if DEBUG
+    else json.loads(os.environ["ALLOWED_ORIGIN_REGEXES"])
+)
 
 
 # smtp
@@ -266,6 +260,7 @@ AUTH_USER_MODEL = "account.User"
 
 # platform
 PLATFORM_NAME = os.environ.get("PLATFORM_NAME", "Minima")
+PLATFORM_STUDENT_REALM = os.environ.get("PLATFORM_STUDENT_REALM", "student")
 PLATFORM_ADDRESS = os.environ.get("PLATFORM_ADDRESS", "1234 Main St, San Francisco, CA 94123, USA")
 PLATFORM_BASE_URL = os.environ.get("PLATFORM_BASE_URL", "http://www.example.com")
 PLATFORM_PHONE_NUMBER = os.environ.get("PLATFORM_PHONE_NUMBER", "1234-5678")
@@ -353,10 +348,7 @@ CELERY_BEAT_SCHEDULE = {
     "sync-hot-events": {"task": "apps.tracking.tasks.sync_hot_event", "schedule": 300.0},
     "cleanup-hot-events": {"task": "apps.tracking.tasks.cleanup_hot_event", "schedule": crontab(hour=2, minute=0)},
     "collect-daily-data": {"task": "apps.warehouse.tasks.collect_daily_data", "schedule": crontab(hour=1, minute=5)},
-    "cleanup-preview-data": {
-        "task": "apps.learning.tasks.cleanup_testing_data",
-        "schedule": crontab(hour=1, minute=10),
-    },
+    "cleanup-audit-data": {"task": "apps.learning.tasks.cleanup_audit_data", "schedule": crontab(hour=1, minute=10)},
 }
 
 # assistant

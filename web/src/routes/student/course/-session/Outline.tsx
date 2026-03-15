@@ -231,7 +231,7 @@ export const Outline = () => {
                             class="btn btn-secondary btn-sm whitespace-nowrap w-full"
                             onClick={() =>
                               navigate({
-                                to: '/survey/$id',
+                                to: '/public/survey/$id',
                                 params: { id: item.survey.id },
                                 search: (prev) => ({ ...prev, course: s().course.id }),
                               })

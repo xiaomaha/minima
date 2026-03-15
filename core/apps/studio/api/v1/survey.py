@@ -11,8 +11,8 @@ from pydantic import RootModel
 
 from apps.common.error import ErrorCode
 from apps.common.schema import FileSizeValidator, FileTypeValidator, LearningObjectMixinSchema, Schema
-from apps.common.util import HttpRequest, RealmChoices
-from apps.studio.decorator import editor_required, track_editing
+from apps.common.util import HttpRequest
+from apps.studio.decorator import track_editing
 from apps.survey.models import Question, QuestionPool, Submission, Survey
 
 
@@ -70,7 +70,6 @@ router = Router(by_alias=True)
 
 
 @router.get("/survey/{id}", response=SurveySpec)
-@editor_required()
 async def get_survey(request: HttpRequest, id: str):
     return await Survey.objects.prefetch_related(
         Prefetch("question_pool__questions", queryset=Question.objects.prefetch_related("attachments").order_by("id"))
@@ -78,7 +77,6 @@ async def get_survey(request: HttpRequest, id: str):
 
 
 @router.post("/survey", response=str)
-@editor_required()
 @track_editing(Survey)
 async def save_survey(
     request: HttpRequest,
@@ -119,16 +117,14 @@ async def save_survey(
 
 
 @router.delete("/survey/{id}")
-@editor_required()
 @track_editing(Survey, id_field="id")
 async def delete_survey(request: HttpRequest, id: str):
-    if await Submission.objects.filter(survey_id=id, realm=RealmChoices.STUDENT).aexists():
+    if await Submission.objects.filter(survey_id=id).aexists():
         raise ValueError(ErrorCode.ATTEMPT_EXISTS)
     await Survey.objects.filter(id=id, owner_id=request.auth, published__isnull=True).adelete()
 
 
 @router.get("/survey/{id}/question", response=list[SurveyQuestionSpec])
-@editor_required()
 async def get_survey_questions(request: HttpRequest, id: str):
     return [
         q
@@ -139,7 +135,6 @@ async def get_survey_questions(request: HttpRequest, id: str):
 
 
 @router.post("/survey/{id}/question", response=list[int])
-@editor_required()
 @track_editing(Survey, id_field="id")
 async def save_survey_questions(
     request: HttpRequest,
@@ -179,7 +174,6 @@ async def save_survey_questions(
 
 
 @router.delete("/survey/{id}/question/{question_id}")
-@editor_required()
 @track_editing(Survey, id_field="id")
 async def delete_survey_quesion(request: HttpRequest, id: str, question_id: int):
     count, _ = await Question.objects.filter(id=question_id, pool__survey__id=id).adelete()

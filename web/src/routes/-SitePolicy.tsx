@@ -1,17 +1,16 @@
-import { useRouter } from '@tanstack/solid-router'
 import { createEffect, For, Show } from 'solid-js'
 import type * as v from 'valibot'
 import { operationV1AgreePolicies, operationV1EffectivePolicies } from '@/api'
 import type { vPolicyVersionAgreementSchema } from '@/api/valibot.gen'
 import { PLATFORM_NAME } from '@/config'
-import { accountStore, setStore as setUserStore } from '@/routes/account/-store'
+import { logout } from '@/routes/auth/-auth/logout'
+import { accountStore, setStore as setUserStore } from '@/routes/student/(account)/-store'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'
 import { SubmitButton } from '@/shared/SubmitButton'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { createForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
-import { logout } from './account/-account/logout'
 
 interface SitePolicyProps {
   open: boolean
@@ -20,7 +19,6 @@ interface SitePolicyProps {
 
 export const SitePolicy = (props: SitePolicyProps) => {
   const { t } = useTranslation()
-  const router = useRouter()
 
   const [policies, { setStore }] = createCachedStore(
     'operationV1EffectivePolicies',
@@ -65,7 +63,6 @@ export const SitePolicy = (props: SitePolicyProps) => {
   const close = async () => {
     if (accountStore.user?.agreementRequired) {
       await logout()
-      router.invalidate()
     }
     props.setOpen(false)
   }
@@ -90,7 +87,7 @@ export const SitePolicy = (props: SitePolicyProps) => {
       disableBackdrop={!!accountStore.user?.agreementRequired}
     >
       <Form onSubmit={submit}>
-        <div class="px-8 space-y-6 mb-8">
+        <div class="px-8 space-y-6 mb-8 text-left">
           <div class="text-xs text-info mb-8">
             <Show when={accountStore.user}>
               <span class="mr-1">

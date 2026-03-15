@@ -20,7 +20,7 @@ from django.db.models import (
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.common.util import AccessDate, GradingDate, RealmChoices, track_fields, tuid
+from apps.common.util import AccessDate, GradingDate, track_fields, tuid
 
 log = logging.getLogger(__name__)
 
@@ -153,9 +153,6 @@ class AttemptMixin(Model):
     lock = DateTimeField(_("Lock"))
     active = BooleanField(_("Active"), default=True)
     context = CharField(_("Context Key"), max_length=255, blank=True, default="")
-    realm = CharField(
-        _("Realm"), max_length=30, choices=RealmChoices.choices, default=RealmChoices.STUDENT, db_index=True
-    )
 
     class Meta:
         abstract = True

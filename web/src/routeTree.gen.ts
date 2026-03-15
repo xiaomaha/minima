@@ -12,21 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TutorRouteRouteImport } from './routes/tutor/route'
 import { Route as StudioRouteRouteImport } from './routes/studio/route'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
-import { Route as AccountRouteRouteImport } from './routes/account/route'
-import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as DeskRouteRouteImport } from './routes/desk/route'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TutorIndexRouteImport } from './routes/tutor/index'
 import { Route as StudioIndexRouteImport } from './routes/studio/index'
-import { Route as AccountProfileRouteImport } from './routes/account/profile'
-import { Route as AccountLinkRouteImport } from './routes/account/link'
-import { Route as AccountGroupRouteImport } from './routes/account/group'
-import { Route as AccountEmailChangeRouteImport } from './routes/account/email-change'
-import { Route as AccountDeviceRouteImport } from './routes/account/device'
-import { Route as authPasswordChangeRouteImport } from './routes/(auth)/password-change'
-import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as authJoinRouteImport } from './routes/(auth)/join'
-import { Route as authActivateRouteImport } from './routes/(auth)/activate'
+import { Route as PreviewOttRouteImport } from './routes/preview/$ott'
+import { Route as AuthPasswordChangeRouteImport } from './routes/auth/password-change'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthJoinRouteImport } from './routes/auth/join'
+import { Route as AuthActivateRouteImport } from './routes/auth/activate'
 import { Route as StudentdashboardRouteRouteImport } from './routes/student/(dashboard)/route'
+import { Route as StudentaccountRouteRouteImport } from './routes/student/(account)/route'
 import { Route as StudentdashboardIndexRouteImport } from './routes/student/(dashboard)/index'
 import { Route as StudioAppIdRouteImport } from './routes/studio/$app.$id'
 import { Route as StudentMediaIdRouteImport } from './routes/student/media/$id'
@@ -38,7 +35,12 @@ import { Route as StudentdashboardGoalRouteImport } from './routes/student/(dash
 import { Route as StudentdashboardCatalogRouteImport } from './routes/student/(dashboard)/catalog'
 import { Route as StudentdashboardAnnouncementRouteImport } from './routes/student/(dashboard)/announcement'
 import { Route as StudentdashboardAchievementRouteImport } from './routes/student/(dashboard)/achievement'
-import { Route as publicSurveyIdRouteImport } from './routes/(public)/survey/$id'
+import { Route as StudentaccountProfileRouteImport } from './routes/student/(account)/profile'
+import { Route as StudentaccountLinkRouteImport } from './routes/student/(account)/link'
+import { Route as StudentaccountGroupRouteImport } from './routes/student/(account)/group'
+import { Route as StudentaccountEmailChangeRouteImport } from './routes/student/(account)/email-change'
+import { Route as StudentaccountDeviceRouteImport } from './routes/student/(account)/device'
+import { Route as PublicSurveyIdRouteImport } from './routes/public/survey/$id'
 import { Route as TutorExamIdGradingRouteImport } from './routes/tutor/exam/$id.grading'
 import { Route as TutorDiscussionIdGradingRouteImport } from './routes/tutor/discussion/$id.grading'
 import { Route as TutorAssignmentIdGradingRouteImport } from './routes/tutor/assignment/$id.grading'
@@ -63,13 +65,14 @@ const StudentRouteRoute = StudentRouteRouteImport.update({
   path: '/student',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountRouteRoute = AccountRouteRouteImport.update({
-  id: '/account',
-  path: '/account',
+const DeskRouteRoute = DeskRouteRouteImport.update({
+  id: '/desk',
+  path: '/desk',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authRouteRoute = authRouteRouteImport.update({
-  id: '/(auth)',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -87,53 +90,37 @@ const StudioIndexRoute = StudioIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StudioRouteRoute,
 } as any)
-const AccountProfileRoute = AccountProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AccountRouteRoute,
+const PreviewOttRoute = PreviewOttRouteImport.update({
+  id: '/preview/$ott',
+  path: '/preview/$ott',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AccountLinkRoute = AccountLinkRouteImport.update({
-  id: '/link',
-  path: '/link',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountGroupRoute = AccountGroupRouteImport.update({
-  id: '/group',
-  path: '/group',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountEmailChangeRoute = AccountEmailChangeRouteImport.update({
-  id: '/email-change',
-  path: '/email-change',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const AccountDeviceRoute = AccountDeviceRouteImport.update({
-  id: '/device',
-  path: '/device',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
-const authPasswordChangeRoute = authPasswordChangeRouteImport.update({
+const AuthPasswordChangeRoute = AuthPasswordChangeRouteImport.update({
   id: '/password-change',
   path: '/password-change',
-  getParentRoute: () => authRouteRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const authLoginRoute = authLoginRouteImport.update({
+const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => authRouteRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const authJoinRoute = authJoinRouteImport.update({
+const AuthJoinRoute = AuthJoinRouteImport.update({
   id: '/join',
   path: '/join',
-  getParentRoute: () => authRouteRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const authActivateRoute = authActivateRouteImport.update({
+const AuthActivateRoute = AuthActivateRouteImport.update({
   id: '/activate',
   path: '/activate',
-  getParentRoute: () => authRouteRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const StudentdashboardRouteRoute = StudentdashboardRouteRouteImport.update({
   id: '/(dashboard)',
+  getParentRoute: () => StudentRouteRoute,
+} as any)
+const StudentaccountRouteRoute = StudentaccountRouteRouteImport.update({
+  id: '/(account)',
   getParentRoute: () => StudentRouteRoute,
 } as any)
 const StudentdashboardIndexRoute = StudentdashboardIndexRouteImport.update({
@@ -194,9 +181,35 @@ const StudentdashboardAchievementRoute =
     path: '/achievement',
     getParentRoute: () => StudentdashboardRouteRoute,
   } as any)
-const publicSurveyIdRoute = publicSurveyIdRouteImport.update({
-  id: '/(public)/survey/$id',
-  path: '/survey/$id',
+const StudentaccountProfileRoute = StudentaccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => StudentaccountRouteRoute,
+} as any)
+const StudentaccountLinkRoute = StudentaccountLinkRouteImport.update({
+  id: '/link',
+  path: '/link',
+  getParentRoute: () => StudentaccountRouteRoute,
+} as any)
+const StudentaccountGroupRoute = StudentaccountGroupRouteImport.update({
+  id: '/group',
+  path: '/group',
+  getParentRoute: () => StudentaccountRouteRoute,
+} as any)
+const StudentaccountEmailChangeRoute =
+  StudentaccountEmailChangeRouteImport.update({
+    id: '/email-change',
+    path: '/email-change',
+    getParentRoute: () => StudentaccountRouteRoute,
+  } as any)
+const StudentaccountDeviceRoute = StudentaccountDeviceRouteImport.update({
+  id: '/device',
+  path: '/device',
+  getParentRoute: () => StudentaccountRouteRoute,
+} as any)
+const PublicSurveyIdRoute = PublicSurveyIdRouteImport.update({
+  id: '/public/survey/$id',
+  path: '/public/survey/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TutorExamIdGradingRoute = TutorExamIdGradingRouteImport.update({
@@ -246,22 +259,24 @@ const StudentAssignmentIdSessionRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/account': typeof AccountRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/desk': typeof DeskRouteRoute
   '/student': typeof StudentdashboardRouteRouteWithChildren
   '/studio': typeof StudioRouteRouteWithChildren
   '/tutor': typeof TutorRouteRouteWithChildren
-  '/activate': typeof authActivateRoute
-  '/join': typeof authJoinRoute
-  '/login': typeof authLoginRoute
-  '/password-change': typeof authPasswordChangeRoute
-  '/account/device': typeof AccountDeviceRoute
-  '/account/email-change': typeof AccountEmailChangeRoute
-  '/account/group': typeof AccountGroupRoute
-  '/account/link': typeof AccountLinkRoute
-  '/account/profile': typeof AccountProfileRoute
+  '/auth/activate': typeof AuthActivateRoute
+  '/auth/join': typeof AuthJoinRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/password-change': typeof AuthPasswordChangeRoute
+  '/preview/$ott': typeof PreviewOttRoute
   '/studio/': typeof StudioIndexRoute
   '/tutor/': typeof TutorIndexRoute
-  '/survey/$id': typeof publicSurveyIdRoute
+  '/public/survey/$id': typeof PublicSurveyIdRoute
+  '/student/device': typeof StudentaccountDeviceRoute
+  '/student/email-change': typeof StudentaccountEmailChangeRoute
+  '/student/group': typeof StudentaccountGroupRoute
+  '/student/link': typeof StudentaccountLinkRoute
+  '/student/profile': typeof StudentaccountProfileRoute
   '/student/achievement': typeof StudentdashboardAchievementRoute
   '/student/announcement': typeof StudentdashboardAnnouncementRoute
   '/student/catalog': typeof StudentdashboardCatalogRoute
@@ -284,20 +299,22 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof AccountRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/desk': typeof DeskRouteRoute
   '/student': typeof StudentdashboardIndexRoute
-  '/activate': typeof authActivateRoute
-  '/join': typeof authJoinRoute
-  '/login': typeof authLoginRoute
-  '/password-change': typeof authPasswordChangeRoute
-  '/account/device': typeof AccountDeviceRoute
-  '/account/email-change': typeof AccountEmailChangeRoute
-  '/account/group': typeof AccountGroupRoute
-  '/account/link': typeof AccountLinkRoute
-  '/account/profile': typeof AccountProfileRoute
+  '/auth/activate': typeof AuthActivateRoute
+  '/auth/join': typeof AuthJoinRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/password-change': typeof AuthPasswordChangeRoute
+  '/preview/$ott': typeof PreviewOttRoute
   '/studio': typeof StudioIndexRoute
   '/tutor': typeof TutorIndexRoute
-  '/survey/$id': typeof publicSurveyIdRoute
+  '/public/survey/$id': typeof PublicSurveyIdRoute
+  '/student/device': typeof StudentaccountDeviceRoute
+  '/student/email-change': typeof StudentaccountEmailChangeRoute
+  '/student/group': typeof StudentaccountGroupRoute
+  '/student/link': typeof StudentaccountLinkRoute
+  '/student/profile': typeof StudentaccountProfileRoute
   '/student/achievement': typeof StudentdashboardAchievementRoute
   '/student/announcement': typeof StudentdashboardAnnouncementRoute
   '/student/catalog': typeof StudentdashboardCatalogRoute
@@ -320,24 +337,26 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/(auth)': typeof authRouteRouteWithChildren
-  '/account': typeof AccountRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/desk': typeof DeskRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/studio': typeof StudioRouteRouteWithChildren
   '/tutor': typeof TutorRouteRouteWithChildren
+  '/student/(account)': typeof StudentaccountRouteRouteWithChildren
   '/student/(dashboard)': typeof StudentdashboardRouteRouteWithChildren
-  '/(auth)/activate': typeof authActivateRoute
-  '/(auth)/join': typeof authJoinRoute
-  '/(auth)/login': typeof authLoginRoute
-  '/(auth)/password-change': typeof authPasswordChangeRoute
-  '/account/device': typeof AccountDeviceRoute
-  '/account/email-change': typeof AccountEmailChangeRoute
-  '/account/group': typeof AccountGroupRoute
-  '/account/link': typeof AccountLinkRoute
-  '/account/profile': typeof AccountProfileRoute
+  '/auth/activate': typeof AuthActivateRoute
+  '/auth/join': typeof AuthJoinRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/password-change': typeof AuthPasswordChangeRoute
+  '/preview/$ott': typeof PreviewOttRoute
   '/studio/': typeof StudioIndexRoute
   '/tutor/': typeof TutorIndexRoute
-  '/(public)/survey/$id': typeof publicSurveyIdRoute
+  '/public/survey/$id': typeof PublicSurveyIdRoute
+  '/student/(account)/device': typeof StudentaccountDeviceRoute
+  '/student/(account)/email-change': typeof StudentaccountEmailChangeRoute
+  '/student/(account)/group': typeof StudentaccountGroupRoute
+  '/student/(account)/link': typeof StudentaccountLinkRoute
+  '/student/(account)/profile': typeof StudentaccountProfileRoute
   '/student/(dashboard)/achievement': typeof StudentdashboardAchievementRoute
   '/student/(dashboard)/announcement': typeof StudentdashboardAnnouncementRoute
   '/student/(dashboard)/catalog': typeof StudentdashboardCatalogRoute
@@ -362,22 +381,24 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/account'
+    | '/auth'
+    | '/desk'
     | '/student'
     | '/studio'
     | '/tutor'
-    | '/activate'
-    | '/join'
-    | '/login'
-    | '/password-change'
-    | '/account/device'
-    | '/account/email-change'
-    | '/account/group'
-    | '/account/link'
-    | '/account/profile'
+    | '/auth/activate'
+    | '/auth/join'
+    | '/auth/login'
+    | '/auth/password-change'
+    | '/preview/$ott'
     | '/studio/'
     | '/tutor/'
-    | '/survey/$id'
+    | '/public/survey/$id'
+    | '/student/device'
+    | '/student/email-change'
+    | '/student/group'
+    | '/student/link'
+    | '/student/profile'
     | '/student/achievement'
     | '/student/announcement'
     | '/student/catalog'
@@ -400,20 +421,22 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/account'
+    | '/auth'
+    | '/desk'
     | '/student'
-    | '/activate'
-    | '/join'
-    | '/login'
-    | '/password-change'
-    | '/account/device'
-    | '/account/email-change'
-    | '/account/group'
-    | '/account/link'
-    | '/account/profile'
+    | '/auth/activate'
+    | '/auth/join'
+    | '/auth/login'
+    | '/auth/password-change'
+    | '/preview/$ott'
     | '/studio'
     | '/tutor'
-    | '/survey/$id'
+    | '/public/survey/$id'
+    | '/student/device'
+    | '/student/email-change'
+    | '/student/group'
+    | '/student/link'
+    | '/student/profile'
     | '/student/achievement'
     | '/student/announcement'
     | '/student/catalog'
@@ -435,24 +458,26 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/(auth)'
-    | '/account'
+    | '/auth'
+    | '/desk'
     | '/student'
     | '/studio'
     | '/tutor'
+    | '/student/(account)'
     | '/student/(dashboard)'
-    | '/(auth)/activate'
-    | '/(auth)/join'
-    | '/(auth)/login'
-    | '/(auth)/password-change'
-    | '/account/device'
-    | '/account/email-change'
-    | '/account/group'
-    | '/account/link'
-    | '/account/profile'
+    | '/auth/activate'
+    | '/auth/join'
+    | '/auth/login'
+    | '/auth/password-change'
+    | '/preview/$ott'
     | '/studio/'
     | '/tutor/'
-    | '/(public)/survey/$id'
+    | '/public/survey/$id'
+    | '/student/(account)/device'
+    | '/student/(account)/email-change'
+    | '/student/(account)/group'
+    | '/student/(account)/link'
+    | '/student/(account)/profile'
     | '/student/(dashboard)/achievement'
     | '/student/(dashboard)/announcement'
     | '/student/(dashboard)/catalog'
@@ -476,12 +501,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  authRouteRoute: typeof authRouteRouteWithChildren
-  AccountRouteRoute: typeof AccountRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  DeskRouteRoute: typeof DeskRouteRoute
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
   StudioRouteRoute: typeof StudioRouteRouteWithChildren
   TutorRouteRoute: typeof TutorRouteRouteWithChildren
-  publicSurveyIdRoute: typeof publicSurveyIdRoute
+  PreviewOttRoute: typeof PreviewOttRoute
+  PublicSurveyIdRoute: typeof PublicSurveyIdRoute
 }
 
 declare module '@tanstack/solid-router' {
@@ -507,18 +533,18 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof StudentRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountRouteRouteImport
+    '/desk': {
+      id: '/desk'
+      path: '/desk'
+      fullPath: '/desk'
+      preLoaderRoute: typeof DeskRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)': {
-      id: '/(auth)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof authRouteRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -542,74 +568,53 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof StudioIndexRouteImport
       parentRoute: typeof StudioRouteRoute
     }
-    '/account/profile': {
-      id: '/account/profile'
-      path: '/profile'
-      fullPath: '/account/profile'
-      preLoaderRoute: typeof AccountProfileRouteImport
-      parentRoute: typeof AccountRouteRoute
+    '/preview/$ott': {
+      id: '/preview/$ott'
+      path: '/preview/$ott'
+      fullPath: '/preview/$ott'
+      preLoaderRoute: typeof PreviewOttRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/account/link': {
-      id: '/account/link'
-      path: '/link'
-      fullPath: '/account/link'
-      preLoaderRoute: typeof AccountLinkRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/group': {
-      id: '/account/group'
-      path: '/group'
-      fullPath: '/account/group'
-      preLoaderRoute: typeof AccountGroupRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/email-change': {
-      id: '/account/email-change'
-      path: '/email-change'
-      fullPath: '/account/email-change'
-      preLoaderRoute: typeof AccountEmailChangeRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/account/device': {
-      id: '/account/device'
-      path: '/device'
-      fullPath: '/account/device'
-      preLoaderRoute: typeof AccountDeviceRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
-    '/(auth)/password-change': {
-      id: '/(auth)/password-change'
+    '/auth/password-change': {
+      id: '/auth/password-change'
       path: '/password-change'
-      fullPath: '/password-change'
-      preLoaderRoute: typeof authPasswordChangeRouteImport
-      parentRoute: typeof authRouteRoute
+      fullPath: '/auth/password-change'
+      preLoaderRoute: typeof AuthPasswordChangeRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/(auth)/login': {
-      id: '/(auth)/login'
+    '/auth/login': {
+      id: '/auth/login'
       path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginRouteImport
-      parentRoute: typeof authRouteRoute
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/(auth)/join': {
-      id: '/(auth)/join'
+    '/auth/join': {
+      id: '/auth/join'
       path: '/join'
-      fullPath: '/join'
-      preLoaderRoute: typeof authJoinRouteImport
-      parentRoute: typeof authRouteRoute
+      fullPath: '/auth/join'
+      preLoaderRoute: typeof AuthJoinRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/(auth)/activate': {
-      id: '/(auth)/activate'
+    '/auth/activate': {
+      id: '/auth/activate'
       path: '/activate'
-      fullPath: '/activate'
-      preLoaderRoute: typeof authActivateRouteImport
-      parentRoute: typeof authRouteRoute
+      fullPath: '/auth/activate'
+      preLoaderRoute: typeof AuthActivateRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/student/(dashboard)': {
       id: '/student/(dashboard)'
       path: ''
       fullPath: '/student'
       preLoaderRoute: typeof StudentdashboardRouteRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
+    '/student/(account)': {
+      id: '/student/(account)'
+      path: ''
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentaccountRouteRouteImport
       parentRoute: typeof StudentRouteRoute
     }
     '/student/(dashboard)/': {
@@ -689,11 +694,46 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof StudentdashboardAchievementRouteImport
       parentRoute: typeof StudentdashboardRouteRoute
     }
-    '/(public)/survey/$id': {
-      id: '/(public)/survey/$id'
-      path: '/survey/$id'
-      fullPath: '/survey/$id'
-      preLoaderRoute: typeof publicSurveyIdRouteImport
+    '/student/(account)/profile': {
+      id: '/student/(account)/profile'
+      path: '/profile'
+      fullPath: '/student/profile'
+      preLoaderRoute: typeof StudentaccountProfileRouteImport
+      parentRoute: typeof StudentaccountRouteRoute
+    }
+    '/student/(account)/link': {
+      id: '/student/(account)/link'
+      path: '/link'
+      fullPath: '/student/link'
+      preLoaderRoute: typeof StudentaccountLinkRouteImport
+      parentRoute: typeof StudentaccountRouteRoute
+    }
+    '/student/(account)/group': {
+      id: '/student/(account)/group'
+      path: '/group'
+      fullPath: '/student/group'
+      preLoaderRoute: typeof StudentaccountGroupRouteImport
+      parentRoute: typeof StudentaccountRouteRoute
+    }
+    '/student/(account)/email-change': {
+      id: '/student/(account)/email-change'
+      path: '/email-change'
+      fullPath: '/student/email-change'
+      preLoaderRoute: typeof StudentaccountEmailChangeRouteImport
+      parentRoute: typeof StudentaccountRouteRoute
+    }
+    '/student/(account)/device': {
+      id: '/student/(account)/device'
+      path: '/device'
+      fullPath: '/student/device'
+      preLoaderRoute: typeof StudentaccountDeviceRouteImport
+      parentRoute: typeof StudentaccountRouteRoute
+    }
+    '/public/survey/$id': {
+      id: '/public/survey/$id'
+      path: '/public/survey/$id'
+      fullPath: '/public/survey/$id'
+      preLoaderRoute: typeof PublicSurveyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tutor/exam/$id/grading': {
@@ -755,43 +795,42 @@ declare module '@tanstack/solid-router' {
   }
 }
 
-interface authRouteRouteChildren {
-  authActivateRoute: typeof authActivateRoute
-  authJoinRoute: typeof authJoinRoute
-  authLoginRoute: typeof authLoginRoute
-  authPasswordChangeRoute: typeof authPasswordChangeRoute
+interface AuthRouteRouteChildren {
+  AuthActivateRoute: typeof AuthActivateRoute
+  AuthJoinRoute: typeof AuthJoinRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthPasswordChangeRoute: typeof AuthPasswordChangeRoute
 }
 
-const authRouteRouteChildren: authRouteRouteChildren = {
-  authActivateRoute: authActivateRoute,
-  authJoinRoute: authJoinRoute,
-  authLoginRoute: authLoginRoute,
-  authPasswordChangeRoute: authPasswordChangeRoute,
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthActivateRoute: AuthActivateRoute,
+  AuthJoinRoute: AuthJoinRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthPasswordChangeRoute: AuthPasswordChangeRoute,
 }
 
-const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
-  authRouteRouteChildren,
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
 )
 
-interface AccountRouteRouteChildren {
-  AccountDeviceRoute: typeof AccountDeviceRoute
-  AccountEmailChangeRoute: typeof AccountEmailChangeRoute
-  AccountGroupRoute: typeof AccountGroupRoute
-  AccountLinkRoute: typeof AccountLinkRoute
-  AccountProfileRoute: typeof AccountProfileRoute
+interface StudentaccountRouteRouteChildren {
+  StudentaccountDeviceRoute: typeof StudentaccountDeviceRoute
+  StudentaccountEmailChangeRoute: typeof StudentaccountEmailChangeRoute
+  StudentaccountGroupRoute: typeof StudentaccountGroupRoute
+  StudentaccountLinkRoute: typeof StudentaccountLinkRoute
+  StudentaccountProfileRoute: typeof StudentaccountProfileRoute
 }
 
-const AccountRouteRouteChildren: AccountRouteRouteChildren = {
-  AccountDeviceRoute: AccountDeviceRoute,
-  AccountEmailChangeRoute: AccountEmailChangeRoute,
-  AccountGroupRoute: AccountGroupRoute,
-  AccountLinkRoute: AccountLinkRoute,
-  AccountProfileRoute: AccountProfileRoute,
+const StudentaccountRouteRouteChildren: StudentaccountRouteRouteChildren = {
+  StudentaccountDeviceRoute: StudentaccountDeviceRoute,
+  StudentaccountEmailChangeRoute: StudentaccountEmailChangeRoute,
+  StudentaccountGroupRoute: StudentaccountGroupRoute,
+  StudentaccountLinkRoute: StudentaccountLinkRoute,
+  StudentaccountProfileRoute: StudentaccountProfileRoute,
 }
 
-const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
-  AccountRouteRouteChildren,
-)
+const StudentaccountRouteRouteWithChildren =
+  StudentaccountRouteRoute._addFileChildren(StudentaccountRouteRouteChildren)
 
 interface StudentdashboardRouteRouteChildren {
   StudentdashboardAchievementRoute: typeof StudentdashboardAchievementRoute
@@ -823,6 +862,7 @@ const StudentdashboardRouteRouteWithChildren =
   )
 
 interface StudentRouteRouteChildren {
+  StudentaccountRouteRoute: typeof StudentaccountRouteRouteWithChildren
   StudentdashboardRouteRoute: typeof StudentdashboardRouteRouteWithChildren
   StudentMediaIdRoute: typeof StudentMediaIdRoute
   StudentAssignmentIdSessionRoute: typeof StudentAssignmentIdSessionRoute
@@ -832,6 +872,7 @@ interface StudentRouteRouteChildren {
 }
 
 const StudentRouteRouteChildren: StudentRouteRouteChildren = {
+  StudentaccountRouteRoute: StudentaccountRouteRouteWithChildren,
   StudentdashboardRouteRoute: StudentdashboardRouteRouteWithChildren,
   StudentMediaIdRoute: StudentMediaIdRoute,
   StudentAssignmentIdSessionRoute: StudentAssignmentIdSessionRoute,
@@ -880,12 +921,13 @@ const TutorRouteRouteWithChildren = TutorRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  authRouteRoute: authRouteRouteWithChildren,
-  AccountRouteRoute: AccountRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  DeskRouteRoute: DeskRouteRoute,
   StudentRouteRoute: StudentRouteRouteWithChildren,
   StudioRouteRoute: StudioRouteRouteWithChildren,
   TutorRouteRoute: TutorRouteRouteWithChildren,
-  publicSurveyIdRoute: publicSurveyIdRoute,
+  PreviewOttRoute: PreviewOttRoute,
+  PublicSurveyIdRoute: PublicSurveyIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

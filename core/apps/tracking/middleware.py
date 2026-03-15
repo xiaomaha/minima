@@ -11,7 +11,7 @@ class DjangoRequest:
         # cf. pghistory.middleware.HistoryMiddleware
         if attr == "user":
             if hasattr(value, "_meta"):
-                pghistory.context(user_id=value.pk, is_admin=value.is_superuser or value.is_staff)
+                pghistory.context(user_id=value.pk, is_admin=value.is_superuser)
 
         return super().__setattr__(attr, value)
 

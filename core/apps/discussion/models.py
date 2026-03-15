@@ -36,15 +36,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.account.models import OtpLog
 from apps.common.error import ErrorCode
 from apps.common.models import AttemptMixin, GradeFieldMixin, GradeWorkflowMixin, LearningObjectMixin, TimeStampedMixin
-from apps.common.util import (
-    AccessDate,
-    GradingDate,
-    LearningSessionStep,
-    OtpTokenDict,
-    RealmChoices,
-    ScoreStatsDict,
-    get_score_stats,
-)
+from apps.common.util import AccessDate, GradingDate, LearningSessionStep, OtpTokenDict, ScoreStatsDict, get_score_stats
 from apps.discussion.trigger import attempt_retry_count
 from apps.operation.models import Appeal, AttachmentMixin, HonorCode, MessageType, user_message_created
 
@@ -223,7 +215,7 @@ class Attempt(AttemptMixin):
         max_attempts: int  # annotated
 
     @classmethod
-    async def start(cls, *, discussion_id: str, learner_id: str, lock: datetime, context: str, realm: RealmChoices):
+    async def start(cls, *, discussion_id: str, learner_id: str, lock: datetime, context: str):
         discussion = await Discussion.objects.aget(id=discussion_id)
 
         if discussion.verification_required:
@@ -242,7 +234,6 @@ class Attempt(AttemptMixin):
                 active=True,
                 started=timezone.now() + timedelta(seconds=1),
                 question=question,
-                realm=realm,
             )
         except IntegrityError:
             raise ValueError(ErrorCode.ATTEMPT_ALREADY_STARTED)

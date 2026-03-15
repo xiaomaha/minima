@@ -6,13 +6,12 @@ import { NavbarLogo } from '@/shared/NavbarLogo'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { protectedRoute } from '../-protected'
-import { AccountButton } from '../account/-account/AccountButton'
+import { LogoutButton } from '../auth/-auth/LogoutButtion'
 import { AllocationProvider } from './-tutor/context'
 
 export const Route = createFileRoute('/tutor')({
   beforeLoad: () => {
     protectedRoute()
-
     if (location.hostname.split('.')[0] !== 'tutor') throw notFound()
   },
   component: RouteComponent,
@@ -37,7 +36,7 @@ function RouteComponent() {
 
         <div class="flex gap-2 md:gap-6 px-4">
           <ThemeButton />
-          <AccountButton />
+          <LogoutButton />
         </div>
       </div>
 

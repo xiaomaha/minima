@@ -157,7 +157,7 @@ class GradeAdmin(ModelAdmin[Grade]):
         async_to_sync(grade.grade)(grader_id=cast(str, request.user.pk) if request.user else None)
 
     def has_grade_permission(self, request, object_id: str | int):
-        return request.user.is_staff
+        return request.user.is_superuser
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == "earned_details":

@@ -199,7 +199,7 @@ function RouteComponent() {
         </div>
 
         <Show when={appeals.end && appeals.count === 0}>
-          <NoContent message={t('No exam grading yet.')} />
+          <NoContent message={t('No grading appeal yet.')} />
         </Show>
 
         <Show when={!appeals.end}>

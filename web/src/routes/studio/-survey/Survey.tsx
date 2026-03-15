@@ -1,9 +1,9 @@
-import { IconExternalLink } from '@tabler/icons-solidjs'
-import { Link, useNavigate } from '@tanstack/solid-router'
+import { useNavigate } from '@tanstack/solid-router'
 import { createSignal, Show } from 'solid-js'
 import { modifyMutable, reconcile, unwrap } from 'solid-js/store'
 import type * as v from 'valibot'
 import { type SurveySpec, studioV1SaveSurvey } from '@/api'
+import { PreviewButton } from '@/routes/preview/-PreviewButton'
 import { useTranslation } from '@/shared/solid/i18n'
 import { EMPTY_CONTENT_ID, useEditing } from '../-context/editing'
 import { DataAction } from '../-studio/DataAction'
@@ -70,19 +70,11 @@ export const Survey = (props: Props) => {
 
             <div class="flex gap-2 items-center justify-end">
               <Show when={source.id !== EMPTY_CONTENT_ID}>
-                <Link
-                  to="/survey/$id"
-                  params={{ id: source.id }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn btn-primary btn-sm btn-link mr-auto no-underline"
-                  onMouseDown={(e) => e.preventDefault()}
-                  tabIndex={-1}
-                >
-                  <IconExternalLink size={20} />
-                  {t('Preview')}
-                  <span class="text-base-content/40">{new Date(source.modified).toLocaleString()}</span>
-                </Link>
+                <PreviewButton
+                  link={{ to: '/public/survey/$id', params: { id: source.id } }}
+                  modified={source.modified}
+                  class="mr-auto"
+                />
               </Show>
 
               <actions.Import />

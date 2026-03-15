@@ -11,7 +11,7 @@ import {
 } from '@/api'
 import { vDiscussionPostSaveSchema } from '@/api/valibot.gen'
 import { accessContextParam } from '@/context'
-import { accountStore } from '@/routes/account/-store'
+import { accountStore } from '@/routes/student/(account)/-store'
 import { Avatar } from '@/shared/Avatar'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { Dialog } from '@/shared/Diaglog'

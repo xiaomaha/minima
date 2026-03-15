@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
-import { accountStore } from '@/routes/account/-store'
+import { accountStore } from '@/routes/student/(account)/-store'
 import { Inquiry } from '../-shared/Inquiry'
 import { useDashboard } from './-context'
 

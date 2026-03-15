@@ -37,6 +37,7 @@ from django.db.models import (
     Model,
     OneToOneField,
     Q,
+    QuerySet,
     TextField,
     Value,
 )
@@ -54,7 +55,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.error import ErrorCode
 from apps.common.models import TimeStampedMixin, TuidMixin
-from apps.common.util import HttpRequest, OtpTokenDict, TokenDict, decode_token, encode_token
+from apps.common.util import HttpRequest, OtpTokenDict, TokenDict, decode_token, encode_token, get_realm
 
 log = logging.getLogger(__name__)
 
@@ -137,10 +138,14 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         indexes = [Index(fields=["name"]), Index(fields=["nickname"])]
 
     if TYPE_CHECKING:
+        from apps.partner.models import Member
+
         pgh_event_model: type[Model]
         otp_enabled: "datetime | None"  # annotated
         token_expires: "datetime | None"  # annotated
         pk: str
+        members: "QuerySet[Member]"
+        agreement_required: bool
 
     def __str__(self):
         return f"{self.name} <{self.email}>"
@@ -186,19 +191,38 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                 raise ValueError(ErrorCode.INVALID_PASSWORD)
 
         roles = [g.name async for g in self.groups.all()]
+        realms = [m.group.partner.realm async for m in self.members.select_related("group__partner").all()]
+
+        # escalate realm as authentication
+        realm = get_realm(request)
+        if realm != settings.PLATFORM_STUDENT_REALM:
+            if realm not in roles and realm not in realms:
+                raise ValueError(ErrorCode.INVALID_REALM)
 
         # access token
         options = auth_cookie_options()
         max_age = settings.ACCESS_TOKEN_EXPIRE_SECONDS
-        access_payload: TokenDict = {"sub": self.pk, "exp": int(time()) + max_age, "type": "access", "roles": roles}
+        access_payload: TokenDict = {
+            "sub": self.pk,
+            "exp": int(time()) + max_age,
+            "type": "access",
+            "roles": roles,
+            "realms": realms,
+        }
         access_token = encode_token(access_payload)
-        response.set_cookie(key="access_token", value=access_token, max_age=max_age, **options)
+        response.set_cookie(key=settings.ACCESS_TOKEN_NAME, value=access_token, max_age=max_age, **options)
 
         # refresh token
         max_age = settings.REFRESH_TOKEN_EXPIRE_SECONDS
-        refresh_payload: TokenDict = {"sub": self.pk, "exp": int(time()) + max_age, "type": "refresh", "roles": roles}
+        refresh_payload: TokenDict = {
+            "sub": self.pk,
+            "exp": int(time()) + max_age,
+            "type": "refresh",
+            "roles": roles,
+            "realms": realms,
+        }
         refresh_token = encode_token(refresh_payload)
-        response.set_cookie(key="refresh_token", value=refresh_token, max_age=max_age, **options)
+        response.set_cookie(key=settings.REFRESH_TOKEN_NAME, value=refresh_token, max_age=max_age, **options)
 
         # save last login time
         now = timezone.now()
@@ -262,7 +286,13 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                         )
                     )
                 ),
-                roles=ArrayAgg("groups__name", filter=Q(groups__isnull=False), default=Value([])),
+                roles=ArrayAgg("groups__name", filter=Q(groups__isnull=False), default=Value([]), distinct=True),
+                realms=ArrayAgg(
+                    "members__group__partner__realm",
+                    filter=Q(members__group__partner__realm__isnull=False),
+                    default=Value([]),
+                    distinct=True,
+                ),
             )
             if annotate
             else cls.objects

@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
 import { createEffect, createSignal, For, onMount, Show } from 'solid-js'
 import { type MessageSchema, operationV1GetUnreadMessages, operationV1ReadMessage } from '@/api'
-import { accountStore } from '@/routes/account/-store'
+import { accountStore } from '@/routes/student/(account)/-store'
 import { NoContent } from '@/shared/NoContent'
 import { RefreshButton } from '@/shared/RefreshButton'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
@@ -77,7 +77,7 @@ export const Notification = () => {
         navigate({ to: '/student/catalog' })
         break
       case 'group':
-        navigate({ to: '/account/group' })
+        navigate({ to: '/student/group' })
         break
     }
   }

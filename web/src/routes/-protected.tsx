@@ -1,5 +1,5 @@
 import { redirect } from '@tanstack/solid-router'
-import { accountStore } from './account/-store'
+import { accountStore } from './student/(account)/-store'
 
 export const protectedRoute = () => {
   if (!accountStore.user) {
@@ -7,7 +7,7 @@ export const protectedRoute = () => {
     const shouldIgnoreNext = location.search.includes('token=')
 
     throw redirect({
-      to: '/login',
+      to: '/auth/login',
       search: shouldIgnoreNext ? undefined : { next: nextPath },
     })
   }

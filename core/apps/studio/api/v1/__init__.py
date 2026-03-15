@@ -28,7 +28,6 @@ from apps.studio.api.v1.exam import router as exam_router
 from apps.studio.api.v1.media import router as media_router
 from apps.studio.api.v1.quiz import router as quiz_router
 from apps.studio.api.v1.survey import router as survey_router
-from apps.studio.decorator import editor_required
 from apps.studio.models import Editing
 from apps.survey.models import Survey
 
@@ -62,7 +61,6 @@ class StudioContentSpec(Schema):
 
 
 @router.get("/content", response=PaginatedResponse[StudioContentSpec])
-@editor_required()
 async def content(
     request: HttpRequest,
     page: Annotated[int, functions.Query(1, ge=1)],
@@ -131,7 +129,6 @@ class AssessmentSuggestionSpec(Schema):
 
 
 @router.get("/suggestion/assessment", response=list[AssessmentSuggestionSpec])
-@editor_required()
 async def assessment_suggestions(request: HttpRequest):
     qs = [
         M.objects
@@ -151,7 +148,6 @@ class ContentSuggestionSpec(Schema):
 
 
 @router.get("/suggestion/content", response=list[ContentSuggestionSpec])
-@editor_required()
 async def content_suggestions(request: HttpRequest, kind: Annotated[StudioModel, functions.Query(...)]):
     return [
         raw
@@ -172,7 +168,6 @@ InlineItem = Literal["honor_code", "faq", "category", "instructor", "certificate
 
 
 @router.get("/suggestion/inline", response=list[InlineSuggestionSpec])
-@editor_required()
 async def inline_suggestions(request: HttpRequest, kind: Annotated[InlineItem, functions.Query(...)]):
     qs = None
 

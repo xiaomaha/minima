@@ -1,23 +1,21 @@
-import { IconHelpCircle } from '@tabler/icons-solidjs'
 import { createFileRoute, Outlet, redirect } from '@tanstack/solid-router'
-import { createEffect, onMount, Show, Suspense } from 'solid-js'
+import { createEffect, onMount, Suspense } from 'solid-js'
 import * as v from 'valibot'
 import { learningV1GetRecords, operationV1RegisterDevice } from '@/api'
 import { getFcmToken } from '@/firebase'
-import { accountStore } from '@/routes/account/-store'
 import { setRecords } from '@/routes/student/-shared/record'
 import { SearchBox } from '@/routes/student/-shared/SearchBox'
+import { accountStore } from '@/routes/student/(account)/-store'
 import { NotFound } from '@/shared/error/NotFound'
 import { NavbarLogo } from '@/shared/NavbarLogo'
 import { createCachedStore } from '@/shared/solid/cached-store'
-import { useTranslation } from '@/shared/solid/i18n'
 import { ThemeButton } from '@/shared/ThemeButton'
-import { capitalize, getDeviceName } from '@/shared/utils'
+import { getDeviceName } from '@/shared/utils'
 import { protectedRoute } from '../-protected'
-import { AccountButton } from '../account/-account/AccountButton'
-import { currentDevice, setCurrentDevice } from '../account/-device'
 import { Chat } from './-shared/aichat/Chat'
 import { Notification } from './-shared/Notification'
+import { AccountButton } from './(account)/-account/AccountButton'
+import { currentDevice, setCurrentDevice } from './(account)/-device'
 
 const searchSchema = v.object({
   course: v.optional(v.pipe(v.string())),
@@ -73,58 +71,32 @@ function RouteComponent() {
   })
 
   return (
-    <>
-      <div class="flex flex-col">
-        <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
-          <div class="flex-1 flex items-center">
-            <NavbarLogo>
-              <span class="text-md font-semibold hidden md:block">Minima</span>
-            </NavbarLogo>
-          </div>
-
-          <SearchBox />
-
-          <div class="flex-1 flex gap-2 md:gap-6 px-4 justify-end">
-            <Suspense>
-              <Chat />
-            </Suspense>
-
-            <ThemeButton />
-
-            <Notification />
-
-            <AccountButton />
-          </div>
+    <div class="flex flex-col">
+      <div class="justify-between navbar bg-base-100/90 w-full min-h-14 fixed top-0 z-10 backdrop-blur-2xl">
+        <div class="flex-1 flex items-center">
+          <NavbarLogo>
+            <span class="text-md font-semibold hidden md:block">Minima</span>
+          </NavbarLogo>
         </div>
 
-        <main class="p-4 pb-12 mt-14">
-          <Outlet />
-        </main>
+        <SearchBox />
+
+        <div class="flex-1 flex gap-2 md:gap-6 px-4 justify-end">
+          <Suspense>
+            <Chat />
+          </Suspense>
+
+          <ThemeButton />
+
+          <Notification />
+
+          <AccountButton />
+        </div>
       </div>
-      <AuditBanner />
-    </>
-  )
-}
 
-const AuditBanner = () => {
-  const { t } = useTranslation()
-
-  const subdomain = () => location.hostname.split('.')[0]
-  const isAuditMode = () => subdomain() !== 'student'
-
-  return (
-    <Show when={isAuditMode()}>
-      <div role="alert" class="alert alert-warning bg-warning/60 fixed bottom-8 left-8 z-1000">
-        <span class="font-semibold">{t('{{realm}} preview', { realm: t(capitalize(subdomain()!)) })}</span>
-        <span class="tooltip">
-          <div class="tooltip-content text-left">
-            <span class="text-left">
-              {t('You can use all features without any restrictions. Data will be deleted in about an hour.')}
-            </span>
-          </div>
-          <IconHelpCircle size={20} />
-        </span>
-      </div>
-    </Show>
+      <main class="p-4 pb-12 mt-14">
+        <Outlet />
+      </main>
+    </div>
   )
 }

@@ -43,7 +43,7 @@ dependencies = [
   "webvtt-py",
   "authlib",
   "httpx",
-  "firebase-admin>=7.1.0",
+  "firebase-admin",
 ]
 
 [dependency-groups]
@@ -64,7 +64,7 @@ dev = [
   "openpyxl",
   "django-stubs",
   "typing-extensions",
-  "celery-types>=0.24.0",
+  "celery-types",
 ]
 
 [tool.django-stubs]

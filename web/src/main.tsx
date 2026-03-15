@@ -1,23 +1,11 @@
-import { createRouter, RouterProvider } from '@tanstack/solid-router'
+import { RouterProvider } from '@tanstack/solid-router'
 import { render } from 'solid-js/web'
-import { routeTree } from './routeTree.gen'
-import { UnKnown } from './shared/error/UnKnown'
 import './styles.css'
 import { client } from './api/client.gen'
 import { accessContextParam } from './context'
-import { getUserLanguage } from './routes/account/-store'
+import { router } from './router'
+import { getUserLanguage } from './routes/student/(account)/-store'
 import { handleApiError } from './shared/error/error'
-
-const router = createRouter({
-  routeTree,
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-  defaultPreloadStaleTime: 0,
-  defaultErrorComponent: ({ error }) => {
-    console.error(error)
-    return <UnKnown error={error} />
-  },
-})
 
 // error
 client.instance.interceptors.response.use((res) => res, handleApiError)

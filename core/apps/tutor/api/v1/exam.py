@@ -10,7 +10,7 @@ from apps.common.util import HttpRequest, Pagination
 from apps.exam.api.schema import ExamQuestionSchema, ExamSolutionSchema
 from apps.exam.models import Exam, Grade, Question
 from apps.tutor.api.v1.schema import TutorGradeSaveSchema, TutorGradeSchema, TutorGraeCompleteSchema
-from apps.tutor.decorator import allocation_required, tutor_required
+from apps.tutor.decorator import allocation_required
 
 router = Router(by_alias=True)
 
@@ -22,7 +22,6 @@ class TutorExamGradeSchema(TutorGradeSchema):
 
 
 @router.get("/exam/{id}/grade", response=list[TutorExamGradeSchema])
-@tutor_required()
 @allocation_required("exam", "exam")
 @paginate(Pagination)
 async def get_exam_grades(request: HttpRequest, id: str):
@@ -65,7 +64,6 @@ class TutorExamGradePaperSchema(Schema):
 
 
 @router.get("/exam/{id}/grade/{grade_id}", response=TutorExamGradePaperSchema)
-@tutor_required()
 @allocation_required("exam", "exam")
 async def get_exam_grade_paper(
     request: HttpRequest, id: str, grade_id: int, question_id: int | None = functions.Query(None, alias="questionId")
@@ -99,7 +97,6 @@ async def get_exam_grade_paper(
 
 
 @router.post("/exam/{id}/grade/{grade_id}", response=TutorGraeCompleteSchema)
-@tutor_required()
 @allocation_required("exam", "exam")
 async def complete_exam_grade(request: HttpRequest, id: str, grade_id: int, data: TutorGradeSaveSchema):
     grade = await aget_object_or_404(

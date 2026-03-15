@@ -14,7 +14,7 @@ from apps.assignment.api.schema import (
 from apps.assignment.models import Assignment, Attempt
 from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest
-from apps.learning.api.access_control import access_date, access_realm, active_context
+from apps.learning.api.access_control import access_date, active_context
 
 router = Router(by_alias=True)
 
@@ -30,15 +30,10 @@ async def get_session(request: HttpRequest, id: str):
 
 @router.post("/{id}/attempt", response=AssignmentAttemptSchema)
 @active_context()
-@access_realm()
 @access_date("assignment", "assignment")
 async def start_attempt(request: HttpRequest, id: str):
     return await Attempt.start(
-        assignment_id=id,
-        learner_id=request.auth,
-        lock=request.access_date["end"],
-        context=request.active_context,
-        realm=request.access_realm,
+        assignment_id=id, learner_id=request.auth, lock=request.access_date["end"], context=request.active_context
     )
 
 

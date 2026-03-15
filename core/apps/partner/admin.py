@@ -50,7 +50,7 @@ class MemberAdmin(ImportExportModelAdmin[Member]):
         ("group__partner", RelatedDropdownFilter),
         ("group", RelatedDropdownFilter),
         ("team", FieldTextFilter),
-        ("cohortmember__cohort", RelatedDropdownFilter),
+        ("cohort_members__cohort", RelatedDropdownFilter),
     ]
 
     @admin.display(description=_("User"), boolean=True)
