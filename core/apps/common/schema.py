@@ -1,10 +1,11 @@
 from datetime import datetime
+from typing import Annotated
 
 from django.conf import settings
 from ninja import Schema as BaseSchema
 from ninja.files import UploadedFile
 from PIL import Image
-from pydantic import GetCoreSchemaHandler
+from pydantic import Field, GetCoreSchemaHandler
 from pydantic.alias_generators import to_camel
 from pydantic.config import ConfigDict
 from pydantic_core import core_schema
@@ -134,3 +135,17 @@ class ImageValidator:
 
     def __get_pydantic_core_schema__(self, source, handler: GetCoreSchemaHandler):
         return core_schema.no_info_after_validator_function(self.validate, handler(source))
+
+
+class PGHContextSchema(Schema):
+    class PGHContextMedtadataSchema(Schema):
+        ip: str
+        device: str | None
+        os: str | None
+        browser: str | None
+        auth_id: str | None
+        url: str
+        user_id: Annotated[str, Field(None)]
+        is_admin: Annotated[bool, Field(None)]
+
+    metadata: PGHContextMedtadataSchema

@@ -156,9 +156,7 @@ const ItemList = (props: ItemListProps) => {
           <RefreshButton refresh={refetch} loading={items.loading} />
         </div>
         <div class="max-w-5xl mx-auto flex flex-col gap-6">
-          <For each={items.items}>
-            {(item) => <ItemCard catalogId={props.catalog.id} item={item} setStore={setStore} />}
-          </For>
+          <For each={items.items}>{(item) => <ItemCard catalog={props.catalog} item={item} setStore={setStore} />}</For>
 
           <Show when={items.end && items.count === 0}>
             <NoContent />
@@ -176,7 +174,7 @@ const ItemList = (props: ItemListProps) => {
 }
 
 interface ItemCardProps {
-  catalogId: number
+  catalog: CatalogSchema
   item: CatalogItemSchema
   setStore: SetStoreFunction<{ items: CatalogItemSchema[] }>
 }
@@ -193,7 +191,7 @@ const ItemCard = (props: ItemCardProps) => {
 
     try {
       const { data } = await learningV1EnrollCatalogItem({
-        path: { id: props.catalogId },
+        path: { id: props.catalog.id },
         body: {
           contentId: props.item.content.id,
           appLabel: props.item.contentType.appLabel,
@@ -203,7 +201,12 @@ const ItemCard = (props: ItemCardProps) => {
       // update catalog cache
       props.setStore('items', (prev) => prev.id === props.item.id, 'enrolled', true)
       // update enrollment cache
-      newEnrollments.push({ ...data, content: props.item.content, contentType: props.item.contentType })
+      newEnrollments.push({
+        ...data,
+        content: props.item.content,
+        contentType: props.item.contentType,
+        term: props.catalog.name,
+      })
     } catch (_) {
       // This error will be handled in global error handler
     } finally {

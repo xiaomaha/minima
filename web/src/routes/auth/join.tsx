@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from '@tanstack/solid-router'
+import { createFileRoute, type NavigateOptions, notFound } from '@tanstack/solid-router'
 import { createSignal, For, Show } from 'solid-js'
 import * as v from 'valibot'
 import type { SitePolicySchema } from '@/api'
@@ -34,6 +34,8 @@ export const Route = createFileRoute('/auth/join')({
   },
 })
 
+const callbackPath: NavigateOptions['to'] = '/auth/activate'
+
 function RouteComponent() {
   const { t } = useTranslation()
   const search = Route.useSearch()
@@ -46,7 +48,7 @@ function RouteComponent() {
       agreements: [],
       password: '',
       passwordConfirm: '',
-      callbackUrl: `${window.location.origin}/activate`,
+      callbackUrl: `${window.location.origin}${callbackPath}`,
     },
     validate: valiForm(vJoinSchema),
   })

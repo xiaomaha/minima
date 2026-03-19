@@ -57,6 +57,7 @@ services:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./script/init.sql:/docker-entrypoint-initdb.d/init.sql
     command: >
       sh -c "
         docker-entrypoint.sh postgres

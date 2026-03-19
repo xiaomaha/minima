@@ -5,6 +5,7 @@ import { NavbarLogo } from '@/shared/NavbarLogo'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { protectedRoute } from '../-protected'
 import { LogoutButton } from '../auth/-auth/LogoutButtion'
+import { useTokenExpired } from '../auth/-auth/logout'
 
 export const Route = createFileRoute('/studio')({
   beforeLoad: () => {
@@ -16,6 +17,8 @@ export const Route = createFileRoute('/studio')({
 })
 
 function RouteComponent() {
+  useTokenExpired()
+
   return (
     <>
       <style>

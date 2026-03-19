@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from apps.common.admin import ModelAdmin, ReadOnlyHiddenModelAdmin, ReadOnlyTabularInline
-from apps.learning.models import Catalog, CatalogItem, CohortCatalog, Enrollment, UserCatalog
+from apps.learning.models import Catalog, CatalogItem, CohortCatalog, Enrollment, LearningTerm, UserCatalog
 
 
 @admin.register(Enrollment)
@@ -10,6 +10,11 @@ class EnrollmentAdmin(ModelAdmin[Enrollment]):
         model = Enrollment.pgh_event_model
 
     inlines = (EnrollmentEventInline,)
+
+
+@admin.register(LearningTerm)
+class LearningTermAdmin(ModelAdmin[LearningTerm]):
+    pass
 
 
 @admin.register(Enrollment.pgh_event_model)

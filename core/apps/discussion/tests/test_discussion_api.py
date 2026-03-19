@@ -13,7 +13,7 @@ from conftest import AdminUser
 def test_discussion_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     admin_user.login()
 
-    discussion = DiscussionFactory.create(title=mimesis.text.title())
+    discussion = DiscussionFactory.create(title=mimesis.text.title(), verification_required=True)
     EnrollmentFactory(
         content_type=ContentType.objects.get_for_model(discussion),
         content_id=discussion.id,

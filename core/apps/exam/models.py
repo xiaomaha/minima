@@ -30,6 +30,7 @@ from django.db.models import (
     UniqueConstraint,
     aprefetch_related_objects,
 )
+from django.db.models.expressions import RawSQL
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.utils.translation import gettext as t
@@ -198,14 +199,18 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
 
         all_questions = attempt.questions.all()
         session["solutions"] = {str(q.pk): q.solution async for q in all_questions if hasattr(q, "solution")}
+
         session["appeals"] = {
             str(a.question_id): a
             async for a in Appeal.objects.prefetch_related("attachments").filter(
+                assessment_type=Subquery(
+                    ContentType.objects.filter(app_label=cls._meta.app_label, model=cls._meta.model_name).values("pk")[
+                        :1
+                    ]
+                ),
+                assessment_id=exam_id,
                 learner_id=learner_id,
                 question_id__in=[q.pk for q in all_questions],
-                question_type_id=Subquery(
-                    ContentType.objects.filter(model="question", app_label="exam").values("pk")[:1]
-                ),
             )
         }
         session["analysis"] = await exam.analyze_answers([q.pk for q in all_questions])
@@ -215,7 +220,7 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
             return session
 
         session["stats"] = await get_score_stats(
-            base_model=Exam, base_model_id=exam_id, grade_model=Grade, attempt_model=Attempt
+            base_model=cls, base_model_id=exam_id, grade_model=Grade, attempt_model=Attempt
         )
         session["step"] = LearningSessionStep.FINAL
 
@@ -227,20 +232,33 @@ class Exam(LearningObjectMixin, GradeWorkflowMixin):
         return await sync_to_async(SubmissionDocument.analyze_answers)(question_ids=question_ids)
 
     @classmethod
-    async def regrade_question(cls, *, exam_id: str, question_id: int, from_answers: list[str], to_answers: list[str]):
-        affected = set(from_answers).symmetric_difference(set(to_answers))
+    async def regrade_question(cls, *, exam_id: str, question_id: int, to_answers: list[str]):
+        solution = await Solution.objects.aget(question_id=question_id)
+
+        from_answers_set = set(solution.correct_answers)
+        to_answers_set = set(to_answers)
+        if from_answers_set == to_answers_set:
+            return
+
+        solution.correct_answers = to_answers
+        await solution.asave()
+
+        affected = from_answers_set.symmetric_difference(to_answers_set)
+        if not affected:
+            return
+
         attempts = [
             a
-            async for a in Attempt.objects.select_related("grade").filter(
-                exam_id=exam_id,
-                questions__id=question_id,
-                active=True,
-                **{f"submission__answers__{question_id}__in": list(affected)},
-            )
+            async for a in Attempt.objects
+            .select_related("grade", "submission", "exam")
+            .prefetch_related(Prefetch("questions", queryset=Question.objects.select_related("solution")))
+            .annotate(submitted_answer=RawSQL(f"exam_submission.answers->>'{question_id}'", []))
+            .filter(exam_id=exam_id, questions__id=question_id, active=True, submitted_answer__in=list(affected))
         ]
+
         for attempt in attempts:
             if hasattr(attempt, "grade"):
-                await attempt.grade.regrade()
+                await attempt.grade.grade()
 
 
 @pghistory.track()
@@ -458,7 +476,6 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         if self.completed and not self.confirmed:
             user_message_created.send(
                 source=self.attempt.exam,
-                path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id, title=t("Exam Grading Completed"), body=self.attempt.exam.title
                 ),
@@ -468,7 +485,6 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         if self.confirmed:
             user_message_created.send(
                 source=self.attempt.exam,
-                path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id, title=t("Exam Grading Confirmed"), body=self.attempt.exam.title
                 ),

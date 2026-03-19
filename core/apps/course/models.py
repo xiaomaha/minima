@@ -790,7 +790,6 @@ class Gradebook(TimeStampedMixin):
         if self.confirmed:
             user_message_created.send(
                 source=self.engagement.course,
-                path="",
                 message=MessageType(
                     user_id=self.engagement.learner_id,
                     title=t("Course Grading Confirmed"),

@@ -8,15 +8,19 @@ from pydantic import ConfigDict, Field, RootModel, model_validator
 from apps.account.api.schema import OwnerSchema
 from apps.common.error import ErrorCode
 from apps.common.schema import ContentTypeSchema, Schema, TimeStampedMixinSchema
-from apps.operation.models import Appeal, Comment, Inquiry, Policy
+from apps.operation.models import Announcement, Appeal, Comment, Inquiry, Policy
 
 
-class AnnounceSchema(TimeStampedMixinSchema):
+class AnnouncementSchema(TimeStampedMixinSchema):
     id: int
     title: str
     body: str
     pinned: bool
     read: datetime | None
+
+    @staticmethod
+    def resolve_body(obj: Announcement):
+        return obj.cleaned_body
 
 
 class HonorCodeSchema(TimeStampedMixinSchema):
@@ -49,7 +53,6 @@ class InquirySchema(TimeStampedMixinSchema):
     question: str
     content_type: ContentTypeSchema
     content_id: str | int
-    path: str
 
     @staticmethod
     def resolve_question(obj: Inquiry):
@@ -60,7 +63,6 @@ class InquirySavedSchema(TimeStampedMixinSchema):
     id: int
     title: str
     question: str
-    path: str
 
     @staticmethod
     def resolve_question(obj: Inquiry):
@@ -79,7 +81,6 @@ class InquiryCreateSchema(Schema):
     app_label: str
     model: str
     content_id: str | int
-    path: str
 
 
 class InquiryUpdateSchema(Schema):
@@ -92,7 +93,6 @@ class MessageSchema(TimeStampedMixinSchema):
         app_label: str
         model: str
         object_id: int | str
-        path: str
         model_config = ConfigDict(extra="allow")
 
     id: int
@@ -107,7 +107,6 @@ class AppealSchema(TimeStampedMixinSchema):
     question_id: int
     explanation: str
     review: str
-    path: str
 
     @staticmethod
     def resolve_explanation(obj: Appeal):
@@ -118,8 +117,8 @@ class AppealCreateSchema(Schema):
     explanation: Annotated[str, Field(min_length=1)]
     app_label: str
     model: str
+    assessment_id: str
     question_id: int
-    path: str
 
 
 class SitePolicySchema(TimeStampedMixinSchema):
@@ -153,7 +152,6 @@ class ThreadSchema(TimeStampedMixinSchema):
     rating_count: int
     rating_avg: float
     closed: bool | None
-    path: str
 
 
 class ThreadCreateSchema(Schema):
@@ -162,7 +160,6 @@ class ThreadCreateSchema(Schema):
     model: str
     subject_id: str
     description: str
-    path: str
 
 
 class CommentSchema(TimeStampedMixinSchema):

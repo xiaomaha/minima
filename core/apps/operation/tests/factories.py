@@ -37,6 +37,7 @@ class AnnouncementFactory(DjangoModelFactory[Announcement]):
     )
     public = True
     pinned = LazyFunction(lambda: generic.random.weighted_choice({True: 1, False: 9}))
+    writer = SubFactory(UserFactory)
 
     class Meta:
         model = Announcement

@@ -364,10 +364,6 @@ export type AppealSchema = {
      * Review
      */
     review: string;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -2225,13 +2221,795 @@ export type CourseCertificateRequestSchema = {
 };
 
 /**
- * PagedUserSchema
+ * DeskUserSpec
  */
-export type PagedUserSchema = {
+export type DeskUserSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Avatar
+     */
+    avatar: string | null;
+    /**
+     * Nickname
+     */
+    nickname: string;
+    /**
+     * Phone
+     */
+    phone: string;
+    /**
+     * Birthdate
+     */
+    birthDate: string | null;
+    /**
+     * Language
+     */
+    language: 'en' | 'ko' | '';
+    /**
+     * Isactive
+     */
+    isActive: boolean;
+    /**
+     * Roles
+     */
+    roles: Array<string>;
+    /**
+     * Realms
+     */
+    realms: Array<string>;
+    /**
+     * Lastlogin
+     */
+    lastLogin: string | null;
+};
+
+/**
+ * PagedDeskUserSpec
+ */
+export type PagedDeskUserSpec = {
     /**
      * Items
      */
-    items: Array<UserSchema>;
+    items: Array<DeskUserSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskUserDetailHistorySpec
+ */
+export type DeskUserDetailHistorySpec = {
+    /**
+     * Pghcreatedat
+     */
+    pghCreatedAt: string;
+    pghContext: PghContextSchema | null;
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Phone
+     */
+    phone: string;
+    /**
+     * Birthdate
+     */
+    birthDate: string | null;
+};
+
+/**
+ * DeskUserDetailSpec
+ */
+export type DeskUserDetailSpec = {
+    /**
+     * Histories
+     */
+    histories: Array<DeskUserDetailHistorySpec>;
+};
+
+/**
+ * PGHContextMedtadataSchema
+ */
+export type PghContextMedtadataSchema = {
+    /**
+     * Ip
+     */
+    ip: string;
+    /**
+     * Device
+     */
+    device: string | null;
+    /**
+     * Os
+     */
+    os: string | null;
+    /**
+     * Browser
+     */
+    browser: string | null;
+    /**
+     * Authid
+     */
+    authId: string | null;
+    /**
+     * Url
+     */
+    url: string;
+    /**
+     * Userid
+     */
+    userId?: string;
+    /**
+     * Isadmin
+     */
+    isAdmin?: boolean;
+};
+
+/**
+ * PGHContextSchema
+ */
+export type PghContextSchema = {
+    metadata: PghContextMedtadataSchema;
+};
+
+/**
+ * ContentTypeSchema
+ */
+export type ContentTypeSchema = {
+    /**
+     * Applabel
+     */
+    appLabel: string;
+    /**
+     * Model
+     */
+    model: string;
+};
+
+/**
+ * DeskEnrollmentSpec
+ */
+export type DeskEnrollmentSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    user: OwnerSchema;
+    /**
+     * Active
+     */
+    active: boolean;
+    /**
+     * Start
+     */
+    start: string;
+    /**
+     * End
+     */
+    end: string;
+    /**
+     * Archive
+     */
+    archive: string;
+    /**
+     * Enrolled
+     */
+    enrolled: string;
+    contentType: ContentTypeSchema;
+    /**
+     * Contentid
+     */
+    contentId: string;
+    enrolledBy: OwnerSchema | null;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Term
+     */
+    term: string | null;
+};
+
+/**
+ * PagedDeskEnrollmentSpec
+ */
+export type PagedDeskEnrollmentSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskEnrollmentSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskEnrollmentDetailHistorySpec
+ */
+export type DeskEnrollmentDetailHistorySpec = {
+    /**
+     * Pghcreatedat
+     */
+    pghCreatedAt: string;
+    pghContext: PghContextSchema | null;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Active
+     */
+    active: boolean;
+    /**
+     * Start
+     */
+    start: string;
+    /**
+     * End
+     */
+    end: string;
+    /**
+     * Archive
+     */
+    archive: string;
+};
+
+/**
+ * DeskEnrollmentDetailSpec
+ */
+export type DeskEnrollmentDetailSpec = {
+    /**
+     * Histories
+     */
+    histories: Array<DeskEnrollmentDetailHistorySpec>;
+};
+
+/**
+ * DeskBreakDownSpec
+ */
+export type DeskBreakDownSpec = {
+    /**
+     * Course
+     */
+    course?: number | null;
+    /**
+     * Media
+     */
+    media?: number | null;
+    /**
+     * Exam
+     */
+    exam?: number | null;
+    /**
+     * Assignment
+     */
+    assignment?: number | null;
+    /**
+     * Discussion
+     */
+    discussion?: number | null;
+    /**
+     * Quiz
+     */
+    quiz?: number | null;
+    /**
+     * Survey
+     */
+    survey?: number | null;
+};
+
+/**
+ * DeskLearningTermSpec
+ */
+export type DeskLearningTermSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Usercount
+     */
+    userCount: number;
+    /**
+     * Enrollmentcount
+     */
+    enrollmentCount: number;
+    breakdown: DeskBreakDownSpec;
+};
+
+/**
+ * PagedDeskLearningTermSpec
+ */
+export type PagedDeskLearningTermSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskLearningTermSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskCatalogSpec
+ */
+export type DeskCatalogSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description: string;
+    /**
+     * Thumbnail
+     */
+    thumbnail: string;
+    /**
+     * Active
+     */
+    active: boolean;
+    /**
+     * Public
+     */
+    public: boolean;
+    /**
+     * Availablefrom
+     */
+    availableFrom: string;
+    /**
+     * Availableuntil
+     */
+    availableUntil: string;
+    /**
+     * Itemcount
+     */
+    itemCount: number;
+    breakdown: DeskBreakDownSpec;
+};
+
+/**
+ * PagedDeskCatalogSpec
+ */
+export type PagedDeskCatalogSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskCatalogSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskCatalogDetailSpec
+ */
+export type DeskCatalogDetailSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskCatalogItemSpec>;
+};
+
+/**
+ * DeskCatalogItemSpec
+ */
+export type DeskCatalogItemSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    contentType: ContentTypeSchema;
+    /**
+     * Label
+     */
+    label: string;
+    /**
+     * Ordering
+     */
+    ordering: number;
+};
+
+/**
+ * DeskPartnerSpec
+ */
+export type DeskPartnerSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Realm
+     */
+    realm: string;
+    /**
+     * Phone
+     */
+    phone: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Logo
+     */
+    logo: string;
+    /**
+     * Website
+     */
+    website: string;
+};
+
+/**
+ * PagedDeskPartnerSpec
+ */
+export type PagedDeskPartnerSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskPartnerSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskAnnouncementSpec
+ */
+export type DeskAnnouncementSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Body
+     */
+    body: string;
+    /**
+     * Public
+     */
+    public: boolean;
+    /**
+     * Pinned
+     */
+    pinned: boolean;
+    /**
+     * Read
+     */
+    read: number;
+    writer: OwnerSchema;
+};
+
+/**
+ * PagedDeskAnnouncementSpec
+ */
+export type PagedDeskAnnouncementSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskAnnouncementSpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskInquirySpec
+ */
+export type DeskInquirySpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Title
+     */
+    title: string;
+    /**
+     * Question
+     */
+    question: string;
+    writer: OwnerSchema;
+    contentType: ContentTypeSchema;
+    /**
+     * Contentid
+     */
+    contentId: string;
+    /**
+     * Solved
+     */
+    solved: boolean;
+};
+
+/**
+ * PagedDeskInquirySpec
+ */
+export type PagedDeskInquirySpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskInquirySpec>;
+    /**
+     * Count
+     */
+    count: number;
+    /**
+     * Size
+     */
+    size: number;
+    /**
+     * Page
+     */
+    page: number;
+    /**
+     * Pages
+     */
+    pages: number;
+};
+
+/**
+ * DeskInquiryDetailSpec
+ */
+export type DeskInquiryDetailSpec = {
+    /**
+     * Responses
+     */
+    responses: Array<DeskInquiryResponseSpec>;
+};
+
+/**
+ * DeskInquiryResponseSpec
+ */
+export type DeskInquiryResponseSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Answer
+     */
+    answer: string;
+    writer: OwnerSchema;
+    /**
+     * Solved
+     */
+    solved: string | null;
+};
+
+/**
+ * DeskAppealSpec
+ */
+export type DeskAppealSpec = {
+    /**
+     * Created
+     */
+    created: string;
+    /**
+     * Modified
+     */
+    modified: string;
+    /**
+     * Id
+     */
+    id: number;
+    learner: OwnerSchema;
+    /**
+     * Explanation
+     */
+    explanation: string;
+    /**
+     * Review
+     */
+    review: string;
+    reviewer: OwnerSchema | null;
+    assessmentType: ContentTypeSchema;
+    /**
+     * Assessmentid
+     */
+    assessmentId: number;
+    /**
+     * Solved
+     */
+    solved: boolean;
+};
+
+/**
+ * PagedDeskAppealSpec
+ */
+export type PagedDeskAppealSpec = {
+    /**
+     * Items
+     */
+    items: Array<DeskAppealSpec>;
     /**
      * Count
      */
@@ -2947,20 +3725,6 @@ export type ExamAttemptAnswersSchema = {
 };
 
 /**
- * ContentTypeSchema
- */
-export type ContentTypeSchema = {
-    /**
-     * Applabel
-     */
-    appLabel: string;
-    /**
-     * Model
-     */
-    model: string;
-};
-
-/**
  * EnrollmentContentSchema
  */
 export type EnrollmentContentSchema = {
@@ -3065,6 +3829,10 @@ export type EnrollmentSchema = {
      * Candeactivate
      */
     canDeactivate: boolean;
+    /**
+     * Term
+     */
+    term: string | null;
 };
 
 /**
@@ -3372,9 +4140,9 @@ export type LearningReportSchema = {
 };
 
 /**
- * AnnounceSchema
+ * AnnouncementSchema
  */
-export type AnnounceSchema = {
+export type AnnouncementSchema = {
     /**
      * Created
      */
@@ -3406,13 +4174,13 @@ export type AnnounceSchema = {
 };
 
 /**
- * PagedAnnounceSchema
+ * PagedAnnouncementSchema
  */
-export type PagedAnnounceSchema = {
+export type PagedAnnouncementSchema = {
     /**
      * Items
      */
-    items: Array<AnnounceSchema>;
+    items: Array<AnnouncementSchema>;
     /**
      * Count
      */
@@ -3509,10 +4277,6 @@ export type InquirySchema = {
      * Contentid
      */
     contentId: string | number;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -3565,10 +4329,6 @@ export type InquirySavedSchema = {
      * Question
      */
     question: string;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -3595,10 +4355,6 @@ export type InquiryCreateSchema = {
      * Contentid
      */
     contentId: string | number;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -3631,10 +4387,6 @@ export type MessageDataSchema = {
      * Objectid
      */
     objectId: number | string;
-    /**
-     * Path
-     */
-    path: string;
     [key: string]: unknown;
 };
 
@@ -3712,13 +4464,13 @@ export type AppealCreateSchema = {
      */
     model: string;
     /**
+     * Assessmentid
+     */
+    assessmentId: string;
+    /**
      * Questionid
      */
     questionId: number;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -3853,10 +4605,6 @@ export type ThreadSchema = {
      * Closed
      */
     closed: boolean | null;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -3883,10 +4631,6 @@ export type ThreadCreateSchema = {
      * Description
      */
     description: string;
-    /**
-     * Path
-     */
-    path: string;
 };
 
 /**
@@ -6671,6 +7415,16 @@ export type AllocationStatsSchema = {
 };
 
 /**
+ * TutoringModelInfoSchema
+ */
+export type TutoringModelInfoSchema = {
+    /**
+     * Title
+     */
+    title: string;
+};
+
+/**
  * GradeAppealSchema
  */
 export type GradeAppealSchema = {
@@ -6698,10 +7452,6 @@ export type GradeAppealSchema = {
      * Review
      */
     review: string;
-    /**
-     * Path
-     */
-    path: string;
     /**
      * Gradeid
      */
@@ -6862,6 +7612,10 @@ export type TutorExamGradePaperSchema = {
             [key: string]: number;
         };
     };
+    /**
+     * Confirmed
+     */
+    confirmed: string | null;
 };
 
 /**
@@ -6926,6 +7680,16 @@ export type TutorGradeSaveSchema = {
     feedback: {
         [key: string]: string;
     };
+};
+
+/**
+ * TutorExamQuestionRegradeSchema
+ */
+export type TutorExamQuestionRegradeSchema = {
+    /**
+     * Toanswers
+     */
+    toAnswers: Array<string>;
 };
 
 /**
@@ -7027,6 +7791,10 @@ export type TutorAssignmentGradePaperSchema = {
      * Similaranswer
      */
     similarAnswer: string | null;
+    /**
+     * Confirmed
+     */
+    confirmed: string | null;
 };
 
 /**
@@ -7106,6 +7874,10 @@ export type TutorDiscussionGradePaperSchema = {
      * Posts
      */
     posts: Array<DiscussionOwnPostSchema>;
+    /**
+     * Confirmed
+     */
+    confirmed: string | null;
 };
 
 /**
@@ -8148,6 +8920,10 @@ export type DeskV1GetUsersData = {
     path?: never;
     query?: {
         /**
+         * Search
+         */
+        search?: string | null;
+        /**
          * Page
          */
         page?: number;
@@ -8163,10 +8939,297 @@ export type DeskV1GetUsersResponses = {
     /**
      * OK
      */
-    200: PagedUserSchema;
+    200: PagedDeskUserSpec;
 };
 
 export type DeskV1GetUsersResponse = DeskV1GetUsersResponses[keyof DeskV1GetUsersResponses];
+
+export type DeskV1GetUserDetailData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/desk/account/user/{id}';
+};
+
+export type DeskV1GetUserDetailResponses = {
+    /**
+     * OK
+     */
+    200: DeskUserDetailSpec;
+};
+
+export type DeskV1GetUserDetailResponse = DeskV1GetUserDetailResponses[keyof DeskV1GetUserDetailResponses];
+
+export type DeskV1GetEnrollmentsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/learning/enrollment';
+};
+
+export type DeskV1GetEnrollmentsResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskEnrollmentSpec;
+};
+
+export type DeskV1GetEnrollmentsResponse = DeskV1GetEnrollmentsResponses[keyof DeskV1GetEnrollmentsResponses];
+
+export type DeskV1GetEnrollmentDetailData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/desk/learning/enrollment/{id}';
+};
+
+export type DeskV1GetEnrollmentDetailResponses = {
+    /**
+     * OK
+     */
+    200: DeskEnrollmentDetailSpec;
+};
+
+export type DeskV1GetEnrollmentDetailResponse = DeskV1GetEnrollmentDetailResponses[keyof DeskV1GetEnrollmentDetailResponses];
+
+export type DeskV1GetTermsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/learning/term';
+};
+
+export type DeskV1GetTermsResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskLearningTermSpec;
+};
+
+export type DeskV1GetTermsResponse = DeskV1GetTermsResponses[keyof DeskV1GetTermsResponses];
+
+export type DeskV1GetCatalogsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/learning/catalog';
+};
+
+export type DeskV1GetCatalogsResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskCatalogSpec;
+};
+
+export type DeskV1GetCatalogsResponse = DeskV1GetCatalogsResponses[keyof DeskV1GetCatalogsResponses];
+
+export type DeskV1GetCatalogDetailData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/desk/learning/catalog/{id}';
+};
+
+export type DeskV1GetCatalogDetailResponses = {
+    /**
+     * OK
+     */
+    200: DeskCatalogDetailSpec;
+};
+
+export type DeskV1GetCatalogDetailResponse = DeskV1GetCatalogDetailResponses[keyof DeskV1GetCatalogDetailResponses];
+
+export type DeskV1GetPartnersData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/partner/parnter';
+};
+
+export type DeskV1GetPartnersResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskPartnerSpec;
+};
+
+export type DeskV1GetPartnersResponse = DeskV1GetPartnersResponses[keyof DeskV1GetPartnersResponses];
+
+export type DeskV1GetAnnouncementsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/operation/announcement';
+};
+
+export type DeskV1GetAnnouncementsResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskAnnouncementSpec;
+};
+
+export type DeskV1GetAnnouncementsResponse = DeskV1GetAnnouncementsResponses[keyof DeskV1GetAnnouncementsResponses];
+
+export type DeskV1GetInquiriesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/operation/inquiry';
+};
+
+export type DeskV1GetInquiriesResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskInquirySpec;
+};
+
+export type DeskV1GetInquiriesResponse = DeskV1GetInquiriesResponses[keyof DeskV1GetInquiriesResponses];
+
+export type DeskV1GetInquiryDetailData = {
+    body?: never;
+    path: {
+        /**
+         * Id
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/v1/desk/operation/inquiry/{id}';
+};
+
+export type DeskV1GetInquiryDetailResponses = {
+    /**
+     * OK
+     */
+    200: DeskInquiryDetailSpec;
+};
+
+export type DeskV1GetInquiryDetailResponse = DeskV1GetInquiryDetailResponses[keyof DeskV1GetInquiryDetailResponses];
+
+export type DeskV1GetAppealsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Search
+         */
+        search?: string | null;
+        /**
+         * Page
+         */
+        page?: number;
+        /**
+         * Size
+         */
+        size?: number;
+    };
+    url: '/api/v1/desk/operation/appeal';
+};
+
+export type DeskV1GetAppealsResponses = {
+    /**
+     * OK
+     */
+    200: PagedDeskAppealSpec;
+};
+
+export type DeskV1GetAppealsResponse = DeskV1GetAppealsResponses[keyof DeskV1GetAppealsResponses];
 
 export type DiscussionV1GetSessionData = {
     body?: never;
@@ -8552,7 +9615,7 @@ export type ExamV1GetTimestampResponses = {
 
 export type ExamV1GetTimestampResponse = ExamV1GetTimestampResponses[keyof ExamV1GetTimestampResponses];
 
-export type LearningV1GetEnrolledData = {
+export type LearningV1GetEnrollmentsData = {
     body?: never;
     path?: never;
     query?: {
@@ -8568,14 +9631,14 @@ export type LearningV1GetEnrolledData = {
     url: '/api/v1/learning/enrollment';
 };
 
-export type LearningV1GetEnrolledResponses = {
+export type LearningV1GetEnrollmentsResponses = {
     /**
      * OK
      */
     200: PaginatedResponseEnrollmentSchema;
 };
 
-export type LearningV1GetEnrolledResponse = LearningV1GetEnrolledResponses[keyof LearningV1GetEnrolledResponses];
+export type LearningV1GetEnrollmentsResponse = LearningV1GetEnrollmentsResponses[keyof LearningV1GetEnrollmentsResponses];
 
 export type LearningV1UnenrollData = {
     body?: never;
@@ -8726,7 +9789,7 @@ export type OperationV1GetAnnouncementsResponses = {
     /**
      * OK
      */
-    200: PagedAnnounceSchema;
+    200: PagedAnnouncementSchema;
 };
 
 export type OperationV1GetAnnouncementsResponse = OperationV1GetAnnouncementsResponses[keyof OperationV1GetAnnouncementsResponses];
@@ -8812,10 +9875,6 @@ export type OperationV1CreateInquiryData = {
          * Contentid
          */
         contentId: string | number;
-        /**
-         * Path
-         */
-        path: string;
         /**
          * Files
          *
@@ -8938,13 +9997,13 @@ export type OperationV1CreateAppealData = {
          */
         model: string;
         /**
+         * Assessmentid
+         */
+        assessmentId: string;
+        /**
          * Questionid
          */
         questionId: number;
-        /**
-         * Path
-         */
-        path: string;
         /**
          * Files
          *
@@ -11104,6 +12163,35 @@ export type TutorV1GetAllocationStatsResponses = {
 
 export type TutorV1GetAllocationStatsResponse = TutorV1GetAllocationStatsResponses[keyof TutorV1GetAllocationStatsResponses];
 
+export type TutorV1GetModelInfoData = {
+    body?: never;
+    path: {
+        /**
+         * App Label
+         */
+        app_label: string;
+        /**
+         * Model
+         */
+        model: string;
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/tutor/{app_label}/{model}/{id}/info';
+};
+
+export type TutorV1GetModelInfoResponses = {
+    /**
+     * OK
+     */
+    200: TutoringModelInfoSchema;
+};
+
+export type TutorV1GetModelInfoResponse = TutorV1GetModelInfoResponses[keyof TutorV1GetModelInfoResponses];
+
 export type TutorV1GetAppealsData = {
     body?: never;
     path: {
@@ -11245,6 +12333,29 @@ export type TutorV1CompleteExamGradeResponses = {
 };
 
 export type TutorV1CompleteExamGradeResponse = TutorV1CompleteExamGradeResponses[keyof TutorV1CompleteExamGradeResponses];
+
+export type TutorV1RegradeExamQuestionData = {
+    body: TutorExamQuestionRegradeSchema;
+    path: {
+        /**
+         * Id
+         */
+        id: string;
+        /**
+         * Question Id
+         */
+        question_id: number;
+    };
+    query?: never;
+    url: '/api/v1/tutor/exam/{id}/question/{question_id}/regrade';
+};
+
+export type TutorV1RegradeExamQuestionResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
 
 export type TutorV1GetAssignmentGradesData = {
     body?: never;

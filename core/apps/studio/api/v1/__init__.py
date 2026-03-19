@@ -31,7 +31,12 @@ from apps.studio.api.v1.survey import router as survey_router
 from apps.studio.models import Editing
 from apps.survey.models import Survey
 
-router = Router(by_alias=True)
+
+def studio_auth(request: HttpRequest):
+    return request.auth if "studio" in request.roles else ""
+
+
+router = Router(by_alias=True, auth=studio_auth)
 
 
 StudioModel = Literal["exam", "survey", "quiz", "assignment", "discussion", "media", "course"]

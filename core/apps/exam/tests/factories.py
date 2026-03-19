@@ -104,7 +104,7 @@ class SolutionFactory(DjangoModelFactory[Solution]):
 class ExamFactory(LearningObjectFactory[Exam], GradeWorkflowFactory[Exam]):
     passing_point = FactoryField("choice", items=[60, 80])
     max_attempts = FactoryField("choice", items=[1, 2])
-    verification_required = True
+    verification_required = False
 
     owner = LazyFunction(lambda: UserFactory(email=test_user_email))
     honor_code = SubFactory(HonorCodeFactory)

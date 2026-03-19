@@ -72,7 +72,7 @@ export const GradingPaper = (props: Props) => {
   return (
     <Show when={grading.data}>
       <Form onSubmit={saveGrade}>
-        <div class="text-left m-8 p-8 bg-base-100 rounded space-y-8">
+        <div class="m-8 p-8 bg-base-100 rounded space-y-8">
           <Question question={grading.data!.question} />
 
           <div class="divider" />
@@ -107,10 +107,8 @@ export const GradingPaper = (props: Props) => {
 
           <div class="divider" />
 
-          <fieldset
-            disabled={!gradingContext || !!gradingContext[0].items.find((g) => g.id === props.gradingId)?.confirmed}
-          >
-            <table class="table table-sm">
+          <fieldset disabled={!!grading.data!.confirmed}>
+            <table class="table">
               <tbody>
                 <tr>
                   <th></th>
@@ -182,7 +180,7 @@ export const GradingPaper = (props: Props) => {
             </table>
           </fieldset>
         </div>
-        <Show when={gradingContext}>
+        <Show when={!grading.data!.confirmed}>
           <div class="text-center mb-8 mr-8">
             <SubmitButton
               label={t('Complete Grade')}

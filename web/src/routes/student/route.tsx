@@ -12,6 +12,7 @@ import { createCachedStore } from '@/shared/solid/cached-store'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { getDeviceName } from '@/shared/utils'
 import { protectedRoute } from '../-protected'
+import { useTokenExpired } from '../auth/-auth/logout'
 import { Chat } from './-shared/aichat/Chat'
 import { Notification } from './-shared/Notification'
 import { AccountButton } from './(account)/-account/AccountButton'
@@ -69,6 +70,8 @@ function RouteComponent() {
 
     setCurrentDevice(data)
   })
+
+  useTokenExpired()
 
   return (
     <div class="flex flex-col">

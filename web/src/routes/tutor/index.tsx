@@ -2,13 +2,13 @@ import { IconHelp, IconHome } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { formatDistanceToNow } from 'date-fns'
 import { For, Match, Show, Switch } from 'solid-js'
-import { tutorV1GetAllocationStats } from '@/api'
+import { tutorV1GetAllocation, tutorV1GetAllocationStats } from '@/api'
 import { NoContent } from '@/shared/NoContent'
 import { RefreshButton } from '@/shared/RefreshButton'
+import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { createCachedStore } from '@/shared/solid/cached-store'
 import { useTranslation } from '@/shared/solid/i18n'
 import { capitalize } from '@/shared/utils'
-import { useAllocation } from './-tutor/context'
 
 export const Route = createFileRoute('/tutor/')({
   component: RouteComponent,
@@ -24,7 +24,11 @@ function RouteComponent() {
     async () => (await tutorV1GetAllocationStats()).data,
   )
 
-  const [allocations, setObserverEl, { refetch: refetchAllocations }] = useAllocation()
+  const [allocations, setObserverEl, { refetch: refetchAllocations }] = createCachedInfiniteStore(
+    'tutorV1GetAllocation',
+    () => ({}),
+    async (_, page) => (await tutorV1GetAllocation({ query: { page } })).data,
+  )
 
   const goToGradingList = (app: 'exam' | 'assignment' | 'discussion', id: string) => {
     if (app === 'exam') {
@@ -57,7 +61,7 @@ function RouteComponent() {
     <div class="space-y-8">
       <div class="breadcrumbs mb-8">
         <ul>
-          <li class="flex items-center gap-4">
+          <li class="flex items-center gap-2">
             <IconHome size={20} />
             {t('Tutor')}
           </li>
@@ -89,9 +93,9 @@ function RouteComponent() {
       </div>
 
       <Show when={!allocations.loading || allocations.items.length > 0}>
-        <table class="table text-center text-base">
+        <table class="table text-base">
           <thead>
-            <tr class="[&_th]:font-normal [&_th]:px-1">
+            <tr class="[&_th]:font-normal">
               <th class="w-12">#</th>
               <th>{t('Type')}</th>
               <th>{t('Title')}</th>
@@ -123,7 +127,7 @@ function RouteComponent() {
                 >
                   <td>{allocations.count - i()}</td>
                   <td>{t(capitalize(item.contentType.model))}</td>
-                  <td class="text-left">{item.content.title}</td>
+                  <td>{item.content.title}</td>
                   <td class="text-sm">
                     {item.content.lastGrading
                       ? formatDistanceToNow(new Date(item.content.lastGrading), { addSuffix: true })

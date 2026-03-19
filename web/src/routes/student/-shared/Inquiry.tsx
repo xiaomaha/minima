@@ -145,7 +145,6 @@ const InquiryEditor = (props: InquiryEditorProps) => {
     initialValues: {
       title: props.title ?? '',
       question: props.question ?? '',
-      path: `${window.location.pathname}${window.location.search}`,
       ...inquiryContext,
     },
     validate: valiForm(vInquiryCreateSchema),
