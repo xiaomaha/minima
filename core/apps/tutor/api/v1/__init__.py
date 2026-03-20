@@ -11,9 +11,14 @@ from apps.operation.api.schema import AppealSchema
 from apps.tutor.api.v1.assignment import router as assignment_router
 from apps.tutor.api.v1.discussion import router as discussion_router
 from apps.tutor.api.v1.exam import router as exam_router
-from apps.tutor.models import Allocation
+from apps.tutor.models import TUTORING_MODEL_MAP, Allocation
 
-router = Router(by_alias=True)
+
+def tutor_auth(request: HttpRequest):
+    return request.auth if "tutor" in request.roles else ""
+
+
+router = Router(by_alias=True, auth=tutor_auth)
 
 
 class AllocationSchema(Schema):
@@ -64,6 +69,15 @@ async def get_allocation_stats(request: HttpRequest):
     return await Allocation.get_stats(tutor_id=request.auth)
 
 
+class TutoringModelInfoSchema(Schema):
+    title: str
+
+
+@router.get("/{app_label}/{model}/{id}/info", response=TutoringModelInfoSchema)
+async def get_model_info(request: HttpRequest, app_label: str, model: str, id: str):
+    return await TUTORING_MODEL_MAP[(app_label, model)].objects.aget(id=id)
+
+
 AppealAppLabel = Literal["exam", "assignment", "discussion"]
 AppealModel = Literal["exam", "assignment", "discussion"]
 
@@ -82,7 +96,7 @@ async def get_appeals(
     size: Annotated[int, functions.Query(settings.DEFAULT_PAGINATION_SIZE, gte=1, le=100)],
 ):
     return await Allocation.get_appeals(
-        tutor_id=request.auth, app_label=app_label, model=model, content_id=id, page=page, size=size
+        tutor_id=request.auth, app_label=app_label, model=model, assessment_id=id, page=page, size=size
     )
 
 

@@ -14,11 +14,12 @@ from apps.common.util import tuid
 from apps.partner.models import Cohort, CohortMember, CohortStaff, Group, Member, Partner
 
 generic = mimesis.Generic(settings.DEFAULT_LANGUAGE)
+en_generic = mimesis.Generic(Locale.EN)
 
 
 class PartnerFactory(DjangoModelFactory[Partner]):
     name = FactoryField("company")
-    realm = LazyFunction(lambda: f"{mimesis.Generic(Locale.DEFAULT).food.fruit()}-{tuid()[-4:]}")
+    realm = LazyFunction(lambda: f"{en_generic.food.fruit()}-{tuid()[-4:]}".lower().split(" ")[-1])
     description = FactoryField("sentence")
     phone = FactoryField("phone_number")
     email = FactoryField("email")

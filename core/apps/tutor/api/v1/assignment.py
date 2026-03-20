@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from asgiref.sync import sync_to_async
 from django.db.models import F
 from django.shortcuts import aget_object_or_404
@@ -44,6 +46,7 @@ class TutorAssignmentGradePaperSchema(Schema):
     question: AssignmentQuestionSchema
     analysis: dict[str, dict[str, int]]
     similar_answer: str | None
+    confirmed: datetime | None
 
     @staticmethod
     def resolve_question(grade: Grade):

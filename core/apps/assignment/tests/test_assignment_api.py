@@ -15,7 +15,7 @@ from conftest import AdminUser
 def test_assignment_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     admin_user.login()
 
-    assignment = AssignmentFactory.create(title=mimesis.text.title())
+    assignment = AssignmentFactory.create(title=mimesis.text.title(), verification_required=True)
     EnrollmentFactory(
         content_type=ContentType.objects.get_for_model(assignment),
         content_id=assignment.id,

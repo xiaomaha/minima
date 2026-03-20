@@ -75,6 +75,15 @@ class EnrollmentFactory(DjangoModelFactory[Enrollment]):
 
         return instance.pk
 
+    @post_generation
+    def post_generation(self: Enrollment, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if self.content:
+            self.label = self.content.title
+            self.save(update_fields=["label"])
+
 
 class CatalogFactory(DjangoModelFactory[Catalog]):
     name = FactoryField("text.title")
@@ -91,11 +100,12 @@ class CatalogFactory(DjangoModelFactory[Catalog]):
         skip_postgeneration_save = True
 
     @post_generation
-    def post_generation(self, create: bool, extracted: object, **kwargs: object):
+    def post_generation(self: Catalog, create: bool, extracted: object, **kwargs: object):
         if not create or extracted is False:
             return
 
         CatalogItemFactory.create_batch(size=7, catalog=self)
+        self._sync()
 
 
 class CatalogItemFactory(DjangoModelFactory[CatalogItem]):
@@ -121,6 +131,15 @@ class CatalogItemFactory(DjangoModelFactory[CatalogItem]):
         instance = FactoryClass.create()
 
         return instance.pk
+
+    @post_generation
+    def post_generation(self: CatalogItem, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if self.content:
+            self.label = self.content.title
+            self.save(update_fields=["label"])
 
 
 class UserCatalogFactory(DjangoModelFactory[UserCatalog]):

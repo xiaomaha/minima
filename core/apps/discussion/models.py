@@ -5,6 +5,7 @@ import pghistory
 from celery.exceptions import ImproperlyConfigured
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
 from django.core.signing import dumps
 from django.db.models import (
@@ -172,7 +173,14 @@ class Discussion(LearningObjectMixin, GradeWorkflowMixin):
 
         try:
             session["appeal"] = await Appeal.objects.prefetch_related("attachments").aget(
-                question_id=attempt.question_id, learner_id=learner_id
+                assessment_type=Subquery(
+                    ContentType.objects.filter(app_label=cls._meta.app_label, model=cls._meta.model_name).values("pk")[
+                        :1
+                    ]
+                ),
+                assessment_id=discussion_id,
+                question_id=attempt.question_id,
+                learner_id=learner_id,
             )
         except Appeal.DoesNotExist:
             pass
@@ -468,7 +476,6 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         if self.completed and not self.confirmed:
             user_message_created.send(
                 source=self.attempt.discussion,
-                path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id,
                     title=t("Discussion Grading Completed"),
@@ -480,7 +487,6 @@ class Grade(GradeFieldMixin, TimeStampedMixin):
         if self.confirmed:
             user_message_created.send(
                 source=self.attempt.discussion,
-                path="",
                 message=MessageType(
                     user_id=self.attempt.learner_id,
                     title=t("Discussion Grading Confirmed"),

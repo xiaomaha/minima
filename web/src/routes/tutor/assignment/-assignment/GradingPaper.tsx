@@ -84,7 +84,7 @@ export const GradingPaper = (props: Props) => {
   return (
     <Show when={grading.data}>
       <Form onSubmit={saveGrade}>
-        <div class="text-left m-8 p-8 bg-base-100 rounded space-y-8">
+        <div class="m-8 p-8 bg-base-100 rounded space-y-8">
           <Question question={grading.data!.question} analysis={grading.data!.analysis[grading.data!.question.id]} />
 
           <div class="divider" />
@@ -103,9 +103,7 @@ export const GradingPaper = (props: Props) => {
 
           <div class="divider" />
 
-          <fieldset
-            disabled={!gradingContext || !!gradingContext[0].items.find((g) => g.id === props.gradingId)?.confirmed}
-          >
+          <fieldset disabled={!!grading.data!.confirmed}>
             <div class="label mb-2 w-full">
               {t('Grading Rubric')}
               <span class="ml-auto mx-6 text-primary font-semibold">
@@ -179,7 +177,7 @@ export const GradingPaper = (props: Props) => {
             </div>
           </fieldset>
         </div>
-        <Show when={gradingContext}>
+        <Show when={!grading.data!.confirmed}>
           <div class="text-center mb-8 mr-8">
             <SubmitButton
               label={t('Complete Grade')}

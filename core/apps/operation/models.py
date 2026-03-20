@@ -73,7 +73,7 @@ class Category(MP_Node):
     name = CharField(_("Name"), max_length=100)
     ancestors = ArrayField(CharField(_("Ancestors"), max_length=200), editable=False)
 
-    class Meta(MP_Node.Meta):
+    class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
@@ -91,7 +91,7 @@ class Category(MP_Node):
 
 @pghistory.track()
 class Tag(TagBase):
-    class Meta(TagBase.Meta):
+    class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
 
@@ -101,7 +101,7 @@ class TaggedItem(CommonGenericTaggedItemBase, TaggedItemBase):
     object_id = CharField(_("Object ID"), max_length=36)
     tag = ForeignKey(Tag, CASCADE, related_name="%(app_label)s_%(class)s_items", verbose_name=_("Tag"))
 
-    class Meta(CommonGenericTaggedItemBase.Meta, TaggedItemBase.Meta):
+    class Meta:
         verbose_name = _("Tagged Item")
         verbose_name_plural = _("Tagged Items")
         indexes = [Index(fields=["content_type", "object_id"]), Index(fields=["object_id"])]
@@ -124,113 +124,6 @@ class TaggableMixin(Model):
 
 
 @pghistory.track()
-class Announcement(TimeStampedMixin):
-    title = CharField(_("Title"), max_length=255, unique=True)
-    body = TextField(_("Body"))
-    public = BooleanField(_("Public"), default=True)
-    pinned = BooleanField(_("Pinned"), default=False)
-
-    class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Announcement")
-        verbose_name_plural = _("Announcements")
-
-    if TYPE_CHECKING:
-        pk: int
-
-    def __str__(self):
-        return self.title
-
-    @classmethod
-    def get_announcements(cls, user_id: str):
-        return (
-            cls.objects
-            .annotate(
-                read=Subquery(
-                    AnnouncementRead.objects.filter(announcement_id=OuterRef("pk"), user_id=user_id).values("read")[:1]
-                )
-            )
-            .filter(public=True)
-            .order_by("-pinned", "-id")
-        )
-
-
-@pghistory.track()
-class AnnouncementRead(Model):
-    user = ForeignKey(User, CASCADE, verbose_name=_("User"))
-    announcement = ForeignKey(Announcement, CASCADE, verbose_name=_("Announcement"))
-    read = DateTimeField(_("Read at"), auto_now_add=True)
-
-    class Meta:
-        verbose_name = _("Announcement Read")
-        verbose_name_plural = _("Announcement Reads")
-        constraints = [UniqueConstraint(fields=["user", "announcement"], name="operation_announcementread_us_an_uniq")]
-
-
-@pghistory.track()
-class Instructor(TimeStampedMixin):
-    name = CharField(_("Name"), max_length=50)
-    email = EmailField(_("Email"), unique=True)
-    about = TextField(_("About"))
-    bio = ArrayField(CharField(max_length=200), verbose_name=_("Bio"))
-    avatar = ImageField(_("Avatar"), null=True, blank=True)
-    active = BooleanField(_("Active"), default=True)
-
-    class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Instructor")
-        verbose_name_plural = _("Instructors")
-        indexes = [Index(fields=["name"])]
-
-    if TYPE_CHECKING:
-        pk: int
-
-    def __str__(self):
-        return self.name
-
-
-@pghistory.track()
-class HonorCode(TimeStampedMixin):
-    title = CharField(_("Title"), max_length=255, unique=True)
-    code = TextField(_("Code"))
-
-    class Meta(TimeStampedMixin.Meta):
-        verbose_name = _("Honor Code")
-        verbose_name_plural = _("Honor Codes")
-
-    def __str__(self):
-        return self.title
-
-
-@pghistory.track()
-class FAQ(Model):
-    name = CharField(_("Name"), max_length=255, unique=True)
-    description = TextField(_("Description"), blank=True, default="")
-
-    class Meta:
-        verbose_name = _("FAQ")
-        verbose_name_plural = _("FAQs")
-
-    def __str__(self):
-        return self.name
-
-    if TYPE_CHECKING:
-        items: QuerySet[FAQItem]
-
-
-@pghistory.track()
-class FAQItem(OrderableMixin, TimeStampedMixin):
-    faq = ForeignKey(FAQ, CASCADE, related_name="items", verbose_name=_("FAQ"))
-    question = CharField(_("Question"), max_length=255)
-    answer = TextField(_("Answer"))
-    active = BooleanField(_("Active"), default=True)
-    ordering_group = ("faq",)
-
-    class Meta(OrderableMixin.Meta, TimeStampedMixin.Meta):
-        verbose_name = _("FAQ")
-        verbose_name_plural = _("FAQs")
-        constraints = [UniqueConstraint(fields=["faq", "question"], name="operation_faqitem_fa_qu_uniq")]
-
-
-@pghistory.track()
 class Attachment(SoftDeleteMixin, TimeStampedMixin):
     file = FileField(_("File"), max_length=255, unique=True)
     size = IntegerField(_("Size"), null=True, blank=True)
@@ -239,7 +132,7 @@ class Attachment(SoftDeleteMixin, TimeStampedMixin):
     owner = ForeignKey(User, CASCADE, verbose_name=_("Owner"))
     deleted = DateTimeField(_("Deleted"), null=True, blank=True)
 
-    class Meta(SoftDeleteMixin.Meta, TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Attachment")
         verbose_name_plural = _("Attachments")
         constraints = [UniqueConstraint(fields=["hash", "owner"], name="operation_attachment_ha_own_uniq")]
@@ -372,6 +265,127 @@ class AttachmentMixin(Model):
 
 
 @pghistory.track()
+class Announcement(TimeStampedMixin, AttachmentMixin):
+    title = CharField(_("Title"), max_length=255, unique=True)
+    body = TextField(_("Body"))
+    public = BooleanField(_("Public"), default=True)
+    pinned = BooleanField(_("Pinned"), default=False)
+    writer = ForeignKey(User, CASCADE, verbose_name=_("Writer"))
+
+    class Meta:
+        verbose_name = _("Announcement")
+        verbose_name_plural = _("Announcements")
+
+    if TYPE_CHECKING:
+        pk: int
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def cleaned_body(self):
+        return self.update_attachment_urls(content=self.body)
+
+    @classmethod
+    def get_announcements(cls, user_id: str):
+        return (
+            cls.objects
+            .prefetch_related("attachments")
+            .annotate(
+                read=Subquery(
+                    AnnouncementRead.objects.filter(announcement_id=OuterRef("pk"), user_id=user_id).values("read")[:1]
+                )
+            )
+            .filter(public=True)
+            .order_by("-pinned", "-id")
+        )
+
+    @classmethod
+    async def create(
+        cls, *, title: str, body: str, public: bool, pinned: bool, files: Sequence[File] | None, writer_id: str
+    ):
+        an = await cls.objects.acreate(title=title, body=body, public=public, pinned=pinned, writer_id=writer_id)
+        await an.update_attachments(files=files, owner_id=writer_id, content=an.body)
+        return an
+
+
+@pghistory.track()
+class AnnouncementRead(Model):
+    user = ForeignKey(User, CASCADE, verbose_name=_("User"))
+    announcement = ForeignKey(Announcement, CASCADE, related_name="reads", verbose_name=_("Announcement"))
+    read = DateTimeField(_("Read at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Announcement Read")
+        verbose_name_plural = _("Announcement Reads")
+        constraints = [UniqueConstraint(fields=["user", "announcement"], name="operation_announcementread_us_an_uniq")]
+
+
+@pghistory.track()
+class Instructor(TimeStampedMixin):
+    name = CharField(_("Name"), max_length=50)
+    email = EmailField(_("Email"), unique=True)
+    about = TextField(_("About"))
+    bio = ArrayField(CharField(max_length=200), verbose_name=_("Bio"))
+    avatar = ImageField(_("Avatar"), null=True, blank=True)
+    active = BooleanField(_("Active"), default=True)
+
+    class Meta:
+        verbose_name = _("Instructor")
+        verbose_name_plural = _("Instructors")
+        indexes = [Index(fields=["name"])]
+
+    if TYPE_CHECKING:
+        pk: int
+
+    def __str__(self):
+        return self.name
+
+
+@pghistory.track()
+class HonorCode(TimeStampedMixin):
+    title = CharField(_("Title"), max_length=255, unique=True)
+    code = TextField(_("Code"))
+
+    class Meta:
+        verbose_name = _("Honor Code")
+        verbose_name_plural = _("Honor Codes")
+
+    def __str__(self):
+        return self.title
+
+
+@pghistory.track()
+class FAQ(Model):
+    name = CharField(_("Name"), max_length=255, unique=True)
+    description = TextField(_("Description"), blank=True, default="")
+
+    class Meta:
+        verbose_name = _("FAQ")
+        verbose_name_plural = _("FAQs")
+
+    def __str__(self):
+        return self.name
+
+    if TYPE_CHECKING:
+        items: QuerySet[FAQItem]
+
+
+@pghistory.track()
+class FAQItem(OrderableMixin, TimeStampedMixin):
+    faq = ForeignKey(FAQ, CASCADE, related_name="items", verbose_name=_("FAQ"))
+    question = CharField(_("Question"), max_length=255)
+    answer = TextField(_("Answer"))
+    active = BooleanField(_("Active"), default=True)
+    ordering_group = ("faq",)
+
+    class Meta:
+        verbose_name = _("FAQ")
+        verbose_name_plural = _("FAQs")
+        constraints = [UniqueConstraint(fields=["faq", "question"], name="operation_faqitem_fa_qu_uniq")]
+
+
+@pghistory.track()
 class Inquiry(TimeStampedMixin, AttachmentMixin):
     title = CharField(_("Title"), max_length=255)
     question = TextField(_("Question"))
@@ -379,9 +393,8 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
     content_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Content Type"))
     content_id = CharField(_("Content ID"), max_length=36, db_index=True)
     content = GenericForeignKey("content_type", "content_id")
-    path = CharField(_("Path"), max_length=500, default="", blank=True)
 
-    class Meta(TimeStampedMixin.Meta, AttachmentMixin.Meta):
+    class Meta:
         verbose_name = _("Inquiry")
         verbose_name_plural = _("Inquiries")
         indexes = [Index(fields=["content_type", "content_id"])]
@@ -411,16 +424,10 @@ class Inquiry(TimeStampedMixin, AttachmentMixin):
         content_id: int,
         writer_id: str,
         files: Sequence[File] | None,
-        path: str,
     ):
         content_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
         inquiry = await cls.objects.acreate(
-            title=title,
-            question=question,
-            writer_id=writer_id,
-            content_type=content_type,
-            content_id=content_id,
-            path=path,
+            title=title, question=question, writer_id=writer_id, content_type=content_type, content_id=content_id
         )
         await inquiry.update_attachments(files=files, owner_id=writer_id, content=inquiry.question)
         return inquiry
@@ -451,7 +458,7 @@ class InquiryResponse(TimeStampedMixin):
     writer = ForeignKey(User, CASCADE, verbose_name=_("Writer"))
     solved = DateTimeField(_("Solved"), null=True, blank=True)
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Inquiry Response")
         verbose_name_plural = _("Inquiry Responses")
         constraints = [
@@ -465,7 +472,6 @@ class InquiryResponse(TimeStampedMixin):
 
         user_message_created.send(
             source=self.inquiry,
-            path=self.inquiry.path,
             message=MessageType(
                 user_id=self.inquiry.writer_id, title=t("Inquiry response added"), body=self.inquiry.title
             ),
@@ -479,22 +485,25 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
     explanation = TextField(_("Explanation"))
     review = TextField(_("Review"), blank=True, default="")
     reviewer = ForeignKey(User, CASCADE, verbose_name=_("Reviewer"), null=True, related_name="+")
-    path = CharField(_("Path"), max_length=500, default="", blank=True, db_index=True)
 
-    limit_choices_to = {"model__in": ["question"]}
-    question_type = ForeignKey(ContentType, CASCADE, verbose_name=_("Question Type"), limit_choices_to=limit_choices_to)
+    limit_choices_to = {"model__in": ["exam", "assignment", "discussion"]}
+    assessment_type = ForeignKey(
+        ContentType, CASCADE, verbose_name=_("Assessment Type"), limit_choices_to=limit_choices_to
+    )
+    assessment_id = CharField(_("Assessment ID"), max_length=12)  # actually tuid
+    assessment = GenericForeignKey("assessment_type", "assessment_id")
     question_id = IntegerField(_("Question ID"))
-    question = GenericForeignKey("question_type", "question_id")
 
-    class Meta(TimeStampedMixin.Meta, AttachmentMixin.Meta):
+    class Meta:
         verbose_name = _("Grade Appeal")
         verbose_name_plural = _("Grade Appeals")
         constraints = [
             UniqueConstraint(
-                fields=["question_type", "question_id", "learner"], name="operation_appeal_quid_quty_le_uniq"
+                fields=["assessment_type", "assessment_id", "learner", "question_id"],
+                name="operation_appeal_asty_asid_le_quid_uniq",
             )
         ]
-        indexes = [Index(fields=["question_type", "question_id"])]
+        indexes = [Index(fields=["assessment_type", "assessment_id", "question_id"])]
 
     if TYPE_CHECKING:
         learner_id: str
@@ -509,19 +518,20 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
         cls,
         *,
         learner_id: str,
-        question_id: int,
+        assessment_id: str,
         app_label: str,
         model: str,
+        question_id: int,
         explanation: str,
         files: Sequence[File] | None,
-        path: str,
     ):
-        question_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
+        assessment_type = await sync_to_async(ContentType.objects.get_by_natural_key)(app_label, model)
         appeal, created = await cls.objects.aget_or_create(
             learner_id=learner_id,
+            assessment_type=assessment_type,
+            assessment_id=assessment_id,
             question_id=question_id,
-            question_type=question_type,
-            defaults={"explanation": explanation, "path": path},
+            defaults={"explanation": explanation},
         )
 
         if not created:
@@ -533,8 +543,7 @@ class Appeal(TimeStampedMixin, AttachmentMixin):
     def on_review_changed(self, old_value: str):
         if not old_value and self.review:
             user_message_created.send(
-                source=self,
-                path=self.path,
+                source=self.assessment,
                 message=MessageType(
                     user_id=self.learner_id, title=t("Grade Appeal Resolved"), body=self.explanation[:50]
                 ),
@@ -549,7 +558,7 @@ class Message(TimeStampedMixin):
     group = CharField(_("Group"), blank=True, default="", max_length=255)
     data = JSONField(_("Data"), default=dict, blank=True)
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
         indexes = [Index(fields=["group"])]
@@ -578,7 +587,6 @@ class MessageDataDict(TypedDict, extra_items=Any):
     app_label: str
     model: str
     object_id: int | str
-    path: str
 
 
 class MessageType(TypedDict):
@@ -588,20 +596,19 @@ class MessageType(TypedDict):
 
 
 class MessageSignal(Signal):
-    def send(self, *, source: Model, path: str, message: MessageType, **kwargs):
-        return super().send(sender=source.__class__, source=source, path=path, message=message, **kwargs)
+    def send(self, *, source: Model, message: MessageType, **kwargs):
+        return super().send(sender=source.__class__, source=source, message=message, **kwargs)
 
 
 user_message_created = MessageSignal()
 
 
 @receiver(user_message_created)
-def user_message_created_receiver(source: Model, path: str, message: MessageType, **kwargs):
+def user_message_created_receiver(source: Model, message: MessageType, **kwargs):
     data: MessageDataDict = {
         "app_label": source._meta.app_label,
         "model": source._meta.model.__name__.lower(),
         "object_id": source.pk,
-        "path": path,
     }
     msg = Message.objects.create(**message, data=data)
 
@@ -619,6 +626,10 @@ class NotificationDevice(TimeStampedMixin):
     platform = CharField(_("Platform"), max_length=50)
     device_name = CharField(_("Device Name"), max_length=100)
     active = BooleanField(_("Active"), default=True)
+
+    class Meta:
+        verbose_name = _("Notification Device")
+        verbose_name_plural = _("Notification Devices")
 
     @classmethod
     async def toggle_active(cls, id: int):
@@ -641,7 +652,7 @@ class Policy(TimeStampedMixin):
     mandatory = BooleanField(_("Mandatory"), default=True)
     priority = PositiveSmallIntegerField(_("Priority"))
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Policy")
         verbose_name_plural = _("Policies")
 
@@ -702,7 +713,7 @@ class PolicyVersion(TimeStampedMixin):
     version = CharField(_("Version"), max_length=20)
     effective_date = DateTimeField(_("Effective Date"), default=timezone.now)
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Policy Version")
         verbose_name_plural = _("Policy Versions")
         constraints = [UniqueConstraint(fields=["policy", "version"], name="operation_policyversion_po_ve_uniq")]
@@ -734,7 +745,7 @@ class PolicyAgreement(TimeStampedMixin):
     version = ForeignKey(PolicyVersion, CASCADE, verbose_name=_("Policy Version"))
     accepted = BooleanField(_("Accepted"), null=True, blank=True)
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Policy Agreement")
         verbose_name_plural = _("Policy Agreements")
         indexes = [Index(fields=["user", "accepted"])]
@@ -767,9 +778,8 @@ class Thread(TimeStampedMixin):
     rating_sum = PositiveIntegerField(_("Rating Sum"), default=0)
     rating_avg = FloatField(_("Rating Average"), default=0)
     closed = DateTimeField(_("Closed"), null=True, blank=True)
-    path = CharField(_("Path"), max_length=500, default="", blank=True)
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Thread")
         verbose_name_plural = _("Threads")
         constraints = [UniqueConstraint(fields=["subject_type", "subject_id"], name="opeation_thread_suty_suid_uniq")]
@@ -791,7 +801,7 @@ class Comment(TimeStampedMixin, AttachmentMixin):
     rating = PositiveSmallIntegerField(_("Rating"), null=True, blank=True)
     writer = ForeignKey(User, CASCADE, verbose_name=_("Writer"))
 
-    class Meta(TimeStampedMixin.Meta):
+    class Meta:
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
 
@@ -828,7 +838,6 @@ class Comment(TimeStampedMixin, AttachmentMixin):
         if self.parent:
             user_message_created.send(
                 source=self.thread,
-                path=self.thread.path,
                 message=MessageType(
                     user_id=self.parent.writer_id, title=t("Comment Reply Added"), body=self.parent.comment[:50]
                 ),

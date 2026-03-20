@@ -17,7 +17,7 @@ from conftest import AdminUser
 def test_course_flow(client: Client, mimesis: Generic, admin_user: AdminUser):
     admin_user.login()
 
-    course: Course = CourseFactory()
+    course: Course = CourseFactory(verification_required=True)
     EnrollmentFactory(
         content_type=ContentType.objects.get_for_model(course), content_id=course.id, active=True, user_id=admin_user.id
     )

@@ -1,4 +1,4 @@
-import { createEffect, createRoot } from 'solid-js'
+import { createEffect, createRoot, onCleanup } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import type { UserSchema } from '@/api'
 import i18n from '@/i18n'
@@ -48,11 +48,14 @@ export const {
     const expiryTime = new Date(user.tokenExpires).getTime()
     const timeUntilExpiry = expiryTime - Date.now()
     if (timeUntilExpiry <= 0) {
-      setStore('user', null)
+      setStore('user', 'tokenExpires', null)
       return
     }
-    const timeout = setTimeout(() => setStore('user', null), timeUntilExpiry)
-    return () => clearTimeout(timeout)
+
+    const timeout = setTimeout(() => {
+      setStore('user', 'tokenExpires', null)
+    }, timeUntilExpiry)
+    onCleanup(() => clearTimeout(timeout))
   })
 
   return {

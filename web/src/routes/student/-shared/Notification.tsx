@@ -51,12 +51,6 @@ export const Notification = () => {
 
     if (!item.read) readMessage(item.id)
 
-    if (item.data.path) {
-      // appeal, inquiry, comment reply
-      navigate({ to: item.data.path })
-      return
-    }
-
     switch (item.data.model) {
       case 'course':
         navigate({ to: '/student/course/$id/session', params: { id: item.data.objectId as string } })

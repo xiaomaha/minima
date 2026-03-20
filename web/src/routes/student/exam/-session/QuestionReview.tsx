@@ -1,3 +1,4 @@
+import { useParams } from '@tanstack/solid-router'
 import { createSignal, For, Match, Show, Switch } from 'solid-js'
 import type { AppealSchema, ExamQuestionSchema } from '@/api'
 import { ContentViewer } from '@/shared/ContentViewer'
@@ -14,6 +15,7 @@ interface Props {
 
 export const QuestionReview = (props: Props) => {
   const { t } = useTranslation()
+  const params = useParams({ from: '/student/exam/$id/session' })
 
   const [session, { setStore }] = useSession()
   const s = () => session.data!
@@ -176,7 +178,14 @@ export const QuestionReview = (props: Props) => {
         open={!!appealDialogOpen()}
         onClose={() => setAppealDialogOpen(false)}
       >
-        <Appeal appeal={appeal()} appLabel="exam" model="question" questionId={question.id} onCreate={onCreateAppeal} />
+        <Appeal
+          appeal={appeal()}
+          appLabel="exam"
+          model="exam"
+          assessmentId={params().id}
+          questionId={question.id}
+          onCreate={onCreateAppeal}
+        />
       </Dialog>
     </div>
   )

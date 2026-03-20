@@ -28,7 +28,20 @@ export const clearCachedStoreBy = (matcher: string | RegExp): void => {
   }
 }
 
-const buildKey = (prefix: string, params: unknown): string => `${prefix}::${JSON.stringify(params)}`
+export const updateCachedStoreBy = <T>(
+  predicate: (key: string) => boolean,
+  exceptKey: string,
+  updater: (data: T) => T,
+): void => {
+  for (const [key, state] of cache.entries()) {
+    if (key === exceptKey) continue
+    if (predicate(key) && state.data !== undefined) {
+      cache.set(key, { ...state, data: updater(state.data as T) })
+    }
+  }
+}
+
+export const buildKey = (prefix: string, params: unknown): string => `${prefix}::${JSON.stringify(params)}`
 
 export const initCachedStore = <T, P>(prefix: string, params: P, data?: T): void => {
   const key = buildKey(prefix, params)

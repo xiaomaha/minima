@@ -127,7 +127,7 @@ class QuestionFactory(DjangoModelFactory[Question]):
 class AssignmentFactory(LearningObjectFactory[Assignment], GradeWorkflowFactory[Assignment]):
     passing_point = FactoryField("choice", items=[60, 80])
     max_attempts = 1
-    verification_required = True
+    verification_required = False
     rubric = SubFactory(RubricFactory)
     sample_attachment = Sequence(
         lambda n: ContentFile(generic.binaryfile.document(file_type=DocumentFile.DOCX), name=f"sample.{n}.docx")

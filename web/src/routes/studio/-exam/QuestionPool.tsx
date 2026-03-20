@@ -88,7 +88,7 @@ export const QuestionPool = () => {
             <div class="flex gap-2 items-center justify-end mx-4">
               <Show when={collapseAll && questions().length}>
                 <CollapseButton
-                  class="absolute left-4 opacity-30 hover:opacity-100"
+                  class="opacity-30 hover:opacity-100"
                   collapsed={collapseAll!.collapsed}
                   setCollapsed={collapseAll!.setCollapsed}
                   default={true}

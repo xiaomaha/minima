@@ -21,12 +21,12 @@ router = Router(by_alias=True)
 
 
 @router.get("/enrollment", response=PaginatedResponse[EnrollmentSchema])
-async def get_enrolled(
+async def get_enrollments(
     request: HttpRequest,
     page: Annotated[int, functions.Query(1, ge=1)],
     size: Annotated[int, functions.Query(settings.DEFAULT_PAGINATION_SIZE, gte=1, le=100)],
 ):
-    return await Enrollment.get_enrolled(user_id=request.auth, page=page, size=size)
+    return await Enrollment.get_enrollments(user_id=request.auth, page=page, size=size)
 
 
 @router.delete("/enrollment/{id}")

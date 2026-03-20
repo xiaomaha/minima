@@ -47,7 +47,7 @@ class MessagePresetFactory(DjangoModelFactory[MessagePreset]):
 class CourseFactory(LearningObjectFactory[Course], GradeWorkflowFactory[Course]):
     passing_point = FactoryField("choice", items=[60, 80])
     max_attempts = FactoryField("choice", items=[1, 2])
-    verification_required = True
+    verification_required = False
 
     owner = LazyFunction(lambda: UserFactory(email=test_user_email))
     objective = FactoryField("text")

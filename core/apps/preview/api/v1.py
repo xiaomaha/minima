@@ -39,7 +39,7 @@ async def exchange_preview_session(request: HttpRequest, response: HttpResponse,
     await cache.adelete(f"{_PREVIEW_OTT_PREFIX}{ott}")
 
     preview_user, created = await User.objects.aget_or_create(
-        email=f"preview+{ott_auth}@preview.worker",
+        email=f"{ott_auth}@preview.worker",
         defaults={"name": _("Preview"), "nickname": "?", "is_active": True, "password": make_password(None)},
     )
 

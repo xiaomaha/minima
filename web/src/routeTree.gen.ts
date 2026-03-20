@@ -41,6 +41,14 @@ import { Route as StudentaccountGroupRouteImport } from './routes/student/(accou
 import { Route as StudentaccountEmailChangeRouteImport } from './routes/student/(account)/email-change'
 import { Route as StudentaccountDeviceRouteImport } from './routes/student/(account)/device'
 import { Route as PublicSurveyIdRouteImport } from './routes/public/survey/$id'
+import { Route as DeskPartnerParnterRouteImport } from './routes/desk/partner/parnter'
+import { Route as DeskOperationInquiryRouteImport } from './routes/desk/operation/inquiry'
+import { Route as DeskOperationAppealRouteImport } from './routes/desk/operation/appeal'
+import { Route as DeskOperationAnnouncementRouteImport } from './routes/desk/operation/announcement'
+import { Route as DeskLearningTermRouteImport } from './routes/desk/learning/term'
+import { Route as DeskLearningEnrollmentRouteImport } from './routes/desk/learning/enrollment'
+import { Route as DeskLearningCatalogRouteImport } from './routes/desk/learning/catalog'
+import { Route as DeskAccountUserRouteImport } from './routes/desk/account/user'
 import { Route as TutorExamIdGradingRouteImport } from './routes/tutor/exam/$id.grading'
 import { Route as TutorDiscussionIdGradingRouteImport } from './routes/tutor/discussion/$id.grading'
 import { Route as TutorAssignmentIdGradingRouteImport } from './routes/tutor/assignment/$id.grading'
@@ -212,6 +220,47 @@ const PublicSurveyIdRoute = PublicSurveyIdRouteImport.update({
   path: '/public/survey/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DeskPartnerParnterRoute = DeskPartnerParnterRouteImport.update({
+  id: '/partner/parnter',
+  path: '/partner/parnter',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
+const DeskOperationInquiryRoute = DeskOperationInquiryRouteImport.update({
+  id: '/operation/inquiry',
+  path: '/operation/inquiry',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
+const DeskOperationAppealRoute = DeskOperationAppealRouteImport.update({
+  id: '/operation/appeal',
+  path: '/operation/appeal',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
+const DeskOperationAnnouncementRoute =
+  DeskOperationAnnouncementRouteImport.update({
+    id: '/operation/announcement',
+    path: '/operation/announcement',
+    getParentRoute: () => DeskRouteRoute,
+  } as any)
+const DeskLearningTermRoute = DeskLearningTermRouteImport.update({
+  id: '/learning/term',
+  path: '/learning/term',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
+const DeskLearningEnrollmentRoute = DeskLearningEnrollmentRouteImport.update({
+  id: '/learning/enrollment',
+  path: '/learning/enrollment',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
+const DeskLearningCatalogRoute = DeskLearningCatalogRouteImport.update({
+  id: '/learning/catalog',
+  path: '/learning/catalog',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
+const DeskAccountUserRoute = DeskAccountUserRouteImport.update({
+  id: '/account/user',
+  path: '/account/user',
+  getParentRoute: () => DeskRouteRoute,
+} as any)
 const TutorExamIdGradingRoute = TutorExamIdGradingRouteImport.update({
   id: '/exam/$id/grading',
   path: '/exam/$id/grading',
@@ -260,7 +309,7 @@ const StudentAssignmentIdSessionRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
-  '/desk': typeof DeskRouteRoute
+  '/desk': typeof DeskRouteRouteWithChildren
   '/student': typeof StudentdashboardRouteRouteWithChildren
   '/studio': typeof StudioRouteRouteWithChildren
   '/tutor': typeof TutorRouteRouteWithChildren
@@ -271,6 +320,14 @@ export interface FileRoutesByFullPath {
   '/preview/$ott': typeof PreviewOttRoute
   '/studio/': typeof StudioIndexRoute
   '/tutor/': typeof TutorIndexRoute
+  '/desk/account/user': typeof DeskAccountUserRoute
+  '/desk/learning/catalog': typeof DeskLearningCatalogRoute
+  '/desk/learning/enrollment': typeof DeskLearningEnrollmentRoute
+  '/desk/learning/term': typeof DeskLearningTermRoute
+  '/desk/operation/announcement': typeof DeskOperationAnnouncementRoute
+  '/desk/operation/appeal': typeof DeskOperationAppealRoute
+  '/desk/operation/inquiry': typeof DeskOperationInquiryRoute
+  '/desk/partner/parnter': typeof DeskPartnerParnterRoute
   '/public/survey/$id': typeof PublicSurveyIdRoute
   '/student/device': typeof StudentaccountDeviceRoute
   '/student/email-change': typeof StudentaccountEmailChangeRoute
@@ -300,7 +357,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
-  '/desk': typeof DeskRouteRoute
+  '/desk': typeof DeskRouteRouteWithChildren
   '/student': typeof StudentdashboardIndexRoute
   '/auth/activate': typeof AuthActivateRoute
   '/auth/join': typeof AuthJoinRoute
@@ -309,6 +366,14 @@ export interface FileRoutesByTo {
   '/preview/$ott': typeof PreviewOttRoute
   '/studio': typeof StudioIndexRoute
   '/tutor': typeof TutorIndexRoute
+  '/desk/account/user': typeof DeskAccountUserRoute
+  '/desk/learning/catalog': typeof DeskLearningCatalogRoute
+  '/desk/learning/enrollment': typeof DeskLearningEnrollmentRoute
+  '/desk/learning/term': typeof DeskLearningTermRoute
+  '/desk/operation/announcement': typeof DeskOperationAnnouncementRoute
+  '/desk/operation/appeal': typeof DeskOperationAppealRoute
+  '/desk/operation/inquiry': typeof DeskOperationInquiryRoute
+  '/desk/partner/parnter': typeof DeskPartnerParnterRoute
   '/public/survey/$id': typeof PublicSurveyIdRoute
   '/student/device': typeof StudentaccountDeviceRoute
   '/student/email-change': typeof StudentaccountEmailChangeRoute
@@ -338,7 +403,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
-  '/desk': typeof DeskRouteRoute
+  '/desk': typeof DeskRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
   '/studio': typeof StudioRouteRouteWithChildren
   '/tutor': typeof TutorRouteRouteWithChildren
@@ -351,6 +416,14 @@ export interface FileRoutesById {
   '/preview/$ott': typeof PreviewOttRoute
   '/studio/': typeof StudioIndexRoute
   '/tutor/': typeof TutorIndexRoute
+  '/desk/account/user': typeof DeskAccountUserRoute
+  '/desk/learning/catalog': typeof DeskLearningCatalogRoute
+  '/desk/learning/enrollment': typeof DeskLearningEnrollmentRoute
+  '/desk/learning/term': typeof DeskLearningTermRoute
+  '/desk/operation/announcement': typeof DeskOperationAnnouncementRoute
+  '/desk/operation/appeal': typeof DeskOperationAppealRoute
+  '/desk/operation/inquiry': typeof DeskOperationInquiryRoute
+  '/desk/partner/parnter': typeof DeskPartnerParnterRoute
   '/public/survey/$id': typeof PublicSurveyIdRoute
   '/student/(account)/device': typeof StudentaccountDeviceRoute
   '/student/(account)/email-change': typeof StudentaccountEmailChangeRoute
@@ -393,6 +466,14 @@ export interface FileRouteTypes {
     | '/preview/$ott'
     | '/studio/'
     | '/tutor/'
+    | '/desk/account/user'
+    | '/desk/learning/catalog'
+    | '/desk/learning/enrollment'
+    | '/desk/learning/term'
+    | '/desk/operation/announcement'
+    | '/desk/operation/appeal'
+    | '/desk/operation/inquiry'
+    | '/desk/partner/parnter'
     | '/public/survey/$id'
     | '/student/device'
     | '/student/email-change'
@@ -431,6 +512,14 @@ export interface FileRouteTypes {
     | '/preview/$ott'
     | '/studio'
     | '/tutor'
+    | '/desk/account/user'
+    | '/desk/learning/catalog'
+    | '/desk/learning/enrollment'
+    | '/desk/learning/term'
+    | '/desk/operation/announcement'
+    | '/desk/operation/appeal'
+    | '/desk/operation/inquiry'
+    | '/desk/partner/parnter'
     | '/public/survey/$id'
     | '/student/device'
     | '/student/email-change'
@@ -472,6 +561,14 @@ export interface FileRouteTypes {
     | '/preview/$ott'
     | '/studio/'
     | '/tutor/'
+    | '/desk/account/user'
+    | '/desk/learning/catalog'
+    | '/desk/learning/enrollment'
+    | '/desk/learning/term'
+    | '/desk/operation/announcement'
+    | '/desk/operation/appeal'
+    | '/desk/operation/inquiry'
+    | '/desk/partner/parnter'
     | '/public/survey/$id'
     | '/student/(account)/device'
     | '/student/(account)/email-change'
@@ -502,7 +599,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  DeskRouteRoute: typeof DeskRouteRoute
+  DeskRouteRoute: typeof DeskRouteRouteWithChildren
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
   StudioRouteRoute: typeof StudioRouteRouteWithChildren
   TutorRouteRoute: typeof TutorRouteRouteWithChildren
@@ -736,6 +833,62 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof PublicSurveyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/desk/partner/parnter': {
+      id: '/desk/partner/parnter'
+      path: '/partner/parnter'
+      fullPath: '/desk/partner/parnter'
+      preLoaderRoute: typeof DeskPartnerParnterRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/operation/inquiry': {
+      id: '/desk/operation/inquiry'
+      path: '/operation/inquiry'
+      fullPath: '/desk/operation/inquiry'
+      preLoaderRoute: typeof DeskOperationInquiryRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/operation/appeal': {
+      id: '/desk/operation/appeal'
+      path: '/operation/appeal'
+      fullPath: '/desk/operation/appeal'
+      preLoaderRoute: typeof DeskOperationAppealRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/operation/announcement': {
+      id: '/desk/operation/announcement'
+      path: '/operation/announcement'
+      fullPath: '/desk/operation/announcement'
+      preLoaderRoute: typeof DeskOperationAnnouncementRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/learning/term': {
+      id: '/desk/learning/term'
+      path: '/learning/term'
+      fullPath: '/desk/learning/term'
+      preLoaderRoute: typeof DeskLearningTermRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/learning/enrollment': {
+      id: '/desk/learning/enrollment'
+      path: '/learning/enrollment'
+      fullPath: '/desk/learning/enrollment'
+      preLoaderRoute: typeof DeskLearningEnrollmentRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/learning/catalog': {
+      id: '/desk/learning/catalog'
+      path: '/learning/catalog'
+      fullPath: '/desk/learning/catalog'
+      preLoaderRoute: typeof DeskLearningCatalogRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
+    '/desk/account/user': {
+      id: '/desk/account/user'
+      path: '/account/user'
+      fullPath: '/desk/account/user'
+      preLoaderRoute: typeof DeskAccountUserRouteImport
+      parentRoute: typeof DeskRouteRoute
+    }
     '/tutor/exam/$id/grading': {
       id: '/tutor/exam/$id/grading'
       path: '/exam/$id/grading'
@@ -811,6 +964,32 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
+)
+
+interface DeskRouteRouteChildren {
+  DeskAccountUserRoute: typeof DeskAccountUserRoute
+  DeskLearningCatalogRoute: typeof DeskLearningCatalogRoute
+  DeskLearningEnrollmentRoute: typeof DeskLearningEnrollmentRoute
+  DeskLearningTermRoute: typeof DeskLearningTermRoute
+  DeskOperationAnnouncementRoute: typeof DeskOperationAnnouncementRoute
+  DeskOperationAppealRoute: typeof DeskOperationAppealRoute
+  DeskOperationInquiryRoute: typeof DeskOperationInquiryRoute
+  DeskPartnerParnterRoute: typeof DeskPartnerParnterRoute
+}
+
+const DeskRouteRouteChildren: DeskRouteRouteChildren = {
+  DeskAccountUserRoute: DeskAccountUserRoute,
+  DeskLearningCatalogRoute: DeskLearningCatalogRoute,
+  DeskLearningEnrollmentRoute: DeskLearningEnrollmentRoute,
+  DeskLearningTermRoute: DeskLearningTermRoute,
+  DeskOperationAnnouncementRoute: DeskOperationAnnouncementRoute,
+  DeskOperationAppealRoute: DeskOperationAppealRoute,
+  DeskOperationInquiryRoute: DeskOperationInquiryRoute,
+  DeskPartnerParnterRoute: DeskPartnerParnterRoute,
+}
+
+const DeskRouteRouteWithChildren = DeskRouteRoute._addFileChildren(
+  DeskRouteRouteChildren,
 )
 
 interface StudentaccountRouteRouteChildren {
@@ -922,7 +1101,7 @@ const TutorRouteRouteWithChildren = TutorRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  DeskRouteRoute: DeskRouteRoute,
+  DeskRouteRoute: DeskRouteRouteWithChildren,
   StudentRouteRoute: StudentRouteRouteWithChildren,
   StudioRouteRoute: StudioRouteRouteWithChildren,
   TutorRouteRoute: TutorRouteRouteWithChildren,
