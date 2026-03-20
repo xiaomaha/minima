@@ -1,8 +1,8 @@
-# Minima LMS
+# Minima LMSd
 
-[![English](https://img.shields.io/badge/Language-English-blue)](README.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Status](https://img.shields.io/badge/Status-Alpha-orange)
+[!\[English\](https://img.shields.io/badge/Language-English-blue null)](README.md)
+[!\[License: MIT\](https://img.shields.io/badge/License-MIT-yellow.svg null)](https://opensource.org/licenses/MIT)
+!\[Status]\(https\://img.shields.io/badge/Status-Alpha-orange null)
 
 **Micro-learning LMS. Alternative to Moodle, Canvas, and Open edX.**
 
@@ -10,7 +10,7 @@
 
 ## Documentation
 
-[https://cobel1024.github.io/minima-docs/](https://cobel1024.github.io/minima-docs/)
+<https://cobel1024.github.io/minima-docs/>
 
 ## Quick Start
 
@@ -21,28 +21,28 @@ sh dev.sh up
 
 Access with username `admin@example.com` and password `1111`
 
-- Student: [http://student.localhost:5173](http://student.localhost:5173)
-- Studio: [http://studio.localhost:5173](http://studio.localhost:5173)
-- Tutor: [http://tutor.localhost:5173](http://tutor.localhost:5173)
+- Student: <http://student.localhost:5173>
+- Studio: <http://studio.localhost:5173>
+- Tutor: <http://tutor.localhost:5173>
 - Admin: [http://localhost:8000](http://localhost:8000/admin/)
 
 ## Screenshots
 
 - Student Dashboard
 
-![Dashboard](./screenshot/web.webp)
+!\[Dashboard]\(./screenshot/web.webp null)
 
 - Content Studio
 
-![Content Studio](screenshot/studio.webp)
+!\[Content Studio]\(screenshot/studio.webp null)
 
 - Tutor Dashboard
 
-![Tutor Dashboard](screenshot/tutor.webp)
+!\[Tutor Dashboard]\(screenshot/tutor.webp null)
 
 - Admin Panel
 
-![Admin Panel](screenshot/admin.webp)
+!\[Admin Panel]\(screenshot/admin.webp null)
 
 ## Tech Stack
 
