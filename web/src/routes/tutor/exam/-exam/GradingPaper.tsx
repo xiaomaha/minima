@@ -2,7 +2,7 @@ import { createEffect, For, Show } from 'solid-js'
 import { reconcile } from 'solid-js/store'
 import { tutorV1CompleteExamGrade, tutorV1GetExamGradePaper } from '@/api'
 import { SubmitButton } from '@/shared/SubmitButton'
-import { createCachedStore } from '@/shared/solid/cached-store'
+import { buildKey, createCachedStore, updateCachedStoreBy } from '@/shared/solid/cached-store'
 import { createForm } from '@/shared/solid/form'
 import { useTranslation } from '@/shared/solid/i18n'
 import { useGrading } from './context'
@@ -17,7 +17,7 @@ interface Props {
 export const GradingPaper = (props: Props) => {
   const { t } = useTranslation()
 
-  const [grading, { setStore }] = createCachedStore(
+  const [grading, { setStore, refetch }] = createCachedStore(
     'tutorV1GetExamGradePaper',
     () => ({ path: { id: props.examId, grade_id: props.gradingId }, query: { questionId: props.questionId } }),
     async (options) => (await tutorV1GetExamGradePaper(options)).data,
@@ -63,6 +63,23 @@ export const GradingPaper = (props: Props) => {
       if (idx !== -1) gradingContext[2].setStore('items', idx, data)
     }
 
+    // update question paper cache
+    updateCachedStoreBy(
+      (key) =>
+        new RegExp(
+          `tutorV1GetExamGradePaper::\\{"path":\\{"id":"${props.examId}","grade_id":${props.gradingId}\\}`,
+        ).test(key),
+      buildKey('tutorV1GetExamGradePaper', {
+        path: { id: props.examId, grade_id: props.gradingId },
+        query: { questionId: props.questionId },
+      }),
+      (prev: typeof grading.data) => ({
+        ...prev!,
+        earnedDetails: { ...prev!.earnedDetails, ...earnedDetails },
+        feedback: { ...prev!.feedback, ...feedback },
+      }),
+    )
+
     // form reset
     reset({ initialValues: { ...values } })
   }
@@ -72,19 +89,21 @@ export const GradingPaper = (props: Props) => {
       <Form onSubmit={saveGrade}>
         <For each={grading.data!.questions}>
           {(question) => (
-            <div class="text-left m-8 p-8 bg-base-100 rounded">
-              <Question
-                question={question}
-                solution={question.solution}
-                analysis={grading.data!.analysis[question.id]}
-              />
+            <div class="m-8 p-8 bg-base-100 rounded">
+              <fieldset disabled={!!grading.data!.confirmed}>
+                <Question
+                  examId={props.examId}
+                  question={question}
+                  solution={question.solution}
+                  analysis={grading.data!.analysis[question.id]}
+                  refetch={refetch}
+                />
+              </fieldset>
 
               <div class="divider" />
 
-              <fieldset
-                disabled={!gradingContext || !!gradingContext[0].items.find((g) => g.id === props.gradingId)?.confirmed}
-              >
-                <table class="table table-sm">
+              <fieldset disabled={!!grading.data!.confirmed || !!question.solution?.correctAnswers.length}>
+                <table class="table">
                   <tbody>
                     <tr>
                       <th class="w-0 whitespace-nowrap">{t("Learner's Answer")}</th>
@@ -151,7 +170,7 @@ export const GradingPaper = (props: Props) => {
             </div>
           )}
         </For>
-        <Show when={gradingContext}>
+        <Show when={!grading.data!.confirmed}>
           <div class="text-center mb-8 mr-8">
             <SubmitButton
               label={t('Complete Grade')}

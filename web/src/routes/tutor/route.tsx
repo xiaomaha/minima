@@ -1,13 +1,11 @@
 import { createFileRoute, notFound, Outlet } from '@tanstack/solid-router'
-import { tutorV1GetAllocation } from '@/api'
 import { NotFound } from '@/shared/error/NotFound'
 import { GoToTop } from '@/shared/GoToTop'
 import { NavbarLogo } from '@/shared/NavbarLogo'
-import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
 import { ThemeButton } from '@/shared/ThemeButton'
 import { protectedRoute } from '../-protected'
 import { LogoutButton } from '../auth/-auth/LogoutButtion'
-import { AllocationProvider } from './-tutor/context'
+import { useTokenExpired } from '../auth/-auth/logout'
 
 export const Route = createFileRoute('/tutor')({
   beforeLoad: () => {
@@ -19,11 +17,7 @@ export const Route = createFileRoute('/tutor')({
 })
 
 function RouteComponent() {
-  const allocations = createCachedInfiniteStore(
-    'tutorV1GetAllocation',
-    () => ({}),
-    async (_, page) => (await tutorV1GetAllocation({ query: { page } })).data,
-  )
+  useTokenExpired()
 
   return (
     <div class="flex flex-col">
@@ -41,9 +35,7 @@ function RouteComponent() {
       </div>
 
       <main class="p-4 pb-12 mt-14 max-w-6xl mx-auto w-full">
-        <AllocationProvider value={allocations}>
-          <Outlet />
-        </AllocationProvider>
+        <Outlet />
       </main>
       <GoToTop />
     </div>

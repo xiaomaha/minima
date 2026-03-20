@@ -84,6 +84,17 @@ class ArrayField(SimpleArrayField):
         return super().prepare_value(value)
 
 
+class PGHContextDict(TypedDict):
+    ip: str
+    device: str | None
+    os: str | None
+    browser: str | None
+    auth_id: str | None
+    url: str
+    user_id: NotRequired[str]
+    is_admin: NotRequired[bool]
+
+
 class AccessDate(TypedDict):
     start: datetime
     end: datetime

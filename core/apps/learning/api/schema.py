@@ -22,10 +22,15 @@ class EnrollmentSchema(TimeStampedMixinSchema):
     archive: datetime
     enrolled: datetime
     can_deactivate: bool
+    term: str | None
 
     @staticmethod
     def resolve_content(enrollment: Enrollment):
         return enrollment._content_cache
+
+    @staticmethod
+    def resolve_term(enrollment: Enrollment):
+        return enrollment.term.name if enrollment.term else None
 
 
 class LearningRecordSchema(RootModel[dict[str, dict[str, float]]]):

@@ -146,7 +146,7 @@ function RouteComponent() {
       </div>
 
       <div class=" mx-auto space-y-2 flex flex-col w-full">
-        <Show when={!watched.loading} fallback={<div class="h-5 w-48"></div>}>
+        <Show when={!watched.loading && watched.count} fallback={<div class="h-5 w-48"></div>}>
           <div class="label text-sm w-full">{t('{{count}} watched public media found', { count: watched.count })}</div>
         </Show>
 

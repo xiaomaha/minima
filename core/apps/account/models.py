@@ -135,7 +135,6 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
     class Meta(TuidMixin.Meta, TimeStampedMixin.Meta):
         verbose_name = _("User")
         verbose_name_plural = _("Users")
-        indexes = [Index(fields=["name"]), Index(fields=["nickname"])]
 
     if TYPE_CHECKING:
         from apps.partner.models import Member
@@ -244,6 +243,9 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
         access_token = request.COOKIES.get(settings.ACCESS_TOKEN_NAME)
         refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
 
+        if not access_token and not refresh_token:
+            return
+
         blacklisted_tokens: list[BlacklistedToken] = []
         for token in [access_token, refresh_token]:
             if not token:
@@ -254,6 +256,9 @@ class User(TuidMixin, TimeStampedMixin, AbstractBaseUser, PermissionsMixin):
                 blacklisted_tokens.append(BlacklistedToken(token=token, expires=expires))
             except InvalidTokenError:
                 continue
+
+        if not blacklisted_tokens:
+            return
 
         await BlacklistedToken.objects.abulk_create(
             blacklisted_tokens, update_conflicts=True, unique_fields=["token"], update_fields=["expires"]
@@ -588,7 +593,7 @@ class TempPassword(Model):
 @pghistory.track()
 class Token(TimeStampedMixin):
     user = OneToOneField(User, CASCADE, verbose_name=_("User"))
-    token = CharField(_("Token"), max_length=500, db_index=True)
+    token = CharField(_("Token"), max_length=500)
     expires = DateTimeField(_("Expires"))
     ip_address = GenericIPAddressField(_("IP Address"), null=True, blank=True)
     user_agent = TextField(_("User Agent"), null=True, blank=True)
@@ -596,6 +601,7 @@ class Token(TimeStampedMixin):
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Token")
         verbose_name_plural = _("Tokens")
+        indexes = [Index(fields=["token"])]
 
 
 @pghistory.track()

@@ -5,6 +5,8 @@ from ipware.ip import get_client_ip
 from pghistory import config
 from ua_parser import parse
 
+from apps.common.util import PGHContextDict
+
 
 class DjangoRequest:
     def __setattr__(self, attr: str, value):
@@ -32,7 +34,7 @@ class HistoryMiddleware:
         if request.method in config.middleware_methods():
             # request context
             ua = parse(request.headers.get("user-agent", ""))  # by django-upgrade
-            context = {
+            context: PGHContextDict = {
                 "ip": get_client_ip(request)[0],
                 "device": ua.device.family if ua.device else None,
                 "os": ua.os.family if ua.os else None,

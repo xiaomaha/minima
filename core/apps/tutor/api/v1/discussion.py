@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db.models import F, Prefetch
 from django.shortcuts import aget_object_or_404
 from ninja import Router
@@ -45,6 +47,7 @@ class TutorDiscussionGradePaperSchema(Schema):
     grader: OwnerSchema | None
     question: DiscussionQuestionSchema
     posts: list[DiscussionOwnPostSchema]
+    confirmed: datetime | None
 
     @staticmethod
     def resolve_question(grade: Grade):

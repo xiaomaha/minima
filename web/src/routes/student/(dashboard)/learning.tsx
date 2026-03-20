@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { createEffect, createSignal, For, onCleanup, type Setter, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
 import * as v from 'valibot'
-import { type EnrollmentSchema, learningV1GetEnrolled, learningV1Unenroll } from '@/api'
+import { type EnrollmentSchema, learningV1GetEnrollments, learningV1Unenroll } from '@/api'
 import { Avatar } from '@/shared/Avatar'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
@@ -31,7 +31,7 @@ function RouteComponent() {
   const [enrollments, setObserverEl, { setStore }] = createCachedInfiniteStore(
     'learningV1GetEnrolled',
     () => ({ query: {} }),
-    async (options, page) => (await learningV1GetEnrolled({ ...options, query: { page } })).data,
+    async (options, page) => (await learningV1GetEnrollments({ ...options, query: { page } })).data,
   )
 
   const { newEnrollments } = useDashboard()
@@ -204,7 +204,7 @@ const ContentCard = (props: ContentCardProps) => {
             </div>
           </div>
         </div>
-        <div class="text-sm label my-2 w-full relative justify-between">
+        <div class="flex text-sm my-2 w-full relative justify-between">
           <Show
             when={props.item.content.format !== 'live'}
             fallback={
@@ -214,9 +214,15 @@ const ContentCard = (props: ContentCardProps) => {
               </span>
             }
           >
-            <span>
-              {new Date(props.item.start).toLocaleDateString()} ~ {new Date(props.item.end).toLocaleDateString()}
-            </span>
+            <div class="flex flex-col gap-1">
+              <span>
+                {new Date(props.item.start).toLocaleDateString()} ~ {new Date(props.item.end).toLocaleDateString()}
+              </span>
+
+              <Show when={props.item.term}>
+                <div class="line-clamp-1">{t('Term: {{term}}', { term: props.item.term })}</div>
+              </Show>
+            </div>
           </Show>
 
           <Show when={props.item.canDeactivate}>

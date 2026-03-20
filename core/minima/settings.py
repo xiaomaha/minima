@@ -348,7 +348,20 @@ CELERY_BEAT_SCHEDULE = {
     "sync-hot-events": {"task": "apps.tracking.tasks.sync_hot_event", "schedule": 300.0},
     "cleanup-hot-events": {"task": "apps.tracking.tasks.cleanup_hot_event", "schedule": crontab(hour=2, minute=0)},
     "collect-daily-data": {"task": "apps.warehouse.tasks.collect_daily_data", "schedule": crontab(hour=1, minute=5)},
-    "cleanup-audit-data": {"task": "apps.learning.tasks.cleanup_audit_data", "schedule": crontab(hour=1, minute=10)},
+    "cleanup-preview-data": {"task": "apps.preview.tasks.cleanup_preview_data", "schedule": crontab(hour=1, minute=10)},
+    "exam-grade-confirm": {"task": "apps.exam.tasks.grade_confirm_task", "schedule": crontab(hour=8, minute=0)},
+    "discussion-grade-confirm": {
+        "task": "apps.discussion.tasks.grade_confirm_task",
+        "schedule": crontab(hour=8, minute=1),
+    },
+    "assignment-grade-confirm": {
+        "task": "apps.assignment.tasks.grade_confirm_task",
+        "schedule": crontab(hour=8, minute=2),
+    },
+    "course-gradebook-confirm": {
+        "task": "apps.course.tasks.gradebook_confirm_task",
+        "schedule": crontab(hour=8, minute=3),
+    },
 }
 
 # assistant

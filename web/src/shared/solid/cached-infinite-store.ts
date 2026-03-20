@@ -12,6 +12,7 @@ type PaginatedResponse<T> = {
 type StoreState<T> = {
   items: T[]
   count: number
+  size: number
   page: number
   pages: number
   loading: boolean
@@ -22,6 +23,7 @@ type StoreActions<T> = {
   loadMore: () => Promise<void>
   reset: () => void
   refetch: () => Promise<void>
+  fetchPage: (page: number) => Promise<void>
   setStore: SetStoreFunction<StoreState<T>>
 }
 
@@ -34,11 +36,11 @@ const buildKey = (prefix: string, params: unknown): string => {
 }
 
 const noParams = <T>(): StoreState<T> => {
-  return { items: [], count: 0, page: 0, pages: 0, loading: false, end: true }
+  return { items: [], count: 0, size: 0, page: 0, pages: 0, loading: false, end: true }
 }
 
 const startFresh = <T>(): StoreState<T> => {
-  return { items: [], count: 0, page: 0, pages: 0, loading: false, end: false }
+  return { items: [], count: 0, size: 0, page: 0, pages: 0, loading: false, end: false }
 }
 
 export const clearInfiniteStore = (): void => {
@@ -55,6 +57,7 @@ export const initCachedInfiniteStore = <T, P>(
   cache.set(key, {
     items: data?.items ?? [],
     count: data?.count ?? 0,
+    size: data?.size ?? 0,
     page: data?.page ?? 0,
     pages: data?.pages ?? 0,
     loading: false,
@@ -69,10 +72,20 @@ export const clearCachedInfiniteStoreBy = (matcher: string | RegExp): void => {
   }
 }
 
+const applyPageToItems = <T>(items: T[], response: PaginatedResponse<T>): T[] => {
+  const result = [...items]
+  const start = (response.page - 1) * response.size
+  response.items.forEach((item, i) => {
+    result[start + i] = item
+  })
+  return result
+}
+
 export const createCachedInfiniteStore = <T, P>(
   prefix: string,
   getParams: () => P | undefined,
   fetcher: (params: P, page: number) => Promise<PaginatedResponse<T>>,
+  getInitialPage?: () => number,
 ): StoreReturn<T> => {
   let state: StoreState<T>
   let setState: SetStoreFunction<StoreState<T>>
@@ -91,6 +104,7 @@ export const createCachedInfiniteStore = <T, P>(
       cache.set(activeKey, {
         items: [...state.items],
         count: state.count,
+        size: state.size,
         page: state.page,
         pages: state.pages,
         loading: false,
@@ -102,11 +116,12 @@ export const createCachedInfiniteStore = <T, P>(
       if (state.loading || state.end) return
       setState('loading', true)
       try {
-        const nextPage = isInitialLoad ? 1 : state.page + 1
+        const nextPage = isInitialLoad ? (getInitialPage?.() ?? 1) : state.page + 1
         const response = await fetcher(params, nextPage)
         setState({
-          items: isInitialLoad ? response.items : [...state.items, ...response.items],
+          items: applyPageToItems(state.items, response),
           count: response.count,
+          size: response.size,
           page: response.page,
           pages: response.pages,
           loading: false,
@@ -141,6 +156,36 @@ export const createCachedInfiniteStore = <T, P>(
       await loadMoreInternal(params)
     }
 
+    const fetchPage = async (page: number) => {
+      const params = getParams()
+      if (!params) return
+      if (state.loading) return
+
+      const start = (page - 1) * state.size
+      if (state.size > 0 && state.items[start] !== undefined) {
+        setState('page', page)
+        return
+      }
+
+      setState('loading', true)
+      try {
+        const response = await fetcher(params, page)
+        setState({
+          items: applyPageToItems(state.items, response),
+          count: response.count,
+          size: response.size,
+          page: response.page,
+          pages: response.pages,
+          loading: false,
+          end: state.end,
+        })
+        writeCache()
+      } catch (error) {
+        setState('loading', false)
+        throw error
+      }
+    }
+
     const reset = () => {
       setState(noParams())
       if (activeKey) {
@@ -161,6 +206,7 @@ export const createCachedInfiniteStore = <T, P>(
         setState({
           items: response.items,
           count: response.count,
+          size: response.size,
           page: response.page,
           pages: response.pages,
           loading: false,
@@ -178,7 +224,7 @@ export const createCachedInfiniteStore = <T, P>(
       writeCache()
     }) as SetStoreFunction<StoreState<T>>
 
-    ops = { loadMore, reset, refetch, setStore: wrappedSetStore }
+    ops = { loadMore, reset, refetch, fetchPage, setStore: wrappedSetStore }
 
     createEffect(() => {
       const params = getParams()

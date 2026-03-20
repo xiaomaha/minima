@@ -19,13 +19,8 @@ def up():
     subprocess.run(["docker", "compose", "up", "-d"])
 
 
-LANG = os.environ.get("LANGUAGE_CODE", "en-us").lower()
-
-
 @app.command()
 def bootstrap(tty: bool = True):
-    category_fixture = "ncs_category_ko.json" if LANG == "ko-kr" else "ncs_category_en.json"
-    rubric_fixture = "generic_rubric_ko.json" if LANG == "ko-kr" else "generic_rubric_en.json"
 
     commands = [
         "python manage.py migrate",
@@ -36,8 +31,8 @@ def bootstrap(tty: bool = True):
         "python manage.py create_platform_partner",
         "python manage.py setup_base_operation_data",
         "python manage.py load_ncs_data",
-        f"python manage.py loaddata {category_fixture}",
-        f"python manage.py loaddata {rubric_fixture}",
+        "python manage.py loaddata $([ \"$LANGUAGE_CODE\" = 'ko-kr' ] && echo ncs_category_ko.json || echo ncs_category_en.json)",
+        "python manage.py loaddata $([ \"$LANGUAGE_CODE\" = 'ko-kr' ] && echo generic_rubric_ko.json || echo generic_rubric_en.json)",
     ]
     tty_flag: list[str] = [] if tty else ["-T"]
     subprocess.run(["docker", "compose", "exec", *tty_flag, "minima", "sh", "-c", " && ".join(commands)])

@@ -173,8 +173,7 @@ export const vAppealSchema = v.object({
     id: v.pipe(v.number(), v.integer()),
     questionId: v.pipe(v.number(), v.integer()),
     explanation: v.string(),
-    review: v.string(),
-    path: v.string()
+    review: v.string()
 });
 
 /**
@@ -1015,10 +1014,343 @@ export const vCourseCertificateRequestSchema = v.object({
 });
 
 /**
- * PagedUserSchema
+ * DeskUserSpec
  */
-export const vPagedUserSchema = v.object({
-    items: v.array(vUserSchema),
+export const vDeskUserSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.string(),
+    email: v.string(),
+    name: v.string(),
+    avatar: v.nullable(v.string()),
+    nickname: v.string(),
+    phone: v.string(),
+    birthDate: v.nullable(v.pipe(v.string(), v.isoDate())),
+    language: v.picklist([
+        'en',
+        'ko',
+        ''
+    ]),
+    isActive: v.boolean(),
+    roles: v.array(v.string()),
+    realms: v.array(v.string()),
+    lastLogin: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
+});
+
+/**
+ * PagedDeskUserSpec
+ */
+export const vPagedDeskUserSpec = v.object({
+    items: v.array(vDeskUserSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * PGHContextMedtadataSchema
+ */
+export const vPghContextMedtadataSchema = v.object({
+    ip: v.string(),
+    device: v.nullable(v.string()),
+    os: v.nullable(v.string()),
+    browser: v.nullable(v.string()),
+    authId: v.nullable(v.string()),
+    url: v.string(),
+    userId: v.optional(v.string()),
+    isAdmin: v.optional(v.boolean())
+});
+
+/**
+ * PGHContextSchema
+ */
+export const vPghContextSchema = v.object({
+    metadata: vPghContextMedtadataSchema
+});
+
+/**
+ * DeskUserDetailHistorySpec
+ */
+export const vDeskUserDetailHistorySpec = v.object({
+    pghCreatedAt: v.pipe(v.string(), v.isoTimestamp()),
+    pghContext: v.nullable(vPghContextSchema),
+    id: v.string(),
+    email: v.string(),
+    name: v.string(),
+    phone: v.string(),
+    birthDate: v.nullable(v.pipe(v.string(), v.isoDate()))
+});
+
+/**
+ * DeskUserDetailSpec
+ */
+export const vDeskUserDetailSpec = v.object({
+    histories: v.array(vDeskUserDetailHistorySpec)
+});
+
+/**
+ * ContentTypeSchema
+ */
+export const vContentTypeSchema = v.object({
+    appLabel: v.string(),
+    model: v.string()
+});
+
+/**
+ * DeskEnrollmentSpec
+ */
+export const vDeskEnrollmentSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    user: vOwnerSchema,
+    active: v.boolean(),
+    start: v.pipe(v.string(), v.isoTimestamp()),
+    end: v.pipe(v.string(), v.isoTimestamp()),
+    archive: v.pipe(v.string(), v.isoTimestamp()),
+    enrolled: v.pipe(v.string(), v.isoTimestamp()),
+    contentType: vContentTypeSchema,
+    contentId: v.string(),
+    enrolledBy: v.nullable(vOwnerSchema),
+    label: v.string(),
+    term: v.nullable(v.string())
+});
+
+/**
+ * PagedDeskEnrollmentSpec
+ */
+export const vPagedDeskEnrollmentSpec = v.object({
+    items: v.array(vDeskEnrollmentSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskEnrollmentDetailHistorySpec
+ */
+export const vDeskEnrollmentDetailHistorySpec = v.object({
+    pghCreatedAt: v.pipe(v.string(), v.isoTimestamp()),
+    pghContext: v.nullable(vPghContextSchema),
+    id: v.pipe(v.number(), v.integer()),
+    active: v.boolean(),
+    start: v.pipe(v.string(), v.isoTimestamp()),
+    end: v.pipe(v.string(), v.isoTimestamp()),
+    archive: v.pipe(v.string(), v.isoTimestamp())
+});
+
+/**
+ * DeskEnrollmentDetailSpec
+ */
+export const vDeskEnrollmentDetailSpec = v.object({
+    histories: v.array(vDeskEnrollmentDetailHistorySpec)
+});
+
+/**
+ * DeskBreakDownSpec
+ */
+export const vDeskBreakDownSpec = v.object({
+    course: v.nullish(v.pipe(v.number(), v.integer())),
+    media: v.nullish(v.pipe(v.number(), v.integer())),
+    exam: v.nullish(v.pipe(v.number(), v.integer())),
+    assignment: v.nullish(v.pipe(v.number(), v.integer())),
+    discussion: v.nullish(v.pipe(v.number(), v.integer())),
+    quiz: v.nullish(v.pipe(v.number(), v.integer())),
+    survey: v.nullish(v.pipe(v.number(), v.integer()))
+});
+
+/**
+ * DeskLearningTermSpec
+ */
+export const vDeskLearningTermSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string(),
+    userCount: v.pipe(v.number(), v.integer()),
+    enrollmentCount: v.pipe(v.number(), v.integer()),
+    breakdown: vDeskBreakDownSpec
+});
+
+/**
+ * PagedDeskLearningTermSpec
+ */
+export const vPagedDeskLearningTermSpec = v.object({
+    items: v.array(vDeskLearningTermSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskCatalogSpec
+ */
+export const vDeskCatalogSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string(),
+    description: v.string(),
+    thumbnail: v.string(),
+    active: v.boolean(),
+    public: v.boolean(),
+    availableFrom: v.pipe(v.string(), v.isoTimestamp()),
+    availableUntil: v.pipe(v.string(), v.isoTimestamp()),
+    itemCount: v.pipe(v.number(), v.integer()),
+    breakdown: vDeskBreakDownSpec
+});
+
+/**
+ * PagedDeskCatalogSpec
+ */
+export const vPagedDeskCatalogSpec = v.object({
+    items: v.array(vDeskCatalogSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskCatalogItemSpec
+ */
+export const vDeskCatalogItemSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    contentType: vContentTypeSchema,
+    label: v.string(),
+    ordering: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskCatalogDetailSpec
+ */
+export const vDeskCatalogDetailSpec = v.object({
+    items: v.array(vDeskCatalogItemSpec)
+});
+
+/**
+ * DeskPartnerSpec
+ */
+export const vDeskPartnerSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    name: v.string(),
+    realm: v.string(),
+    phone: v.string(),
+    email: v.string(),
+    logo: v.string(),
+    website: v.string()
+});
+
+/**
+ * PagedDeskPartnerSpec
+ */
+export const vPagedDeskPartnerSpec = v.object({
+    items: v.array(vDeskPartnerSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskAnnouncementSpec
+ */
+export const vDeskAnnouncementSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    title: v.string(),
+    body: v.string(),
+    public: v.boolean(),
+    pinned: v.boolean(),
+    read: v.pipe(v.number(), v.integer()),
+    writer: vOwnerSchema
+});
+
+/**
+ * PagedDeskAnnouncementSpec
+ */
+export const vPagedDeskAnnouncementSpec = v.object({
+    items: v.array(vDeskAnnouncementSpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskInquirySpec
+ */
+export const vDeskInquirySpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    title: v.string(),
+    question: v.string(),
+    writer: vOwnerSchema,
+    contentType: vContentTypeSchema,
+    contentId: v.string(),
+    solved: v.boolean()
+});
+
+/**
+ * PagedDeskInquirySpec
+ */
+export const vPagedDeskInquirySpec = v.object({
+    items: v.array(vDeskInquirySpec),
+    count: v.pipe(v.number(), v.integer()),
+    size: v.pipe(v.number(), v.integer()),
+    page: v.pipe(v.number(), v.integer()),
+    pages: v.pipe(v.number(), v.integer())
+});
+
+/**
+ * DeskInquiryResponseSpec
+ */
+export const vDeskInquiryResponseSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    answer: v.string(),
+    writer: vOwnerSchema,
+    solved: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
+});
+
+/**
+ * DeskInquiryDetailSpec
+ */
+export const vDeskInquiryDetailSpec = v.object({
+    responses: v.array(vDeskInquiryResponseSpec)
+});
+
+/**
+ * DeskAppealSpec
+ */
+export const vDeskAppealSpec = v.object({
+    created: v.pipe(v.string(), v.isoTimestamp()),
+    modified: v.pipe(v.string(), v.isoTimestamp()),
+    id: v.pipe(v.number(), v.integer()),
+    learner: vOwnerSchema,
+    explanation: v.string(),
+    review: v.string(),
+    reviewer: v.nullable(vOwnerSchema),
+    assessmentType: vContentTypeSchema,
+    assessmentId: v.pipe(v.number(), v.integer()),
+    solved: v.boolean()
+});
+
+/**
+ * PagedDeskAppealSpec
+ */
+export const vPagedDeskAppealSpec = v.object({
+    items: v.array(vDeskAppealSpec),
     count: v.pipe(v.number(), v.integer()),
     size: v.pipe(v.number(), v.integer()),
     page: v.pipe(v.number(), v.integer()),
@@ -1329,14 +1661,6 @@ export const vExamSessionSchema = v.object({
 export const vExamAttemptAnswersSchema = v.record(v.string(), v.pipe(v.string(), v.minLength(1)));
 
 /**
- * ContentTypeSchema
- */
-export const vContentTypeSchema = v.object({
-    appLabel: v.string(),
-    model: v.string()
-});
-
-/**
  * EnrollmentContentSchema
  */
 export const vEnrollmentContentSchema = v.object({
@@ -1371,7 +1695,8 @@ export const vEnrollmentSchema = v.object({
     end: v.pipe(v.string(), v.isoTimestamp()),
     archive: v.pipe(v.string(), v.isoTimestamp()),
     enrolled: v.pipe(v.string(), v.isoTimestamp()),
-    canDeactivate: v.boolean()
+    canDeactivate: v.boolean(),
+    term: v.nullable(v.string())
 });
 
 /**
@@ -1496,9 +1821,9 @@ export const vLearningReportSchema = v.object({
 });
 
 /**
- * AnnounceSchema
+ * AnnouncementSchema
  */
-export const vAnnounceSchema = v.object({
+export const vAnnouncementSchema = v.object({
     created: v.pipe(v.string(), v.isoTimestamp()),
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
@@ -1509,10 +1834,10 @@ export const vAnnounceSchema = v.object({
 });
 
 /**
- * PagedAnnounceSchema
+ * PagedAnnouncementSchema
  */
-export const vPagedAnnounceSchema = v.object({
-    items: v.array(vAnnounceSchema),
+export const vPagedAnnouncementSchema = v.object({
+    items: v.array(vAnnouncementSchema),
     count: v.pipe(v.number(), v.integer()),
     size: v.pipe(v.number(), v.integer()),
     page: v.pipe(v.number(), v.integer()),
@@ -1551,8 +1876,7 @@ export const vInquirySchema = v.object({
     title: v.string(),
     question: v.string(),
     contentType: vContentTypeSchema,
-    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())]),
-    path: v.string()
+    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())])
 });
 
 /**
@@ -1574,8 +1898,7 @@ export const vInquirySavedSchema = v.object({
     modified: v.pipe(v.string(), v.isoTimestamp()),
     id: v.pipe(v.number(), v.integer()),
     title: v.string(),
-    question: v.string(),
-    path: v.string()
+    question: v.string()
 });
 
 /**
@@ -1586,8 +1909,7 @@ export const vInquiryCreateSchema = v.object({
     question: v.pipe(v.string(), v.minLength(1)),
     appLabel: v.string(),
     model: v.string(),
-    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())]),
-    path: v.string()
+    contentId: v.union([v.string(), v.pipe(v.number(), v.integer())])
 });
 
 /**
@@ -1604,8 +1926,7 @@ export const vInquiryUpdateSchema = v.object({
 export const vMessageDataSchema = v.objectWithRest({
     appLabel: v.string(),
     model: v.string(),
-    objectId: v.union([v.pipe(v.number(), v.integer()), v.string()]),
-    path: v.string()
+    objectId: v.union([v.pipe(v.number(), v.integer()), v.string()])
 }, v.unknown());
 
 /**
@@ -1639,8 +1960,8 @@ export const vAppealCreateSchema = v.object({
     explanation: v.pipe(v.string(), v.minLength(1)),
     appLabel: v.string(),
     model: v.string(),
-    questionId: v.pipe(v.number(), v.integer()),
-    path: v.string()
+    assessmentId: v.string(),
+    questionId: v.pipe(v.number(), v.integer())
 });
 
 /**
@@ -1701,8 +2022,7 @@ export const vThreadSchema = v.object({
     commentCount: v.pipe(v.number(), v.integer()),
     ratingCount: v.pipe(v.number(), v.integer()),
     ratingAvg: v.number(),
-    closed: v.nullable(v.boolean()),
-    path: v.string()
+    closed: v.nullable(v.boolean())
 });
 
 /**
@@ -1713,8 +2033,7 @@ export const vThreadCreateSchema = v.object({
     appLabel: v.string(),
     model: v.string(),
     subjectId: v.string(),
-    description: v.string(),
-    path: v.string()
+    description: v.string()
 });
 
 /**
@@ -2914,6 +3233,13 @@ export const vAllocationStatsSchema = v.object({
 });
 
 /**
+ * TutoringModelInfoSchema
+ */
+export const vTutoringModelInfoSchema = v.object({
+    title: v.string()
+});
+
+/**
  * GradeAppealSchema
  */
 export const vGradeAppealSchema = v.object({
@@ -2923,7 +3249,6 @@ export const vGradeAppealSchema = v.object({
     questionId: v.pipe(v.number(), v.integer()),
     explanation: v.string(),
     review: v.string(),
-    path: v.string(),
     gradeId: v.pipe(v.number(), v.integer())
 });
 
@@ -3002,7 +3327,8 @@ export const vTutorExamGradePaperSchema = v.object({
     feedback: v.record(v.string(), v.string()),
     grader: v.nullable(vOwnerSchema),
     questions: v.array(vTutorExamQuestionSchema),
-    analysis: v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer())))
+    analysis: v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer()))),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -3020,6 +3346,13 @@ export const vTutorGraeCompleteSchema = v.object({
 export const vTutorGradeSaveSchema = v.object({
     earnedDetails: v.object({}),
     feedback: v.record(v.string(), v.string())
+});
+
+/**
+ * TutorExamQuestionRegradeSchema
+ */
+export const vTutorExamQuestionRegradeSchema = v.object({
+    toAnswers: v.pipe(v.array(v.string()), v.minLength(1))
 });
 
 /**
@@ -3058,7 +3391,8 @@ export const vTutorAssignmentGradePaperSchema = v.object({
     grader: v.nullable(vOwnerSchema),
     question: vAssignmentQuestionSchema,
     analysis: v.record(v.string(), v.record(v.string(), v.pipe(v.number(), v.integer()))),
-    similarAnswer: v.nullable(v.string())
+    similarAnswer: v.nullable(v.string()),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -3095,7 +3429,8 @@ export const vTutorDiscussionGradePaperSchema = v.object({
     feedback: vDiscussionFeedbackSchema,
     grader: v.nullable(vOwnerSchema),
     question: vDiscussionQuestionSchema,
-    posts: v.array(vDiscussionOwnPostSchema)
+    posts: v.array(vDiscussionOwnPostSchema),
+    confirmed: v.nullable(v.pipe(v.string(), v.isoTimestamp()))
 });
 
 /**
@@ -3685,6 +4020,7 @@ export const vDeskV1GetUsersData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
+        search: v.nullish(v.string()),
         page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
         size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
     }))
@@ -3693,7 +4029,164 @@ export const vDeskV1GetUsersData = v.object({
 /**
  * OK
  */
-export const vDeskV1GetUsersResponse = vPagedUserSchema;
+export const vDeskV1GetUsersResponse = vPagedDeskUserSpec;
+
+export const vDeskV1GetUserDetailData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetUserDetailResponse = vDeskUserDetailSpec;
+
+export const vDeskV1GetEnrollmentsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetEnrollmentsResponse = vPagedDeskEnrollmentSpec;
+
+export const vDeskV1GetEnrollmentDetailData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetEnrollmentDetailResponse = vDeskEnrollmentDetailSpec;
+
+export const vDeskV1GetTermsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetTermsResponse = vPagedDeskLearningTermSpec;
+
+export const vDeskV1GetCatalogsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetCatalogsResponse = vPagedDeskCatalogSpec;
+
+export const vDeskV1GetCatalogDetailData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetCatalogDetailResponse = vDeskCatalogDetailSpec;
+
+export const vDeskV1GetPartnersData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetPartnersResponse = vPagedDeskPartnerSpec;
+
+export const vDeskV1GetAnnouncementsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetAnnouncementsResponse = vPagedDeskAnnouncementSpec;
+
+export const vDeskV1GetInquiriesData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetInquiriesResponse = vPagedDeskInquirySpec;
+
+export const vDeskV1GetInquiryDetailData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetInquiryDetailResponse = vDeskInquiryDetailSpec;
+
+export const vDeskV1GetAppealsData = v.object({
+    body: v.optional(v.never()),
+    path: v.optional(v.never()),
+    query: v.optional(v.object({
+        search: v.nullish(v.string()),
+        page: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1)), 1),
+        size: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(100)), 24)
+    }))
+});
+
+/**
+ * OK
+ */
+export const vDeskV1GetAppealsResponse = vPagedDeskAppealSpec;
 
 export const vDiscussionV1GetSessionData = v.object({
     body: v.optional(v.never()),
@@ -3912,7 +4405,7 @@ export const vExamV1GetTimestampData = v.object({
  */
 export const vExamV1GetTimestampResponse = v.number();
 
-export const vLearningV1GetEnrolledData = v.object({
+export const vLearningV1GetEnrollmentsData = v.object({
     body: v.optional(v.never()),
     path: v.optional(v.never()),
     query: v.optional(v.object({
@@ -3924,7 +4417,7 @@ export const vLearningV1GetEnrolledData = v.object({
 /**
  * OK
  */
-export const vLearningV1GetEnrolledResponse = vPaginatedResponseEnrollmentSchema;
+export const vLearningV1GetEnrollmentsResponse = vPaginatedResponseEnrollmentSchema;
 
 export const vLearningV1UnenrollData = v.object({
     body: v.optional(v.never()),
@@ -4013,7 +4506,7 @@ export const vOperationV1GetAnnouncementsData = v.object({
 /**
  * OK
  */
-export const vOperationV1GetAnnouncementsResponse = vPagedAnnounceSchema;
+export const vOperationV1GetAnnouncementsResponse = vPagedAnnouncementSchema;
 
 export const vOperationV1ReadAnnouncementData = v.object({
     body: v.optional(v.never()),
@@ -4047,7 +4540,6 @@ export const vOperationV1CreateInquiryData = v.object({
         appLabel: v.string(),
         model: v.string(),
         contentId: v.union([v.string(), v.pipe(v.number(), v.integer())]),
-        path: v.string(),
         files: v.optional(v.array(v.string()))
     }),
     path: v.optional(v.never()),
@@ -4103,8 +4595,8 @@ export const vOperationV1CreateAppealData = v.object({
         explanation: v.pipe(v.string(), v.minLength(1)),
         appLabel: v.string(),
         model: v.string(),
+        assessmentId: v.string(),
         questionId: v.pipe(v.number(), v.integer()),
-        path: v.string(),
         files: v.optional(v.array(v.string()))
     }),
     path: v.optional(v.never()),
@@ -5296,6 +5788,21 @@ export const vTutorV1GetAllocationStatsData = v.object({
  */
 export const vTutorV1GetAllocationStatsResponse = vAllocationStatsSchema;
 
+export const vTutorV1GetModelInfoData = v.object({
+    body: v.optional(v.never()),
+    path: v.object({
+        app_label: v.string(),
+        model: v.string(),
+        id: v.string()
+    }),
+    query: v.optional(v.never())
+});
+
+/**
+ * OK
+ */
+export const vTutorV1GetModelInfoResponse = vTutoringModelInfoSchema;
+
 export const vTutorV1GetAppealsData = v.object({
     body: v.optional(v.never()),
     path: v.object({
@@ -5375,6 +5882,15 @@ export const vTutorV1CompleteExamGradeData = v.object({
  * OK
  */
 export const vTutorV1CompleteExamGradeResponse = vTutorGraeCompleteSchema;
+
+export const vTutorV1RegradeExamQuestionData = v.object({
+    body: vTutorExamQuestionRegradeSchema,
+    path: v.object({
+        id: v.string(),
+        question_id: v.pipe(v.number(), v.integer())
+    }),
+    query: v.optional(v.never())
+});
 
 export const vTutorV1GetAssignmentGradesData = v.object({
     body: v.optional(v.never()),

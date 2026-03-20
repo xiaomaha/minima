@@ -11,7 +11,7 @@ from ninja.router import Router
 from apps.common.schema import FileSizeValidator, FileTypeValidator
 from apps.common.util import HttpRequest, Pagination
 from apps.operation.api.schema import (
-    AnnounceSchema,
+    AnnouncementSchema,
     AppealCreateSchema,
     AppealSchema,
     CommentBriefSchema,
@@ -48,7 +48,7 @@ from apps.operation.models import (
 router = Router(by_alias=True)
 
 
-@router.get("/announcement", response=list[AnnounceSchema])
+@router.get("/announcement", response=list[AnnouncementSchema])
 @paginate(Pagination)
 async def get_announcements(request: HttpRequest):
     return Announcement.get_announcements(user_id=request.auth)

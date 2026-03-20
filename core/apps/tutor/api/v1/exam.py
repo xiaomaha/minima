@@ -1,6 +1,9 @@
+from datetime import datetime
+from typing import Annotated
+
 from django.db.models import F, Prefetch, Q
 from django.shortcuts import aget_object_or_404
-from ninja import Router
+from ninja import Field, Router
 from ninja.pagination import paginate
 from ninja.params import functions
 
@@ -11,6 +14,7 @@ from apps.exam.api.schema import ExamQuestionSchema, ExamSolutionSchema
 from apps.exam.models import Exam, Grade, Question
 from apps.tutor.api.v1.schema import TutorGradeSaveSchema, TutorGradeSchema, TutorGraeCompleteSchema
 from apps.tutor.decorator import allocation_required
+from apps.tutor.tasks import regrade_exam_question_task
 
 router = Router(by_alias=True)
 
@@ -45,6 +49,7 @@ class TutorExamGradePaperSchema(Schema):
     grader: OwnerSchema | None
     questions: list[TutorExamQuestionSchema]
     analysis: dict[str, dict[str, int]]
+    confirmed: datetime | None
 
     @staticmethod
     def resolve_answers(grade: Grade):
@@ -110,3 +115,13 @@ async def complete_exam_grade(request: HttpRequest, id: str, grade_id: int, data
     grade.feedback.update(data.feedback)
     await grade.grade(data.earned_details, grader_id=request.auth)
     return grade
+
+
+class TutorExamQuestionRegradeSchema(Schema):
+    to_answers: Annotated[list[str], Field(min_length=1)]
+
+
+@router.post("/exam/{id}/question/{question_id}/regrade")
+@allocation_required("exam", "exam")
+async def regrade_exam_question(request: HttpRequest, id: str, question_id: int, data: TutorExamQuestionRegradeSchema):
+    regrade_exam_question_task.delay(exam_id=id, question_id=question_id, to_answers=data.to_answers)  # type: ignore

@@ -123,7 +123,7 @@ async def apply_password_change(request: HttpRequest, data: ApplyPasswordChangeS
     await user.change_password(password=data.password)
 
 
-@router.post("/logout")
+@router.post("/logout", auth=None)  # auth=None required for blind clinet(httponly cookie)
 async def logout(request: HttpRequest, response: HttpResponse):
     await User.token_logout(request=request, response=response)
 

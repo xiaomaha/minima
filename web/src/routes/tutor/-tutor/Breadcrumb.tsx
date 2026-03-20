@@ -1,4 +1,4 @@
-import { IconHome } from '@tabler/icons-solidjs'
+import { IconChevronRight, IconHome } from '@tabler/icons-solidjs'
 import { type NavigateOptions, useNavigate } from '@tanstack/solid-router'
 import { Show } from 'solid-js'
 import { PreviewButton } from '@/routes/preview/-PreviewButton'
@@ -49,8 +49,9 @@ export const Breadcrumb = (props: Props) => {
     <div class="breadcrumbs mb-8">
       <ul>
         <li>
-          <span onclick={() => navigate({ to: '/tutor' })}>
+          <span class="flex items-center gap-2" onclick={() => navigate({ to: '/tutor' })}>
             <IconHome size={20} />
+            {t('Tutor')}
           </span>
         </li>
         <li>{t(capitalize(props.app))}</li>
@@ -58,9 +59,10 @@ export const Breadcrumb = (props: Props) => {
           <PreviewButton link={toContent()} title={props.title} class="mr-auto text-base/tight h-auto" />
         </li>
         <Show when={props.title}>
-          <li class="space-x-2">
-            <span class="badge badge-sm badge-primary pointer-events-none">{t(capitalize(props.kind))}</span>
-            <span onclick={goToSibling} class="badge badge-sm badge-outline">
+          <li class="space-x-4">
+            <span class="pointer-events-none">{t(capitalize(props.kind))}</span>
+            <span onclick={goToSibling} class="badge badge-sm badge-soft">
+              <IconChevronRight size={12} />
               {props.kind === 'grading' ? t('Appeal') : t('Grading')}
             </span>
           </li>

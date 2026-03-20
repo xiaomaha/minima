@@ -121,6 +121,7 @@ export const GradingReview = () => {
           appeal={appeal()}
           appLabel="discussion"
           model="question"
+          assessmentId={s().discussion.id}
           questionId={question.id}
           onCreate={onCreateAppeal}
         />

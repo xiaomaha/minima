@@ -15,6 +15,7 @@ interface Props {
   appeal: AppealSchema | undefined
   appLabel: string
   model: string
+  assessmentId: string
   questionId: number
   onCreate: (appeal: AppealSchema) => void
 }
@@ -28,8 +29,8 @@ export const Appeal = (props: Props) => {
       explanation: props.appeal?.explanation ?? '',
       appLabel: props.appLabel,
       model: props.model,
+      assessmentId: props.assessmentId,
       questionId: props.questionId,
-      path: `${window.location.pathname}${window.location.search}`,
     },
     validate: valiForm(vAppealCreateSchema),
   })

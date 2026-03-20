@@ -3,7 +3,7 @@ import { IconSpeakerphone } from '@tabler/icons-solidjs'
 import { createFileRoute } from '@tanstack/solid-router'
 import { createEffect, For, onCleanup, onMount, Show } from 'solid-js'
 import type { SetStoreFunction } from 'solid-js/store'
-import { type AnnounceSchema, operationV1GetAnnouncements, operationV1ReadAnnouncement } from '@/api'
+import { type AnnouncementSchema, operationV1GetAnnouncements, operationV1ReadAnnouncement } from '@/api'
 import { ContentViewer } from '@/shared/ContentViewer'
 import { NoContent } from '@/shared/NoContent'
 import { createCachedInfiniteStore } from '@/shared/solid/cached-infinite-store'
@@ -48,10 +48,10 @@ function RouteComponent() {
 }
 
 interface AnnouncementItemProps {
-  item: AnnounceSchema
+  item: AnnouncementSchema
   numbering: number
   setStore: SetStoreFunction<{
-    items: AnnounceSchema[]
+    items: AnnouncementSchema[]
   }>
 }
 

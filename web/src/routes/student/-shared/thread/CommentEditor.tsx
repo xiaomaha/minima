@@ -51,7 +51,6 @@ export const CommentEditor = (props: Props) => {
           subjectId,
           title: title ?? '',
           description: description ?? '',
-          path: `${window.location.pathname}${window.location.search}`,
         },
       })
 

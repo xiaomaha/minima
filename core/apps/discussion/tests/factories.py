@@ -60,7 +60,7 @@ class QuestionFactory(DjangoModelFactory[Question]):
 class DiscussionFactory(LearningObjectFactory[Discussion], GradeWorkflowFactory[Discussion]):
     passing_point = 100
     max_attempts = 1
-    verification_required = True
+    verification_required = False
 
     owner = LazyFunction(lambda: UserFactory(email=test_user_email))
     question_pool = SubFactory(QuestionPoolFactory, owner=owner)

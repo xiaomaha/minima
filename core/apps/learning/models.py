@@ -4,6 +4,7 @@ from datetime import date, datetime, time, timedelta
 from typing import TYPE_CHECKING, cast
 
 import pghistory
+from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -23,8 +24,10 @@ from django.db.models import (
     ForeignKey,
     ImageField,
     Index,
+    JSONField,
     Model,
     OuterRef,
+    PositiveIntegerField,
     Q,
     QuerySet,
     Subquery,
@@ -91,6 +94,8 @@ class Enrollment(TimeStampedMixin):
     content_id = CharField(_("Content ID"), max_length=36)
     content = GenericForeignKey("content_type", "content_id")
     enrolled_by = ForeignKey(User, on_delete=SET_NULL, verbose_name=_("Enrolled By"), null=True, related_name="+")
+    label = CharField(_("Label"), max_length=255)
+    term = ForeignKey("LearningTerm", on_delete=SET_NULL, verbose_name=_("Term"), null=True)
 
     class Meta(TimeStampedMixin.Meta):
         verbose_name = _("Enrollment")
@@ -99,6 +104,7 @@ class Enrollment(TimeStampedMixin):
             Index(fields=["user", "content_id", "active"]),
             Index(fields=["enrolled"]),
             Index(fields=["content_id"]),
+            Index(fields=["label"]),
         ]
         constraints = [
             UniqueConstraint(
@@ -134,11 +140,11 @@ class Enrollment(TimeStampedMixin):
         await enrollment.asave()
 
     @classmethod
-    async def get_enrolled(cls, *, user_id: str, page: int, size: int):
+    async def get_enrollments(cls, *, user_id: str, page: int, size: int):
         now = timezone.now()
         base_qs = (
             cls.objects
-            .select_related("content_type")
+            .select_related("content_type", "term")
             .filter(user_id=user_id, active=True, archive__gte=now)
             .order_by("-enrolled")
         )
@@ -317,7 +323,6 @@ class Enrollment(TimeStampedMixin):
             content = cast(LearningObjectMixin, self.content)
             user_message_created.send(
                 source=self,
-                path="",
                 message=MessageType(
                     user_id=self.user_id, title=t("%s Enrollment") % self.content_type.model, body=content.title
                 ),
@@ -325,6 +330,49 @@ class Enrollment(TimeStampedMixin):
 
 
 setattr(Enrollment._meta, "triggers", [content_exists_trigger(Enrollment._meta.db_table, ContentType._meta.db_table)])
+
+
+@pghistory.track()
+class LearningTerm(TimeStampedMixin):
+    name = CharField(_("Name"), max_length=255, unique=True)
+    user_count = PositiveIntegerField(_("User Count"), default=0)
+    enrollment_count = PositiveIntegerField(_("Enrollment Count"), default=0)
+    breakdown = JSONField(_("Breakdown"), default=dict)
+
+    class Meta:
+        verbose_name = _("Learning Term")
+        verbose_name_plural = _("Learning Terms")
+
+    async def sync(self):
+        await sync_to_async(self._sync)()
+
+    def _sync(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                UPDATE {self._meta.db_table} SET
+                    enrollment_count = (
+                        SELECT COUNT(*) FROM {Enrollment._meta.db_table}
+                        WHERE term_id = %(term_id)s AND active = true
+                    ),
+                    user_count = (
+                        SELECT COUNT(DISTINCT user_id) FROM {Enrollment._meta.db_table}
+                        WHERE term_id = %(term_id)s AND active = true
+                    ),
+                    breakdown = (
+                        SELECT COALESCE(jsonb_object_agg(model, cnt), '{{}}')
+                        FROM (
+                            SELECT ct.model, COUNT(*) as cnt
+                            FROM {Enrollment._meta.db_table} e
+                            JOIN {ContentType._meta.db_table} ct ON ct.id = e.content_type_id
+                            WHERE e.term_id = %(term_id)s AND e.active = true
+                            GROUP BY ct.model
+                        ) s
+                    )
+                WHERE id = %(term_id)s
+                """,
+                {"term_id": self.id},
+            )
 
 
 @pghistory.track()
@@ -336,6 +384,7 @@ class Catalog(TimeStampedMixin):
     public = BooleanField(_("Public"), default=False)
     available_from = DateTimeField(_("Available From"), default=timezone.now)
     available_until = DateTimeField(_("Available Until"))
+    breakdown = JSONField(_("Breakdown"), default=dict)
 
     class Meta:
         verbose_name = _("Catalog")
@@ -444,6 +493,11 @@ class Catalog(TimeStampedMixin):
         if not catalog:
             raise ValueError(ErrorCode.ACCESS_DENIED)
 
+        M = ENROLLABLE_MODEL_MAP[(app_label, model)]
+        item = await M.objects.aget(id=content_id)
+
+        term, _ = await LearningTerm.objects.aget_or_create(name=catalog.name)
+
         try:
             enrollment = await Enrollment.objects.acreate(
                 user_id=user_id,
@@ -455,12 +509,39 @@ class Catalog(TimeStampedMixin):
                 content_type_id=catalog.item_content_type_id,
                 content_id=content_id,
                 enrolled_by_id=enrolled_by_id,
+                label=item.title,
+                term_id=term.id,
             )
         except IntegrityError as e:
             log.error(e, exc_info=True)
             raise ValueError(ErrorCode.ALREADY_EXISTS)
 
+        await term.sync()
+
         return enrollment
+
+    async def sync(self):
+        await sync_to_async(self._sync)()
+
+    def _sync(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                UPDATE {self._meta.db_table} SET
+                    breakdown = (
+                        SELECT COALESCE(jsonb_object_agg(model, cnt), '{{}}')
+                        FROM (
+                            SELECT ct.model, COUNT(*) as cnt
+                            FROM {CatalogItem._meta.db_table} item
+                            JOIN {ContentType._meta.db_table} ct ON ct.id = item.content_type_id
+                            WHERE item.catalog_id = %(catalog_id)s
+                            GROUP BY ct.model
+                        ) s
+                    )
+                WHERE id = %(catalog_id)s
+                """,
+                {"catalog_id": self.id},
+            )
 
 
 class CatalogItem(TimeStampedMixin, OrderableMixin):
@@ -473,6 +554,7 @@ class CatalogItem(TimeStampedMixin, OrderableMixin):
     )
     content_id = CharField(_("Content ID"), max_length=36)
     content = GenericForeignKey("content_type", "content_id")
+    label = CharField(_("Label"), max_length=255)
 
     ordering_group = ("catalog",)
 
@@ -515,7 +597,6 @@ class UserCatalog(TimeStampedMixin):
         if is_new and self.user_id != self.granted_by_id:
             user_message_created.send(
                 source=self.catalog,
-                path="",
                 message=MessageType(user_id=self.user_id, title=t("User Catalog Enrollment"), body=self.catalog.name),
             )
 
